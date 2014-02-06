@@ -1,0 +1,296 @@
+"Name"    = 'TextFunge'
+"Author"  = 'Mikescher'
+"Version" = '2.0'
+"About"   = 'Language to define Benuge-93 programs procedural'
+
+"Case Sensitive" = False
+"Start Symbol"   = <Program>
+
+!###############################################################################
+
+Comment Start = '/*'
+Comment End   = '*/'
+Comment Line  = '//'
+
+!###############################################################################
+! SETS (FOR SCANNER)
+!###############################################################################
+
+{Hex Digit}            = {Digit} + [abcdefABCDEF]
+{Oct Digit}            = [01234567]
+
+{UnderscoreLetter}     = {Letter} + {&5F}
+
+{String Ch}            = {Printable} - ["]
+{Char Ch}              = {Printable} - ['']
+
+!###############################################################################
+! TERMINALS (SCANNER)
+!###############################################################################
+
+StringLiteral          = '"'( {String Ch} | '\'{Printable} )* '"'
+CharLiteral            = '' ( {Char Ch} | '\'{Printable} )''
+
+Identifier             = {UnderscoreLetter}{AlphaNumeric}*
+
+DigitLiteral           = {Digit}
+DecLiteral             = [123456789]{Digit}+
+HexLiteral             = 0x{Hex Digit}+
+
+!###############################################################################
+! PRODUCTIONS (PARSER)
+!###############################################################################
+
+
+<Program>              ::= <Header> <MainStatements> <MethodList> <Footer>
+
+<Header>               ::= 'program' Identifier
+<Footer>               ::= 'end'
+
+<MethodList>           ::= <Method> <MethodList>
+                       |
+
+
+<MainStatements>       ::= <VarDeclBody> <MethodBody>
+                       |   <MethodBody>
+                       |
+
+
+!############
+!   METHOD  !
+!############
+
+
+<Method>               ::= <MethodHeader> <MethodBody>
+
+<MethodBody>           ::= <VarDeclBody> <Statement>
+
+<MethodHeader>         ::= <Type> Identifier '(' <ParamDecl> ')'
+<VarDeclBody>          ::= 'var' <VarList>
+                       |
+
+<ParamDecl>            ::= <ParamList>
+                       |
+
+<ParamList>            ::= <ParamList> ',' <Param>
+                       |   <Param>
+
+<Param>                ::= <Type> Identifier
+
+<VarList>              ::= <VarList> <VarDecl> ';'
+                       |   <VarDecl> ';'
+                   
+<VarDecl>              ::= <Type> Identifier
+
+                       |   <Type> Identifier ':=' <Literal>
+
+!############
+! STATEMENT !
+!############
+
+
+<Statement>            ::= <Stmt_Quit> ';'
+                       |   <Stmt_Out> ';'
+                       |   <Stmt_In> ';'
+                       |   <Stmt_Assignment> ';'
+                       |   'begin' <StatementList> 'end'
+                       |   <Stmt_If>
+                       |   <Stmt_While>
+                       |   <Stmt_Repeat>
+                       |   <Stmt_Goto>
+                       |   <Stmt_Label>
+
+<StatementList>        ::= <Statement> <StatementList>
+                       |
+
+<Stmt_Quit>            ::= 'quit' | 'stop' | 'close'
+
+<Stmt_Out>             ::= 'out' <Expression>
+
+<Stmt_In>              ::= 'in' Identifier
+
+<Stmt_Assignment>      ::= Identifier ':=' <Expression>
+
+
+!#################
+!  CONTROL FLOW  !
+!#################
+
+
+<Stmt_If>              ::= 'if' '(' <Expression> ')' 'then' <Statement>
+                       |   'if' '(' <Expression> ')' 'then' <Statement> 'else' <Statement>
+
+<Stmt_While>           ::= 'while' '(' <Expression> ')' 'do' <Statement>
+
+<Stmt_Repeat>          ::= 'repeat' <Statement> 'until' '(' <Expression> ')'
+
+<Stmt_Goto>            ::= 'goto' Identifier
+
+<Stmt_Label>        ::= Identifier ':'
+
+!############
+!   TYPES   !
+!############
+
+
+<Type>                 ::= <Type_Int>
+                       |   <Type_Digit>
+                       |   <Type_Char>
+                       |   <Type_Bool>
+                       |   <Type_Void>
+                       |   <Type_IntArr>
+                       |   <Type_String>
+                       |   <Type_DigitArr>
+                       |   <Type_BoolArr>
+                   
+<Type_Int>             ::= 'int'  | 'integer'
+<Type_Char>            ::= 'char' | 'Character'
+<Type_Digit>           ::= 'digit'
+<Type_Bool>            ::= 'bool' | 'boolean'
+<Type_Void>            ::= 'void'
+
+<Type_IntArr>          ::= <Type_Int>   '[' <Literal_Int> ']'
+<Type_String>          ::= <Type_Char>  '[' <Literal_Int> ']'
+<Type_DigitArr>        ::= <Type_Digit> '[' <Literal_Int> ']'
+<Type_BoolArr>         ::= <Type_Bool>  '[' <Literal_Int> ']'
+
+
+!#############
+!  LITERALS  !
+!############+
+
+<Literal>              ::= <Array_Literal>
+                       |   <Value_Literal>
+
+<Array_Literal>        ::= <Literal_IntArr>
+                       |   <Literal_String>
+                       |   <Literal_DigitArr>
+                       |   <Literal_BoolArr>
+
+<Value_Literal>        ::= <Literal_Int>
+                       |   <Literal_Char>
+                       |   <Literal_Bool>
+                       |   <Literal_Digit>
+
+
+<Literal_Int>          ::= DecLiteral |   HexLiteral
+<Literal_Char>         ::= CharLiteral
+<Literal_Bool>         ::= 'true' | 'false'
+<Literal_Digit>        ::= DigitLiteral
+
+
+<Literal_IntArr>       ::= '{' <Literal_Int_List> '}'
+                       |   '{' '}'
+                   
+<Literal_String>       ::= '{' <Literal_Char_List> '}'
+                       |   StringLiteral
+                       |   '{' '}'
+                   
+<Literal_DigitArr>     ::= '{' <Literal_Digit_List> '}'
+                       |   '{' '}'
+                   
+<Literal_BoolArr>      ::= '{' <Literal_Bool_List> '}'
+                       |   '{' '}'
+
+
+<Literal_Int_List>     ::= <Literal_Int_List> ',' <Literal_Int>
+                       |   <Literal_Int>
+                   
+<Literal_Char_List>    ::= <Literal_Char_List> ',' <Literal_Char>
+                       |   <Literal_Char>
+                   
+<Literal_Digit_List>   ::= <Literal_Digit_List> ',' <Literal_Digit>
+                       |   <Literal_Digit>
+                   
+<Literal_Bool_List>    ::= <Literal_Bool_List> ',' <Literal_Bool>
+                       |   <Literal_Bool>
+
+!#############
+! EXPRESSION !
+!#############
+
+
+<Expression>           ::= <Expr Eq>
+
+<Expr Eq>              ::= <Expr Eq>  '==' <Exp Comp>
+                       |   <Expr Eq>  '!=' <Exp Comp>
+                       |   <Exp Comp>
+                   
+<Exp Comp>             ::= <Exp Comp> '<'  <Exp Add>
+                       |   <Exp Comp> '>'  <Exp Add>
+                       |   <Exp Comp> '<=' <Exp Add>
+                       |   <Exp Comp> '>=' <Exp Add>
+                       |   <Exp Add>
+                   
+<Exp Add>              ::= <Exp Add>  '+'  <Exp Mult>
+                       |   <Exp Add>  '-'  <Exp Mult>
+                       |   <Exp Unary>
+
+<Exp Mult>             ::= <Exp Add>  '*'  <Exp Unary>
+                       |   <Exp Add>  '/'  <Exp Unary>
+                       |   <Exp Add>  '%'  <Exp Unary>
+                       |   <Exp Unary>
+                   
+<Exp Unary>            ::= '!' <Value>
+                       |   '-' <Value>
+                       |   <Value>
+
+
+<Value>                ::= <Literal>
+                       |   'rand'
+                       |   '(' <Expression> ')'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
