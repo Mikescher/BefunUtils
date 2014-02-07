@@ -281,7 +281,7 @@ namespace BefunGen.AST
 			{
 				case ProductionIndex.Program:
 					// <Program> ::= <Header> <MainStatements> <MethodList> <Footer>
-					result = new Program(((Program_Header)r.get_Data(0)).Identifier, (Statement)r.get_Data(1), ((List_Methods)r.get_Data(2)).List);
+					result = new Program(((Program_Header)r.get_Data(0)).Identifier, (Method)r.get_Data(1), ((List_Methods)r.get_Data(2)).List);
 					break;
 
 				case ProductionIndex.Header_Program_Identifier:
@@ -516,7 +516,7 @@ namespace BefunGen.AST
 
 				case ProductionIndex.Stmt_repeat_Repeat_Until_Lparen_Rparen:
 					// <Stmt_Repeat> ::= repeat <Statement> until '(' <Expression> ')'
-					result = new Statement_RepeatUntil((Expression)r.get_Data(1), (Statement)r.get_Data(4));
+					result = new Statement_RepeatUntil((Expression)r.get_Data(4), (Statement)r.get_Data(1));
 					break;
 
 				case ProductionIndex.Stmt_goto_Goto_Identifier:

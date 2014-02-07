@@ -6,10 +6,10 @@ namespace BefunGen.AST
 	class Program : ASTObject
 	{
 		public string Identifier;
-		public Statement MainStatement;
+		public Method MainStatement;
 		public List<Method> MethodList;
 
-		public Program(string id, Statement m, List<Method> mlst)
+		public Program(string id, Method m, List<Method> mlst)
 		{
 			this.Identifier = id;
 			this.MainStatement = m;

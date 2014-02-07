@@ -59,5 +59,25 @@ namespace Parse_Tree_C_Sharp.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] Delphi {
+            get {
+                object obj = ResourceManager.GetObject("Delphi", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] TextFunge {
+            get {
+                object obj = ResourceManager.GetObject("TextFunge", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
     }
 }

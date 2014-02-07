@@ -59,6 +59,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Libraries\GOLD Engine.dll</HintPath>
     </Reference>
+    <Reference Include="Puzzle.SyntaxBox">
+      <HintPath>..\Libraries\Puzzle.SyntaxBox.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -83,7 +86,7 @@
     <Compile Include="AST\Type.cs" />
     <Compile Include="AST\Expression.cs" />
     <Compile Include="AST\Statement.cs" />
-    <Compile Include="AST\GOLDParser.cs" />
+    <Compile Include="AST\TextFungeParser.cs" />
     <Compile Include="AST\GrammarTableMap.cs" />
     <Compile Include="AST\Literal.cs" />
     <Compile Include="AST\Program.cs" />
@@ -125,6 +128,8 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="Resources\Delphi.syn" />
+    <None Include="Resources\TextFunge.syn" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">

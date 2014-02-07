@@ -1,27 +1,56 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 
 namespace BefunGen.AST
 {
-	class GOLDParser
+	class TextFungeParser
 	{
 		private GOLD.Parser parser;
 
 		public string FailMessage { get; private set; }
 
-		public GOLDParser(BinaryReader tables)
+		public TextFungeParser()
+		{
+			parser = new GOLD.Parser();
+		}
+
+		public TextFungeParser(BinaryReader tables)
 		{
 			parser = new GOLD.Parser();
 
-			parser.LoadTables(tables);
+			loadTables(tables);
+		}
+
+		public bool loadTables(BinaryReader r)
+		{
+			return parser.LoadTables(r);
+		}
+
+		public bool loadTables(string p)
+		{
+			return loadTables(new BinaryReader(new FileStream(p, FileMode.Open)));
 		}
 
 		public Program generateAST(string txt)
 		{
 			Program result = null;
+
+			try
+			{
+				result = (Program)parse(txt);
+			}
+			catch (Exception e)
+			{
+				FailMessage = e.ToString();
+				return null;
+			}
+
+			return result;
+		}
+
+		private object parse(string txt)
+		{
+			object result = null;
 
 			parser.Open(ref txt);
 			parser.TrimReductions = false;
@@ -44,7 +73,8 @@ namespace BefunGen.AST
 					case GOLD.ParseMessage.Reduction: // Reduction
 						parser.CurrentReduction = GrammarTableMap.CreateNewASTObject(parser.CurrentReduction as GOLD.Reduction);
 						break;
-					case GOLD.ParseMessage.Accept: //Accepted!                               
+					case GOLD.ParseMessage.Accept: //Accepted!    
+						result = parser.CurrentReduction;  
 						done = true;
 						break;
 					case GOLD.ParseMessage.TokenRead: //You don't have to do anything here.
