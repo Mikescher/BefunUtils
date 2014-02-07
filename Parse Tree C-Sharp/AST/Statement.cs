@@ -19,6 +19,11 @@ namespace BefunGen.AST
 		{
 			List = sl.ToList();
 		}
+
+		public override string getDebugString()
+		{
+			return string.Format("#StatementList\n[\n{0}\n]", indent(getDebugStringForList(List)));
+		}
 	}
 
 	class Statement_MethodCall : Statement
@@ -37,6 +42,11 @@ namespace BefunGen.AST
 			this.Identifier = id;
 			this.CallParameter = cp.ToList();
 		}
+
+		public override string getDebugString()
+		{
+			return string.Format("#MethodCall ({0})\n#Parameter:\n{1}", Identifier, indent(getDebugStringForList(CallParameter)));
+		}
 	}
 
 	#region Keywords
@@ -49,6 +59,11 @@ namespace BefunGen.AST
 		{
 			this.Identifier = id;
 		}
+
+		public override string getDebugString()
+		{
+			return string.Format("#LABEL: {0}", Identifier);
+		}
 	}
 
 	class Statement_Goto : Statement
@@ -58,6 +73,11 @@ namespace BefunGen.AST
 		public Statement_Goto(string id)
 		{
 			this.TargetIdentifier = id;
+		}
+
+		public override string getDebugString()
+		{
+			return string.Format("#GOTO: {0}", TargetIdentifier);
 		}
 	}
 
@@ -74,6 +94,11 @@ namespace BefunGen.AST
 		{
 			this.Value = v;
 		}
+
+		public override string getDebugString()
+		{
+			return string.Format("#RETURN: {0}", Value.getDebugString());
+		}
 	}
 
 	class Statement_Out : Statement
@@ -83,6 +108,11 @@ namespace BefunGen.AST
 		public Statement_Out(Expression v)
 		{
 			this.Value = v;
+		}
+
+		public override string getDebugString()
+		{
+			return string.Format("#OUT: {0}", Value.getDebugString());
 		}
 	}
 
@@ -94,12 +124,22 @@ namespace BefunGen.AST
 		{
 			this.ValueTarget = vt;
 		}
+
+		public override string getDebugString()
+		{
+			return string.Format("#OUT: {0}", ValueTarget.getDebugString());
+		}
 	}
 
 	class Statement_Quit : Statement
 	{
 		public Statement_Quit()
 		{
+		}
+
+		public override string getDebugString()
+		{
+			return "#QUIT";
 		}
 	}
 
@@ -115,6 +155,11 @@ namespace BefunGen.AST
 		{
 			this.Identifier = id;
 		}
+
+		public override string getDebugString()
+		{
+			return string.Format("#INC {0}", Identifier.getDebugString());
+		}
 	}
 
 	class Statement_Dec : Statement
@@ -124,6 +169,11 @@ namespace BefunGen.AST
 		public Statement_Dec(Expression_ValuePointer id)
 		{
 			this.Identifier = id;
+		}
+
+		public override string getDebugString()
+		{
+			return string.Format("#DEC {0}", Identifier.getDebugString());
 		}
 	}
 
@@ -136,6 +186,11 @@ namespace BefunGen.AST
 		{
 			this.Target = t;
 			this.Expr = e;
+		}
+
+		public override string getDebugString()
+		{
+			return string.Format("#ASSIGN {0} = {1}", Target.getDebugString(), Expr.getDebugString());
 		}
 	}
 
@@ -162,6 +217,11 @@ namespace BefunGen.AST
 			this.Body = b;
 			this.Else = e;
 		}
+
+		public override string getDebugString()
+		{
+			return string.Format("#IF ({0})\n{1}\n#IFELSE\n{2}", Condition.getDebugString(), indent(Body.ToString()), Else == null ? "  NULL" : indent(Else.ToString()));
+		}
 	}
 
 	class Statement_While : Statement
@@ -174,6 +234,11 @@ namespace BefunGen.AST
 			this.Condition = c;
 			this.Body = b;
 		}
+
+		public override string getDebugString()
+		{
+			return string.Format("#WHILE ({0})\n{1}", Condition.getDebugString(), indent(Body.ToString()));
+		}
 	}
 
 	class Statement_RepeatUntil : Statement
@@ -185,6 +250,11 @@ namespace BefunGen.AST
 		{
 			this.Condition = c;
 			this.Body = b;
+		}
+
+		public override string getDebugString()
+		{
+			return string.Format("#REPEAT-UNTIL ({0})\n{1}", Condition.getDebugString(), indent(Body.ToString()));
 		}
 	}
 

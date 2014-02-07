@@ -41,6 +41,11 @@ namespace BefunGen.AST
 		{
 			this.Value = v;
 		}
+
+		public override string getDebugString()
+		{
+			return Value.ToString();
+		}
 	}
 
 	class Literal_Char : Literal_Value
@@ -50,6 +55,11 @@ namespace BefunGen.AST
 		public Literal_Char(char v)
 		{
 			this.Value = v;
+		}
+
+		public override string getDebugString()
+		{
+			return Value.ToString();
 		}
 	}
 
@@ -61,6 +71,11 @@ namespace BefunGen.AST
 		{
 			this.Value = v;
 		}
+
+		public override string getDebugString()
+		{
+			return Value.ToString();
+		}
 	}
 
 	class Literal_Digit : Literal_Value
@@ -70,6 +85,11 @@ namespace BefunGen.AST
 		public Literal_Digit(byte v)
 		{
 			this.Value = v;
+		}
+
+		public override string getDebugString()
+		{
+			return Value.ToString();
 		}
 	}
 
@@ -84,6 +104,11 @@ namespace BefunGen.AST
 		public Literal_IntArr(List<int> v)
 		{
 			this.Value = v.ToList();
+		}
+
+		public override string getDebugString()
+		{
+			return "{" + string.Join(",", Value.Select(p => p.ToString())) + "}";
 		}
 	}
 
@@ -100,6 +125,11 @@ namespace BefunGen.AST
 		{
 			this.Value = v.ToCharArray().ToList();
 		}
+
+		public override string getDebugString()
+		{
+			return "{" + string.Join(",", Value.Select(p => p.ToString())) + "}";
+		}
 	}
 
 	class Literal_BoolArr : Literal_Array
@@ -110,6 +140,11 @@ namespace BefunGen.AST
 		{
 			this.Value = v.ToList();
 		}
+
+		public override string getDebugString()
+		{
+			return "{" + string.Join(",", Value.Select(p => p.ToString())) + "}";
+		}
 	}
 
 	class Literal_DigitArr : Literal_Array
@@ -119,6 +154,11 @@ namespace BefunGen.AST
 		public Literal_DigitArr(List<byte> v)
 		{
 			this.Value = v.ToList();
+		}
+
+		public override string getDebugString()
+		{
+			return "{" + string.Join(",", Value.Select(p => p.ToString())) + "}";
 		}
 	}
 

@@ -58,6 +58,11 @@ namespace BefunGen.AST
 		{
 			this.Identifier = id;
 		}
+
+		public override string getDebugString()
+		{
+			return Identifier;
+		}
 	}
 
 	class Expression_ArrayValuePointer : Expression_ValuePointer
@@ -69,6 +74,11 @@ namespace BefunGen.AST
 		{
 			this.Identifier = id;
 			this.Index = idx;
+		}
+
+		public override string getDebugString()
+		{
+			return string.Format("{0}[{1}]", Identifier, Index.getDebugString());
 		}
 	}
 
@@ -83,6 +93,11 @@ namespace BefunGen.AST
 		{
 			//--
 		}
+
+		public override string getDebugString()
+		{
+			return string.Format("({0} * {1})", Left.getDebugString(), Right.getDebugString());
+		}
 	}
 
 	class Expression_Div : Expression_Binary
@@ -91,6 +106,11 @@ namespace BefunGen.AST
 			: base(l, r)
 		{
 			//--
+		}
+
+		public override string getDebugString()
+		{
+			return string.Format("({0} / {1})", Left.getDebugString(), Right.getDebugString());
 		}
 	}
 
@@ -101,6 +121,11 @@ namespace BefunGen.AST
 		{
 			//--
 		}
+
+		public override string getDebugString()
+		{
+			return string.Format("({0} % {1})", Left.getDebugString(), Right.getDebugString());
+		}
 	}
 
 	class Expression_Add : Expression_Binary
@@ -110,6 +135,11 @@ namespace BefunGen.AST
 		{
 			//--
 		}
+
+		public override string getDebugString()
+		{
+			return string.Format("({0} + {1})", Left.getDebugString(), Right.getDebugString());
+		}
 	}
 
 	class Expression_Sub : Expression_Binary
@@ -118,6 +148,11 @@ namespace BefunGen.AST
 			: base(l, r)
 		{
 			//--
+		}
+
+		public override string getDebugString()
+		{
+			return string.Format("({0} - {1})", Left.getDebugString(), Right.getDebugString());
 		}
 	}
 
@@ -132,6 +167,11 @@ namespace BefunGen.AST
 		{
 			//--
 		}
+
+		public override string getDebugString()
+		{
+			return string.Format("({0} == {1})", Left.getDebugString(), Right.getDebugString());
+		}
 	}
 
 	class Expression_Unequals : Expression_Compare
@@ -140,6 +180,11 @@ namespace BefunGen.AST
 			: base(l, r)
 		{
 			//--
+		}
+
+		public override string getDebugString()
+		{
+			return string.Format("({0} != {1})", Left.getDebugString(), Right.getDebugString());
 		}
 	}
 
@@ -150,6 +195,11 @@ namespace BefunGen.AST
 		{
 			//--
 		}
+
+		public override string getDebugString()
+		{
+			return string.Format("({0} > {1})", Left.getDebugString(), Right.getDebugString());
+		}
 	}
 
 	class Expression_Lesser : Expression_Compare
@@ -158,6 +208,11 @@ namespace BefunGen.AST
 			: base(l, r)
 		{
 			//--
+		}
+
+		public override string getDebugString()
+		{
+			return string.Format("({0} < {1})", Left.getDebugString(), Right.getDebugString());
 		}
 	}
 
@@ -168,6 +223,11 @@ namespace BefunGen.AST
 		{
 			//--
 		}
+
+		public override string getDebugString()
+		{
+			return string.Format("({0} >= {1})", Left.getDebugString(), Right.getDebugString());
+		}
 	}
 
 	class Expression_LesserEquals : Expression_Compare
@@ -176,6 +236,11 @@ namespace BefunGen.AST
 			: base(l, r)
 		{
 			//--
+		}
+
+		public override string getDebugString()
+		{
+			return string.Format("({0} <= {1})", Left.getDebugString(), Right.getDebugString());
 		}
 	}
 
@@ -190,6 +255,11 @@ namespace BefunGen.AST
 		{
 			//--
 		}
+
+		public override string getDebugString()
+		{
+			return string.Format("(! {1})", Expr.getDebugString());
+		}
 	}
 
 	class Expression_Negate : Expression_Unary
@@ -199,6 +269,11 @@ namespace BefunGen.AST
 		{
 			//--
 		}
+
+		public override string getDebugString()
+		{
+			return string.Format("(- {1})", Expr.getDebugString());
+		}
 	}
 
 	#endregion
@@ -207,9 +282,16 @@ namespace BefunGen.AST
 
 	class Expression_Literal : Expression
 	{
+		public Literal Value;
+
 		public Expression_Literal(Literal l)
 		{
-			//--
+			this.Value = l;
+		}
+
+		public override string getDebugString()
+		{
+			return string.Format("{0}", Value.getDebugString());
 		}
 	}
 
@@ -218,6 +300,11 @@ namespace BefunGen.AST
 		public Expression_Rand()
 		{
 			//--
+		}
+
+		public override string getDebugString()
+		{
+			return "#RAND#";
 		}
 	}
 
@@ -231,6 +318,11 @@ namespace BefunGen.AST
 			this.Type = t;
 			this.Expr = e;
 		}
+
+		public override string getDebugString()
+		{
+			return string.Format("(({0}){1})", Type.getDebugString(), Expr.getDebugString());
+		}
 	}
 
 	class Expression_FunctionCall : Expression
@@ -240,6 +332,11 @@ namespace BefunGen.AST
 		public Expression_FunctionCall(Statement_MethodCall mc)
 		{
 			this.Method = mc;
+		}
+
+		public override string getDebugString()
+		{
+			return Method.getDebugString();
 		}
 	}
 

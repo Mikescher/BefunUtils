@@ -193,6 +193,7 @@
 			// txtAST
 			// 
 			this.txtAST.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.txtAST.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.txtAST.Location = new System.Drawing.Point(3, 3);
 			this.txtAST.Multiline = true;
 			this.txtAST.Name = "txtAST";

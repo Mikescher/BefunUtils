@@ -31,6 +31,11 @@ namespace BefunGen.AST
 		{
 			//--
 		}
+
+		public override string getDebugString()
+		{
+			return "void";
+		}
 	}
 
 	#region Value Types
@@ -41,6 +46,11 @@ namespace BefunGen.AST
 		{
 			//--
 		}
+
+		public override string getDebugString()
+		{
+			return "int";
+		}
 	}
 
 	class BType_Digit : BType_Value
@@ -48,6 +58,11 @@ namespace BefunGen.AST
 		public BType_Digit()
 		{
 			//--
+		}
+
+		public override string getDebugString()
+		{
+			return "digit";
 		}
 	}
 
@@ -57,6 +72,11 @@ namespace BefunGen.AST
 		{
 			//--
 		}
+
+		public override string getDebugString()
+		{
+			return "char";
+		}
 	}
 
 	class BType_Bool : BType_Value
@@ -64,6 +84,11 @@ namespace BefunGen.AST
 		public BType_Bool()
 		{
 			//--
+		}
+
+		public override string getDebugString()
+		{
+			return "bool";
 		}
 	}
 
@@ -79,6 +104,11 @@ namespace BefunGen.AST
 		{
 			this.Size = sz;
 		}
+
+		public override string getDebugString()
+		{
+			return string.Format("int[{0}]", Size);
+		}
 	}
 
 	class BType_CharArr : BType_Array
@@ -88,6 +118,11 @@ namespace BefunGen.AST
 		public BType_CharArr(int sz)
 		{
 			this.Size = sz;
+		}
+
+		public override string getDebugString()
+		{
+			return string.Format("char[{0}]", Size);
 		}
 	}
 
@@ -99,6 +134,11 @@ namespace BefunGen.AST
 		{
 			this.Size = sz;
 		}
+
+		public override string getDebugString()
+		{
+			return string.Format("digit[{0}]", Size);
+		}
 	}
 
 	class BType_BoolArr : BType_Array
@@ -108,6 +148,11 @@ namespace BefunGen.AST
 		public BType_BoolArr(int sz)
 		{
 			this.Size = sz;
+		}
+
+		public override string getDebugString()
+		{
+			return string.Format("bool[{0}]", Size);
 		}
 	}
 

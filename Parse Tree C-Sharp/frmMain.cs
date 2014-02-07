@@ -143,13 +143,13 @@ namespace Parse_Tree_C_Sharp
 				}
 				else
 				{
-					txtAST.Text = "Succesful";
+					txtAST.Text = p.getDebugString().Replace("\n", Environment.NewLine);
 				}
 			}
 			else
 			{
 				txtParseTree.Text = "Grammar not loaded";
-				txtAST.Text       = "Grammar not loaded";
+				txtAST.Text = "Grammar not loaded";
 			}
 		}
 

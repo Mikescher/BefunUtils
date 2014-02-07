@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace BefunGen.AST
 {
@@ -26,6 +27,16 @@ namespace BefunGen.AST
 			this.Variables = v;
 			this.Body = b;
 		}
+
+		public override string getDebugString()
+		{
+			return string.Format("#Method ({0}:{1})\n[\n#Parameter:\n{2}\n#Variables:\n{3}\n#Body:\n{4}\n]",
+				Identifier,
+				ResultType.getDebugString(),
+				indent(getDebugStringForList(Parameter)),
+				indent(getDebugStringForList(Variables)),
+				indent(Body.getDebugString()));
+		}
 	}
 
 	class Method_Header : ASTObject // TEMPORARY -- NOT IN RESULTING AST
@@ -40,6 +51,11 @@ namespace BefunGen.AST
 			this.Identifier = id;
 			this.Parameter = p;
 		}
+
+		public override string getDebugString()
+		{
+			throw new ArgumentException();
+		}
 	}
 
 	class Method_Body : ASTObject // TEMPORARY -- NOT IN RESULTING AST
@@ -51,6 +67,11 @@ namespace BefunGen.AST
 		{
 			this.Variables = v;
 			this.Body = b;
+		}
+
+		public override string getDebugString()
+		{
+			throw new ArgumentException();
 		}
 	}
 }

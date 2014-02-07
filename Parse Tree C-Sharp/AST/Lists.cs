@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace BefunGen.AST
 {
@@ -35,6 +36,11 @@ namespace BefunGen.AST
 			List.Add(e);
 			return this;
 		}
+
+		public override string getDebugString()
+		{
+			throw new ArgumentException();
+		}
 	}
 
 	class List_Statements : ASTList
@@ -55,6 +61,11 @@ namespace BefunGen.AST
 		{
 			List.Add(s);
 			return this;
+		}
+
+		public override string getDebugString()
+		{
+			throw new ArgumentException();
 		}
 	}
 
@@ -77,6 +88,11 @@ namespace BefunGen.AST
 			List.Add(d);
 			return this;
 		}
+
+		public override string getDebugString()
+		{
+			throw new ArgumentException();
+		}
 	}
 
 	class List_Methods : ASTList
@@ -97,6 +113,11 @@ namespace BefunGen.AST
 		{
 			List.Add(d);
 			return this;
+		}
+
+		public override string getDebugString()
+		{
+			throw new ArgumentException();
 		}
 	}
 
@@ -123,6 +144,11 @@ namespace BefunGen.AST
 			List.Add(e);
 			return this;
 		}
+
+		public override string getDebugString()
+		{
+			throw new ArgumentException();
+		}
 	}
 
 	class List_LiteralInts : ASTList
@@ -143,6 +169,11 @@ namespace BefunGen.AST
 		{
 			List.Add(e);
 			return this;
+		}
+
+		public override string getDebugString()
+		{
+			throw new ArgumentException();
 		}
 	}
 
@@ -165,6 +196,11 @@ namespace BefunGen.AST
 			List.Add(e);
 			return this;
 		}
+
+		public override string getDebugString()
+		{
+			throw new ArgumentException();
+		}
 	}
 
 	class List_LiteralBools : ASTList
@@ -185,6 +221,11 @@ namespace BefunGen.AST
 		{
 			List.Add(e);
 			return this;
+		}
+
+		public override string getDebugString()
+		{
+			throw new ArgumentException();
 		}
 	}
 

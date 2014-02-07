@@ -28,6 +28,11 @@ namespace BefunGen.AST
 			this.Identifier = id;
 			this.Initial = v;
 		}
+
+		public override string getDebugString()
+		{
+			return string.Format("{0} {1} ::= {2}", Type.getDebugString(), Identifier, Initial == null ? "NULL" : Initial.getDebugString());
+		}
 	}
 
 	class VarDeclaration_Array : VarDeclaration
@@ -48,6 +53,11 @@ namespace BefunGen.AST
 			this.Type = t;
 			this.Identifier = id;
 			this.Initial = v;
+		}
+
+		public override string getDebugString()
+		{
+			return string.Format("{0} {1} ::= {2}", Type.getDebugString(), Identifier, Initial == null ? "NULL" : Initial.getDebugString());
 		}
 	}
 }
