@@ -1,16 +1,16 @@
-"Name"    = 'TextFunge'
-"Author"  = 'Mikescher'
-"Version" = '2.0'
-"About"   = 'Language to define Benuge-93 programs procedural'
+"Name"                  = 'TextFunge'
+"Author"                = 'Mikescher'
+"Version"               = '2.0'
+"About"                 = 'Language to define Benuge-93 programs procedural'
 
-"Case Sensitive" = False
-"Start Symbol"   = <Program>
+"Case Sensitive"        = False
+"Start Symbol"          = <Program>
 
 !###############################################################################
 
-Comment Start = '/*'
-Comment End   = '*/'
-Comment Line  = '//'
+Comment Start          = '/*'
+Comment End            = '*/'
+Comment Line           = '//'
 
 !###############################################################################
 ! SETS (FOR SCANNER)
@@ -24,22 +24,22 @@ Comment Line  = '//'
 {String Ch}            = {Printable} - ["]
 {Char Ch}              = {Printable} - ['']
 
-!###############################################################################
-! TERMINALS (SCANNER)
-!###############################################################################
+!######################
+! TERMINALS (SCANNER) !
+!######################
 
 StringLiteral          = '"'( {String Ch} | '\'{Printable} )* '"'
 CharLiteral            = '' ( {Char Ch} | '\'{Printable} )''
 
 Identifier             = {UnderscoreLetter}{AlphaNumeric}*
 
-DigitLiteral           = {Digit}
-DecLiteral             = [123456789]{Digit}+
+DigitLiteral           = '#'{Digit}
+DecLiteral             = [0123456789]{Digit}*
 HexLiteral             = 0x{Hex Digit}+
 
-!###############################################################################
-! PRODUCTIONS (PARSER)
-!###############################################################################
+!#######################
+! PRODUCTIONS (PARSER) !
+!#######################
 
 
 <Program>              ::= <Header> <MainStatements> <MethodList> <Footer>
@@ -50,11 +50,7 @@ HexLiteral             = 0x{Hex Digit}+
 <MethodList>           ::= <Method> <MethodList>
                        |
 
-
-<MainStatements>       ::= <VarDeclBody> <MethodBody>
-                       |   <MethodBody>
-                       |
-
+<MainStatements>       ::= <MethodBody>
 
 !############
 !   METHOD  !
@@ -90,8 +86,10 @@ HexLiteral             = 0x{Hex Digit}+
 
 
 <Statement>            ::= <Stmt_Quit> ';'
+                       |   <Stmt_Return> ';'
                        |   <Stmt_Out> ';'
                        |   <Stmt_In> ';'
+                       |   <Stmt_Inc> ';'
                        |   <Stmt_Assignment> ';'
                        |   'begin' <StatementList> 'end'
                        |   <Stmt_If>
@@ -103,13 +101,19 @@ HexLiteral             = 0x{Hex Digit}+
 <StatementList>        ::= <Statement> <StatementList>
                        |
 
+<Stmt_Inc>             ::= Identifier '++'
+                       |   Identifier '--'
+
 <Stmt_Quit>            ::= 'quit' | 'stop' | 'close'
 
 <Stmt_Out>             ::= 'out' <Expression>
 
-<Stmt_In>              ::= 'in' Identifier
+<Stmt_In>              ::= 'in' <ValuePointer>
 
-<Stmt_Assignment>      ::= Identifier ':=' <Expression>
+<Stmt_Assignment>      ::= <ValuePointer> '=' <Expression>
+
+<Stmt_Return>          ::= 'return' <Expression>
+                       |   'return'
 
 
 !#################
@@ -117,8 +121,8 @@ HexLiteral             = 0x{Hex Digit}+
 !#################
 
 
-<Stmt_If>              ::= 'if' '(' <Expression> ')' 'then' <Statement>
-                       |   'if' '(' <Expression> ')' 'then' <Statement> 'else' <Statement>
+<Stmt_If>              ::= 'if' '(' <Expression> ')' 'then' <Statement> 'end'
+                       |   'if' '(' <Expression> ')' 'then' <Statement> 'else' <Statement> 'end'
 
 <Stmt_While>           ::= 'while' '(' <Expression> ')' 'do' <Statement>
 
@@ -126,7 +130,7 @@ HexLiteral             = 0x{Hex Digit}+
 
 <Stmt_Goto>            ::= 'goto' Identifier
 
-<Stmt_Label>        ::= Identifier ':'
+<Stmt_Label>           ::= Identifier ':'
 
 !############
 !   TYPES   !
@@ -180,17 +184,13 @@ HexLiteral             = 0x{Hex Digit}+
 
 
 <Literal_IntArr>       ::= '{' <Literal_Int_List> '}'
-                       |   '{' '}'
                    
 <Literal_String>       ::= '{' <Literal_Char_List> '}'
                        |   StringLiteral
-                       |   '{' '}'
                    
 <Literal_DigitArr>     ::= '{' <Literal_Digit_List> '}'
-                       |   '{' '}'
                    
 <Literal_BoolArr>      ::= '{' <Literal_Bool_List> '}'
-                       |   '{' '}'
 
 
 <Literal_Int_List>     ::= <Literal_Int_List> ',' <Literal_Int>
@@ -224,18 +224,29 @@ HexLiteral             = 0x{Hex Digit}+
                    
 <Exp Add>              ::= <Exp Add>  '+'  <Exp Mult>
                        |   <Exp Add>  '-'  <Exp Mult>
-                       |   <Exp Unary>
+                       |   <Exp Mult>
 
-<Exp Mult>             ::= <Exp Add>  '*'  <Exp Unary>
-                       |   <Exp Add>  '/'  <Exp Unary>
-                       |   <Exp Add>  '%'  <Exp Unary>
+<Exp Mult>             ::= <Exp Mult> '*'  <Exp Unary>
+                       |   <Exp Mult> '/'  <Exp Unary>
+                       |   <Exp Mult> '%'  <Exp Unary>
                        |   <Exp Unary>
                    
 <Exp Unary>            ::= '!' <Value>
                        |   '-' <Value>
+                       |   '(' <Type> ')' <Exp Unary>
                        |   <Value>
 
 
-<Value>                ::= <Literal>
+<Value>                ::= <Value_Literal>
                        |   'rand'
+                       |   <ValuePointer>
+                       |   Identifier '(' <ExpressionList> ')'
+                       |   Identifier '(' ')'
                        |   '(' <Expression> ')'
+                       
+<ExpressionList>       ::= <ExpressionList> ',' <Expression>
+                       |  <Expression>
+
+<ValuePointer>         ::= Identifier
+                       |   Identifier '[' <Expression> ']'
+
