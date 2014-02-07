@@ -74,6 +74,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="linenum_rtf.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="MyParser.cs" />
     <Compile Include="frmMain.cs">
       <SubType>Form</SubType>

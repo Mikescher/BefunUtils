@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Drawing;
 using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
 
@@ -9,6 +12,8 @@ namespace Parse_Tree_C_Sharp
     {
         MyParserClass MyParser = new MyParserClass();
 
+		private bool loaded = false;
+
         public frmMain()
         {
             InitializeComponent();
@@ -16,28 +21,29 @@ namespace Parse_Tree_C_Sharp
 
         private void btnLoad_Click(object sender, EventArgs e)
         {
-            //This procedure can be called to load the parse tables. The class can
-            //read tables using a BinaryReader.
-            try
-            {
-                if (MyParser.Setup(txtTableFile.Text))
-                {
-                    //Change button enable/disable for the user
-                    btnLoad.Enabled = false;
-                    btnParse.Enabled = true;
-                }
-                else
-                {
-                    MessageBox.Show("CGT failed to load");
-                }
-            }
-            catch (GOLD.ParserException ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-
-            doParse();
+			doLoad();
         }
+
+		private void doLoad()
+		{
+			try
+			{
+				if (MyParser.Setup(txtTableFile.Text))
+				{
+					loaded = true;
+				}
+				else
+				{
+					txtParseTree.Text = MyParser.FailMessage + Environment.NewLine + "CGT failed to load";
+				}
+			}
+			catch (GOLD.ParserException ex)
+			{
+				MessageBox.Show(ex.Message);
+			}
+
+			doParse();
+		}
 
         private void btnParse_Click(object sender, EventArgs e)
         {
@@ -47,9 +53,28 @@ namespace Parse_Tree_C_Sharp
         private void frmMain_Load(object sender, EventArgs e)
         {
             btnLoad.Enabled = true;
-            btnParse.Enabled = false;
 
-            txtTableFile.Text = @"E:\Eigene Dateien\Dropbox\Eigene EDV\Visual Studio\Projects\BefunGen\TextFunge\TextFunge.egt";
+			String path_egt = Application.StartupPath;
+			path_egt = path_egt.Substring(0, path_egt.LastIndexOf("BefunGen"));
+			path_egt = Path.Combine(path_egt, "BefunGen");
+			path_egt = Path.Combine(path_egt, "TextFunge");
+			path_egt = Path.Combine(path_egt, "TextFunge.egt");
+
+			txtTableFile.Text = path_egt;
+
+			if (File.Exists(path_egt))
+				doLoad();
+
+			//#########
+
+			String path_tf = Application.StartupPath;
+			path_tf = path_tf.Substring(0, path_tf.LastIndexOf("BefunGen"));
+			path_tf = Path.Combine(path_tf, "BefunGen");
+			path_tf = Path.Combine(path_tf, "TextFunge");
+			path_tf = Path.Combine(path_tf, "example_00.tf");
+
+			if (File.Exists(path_tf))
+				txtSource.Text = File.ReadAllText(path_tf);
         }
 
         private void DrawReductionTree(GOLD.Reduction Root)
@@ -104,23 +129,33 @@ namespace Parse_Tree_C_Sharp
 
         private void doParse()
         {
-            if (!btnParse.Enabled)
-                return;
-
-            btnParse.Enabled = false;
-
-            if (MyParser.Parse(new StringReader(txtSource.Text)))
-            {
-                DrawReductionTree(MyParser.Root);
-            }
-            else
-            {
-                txtParseTree.Text = MyParser.FailMessage;
-            }
-
-            btnParse.Enabled = true;
+			if (loaded)
+			{
+				if (MyParser.Parse(new StringReader(txtSource.Text)))
+				{
+					DrawReductionTree(MyParser.Root);
+				}
+				else
+				{
+					txtParseTree.Text = MyParser.FailMessage;
+				}
+			}
+			else
+			{
+				txtParseTree.Text = "Grammar not loaded";
+			}
         }
 
+		private void txtSource_KeyPress(object sender, KeyPressEventArgs e)
+		{
+			if (e.KeyChar == (char)Keys.Tab)
+			{
+				e.Handled = true;
+				txtSource.SelectedText = new string(' ', 2);
+			}
+
+			doParse();
+		}
 
     }
 } //Form
