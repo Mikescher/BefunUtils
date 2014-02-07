@@ -66,12 +66,13 @@ class MyParserClass
                     break;
 
                 case GOLD.ParseMessage.Reduction:
-                    //For this project, we will let the parser build a tree of Reduction objects
-                    //parser.CurrentReduction = CreateNewObject(parser.CurrentReduction);
+					GOLD.Reduction r = (GOLD.Reduction)parser.CurrentReduction;
+					r.Parent.TableIndex
                     break;
 
                 case GOLD.ParseMessage.Accept:
                     //Accepted!
+					parser.CurrentReduction.
                     Root = (GOLD.Reduction) parser.CurrentReduction;    //The root node!                                  
                     done = true;
                     accepted = true;
