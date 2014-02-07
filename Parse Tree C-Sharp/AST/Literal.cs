@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace BefunGen.AST
 {
@@ -13,23 +11,29 @@ namespace BefunGen.AST
 		}
 	}
 
-	abstract class Value_Literal : Literal
+	#region Parents
+
+	abstract class Literal_Value : Literal
 	{
-		public Value_Literal()
+		public Literal_Value()
 		{
 			//--
 		}
 	}
 
-	abstract class Array_Literal : Literal
+	abstract class Literal_Array : Literal
 	{
-		public Array_Literal()
+		public Literal_Array()
 		{
 			//--
 		}
 	}
 
-	class Literal_Int : Value_Literal
+	#endregion
+
+	#region Value Literals
+
+	class Literal_Int : Literal_Value
 	{
 		public int Value;
 
@@ -39,7 +43,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	class Literal_Char : Value_Literal
+	class Literal_Char : Literal_Value
 	{
 		public char Value;
 
@@ -49,7 +53,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	class Literal_Bool : Value_Literal
+	class Literal_Bool : Literal_Value
 	{
 		public bool Value;
 
@@ -59,7 +63,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	class Literal_Digit : Value_Literal
+	class Literal_Digit : Literal_Value
 	{
 		public byte Value;
 
@@ -69,7 +73,11 @@ namespace BefunGen.AST
 		}
 	}
 
-	class Literal_IntArr : Array_Literal
+	#endregion
+
+	#region Array Literals
+
+	class Literal_IntArr : Literal_Array
 	{
 		public List<int> Value = new List<int>();
 
@@ -79,7 +87,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	class Literal_CharArr : Array_Literal
+	class Literal_CharArr : Literal_Array
 	{
 		public List<char> Value = new List<char>();
 
@@ -94,7 +102,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	class Literal_BoolArr : Array_Literal
+	class Literal_BoolArr : Literal_Array
 	{
 		public List<bool> Value = new List<bool>();
 
@@ -104,7 +112,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	class Literal_DigitArr : Array_Literal
+	class Literal_DigitArr : Literal_Array
 	{
 		public List<byte> Value = new List<byte>();
 
@@ -113,4 +121,6 @@ namespace BefunGen.AST
 			this.Value = v.ToList();
 		}
 	}
+
+	#endregion
 }

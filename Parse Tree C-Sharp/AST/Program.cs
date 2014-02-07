@@ -1,15 +1,36 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace BefunGen.AST
 {
 	class Program : ASTObject
 	{
-		public Program()
-		{
+		public string Identifier;
+		public Statement MainStatement;
+		public List<Method> MethodList;
 
+		public Program(string id, Statement m, List<Method> mlst)
+		{
+			this.Identifier = id;
+			this.MainStatement = m;
+			this.MethodList = mlst.ToList();
+		}
+	}
+
+	class Program_Footer : ASTObject // TEMPORARY -- NOT IN RESULTING AST
+	{
+		public Program_Footer()
+		{
+		}
+	}
+
+	class Program_Header : ASTObject // TEMPORARY -- NOT IN RESULTING AST
+	{
+		public string Identifier;
+
+		public Program_Header(string id)
+		{
+			this.Identifier = id;
 		}
 	}
 }

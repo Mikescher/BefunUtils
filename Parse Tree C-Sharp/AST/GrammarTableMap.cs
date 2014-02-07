@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace BefunGen.AST
 {
@@ -145,7 +144,7 @@ namespace BefunGen.AST
 			@Program = 0,                              // <Program> ::= <Header> <MainStatements> <MethodList> <Footer>
 			@Header_Program_Identifier = 1,            // <Header> ::= program Identifier
 			@Footer_End = 2,                           // <Footer> ::= end
-			@Methodlist = 3,                           // <MethodList> ::= <Method> <MethodList>
+			@Methodlist = 3,                           // <MethodList> ::= <MethodList> <Method>
 			@Methodlist2 = 4,                          // <MethodList> ::= 
 			@Mainstatements = 5,                       // <MainStatements> ::= <MethodBody>
 			@Method = 6,                               // <Method> ::= <MethodHeader> <MethodBody>
@@ -174,10 +173,10 @@ namespace BefunGen.AST
 			@Statement3 = 29,                          // <Statement> ::= <Stmt_Repeat>
 			@Statement4 = 30,                          // <Statement> ::= <Stmt_Goto>
 			@Statement5 = 31,                          // <Statement> ::= <Stmt_Label>
-			@Statementlist = 32,                       // <StatementList> ::= <Statement> <StatementList>
+			@Statementlist = 32,                       // <StatementList> ::= <StatementList> <Statement>
 			@Statementlist2 = 33,                      // <StatementList> ::= 
-			@Stmt_inc_Identifier_Plusplus = 34,        // <Stmt_Inc> ::= Identifier '++'
-			@Stmt_inc_Identifier_Minusminus = 35,      // <Stmt_Inc> ::= Identifier '--'
+			@Stmt_inc_Identifier_Plusplus = 34,        // <Stmt_Inc> ::= <ValuePointer> '++'
+			@Stmt_inc_Identifier_Minusminus = 35,      // <Stmt_Inc> ::= <ValuePointer> '--'
 			@Stmt_quit_Quit = 36,                      // <Stmt_Quit> ::= quit
 			@Stmt_quit_Stop = 37,                      // <Stmt_Quit> ::= stop
 			@Stmt_quit_Close = 38,                     // <Stmt_Quit> ::= close
@@ -278,290 +277,361 @@ namespace BefunGen.AST
 		{
 			ASTObject result = null;
 
-			switch ((ProductionIndex)r.Parent.TableIndex())
+			switch ((ProductionIndex)r.Parent.TableIndex()) // Regex for empty cases:     ^\s+//[^\r]+\r\n\s+break;
 			{
 				case ProductionIndex.Program:
 					// <Program> ::= <Header> <MainStatements> <MethodList> <Footer>
+					result = new Program(((Program_Header)r.get_Data(0)).Identifier, (Statement)r.get_Data(1), ((List_Methods)r.get_Data(2)).List);
 					break;
 
 				case ProductionIndex.Header_Program_Identifier:
 					// <Header> ::= program Identifier
+					result = new Program_Header(getStrData(1, r));
 					break;
 
 				case ProductionIndex.Footer_End:
 					// <Footer> ::= end
+					result = new Program_Footer();
 					break;
 
 				case ProductionIndex.Methodlist:
-					// <MethodList> ::= <Method> <MethodList>
+					// <MethodList> ::= <MethodList> <Method>
+					result = ((List_Methods)r.get_Data(0)).Append((Method)r.get_Data(1));
 					break;
 
 				case ProductionIndex.Methodlist2:
 					// <MethodList> ::= 
+					result = new List_Methods();
 					break;
 
 				case ProductionIndex.Mainstatements:
 					// <MainStatements> ::= <MethodBody>
+					result = new Method(new Method_Header(new BType_Void(), "main", new List<VarDeclaration>()), (Method_Body)r.get_Data(0));
 					break;
 
 				case ProductionIndex.Method:
 					// <Method> ::= <MethodHeader> <MethodBody>
+					result = new Method((Method_Header)r.get_Data(0), (Method_Body)r.get_Data(1));
 					break;
 
 				case ProductionIndex.Methodbody:
 					// <MethodBody> ::= <VarDeclBody> <Statement>
+					result = new Method_Body(((List_VarDeclarations)r.get_Data(0)).List, (Statement)r.get_Data(1));
 					break;
 
 				case ProductionIndex.Methodheader_Identifier_Lparen_Rparen:
 					// <MethodHeader> ::= <Type> Identifier '(' <ParamDecl> ')'
+					result = new Method_Header((BType)r.get_Data(0), getStrData(1, r), ((List_VarDeclarations)r.get_Data(3)).List);
 					break;
 
 				case ProductionIndex.Vardeclbody_Var:
 					// <VarDeclBody> ::= var <VarList>
+					result = (List_VarDeclarations)r.get_Data(1);
 					break;
 
 				case ProductionIndex.Vardeclbody:
 					// <VarDeclBody> ::= 
+					result = new List_VarDeclarations();
 					break;
 
 				case ProductionIndex.Paramdecl:
 					// <ParamDecl> ::= <ParamList>
+					result = (List_VarDeclarations)r.get_Data(0);
 					break;
 
 				case ProductionIndex.Paramdecl2:
 					// <ParamDecl> ::= 
+					result = new List_VarDeclarations();
 					break;
 
 				case ProductionIndex.Paramlist_Comma:
 					// <ParamList> ::= <ParamList> ',' <Param>
+					result = ((List_VarDeclarations)r.get_Data(0)).Append((VarDeclaration)r.get_Data(2));
 					break;
 
 				case ProductionIndex.Paramlist:
 					// <ParamList> ::= <Param>
+					result = new List_VarDeclarations((VarDeclaration)r.get_Data(0));
 					break;
 
 				case ProductionIndex.Param_Identifier:
 					// <Param> ::= <Type> Identifier
+					result = createASTDeclarationFromReduction(r, false);
 					break;
 
 				case ProductionIndex.Varlist_Semi:
 					// <VarList> ::= <VarList> <VarDecl> ';'
+					result = ((List_VarDeclarations)r.get_Data(0)).Append((VarDeclaration)r.get_Data(1));
 					break;
 
 				case ProductionIndex.Varlist_Semi2:
 					// <VarList> ::= <VarDecl> ';'
+					result = new List_VarDeclarations((VarDeclaration)r.get_Data(0));
 					break;
 
 				case ProductionIndex.Vardecl_Identifier:
 					// <VarDecl> ::= <Type> Identifier
+					result = createASTDeclarationFromReduction(r, false);
 					break;
 
 				case ProductionIndex.Vardecl_Identifier_Coloneq:
 					// <VarDecl> ::= <Type> Identifier ':=' <Literal>
+					result = createASTDeclarationFromReduction(r, true);
 					break;
 
 				case ProductionIndex.Statement_Semi:
 					// <Statement> ::= <Stmt_Quit> ';'
+					result = (Statement)r.get_Data(0);
 					break;
 
 				case ProductionIndex.Statement_Semi2:
 					// <Statement> ::= <Stmt_Return> ';'
+					result = (Statement)r.get_Data(0);
 					break;
 
 				case ProductionIndex.Statement_Semi3:
 					// <Statement> ::= <Stmt_Out> ';'
+					result = (Statement)r.get_Data(0);
 					break;
 
 				case ProductionIndex.Statement_Semi4:
 					// <Statement> ::= <Stmt_In> ';'
+					result = (Statement)r.get_Data(0);
 					break;
 
 				case ProductionIndex.Statement_Semi5:
 					// <Statement> ::= <Stmt_Inc> ';'
+					result = (Statement)r.get_Data(0);
 					break;
 
 				case ProductionIndex.Statement_Semi6:
 					// <Statement> ::= <Stmt_Assignment> ';'
+					result = (Statement)r.get_Data(0);
 					break;
 
 				case ProductionIndex.Statement_Begin_End:
 					// <Statement> ::= begin <StatementList> end
+					result = new Statement_StatementList(((List_Statements)r.get_Data(1)).List);
 					break;
 
 				case ProductionIndex.Statement:
 					// <Statement> ::= <Stmt_If>
+					result = (Statement)r.get_Data(0);
 					break;
 
 				case ProductionIndex.Statement2:
 					// <Statement> ::= <Stmt_While>
+					result = (Statement)r.get_Data(0);
 					break;
 
 				case ProductionIndex.Statement3:
 					// <Statement> ::= <Stmt_Repeat>
+					result = (Statement)r.get_Data(0);
 					break;
 
 				case ProductionIndex.Statement4:
 					// <Statement> ::= <Stmt_Goto>
+					result = (Statement)r.get_Data(0);
 					break;
 
 				case ProductionIndex.Statement5:
 					// <Statement> ::= <Stmt_Label>
+					result = (Statement)r.get_Data(0);
 					break;
 
 				case ProductionIndex.Statementlist:
-					// <StatementList> ::= <Statement> <StatementList>
+					// <StatementList> ::= <StatementList> <Statement>
+					result = ((List_Statements)r.get_Data(0)).Append((Statement)r.get_Data(1));
 					break;
 
 				case ProductionIndex.Statementlist2:
 					// <StatementList> ::= 
+					result = new List_Statements();
 					break;
 
 				case ProductionIndex.Stmt_inc_Identifier_Plusplus:
-					// <Stmt_Inc> ::= Identifier '++'
+					// <Stmt_Inc> ::= <ValuePointer> '++'
+					result = new Statement_Inc((Expression_ValuePointer)r.get_Data(0));
 					break;
 
 				case ProductionIndex.Stmt_inc_Identifier_Minusminus:
-					// <Stmt_Inc> ::= Identifier '--'
+					// <Stmt_Inc> ::= <ValuePointer> '--'
+					result = new Statement_Dec((Expression_ValuePointer)r.get_Data(0));
 					break;
 
 				case ProductionIndex.Stmt_quit_Quit:
 					// <Stmt_Quit> ::= quit
+					result = new Statement_Quit();
 					break;
 
 				case ProductionIndex.Stmt_quit_Stop:
 					// <Stmt_Quit> ::= stop
+					result = new Statement_Quit();
 					break;
 
 				case ProductionIndex.Stmt_quit_Close:
 					// <Stmt_Quit> ::= close
+					result = new Statement_Quit();
 					break;
 
 				case ProductionIndex.Stmt_out_Out:
 					// <Stmt_Out> ::= out <Expression>
+					result = new Statement_Out((Expression)r.get_Data(1));
 					break;
 
 				case ProductionIndex.Stmt_in_In:
 					// <Stmt_In> ::= in <ValuePointer>
+					result = new Statement_In((Expression_ValuePointer)r.get_Data(1));
 					break;
 
 				case ProductionIndex.Stmt_assignment_Eq:
 					// <Stmt_Assignment> ::= <ValuePointer> '=' <Expression>
+					result = new Statement_Assignment((Expression_ValuePointer)r.get_Data(0), (Expression)r.get_Data(2));
 					break;
 
 				case ProductionIndex.Stmt_return_Return:
 					// <Stmt_Return> ::= return <Expression>
+					result = new Statement_Return((Expression)r.get_Data(1));
 					break;
 
 				case ProductionIndex.Stmt_return_Return2:
 					// <Stmt_Return> ::= return
+					result = new Statement_Return();
 					break;
 
 				case ProductionIndex.Stmt_if_If_Lparen_Rparen_Then_End:
 					// <Stmt_If> ::= if '(' <Expression> ')' then <Statement> end
+					result = new Statement_If((Expression)r.get_Data(2), (Statement)r.get_Data(5));
 					break;
 
 				case ProductionIndex.Stmt_if_If_Lparen_Rparen_Then_Else_End:
 					// <Stmt_If> ::= if '(' <Expression> ')' then <Statement> else <Statement> end
+					result = new Statement_If((Expression)r.get_Data(2), (Statement)r.get_Data(5), (Statement)r.get_Data(7));
 					break;
 
 				case ProductionIndex.Stmt_while_While_Lparen_Rparen_Do:
 					// <Stmt_While> ::= while '(' <Expression> ')' do <Statement>
+					result = new Statement_While((Expression)r.get_Data(2), (Statement)r.get_Data(5));
 					break;
 
 				case ProductionIndex.Stmt_repeat_Repeat_Until_Lparen_Rparen:
 					// <Stmt_Repeat> ::= repeat <Statement> until '(' <Expression> ')'
+					result = new Statement_RepeatUntil((Expression)r.get_Data(1), (Statement)r.get_Data(4));
 					break;
 
 				case ProductionIndex.Stmt_goto_Goto_Identifier:
 					// <Stmt_Goto> ::= goto Identifier
+					result = new Statement_Goto(getStrData(1, r));
 					break;
 
 				case ProductionIndex.Stmt_label_Identifier_Colon:
 					// <Stmt_Label> ::= Identifier ':'
+					result = new Statement_Label(getStrData(r));
 					break;
 
 				case ProductionIndex.Type:
 					// <Type> ::= <Type_Int>
+					result = (BType)r.get_Data(0);
 					break;
 
 				case ProductionIndex.Type2:
 					// <Type> ::= <Type_Digit>
+					result = (BType)r.get_Data(0);
 					break;
 
 				case ProductionIndex.Type3:
 					// <Type> ::= <Type_Char>
+					result = (BType)r.get_Data(0);
 					break;
 
 				case ProductionIndex.Type4:
 					// <Type> ::= <Type_Bool>
+					result = (BType)r.get_Data(0);
 					break;
 
 				case ProductionIndex.Type5:
 					// <Type> ::= <Type_Void>
+					result = (BType)r.get_Data(0);
 					break;
 
 				case ProductionIndex.Type6:
 					// <Type> ::= <Type_IntArr>
+					result = (BType)r.get_Data(0);
 					break;
 
 				case ProductionIndex.Type7:
 					// <Type> ::= <Type_String>
+					result = (BType)r.get_Data(0);
 					break;
 
 				case ProductionIndex.Type8:
 					// <Type> ::= <Type_DigitArr>
+					result = (BType)r.get_Data(0);
 					break;
 
 				case ProductionIndex.Type9:
 					// <Type> ::= <Type_BoolArr>
+					result = (BType)r.get_Data(0);
 					break;
 
 				case ProductionIndex.Type_int_Int:
 					// <Type_Int> ::= int
+					result = new BType_Int();
 					break;
 
 				case ProductionIndex.Type_int_Integer:
 					// <Type_Int> ::= integer
+					result = new BType_Int();
 					break;
 
 				case ProductionIndex.Type_char_Char:
 					// <Type_Char> ::= char
+					result = new BType_Char();
 					break;
 
 				case ProductionIndex.Type_char_Character:
 					// <Type_Char> ::= Character
+					result = new BType_Char();
 					break;
 
 				case ProductionIndex.Type_digit_Digit:
 					// <Type_Digit> ::= digit
+					result = new BType_Digit();
 					break;
 
 				case ProductionIndex.Type_bool_Bool:
 					// <Type_Bool> ::= bool
+					result = new BType_Bool();
 					break;
 
 				case ProductionIndex.Type_bool_Boolean:
 					// <Type_Bool> ::= boolean
+					result = new BType_Bool();
 					break;
 
 				case ProductionIndex.Type_void_Void:
 					// <Type_Void> ::= void
+					result = new BType_Void();
 					break;
 
 				case ProductionIndex.Type_intarr_Lbracket_Rbracket:
 					// <Type_IntArr> ::= <Type_Int> '[' <Literal_Int> ']'
+					result = new BType_IntArr(((Literal_Int)r.get_Data(2)).Value);
 					break;
 
 				case ProductionIndex.Type_string_Lbracket_Rbracket:
 					// <Type_String> ::= <Type_Char> '[' <Literal_Int> ']'
+					result = new BType_CharArr(((Literal_Int)r.get_Data(2)).Value);
 					break;
 
 				case ProductionIndex.Type_digitarr_Lbracket_Rbracket:
 					// <Type_DigitArr> ::= <Type_Digit> '[' <Literal_Int> ']'
+					result = new BType_DigitArr(((Literal_Int)r.get_Data(2)).Value);
 					break;
 
 				case ProductionIndex.Type_boolarr_Lbracket_Rbracket:
 					// <Type_BoolArr> ::= <Type_Bool> '[' <Literal_Int> ']'
+					result = new BType_BoolArr(((Literal_Int)r.get_Data(2)).Value);
 					break;
 
 				case ProductionIndex.Literal:
@@ -576,41 +646,42 @@ namespace BefunGen.AST
 
 				case ProductionIndex.Array_literal:
 					// <Array_Literal> ::= <Literal_IntArr>
-					result = (Array_Literal)r.get_Data(0);
+					result = (Literal_Array)r.get_Data(0);
 					break;
 
 				case ProductionIndex.Array_literal2:
 					// <Array_Literal> ::= <Literal_String>
-					result = (Array_Literal)r.get_Data(0);
+					result = (Literal_Array)r.get_Data(0);
 					break;
 
 				case ProductionIndex.Array_literal3:
 					// <Array_Literal> ::= <Literal_DigitArr>
-					result = (Array_Literal)r.get_Data(0);
+					result = (Literal_Array)r.get_Data(0);
 					break;
 
 				case ProductionIndex.Array_literal4:
 					// <Array_Literal> ::= <Literal_BoolArr>
-					result = (Array_Literal)r.get_Data(0);
+					result = (Literal_Array)r.get_Data(0);
 					break;
 
 				case ProductionIndex.Value_literal:
 					// <Value_Literal> ::= <Literal_Int>
-					result = (Value_Literal)r.get_Data(0);
+					result = (Literal_Value)r.get_Data(0);
 					break;
 
 				case ProductionIndex.Value_literal2:
 					// <Value_Literal> ::= <Literal_Char>
-					result = (Value_Literal)r.get_Data(0);
+					result = (Literal_Value)r.get_Data(0);
 					break;
 
 				case ProductionIndex.Value_literal3:
 					// <Value_Literal> ::= <Literal_Bool>
-					result =  (Value_Literal)r.get_Data(0);
+					result = (Literal_Value)r.get_Data(0);
 					break;
 
 				case ProductionIndex.Value_literal4:
 					// <Value_Literal> ::= <Literal_Digit>
+					result = (Literal_Value)r.get_Data(0);
 					break;
 
 				case ProductionIndex.Literal_int_Decliteral:
@@ -645,12 +716,12 @@ namespace BefunGen.AST
 
 				case ProductionIndex.Literal_intarr_Lbrace_Rbrace:
 					// <Literal_IntArr> ::= '{' <Literal_Int_List> '}'
-					result = (Literal_IntArr)r.get_Data(1);
+					result = new Literal_IntArr(((List_LiteralInts)r.get_Data(1)).List.Select(p => p.Value).ToList());
 					break;
 
 				case ProductionIndex.Literal_string_Lbrace_Rbrace:
 					// <Literal_String> ::= '{' <Literal_Char_List> '}'
-					result = (Literal_CharArr)r.get_Data(1);
+					result = new Literal_CharArr(((List_LiteralChars)r.get_Data(1)).List.Select(p => p.Value).ToList());
 					break;
 
 				case ProductionIndex.Literal_string_Stringliteral:
@@ -660,185 +731,234 @@ namespace BefunGen.AST
 
 				case ProductionIndex.Literal_digitarr_Lbrace_Rbrace:
 					// <Literal_DigitArr> ::= '{' <Literal_Digit_List> '}'
-					result = (Literal_DigitArr)r.get_Data(1);
+					result = new Literal_DigitArr(((List_LiteralDigits)r.get_Data(1)).List.Select(p => p.Value).ToList());
 					break;
 
 				case ProductionIndex.Literal_boolarr_Lbrace_Rbrace:
 					// <Literal_BoolArr> ::= '{' <Literal_Bool_List> '}'
-					result = (Literal_BoolArr)r.get_Data(1);
+					result = new Literal_BoolArr(((List_LiteralBools)r.get_Data(1)).List.Select(p => p.Value).ToList());
 					break;
 
 				case ProductionIndex.Literal_int_list_Comma:
 					// <Literal_Int_List> ::= <Literal_Int_List> ',' <Literal_Int>
-					Literal_IntArr head_intarr = ((Literal_IntArr)r.get_Data(0));
-					head_intarr.Value.Add(((Literal_Int)r.get_Data(2)).Value);
-					result = head_intarr;
+					result = ((List_LiteralInts)r.get_Data(0)).Append((Literal_Int)r.get_Data(2));
 					break;
 
 				case ProductionIndex.Literal_int_list:
 					// <Literal_Int_List> ::= <Literal_Int>
-					result = new Literal_IntArr(new List<int>() { ((Literal_Int)r.get_Data(0)).Value });
+					result = new List_LiteralInts((Literal_Int)r.get_Data(0));
 					break;
 
 				case ProductionIndex.Literal_char_list_Comma:
 					// <Literal_Char_List> ::= <Literal_Char_List> ',' <Literal_Char>
-					Literal_CharArr head_chararr = ((Literal_CharArr)r.get_Data(0));
-					head_chararr.Value.Add(((Literal_Char)r.get_Data(2)).Value);
-					result = head_chararr;
+					result = ((List_LiteralChars)r.get_Data(0)).Append((Literal_Char)r.get_Data(2));
 					break;
 
 				case ProductionIndex.Literal_char_list:
 					// <Literal_Char_List> ::= <Literal_Char>
-					result = new Literal_CharArr(new List<char>() { ((Literal_Char)r.get_Data(0)).Value });
+					result = new List_LiteralChars((Literal_Char)r.get_Data(0));
 					break;
 
 				case ProductionIndex.Literal_digit_list_Comma:
 					// <Literal_Digit_List> ::= <Literal_Digit_List> ',' <Literal_Digit>
-					Literal_DigitArr head_digarr = ((Literal_DigitArr)r.get_Data(0));
-					head_digarr.Value.Add(((Literal_Digit)r.get_Data(2)).Value);
-					result = head_digarr;
+					result = ((List_LiteralDigits)r.get_Data(0)).Append((Literal_Digit)r.get_Data(2));
 					break;
 
 				case ProductionIndex.Literal_digit_list:
 					// <Literal_Digit_List> ::= <Literal_Digit>
-					result = new Literal_DigitArr(new List<byte>() { ((Literal_Digit)r.get_Data(0)).Value });
+					result = new List_LiteralDigits((Literal_Digit)r.get_Data(0));
 					break;
 
 				case ProductionIndex.Literal_bool_list_Comma:
 					// <Literal_Bool_List> ::= <Literal_Bool_List> ',' <Literal_Bool>
-					Literal_BoolArr head_boolarr = ((Literal_BoolArr)r.get_Data(0));
-					head_boolarr.Value.Add(((Literal_Bool)r.get_Data(2)).Value);
-					result = head_boolarr;
+					result = ((List_LiteralBools)r.get_Data(0)).Append((Literal_Bool)r.get_Data(2));
 					break;
 
 				case ProductionIndex.Literal_bool_list:
 					// <Literal_Bool_List> ::= <Literal_Bool>
-					result = new Literal_BoolArr(new List<bool>() { ((Literal_Bool)r.get_Data(0)).Value });
+					result = new List_LiteralBools((Literal_Bool)r.get_Data(0));
 					break;
 
 				case ProductionIndex.Expression:
 					// <Expression> ::= <Expr Eq>
+					result = (Expression)r.get_Data(0);
 					break;
 
 				case ProductionIndex.Expreq_Eqeq:
 					// <Expr Eq> ::= <Expr Eq> '==' <Exp Comp>
+					result = new Expression_Equals((Expression)r.get_Data(0), (Expression)r.get_Data(2));
 					break;
 
 				case ProductionIndex.Expreq_Exclameq:
 					// <Expr Eq> ::= <Expr Eq> '!=' <Exp Comp>
+					result = new Expression_Unequals((Expression)r.get_Data(0), (Expression)r.get_Data(2));
 					break;
 
 				case ProductionIndex.Expreq:
 					// <Expr Eq> ::= <Exp Comp>
+					result = (Expression)r.get_Data(0);
 					break;
 
 				case ProductionIndex.Expcomp_Lt:
 					// <Exp Comp> ::= <Exp Comp> '<' <Exp Add>
+					result = new Expression_Lesser((Expression)r.get_Data(0), (Expression)r.get_Data(2));
 					break;
 
 				case ProductionIndex.Expcomp_Gt:
 					// <Exp Comp> ::= <Exp Comp> '>' <Exp Add>
+					result = new Expression_Greater((Expression)r.get_Data(0), (Expression)r.get_Data(2));
 					break;
 
 				case ProductionIndex.Expcomp_Lteq:
 					// <Exp Comp> ::= <Exp Comp> '<=' <Exp Add>
+					result = new Expression_LesserEquals((Expression)r.get_Data(0), (Expression)r.get_Data(2));
 					break;
 
 				case ProductionIndex.Expcomp_Gteq:
 					// <Exp Comp> ::= <Exp Comp> '>=' <Exp Add>
+					result = new Expression_GreaterEquals((Expression)r.get_Data(0), (Expression)r.get_Data(2));
 					break;
 
 				case ProductionIndex.Expcomp:
 					// <Exp Comp> ::= <Exp Add>
+					result = (Expression)r.get_Data(0);
 					break;
 
 				case ProductionIndex.Expadd_Plus:
 					// <Exp Add> ::= <Exp Add> '+' <Exp Mult>
+					result = new Expression_Add((Expression)r.get_Data(0), (Expression)r.get_Data(2));
 					break;
 
 				case ProductionIndex.Expadd_Minus:
 					// <Exp Add> ::= <Exp Add> '-' <Exp Mult>
+					result = new Expression_Sub((Expression)r.get_Data(0), (Expression)r.get_Data(2));
 					break;
 
 				case ProductionIndex.Expadd:
 					// <Exp Add> ::= <Exp Mult>
+					result = (Expression)r.get_Data(0);
 					break;
 
 				case ProductionIndex.Expmult_Times:
 					// <Exp Mult> ::= <Exp Mult> '*' <Exp Unary>
+					result = new Expression_Mult((Expression)r.get_Data(0), (Expression)r.get_Data(2));
 					break;
 
 				case ProductionIndex.Expmult_Div:
 					// <Exp Mult> ::= <Exp Mult> '/' <Exp Unary>
+					result = new Expression_Div((Expression)r.get_Data(0), (Expression)r.get_Data(2));
 					break;
 
 				case ProductionIndex.Expmult_Percent:
 					// <Exp Mult> ::= <Exp Mult> '%' <Exp Unary>
+					result = new Expression_Mod((Expression)r.get_Data(0), (Expression)r.get_Data(2));
 					break;
 
 				case ProductionIndex.Expmult:
 					// <Exp Mult> ::= <Exp Unary>
+					result = (Expression)r.get_Data(0);
 					break;
 
 				case ProductionIndex.Expunary_Exclam:
 					// <Exp Unary> ::= '!' <Value>
+					result = new Expression_Not((Expression)r.get_Data(1));
 					break;
 
 				case ProductionIndex.Expunary_Minus:
 					// <Exp Unary> ::= '-' <Value>
+					result = new Expression_Negate((Expression)r.get_Data(1));
 					break;
 
 				case ProductionIndex.Expunary_Lparen_Rparen:
 					// <Exp Unary> ::= '(' <Type> ')' <Exp Unary>
+					result = new Expression_Cast((BType)r.get_Data(1), (Expression)r.get_Data(3));
 					break;
 
 				case ProductionIndex.Expunary:
 					// <Exp Unary> ::= <Value>
+					result = (Expression)r.get_Data(0);
 					break;
 
 				case ProductionIndex.Value:
 					// <Value> ::= <Value_Literal>
+					result = new Expression_Literal((Literal_Value)r.get_Data(0));
 					break;
 
 				case ProductionIndex.Value_Rand:
 					// <Value> ::= rand
+					result = new Expression_Rand();
 					break;
 
 				case ProductionIndex.Value2:
 					// <Value> ::= <ValuePointer>
+					result = (Expression_ValuePointer)r.get_Data(0);
 					break;
 
 				case ProductionIndex.Value_Identifier_Lparen_Rparen:
 					// <Value> ::= Identifier '(' <ExpressionList> ')'
+					result = new Expression_FunctionCall(new Statement_MethodCall(getStrData(r), ((List_Expressions)r.get_Data(2)).List));
 					break;
 
 				case ProductionIndex.Value_Identifier_Lparen_Rparen2:
 					// <Value> ::= Identifier '(' ')'
+					result = new Expression_FunctionCall(new Statement_MethodCall(getStrData(r)));
 					break;
 
 				case ProductionIndex.Value_Lparen_Rparen:
 					// <Value> ::= '(' <Expression> ')'
+					result = (Expression)r.get_Data(1);
 					break;
 
 				case ProductionIndex.Expressionlist_Comma:
 					// <ExpressionList> ::= <ExpressionList> ',' <Expression>
+					result = ((List_Expressions)r.get_Data(0)).Append((Expression)r.get_Data(2));
 					break;
 
 				case ProductionIndex.Expressionlist:
 					// <ExpressionList> ::= <Expression>
+					result = new List_Expressions((Expression)r.get_Data(0));
 					break;
 
 				case ProductionIndex.Valuepointer_Identifier:
 					// <ValuePointer> ::= Identifier
+					result = new Expression_DirectValuePointer(getStrData(r));
 					break;
 
 				case ProductionIndex.Valuepointer_Identifier_Lbracket_Rbracket:
 					// <ValuePointer> ::= Identifier '[' <Expression> ']'
+					result = new Expression_ArrayValuePointer(getStrData(r), (Expression)r.get_Data(2));
 					break;
 
 			}  //switch
 
+			if (result == null)
+			{
+				throw new Exception("Reduction not parsed: " + r.Parent);
+			}
+
 			return result;
+		}
+
+		private static VarDeclaration createASTDeclarationFromReduction(GOLD.Reduction r, bool hasInit)
+		{
+			if (hasInit)
+			{
+				if (r.get_Data(0) is BType_Array)
+					return new VarDeclaration_Array((BType_Array)r.get_Data(0), getStrData(1, r), (Literal_Array)r.get_Data(3));
+				else if (r.get_Data(0) is BType_Value)
+					return new VarDeclaration_Value((BType_Value)r.get_Data(0), getStrData(1, r), (Literal_Value)r.get_Data(3));
+				else
+					return null;
+			}
+			else
+			{
+				if (r.get_Data(0) is BType_Array)
+					return new VarDeclaration_Array((BType_Array)r.get_Data(0), getStrData(1, r));
+				else if (r.get_Data(0) is BType_Value)
+					return new VarDeclaration_Value((BType_Value)r.get_Data(0), getStrData(1, r));
+				else
+					return null;
+			}
 		}
 
 		private static string getStrData(GOLD.Reduction r)

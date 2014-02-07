@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Parse_Tree_C_Sharp</RootNamespace>
     <AssemblyName>Parse Tree C-Sharp</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <StartupObject>
     </StartupObject>
@@ -34,6 +34,7 @@
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <OldToolsVersion>3.5</OldToolsVersion>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -43,6 +44,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -75,6 +77,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AST\ASTObject.cs" />
+    <Compile Include="AST\Method.cs" />
+    <Compile Include="AST\VarDeclaration.cs" />
+    <Compile Include="AST\Lists.cs" />
+    <Compile Include="AST\Type.cs" />
+    <Compile Include="AST\Expression.cs" />
+    <Compile Include="AST\Statement.cs" />
     <Compile Include="AST\GOLDParser.cs" />
     <Compile Include="AST\GrammarTableMap.cs" />
     <Compile Include="AST\Literal.cs" />
@@ -107,6 +115,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <None Include="app.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

@@ -47,7 +47,7 @@ HexLiteral             = 0x{Hex Digit}+
 <Header>               ::= 'program' Identifier
 <Footer>               ::= 'end'
 
-<MethodList>           ::= <Method> <MethodList>
+<MethodList>           ::= <MethodList> <Method>
                        |
 
 <MainStatements>       ::= <MethodBody>
@@ -98,11 +98,11 @@ HexLiteral             = 0x{Hex Digit}+
                        |   <Stmt_Goto>
                        |   <Stmt_Label>
 
-<StatementList>        ::= <Statement> <StatementList>
+<StatementList>        ::= <StatementList> <Statement>
                        |
 
-<Stmt_Inc>             ::= Identifier '++'
-                       |   Identifier '--'
+<Stmt_Inc>             ::= <ValuePointer> '++'
+                       |   <ValuePointer> '--'
 
 <Stmt_Quit>            ::= 'quit' | 'stop' | 'close'
 
