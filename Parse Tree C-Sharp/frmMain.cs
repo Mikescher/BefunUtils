@@ -139,6 +139,18 @@ namespace Parse_Tree_C_Sharp
 				{
 					txtParseTree.Text = MyParser.FailMessage;
 				}
+
+				BefunGen.AST.GOLDParser gp = new BefunGen.AST.GOLDParser(new BinaryReader(new FileStream(txtTableFile.Text, FileMode.Open)));
+				BefunGen.AST.Program p = gp.generateAST(txtSource.Text);
+				if (p == null)
+				{
+					txtParseTree.Text += Environment.NewLine;
+					txtParseTree.Text += Environment.NewLine;
+					txtParseTree.Text += new string('#', 16);
+					txtParseTree.Text += Environment.NewLine;
+					txtParseTree.Text += Environment.NewLine;
+					txtParseTree.Text += gp.FailMessage;
+				}
 			}
 			else
 			{

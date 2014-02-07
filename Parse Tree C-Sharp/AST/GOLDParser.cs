@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -11,9 +12,11 @@ namespace BefunGen.AST
 
 		public string FailMessage { get; private set; }
 
-		public GOLDParser()
+		public GOLDParser(BinaryReader tables)
 		{
 			parser = new GOLD.Parser();
+
+			parser.LoadTables(tables);
 		}
 
 		public Program generateAST(string txt)
@@ -39,7 +42,7 @@ namespace BefunGen.AST
 						done = true;
 						break;
 					case GOLD.ParseMessage.Reduction: // Reduction
-						parser.
+						parser.CurrentReduction = GrammarTableMap.CreateNewASTObject(parser.CurrentReduction as GOLD.Reduction);
 						break;
 					case GOLD.ParseMessage.Accept: //Accepted!                               
 						done = true;

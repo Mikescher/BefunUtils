@@ -7,7 +7,7 @@ namespace BefunGen.AST
 {
 	static class GrammarTableMap
 	{
-		public static enum SymbolIndex
+		public enum SymbolIndex
 		{
 			@Eof = 0,                                  // (EOF)
 			@Error = 1,                                // (Error)
@@ -140,7 +140,7 @@ namespace BefunGen.AST
 			@Varlist = 128                             // <VarList>
 		}
 
-		public static enum ProductionIndex
+		public enum ProductionIndex
 		{
 			@Program = 0,                              // <Program> ::= <Header> <MainStatements> <MethodList> <Footer>
 			@Header_Program_Identifier = 1,            // <Header> ::= program Identifier
@@ -274,7 +274,7 @@ namespace BefunGen.AST
 			@Valuepointer_Identifier_Lbracket_Rbracket = 129   // <ValuePointer> ::= Identifier '[' <Expression> ']'
 		}
 
-		private ASTObject CreateNewASTObject(GOLD.Reduction r)
+		public static ASTObject CreateNewASTObject(GOLD.Reduction r)
 		{
 			ASTObject result = null;
 
@@ -566,38 +566,47 @@ namespace BefunGen.AST
 
 				case ProductionIndex.Literal:
 					// <Literal> ::= <Array_Literal>
+					result = (Literal)r.get_Data(0);
 					break;
 
 				case ProductionIndex.Literal2:
 					// <Literal> ::= <Value_Literal>
+					result = (Literal)r.get_Data(0);
 					break;
 
 				case ProductionIndex.Array_literal:
 					// <Array_Literal> ::= <Literal_IntArr>
+					result = (Array_Literal)r.get_Data(0);
 					break;
 
 				case ProductionIndex.Array_literal2:
 					// <Array_Literal> ::= <Literal_String>
+					result = (Array_Literal)r.get_Data(0);
 					break;
 
 				case ProductionIndex.Array_literal3:
 					// <Array_Literal> ::= <Literal_DigitArr>
+					result = (Array_Literal)r.get_Data(0);
 					break;
 
 				case ProductionIndex.Array_literal4:
 					// <Array_Literal> ::= <Literal_BoolArr>
+					result = (Array_Literal)r.get_Data(0);
 					break;
 
 				case ProductionIndex.Value_literal:
 					// <Value_Literal> ::= <Literal_Int>
+					result = (Value_Literal)r.get_Data(0);
 					break;
 
 				case ProductionIndex.Value_literal2:
 					// <Value_Literal> ::= <Literal_Char>
+					result = (Value_Literal)r.get_Data(0);
 					break;
 
 				case ProductionIndex.Value_literal3:
 					// <Value_Literal> ::= <Literal_Bool>
+					result =  (Value_Literal)r.get_Data(0);
 					break;
 
 				case ProductionIndex.Value_literal4:
@@ -606,78 +615,105 @@ namespace BefunGen.AST
 
 				case ProductionIndex.Literal_int_Decliteral:
 					// <Literal_Int> ::= DecLiteral
+					result = new Literal_Int(Convert.ToInt32(getStrData(r), 10));
 					break;
 
 				case ProductionIndex.Literal_int_Hexliteral:
 					// <Literal_Int> ::= HexLiteral
+					result = new Literal_Int(Convert.ToInt32(getStrData(r), 16));
 					break;
 
 				case ProductionIndex.Literal_char_Charliteral:
 					// <Literal_Char> ::= CharLiteral
+					result = new Literal_Char(getStrData(r)[1]);
 					break;
 
 				case ProductionIndex.Literal_bool_True:
 					// <Literal_Bool> ::= true
+					result = new Literal_Bool(true);
 					break;
 
 				case ProductionIndex.Literal_bool_False:
 					// <Literal_Bool> ::= false
+					result = new Literal_Bool(false);
 					break;
 
 				case ProductionIndex.Literal_digit_Digitliteral:
 					// <Literal_Digit> ::= DigitLiteral
+					result = new Literal_Digit(Convert.ToByte(getStrData(r), 10));
 					break;
 
 				case ProductionIndex.Literal_intarr_Lbrace_Rbrace:
 					// <Literal_IntArr> ::= '{' <Literal_Int_List> '}'
+					result = (Literal_IntArr)r.get_Data(1);
 					break;
 
 				case ProductionIndex.Literal_string_Lbrace_Rbrace:
 					// <Literal_String> ::= '{' <Literal_Char_List> '}'
+					result = (Literal_CharArr)r.get_Data(1);
 					break;
 
 				case ProductionIndex.Literal_string_Stringliteral:
 					// <Literal_String> ::= StringLiteral
+					result = new Literal_CharArr(getStrData(r).Substring(1, getStrData(r).Length - 2));
 					break;
 
 				case ProductionIndex.Literal_digitarr_Lbrace_Rbrace:
 					// <Literal_DigitArr> ::= '{' <Literal_Digit_List> '}'
+					result = (Literal_DigitArr)r.get_Data(1);
 					break;
 
 				case ProductionIndex.Literal_boolarr_Lbrace_Rbrace:
 					// <Literal_BoolArr> ::= '{' <Literal_Bool_List> '}'
+					result = (Literal_BoolArr)r.get_Data(1);
 					break;
 
 				case ProductionIndex.Literal_int_list_Comma:
 					// <Literal_Int_List> ::= <Literal_Int_List> ',' <Literal_Int>
+					Literal_IntArr head_intarr = ((Literal_IntArr)r.get_Data(0));
+					head_intarr.Value.Add(((Literal_Int)r.get_Data(2)).Value);
+					result = head_intarr;
 					break;
 
 				case ProductionIndex.Literal_int_list:
 					// <Literal_Int_List> ::= <Literal_Int>
+					result = new Literal_IntArr(new List<int>() { ((Literal_Int)r.get_Data(0)).Value });
 					break;
 
 				case ProductionIndex.Literal_char_list_Comma:
 					// <Literal_Char_List> ::= <Literal_Char_List> ',' <Literal_Char>
+					Literal_CharArr head_chararr = ((Literal_CharArr)r.get_Data(0));
+					head_chararr.Value.Add(((Literal_Char)r.get_Data(2)).Value);
+					result = head_chararr;
 					break;
 
 				case ProductionIndex.Literal_char_list:
 					// <Literal_Char_List> ::= <Literal_Char>
+					result = new Literal_CharArr(new List<char>() { ((Literal_Char)r.get_Data(0)).Value });
 					break;
 
 				case ProductionIndex.Literal_digit_list_Comma:
 					// <Literal_Digit_List> ::= <Literal_Digit_List> ',' <Literal_Digit>
+					Literal_DigitArr head_digarr = ((Literal_DigitArr)r.get_Data(0));
+					head_digarr.Value.Add(((Literal_Digit)r.get_Data(2)).Value);
+					result = head_digarr;
 					break;
 
 				case ProductionIndex.Literal_digit_list:
 					// <Literal_Digit_List> ::= <Literal_Digit>
+					result = new Literal_DigitArr(new List<byte>() { ((Literal_Digit)r.get_Data(0)).Value });
 					break;
 
 				case ProductionIndex.Literal_bool_list_Comma:
 					// <Literal_Bool_List> ::= <Literal_Bool_List> ',' <Literal_Bool>
+					Literal_BoolArr head_boolarr = ((Literal_BoolArr)r.get_Data(0));
+					head_boolarr.Value.Add(((Literal_Bool)r.get_Data(2)).Value);
+					result = head_boolarr;
 					break;
 
 				case ProductionIndex.Literal_bool_list:
 					// <Literal_Bool_List> ::= <Literal_Bool>
+					result = new Literal_BoolArr(new List<bool>() { ((Literal_Bool)r.get_Data(0)).Value });
 					break;
 
 				case ProductionIndex.Expression:
@@ -803,6 +839,16 @@ namespace BefunGen.AST
 			}  //switch
 
 			return result;
+		}
+
+		private static string getStrData(GOLD.Reduction r)
+		{
+			return getStrData(0, r);
+		}
+
+		private static string getStrData(int p, GOLD.Reduction r)
+		{
+			return (string)r.get_Data(p);
 		}
 	}
 

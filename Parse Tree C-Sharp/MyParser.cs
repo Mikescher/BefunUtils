@@ -67,12 +67,10 @@ class MyParserClass
 
                 case GOLD.ParseMessage.Reduction:
 					GOLD.Reduction r = (GOLD.Reduction)parser.CurrentReduction;
-					r.Parent.TableIndex
                     break;
 
                 case GOLD.ParseMessage.Accept:
                     //Accepted!
-					parser.CurrentReduction.
                     Root = (GOLD.Reduction) parser.CurrentReduction;    //The root node!                                  
                     done = true;
                     accepted = true;
