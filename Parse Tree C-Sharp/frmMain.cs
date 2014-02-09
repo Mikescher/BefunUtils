@@ -4,7 +4,7 @@ using System.IO;
 using System.Text;
 using System.Windows.Forms;
 
-namespace Parse_Tree_C_Sharp
+namespace BefunGen
 {
 	public partial class frmMain : Form
 	{

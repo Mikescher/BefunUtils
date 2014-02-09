@@ -7,7 +7,7 @@ namespace BefunGen.AST
 	/// <summary>
 	/// These Lists are only temporary on AST-Creation - They should NEVER appear in the resulting AST
 	/// </summary>
-	abstract class ASTList : ASTObject
+	public abstract class ASTList : ASTObject
 	{
 		public ASTList()
 		{
@@ -17,7 +17,7 @@ namespace BefunGen.AST
 
 	#region Lists
 
-	class List_Expressions : ASTList
+	public class List_Expressions : ASTList
 	{
 		public List<Expression> List = new List<Expression>();
 
@@ -43,7 +43,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	class List_Statements : ASTList
+	public class List_Statements : ASTList
 	{
 		public List<Statement> List = new List<Statement>();
 
@@ -69,7 +69,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	class List_VarDeclarations : ASTList
+	public class List_VarDeclarations : ASTList
 	{
 		public List<VarDeclaration> List = new List<VarDeclaration>();
 
@@ -95,7 +95,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	class List_Methods : ASTList
+	public class List_Methods : ASTList
 	{
 		public List<Method> List = new List<Method>();
 
@@ -125,7 +125,7 @@ namespace BefunGen.AST
 
 	#region Literals Lists
 
-	class List_LiteralDigits : ASTList
+	public class List_LiteralDigits : ASTList
 	{
 		public List<Literal_Digit> List = new List<Literal_Digit>();
 
@@ -151,7 +151,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	class List_LiteralInts : ASTList
+	public class List_LiteralInts : ASTList
 	{
 		public List<Literal_Int> List = new List<Literal_Int>();
 
@@ -177,7 +177,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	class List_LiteralChars : ASTList
+	public class List_LiteralChars : ASTList
 	{
 		public List<Literal_Char> List = new List<Literal_Char>();
 
@@ -203,7 +203,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	class List_LiteralBools : ASTList
+	public class List_LiteralBools : ASTList
 	{
 		public List<Literal_Bool> List = new List<Literal_Bool>();
 

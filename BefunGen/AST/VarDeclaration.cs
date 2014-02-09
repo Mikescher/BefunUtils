@@ -1,7 +1,7 @@
 ﻿
 namespace BefunGen.AST
 {
-	abstract class VarDeclaration : ASTObject
+	public abstract class VarDeclaration : ASTObject
 	{
 		public VarDeclaration()
 		{
@@ -9,7 +9,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	class VarDeclaration_Value : VarDeclaration
+	public class VarDeclaration_Value : VarDeclaration
 	{
 		public BType_Value Type;
 		public string Identifier;
@@ -35,7 +35,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	class VarDeclaration_Array : VarDeclaration
+	public class VarDeclaration_Array : VarDeclaration
 	{
 		public BType_Array Type;
 		public string Identifier;

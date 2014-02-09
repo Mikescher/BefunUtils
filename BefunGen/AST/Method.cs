@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace BefunGen.AST
 {
-	class Method : ASTObject
+	public class Method : ASTObject
 	{
 		public BType ResultType;
 		public string Identifier;
@@ -39,7 +39,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	class Method_Header : ASTObject // TEMPORARY -- NOT IN RESULTING AST
+	public class Method_Header : ASTObject // TEMPORARY -- NOT IN RESULTING AST
 	{
 		public BType ResultType;
 		public string Identifier;
@@ -58,7 +58,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	class Method_Body : ASTObject // TEMPORARY -- NOT IN RESULTING AST
+	public class Method_Body : ASTObject // TEMPORARY -- NOT IN RESULTING AST
 	{
 		public List<VarDeclaration> Variables;
 		public Statement Body;

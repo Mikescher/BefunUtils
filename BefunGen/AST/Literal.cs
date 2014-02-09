@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace BefunGen.AST
 {
-	abstract class Literal : ASTObject
+	public abstract class Literal : ASTObject
 	{
 		public Literal()
 		{
@@ -13,7 +13,7 @@ namespace BefunGen.AST
 
 	#region Parents
 
-	abstract class Literal_Value : Literal
+	public abstract class Literal_Value : Literal
 	{
 		public Literal_Value()
 		{
@@ -21,7 +21,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	abstract class Literal_Array : Literal
+	public abstract class Literal_Array : Literal
 	{
 		public Literal_Array()
 		{
@@ -33,7 +33,7 @@ namespace BefunGen.AST
 
 	#region Value Literals
 
-	class Literal_Int : Literal_Value
+	public class Literal_Int : Literal_Value
 	{
 		public int Value;
 
@@ -48,7 +48,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	class Literal_Char : Literal_Value
+	public class Literal_Char : Literal_Value
 	{
 		public char Value;
 
@@ -63,7 +63,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	class Literal_Bool : Literal_Value
+	public class Literal_Bool : Literal_Value
 	{
 		public bool Value;
 
@@ -78,7 +78,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	class Literal_Digit : Literal_Value
+	public class Literal_Digit : Literal_Value
 	{
 		public byte Value;
 
@@ -97,7 +97,7 @@ namespace BefunGen.AST
 
 	#region Array Literals
 
-	class Literal_IntArr : Literal_Array
+	public class Literal_IntArr : Literal_Array
 	{
 		public List<int> Value = new List<int>();
 
@@ -112,7 +112,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	class Literal_CharArr : Literal_Array
+	public class Literal_CharArr : Literal_Array
 	{
 		public List<char> Value = new List<char>();
 
@@ -132,7 +132,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	class Literal_BoolArr : Literal_Array
+	public class Literal_BoolArr : Literal_Array
 	{
 		public List<bool> Value = new List<bool>();
 
@@ -147,7 +147,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	class Literal_DigitArr : Literal_Array
+	public class Literal_DigitArr : Literal_Array
 	{
 		public List<byte> Value = new List<byte>();
 

@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace BefunGen.AST
 {
-	class Program : ASTObject
+	public class Program : ASTObject
 	{
 		public string Identifier;
 		public Method MainStatement;
@@ -23,7 +23,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	class Program_Footer : ASTObject // TEMPORARY -- NOT IN RESULTING AST
+	public class Program_Footer : ASTObject // TEMPORARY -- NOT IN RESULTING AST
 	{
 		public Program_Footer()
 		{
@@ -36,7 +36,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	class Program_Header : ASTObject // TEMPORARY -- NOT IN RESULTING AST
+	public class Program_Header : ASTObject // TEMPORARY -- NOT IN RESULTING AST
 	{
 		public string Identifier;
 

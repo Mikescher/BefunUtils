@@ -1,7 +1,7 @@
 ﻿
 namespace BefunGen.AST
 {
-	abstract class BType : ASTObject
+	public abstract class BType : ASTObject
 	{
 		public BType()
 		{
@@ -9,7 +9,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	abstract class BType_Value : BType
+	public abstract class BType_Value : BType
 	{
 		public BType_Value()
 		{
@@ -17,7 +17,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	abstract class BType_Array : BType
+	public abstract class BType_Array : BType
 	{
 		public BType_Array()
 		{
@@ -25,7 +25,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	class BType_Void : BType // neither Array nor Value ...
+	public class BType_Void : BType // neither Array nor Value ...
 	{
 		public BType_Void()
 		{
@@ -40,7 +40,7 @@ namespace BefunGen.AST
 
 	#region Value Types
 
-	class BType_Int : BType_Value
+	public class BType_Int : BType_Value
 	{
 		public BType_Int()
 		{
@@ -53,7 +53,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	class BType_Digit : BType_Value
+	public class BType_Digit : BType_Value
 	{
 		public BType_Digit()
 		{
@@ -66,7 +66,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	class BType_Char : BType_Value
+	public class BType_Char : BType_Value
 	{
 		public BType_Char()
 		{
@@ -79,7 +79,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	class BType_Bool : BType_Value
+	public class BType_Bool : BType_Value
 	{
 		public BType_Bool()
 		{
@@ -96,7 +96,7 @@ namespace BefunGen.AST
 
 	#region Array Types
 
-	class BType_IntArr : BType_Array
+	public class BType_IntArr : BType_Array
 	{
 		public int Size;
 
@@ -111,7 +111,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	class BType_CharArr : BType_Array
+	public class BType_CharArr : BType_Array
 	{
 		public int Size;
 
@@ -126,7 +126,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	class BType_DigitArr : BType_Array
+	public class BType_DigitArr : BType_Array
 	{
 		public int Size;
 
@@ -141,7 +141,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	class BType_BoolArr : BType_Array
+	public class BType_BoolArr : BType_Array
 	{
 		public int Size;
 

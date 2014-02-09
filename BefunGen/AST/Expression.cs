@@ -1,7 +1,7 @@
 ﻿
 namespace BefunGen.AST
 {
-	abstract class Expression : ASTObject
+	public abstract class Expression : ASTObject
 	{
 		public Expression()
 		{
@@ -9,7 +9,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	abstract class Expression_Binary : Expression
+	public abstract class Expression_Binary : Expression
 	{
 		public Expression Left;
 		public Expression Right;
@@ -21,7 +21,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	abstract class Expression_Compare : Expression_Binary
+	public abstract class Expression_Compare : Expression_Binary
 	{
 		public Expression_Compare(Expression l, Expression r)
 			: base(l, r)
@@ -30,7 +30,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	abstract class Expression_Unary : Expression
+	public abstract class Expression_Unary : Expression
 	{
 		public Expression Expr;
 
@@ -40,7 +40,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	abstract class Expression_ValuePointer : Expression
+	public abstract class Expression_ValuePointer : Expression
 	{
 		public Expression_ValuePointer()
 		{
@@ -50,7 +50,7 @@ namespace BefunGen.AST
 
 	#region ValuePointer
 
-	class Expression_DirectValuePointer : Expression_ValuePointer
+	public class Expression_DirectValuePointer : Expression_ValuePointer
 	{
 		public string Identifier;
 
@@ -65,7 +65,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	class Expression_ArrayValuePointer : Expression_ValuePointer
+	public class Expression_ArrayValuePointer : Expression_ValuePointer
 	{
 		public string Identifier;
 		public Expression Index;
@@ -86,7 +86,7 @@ namespace BefunGen.AST
 
 	#region Binary
 
-	class Expression_Mult : Expression_Binary
+	public class Expression_Mult : Expression_Binary
 	{
 		public Expression_Mult(Expression l, Expression r)
 			: base(l, r)
@@ -100,7 +100,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	class Expression_Div : Expression_Binary
+	public class Expression_Div : Expression_Binary
 	{
 		public Expression_Div(Expression l, Expression r)
 			: base(l, r)
@@ -114,7 +114,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	class Expression_Mod : Expression_Binary
+	public class Expression_Mod : Expression_Binary
 	{
 		public Expression_Mod(Expression l, Expression r)
 			: base(l, r)
@@ -128,7 +128,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	class Expression_Add : Expression_Binary
+	public class Expression_Add : Expression_Binary
 	{
 		public Expression_Add(Expression l, Expression r)
 			: base(l, r)
@@ -142,7 +142,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	class Expression_Sub : Expression_Binary
+	public class Expression_Sub : Expression_Binary
 	{
 		public Expression_Sub(Expression l, Expression r)
 			: base(l, r)
@@ -160,7 +160,7 @@ namespace BefunGen.AST
 
 	#region Compare
 
-	class Expression_Equals : Expression_Compare
+	public class Expression_Equals : Expression_Compare
 	{
 		public Expression_Equals(Expression l, Expression r)
 			: base(l, r)
@@ -174,7 +174,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	class Expression_Unequals : Expression_Compare
+	public class Expression_Unequals : Expression_Compare
 	{
 		public Expression_Unequals(Expression l, Expression r)
 			: base(l, r)
@@ -188,7 +188,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	class Expression_Greater : Expression_Compare
+	public class Expression_Greater : Expression_Compare
 	{
 		public Expression_Greater(Expression l, Expression r)
 			: base(l, r)
@@ -202,7 +202,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	class Expression_Lesser : Expression_Compare
+	public class Expression_Lesser : Expression_Compare
 	{
 		public Expression_Lesser(Expression l, Expression r)
 			: base(l, r)
@@ -216,7 +216,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	class Expression_GreaterEquals : Expression_Compare
+	public class Expression_GreaterEquals : Expression_Compare
 	{
 		public Expression_GreaterEquals(Expression l, Expression r)
 			: base(l, r)
@@ -230,7 +230,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	class Expression_LesserEquals : Expression_Compare
+	public class Expression_LesserEquals : Expression_Compare
 	{
 		public Expression_LesserEquals(Expression l, Expression r)
 			: base(l, r)
@@ -248,7 +248,7 @@ namespace BefunGen.AST
 
 	#region Unary
 
-	class Expression_Not : Expression_Unary
+	public class Expression_Not : Expression_Unary
 	{
 		public Expression_Not(Expression e)
 			: base(e)
@@ -262,7 +262,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	class Expression_Negate : Expression_Unary
+	public class Expression_Negate : Expression_Unary
 	{
 		public Expression_Negate(Expression e)
 			: base(e)
@@ -280,7 +280,7 @@ namespace BefunGen.AST
 
 	#region Other
 
-	class Expression_Literal : Expression
+	public class Expression_Literal : Expression
 	{
 		public Literal Value;
 
@@ -295,7 +295,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	class Expression_Rand : Expression
+	public class Expression_Rand : Expression
 	{
 		public Expression_Rand()
 		{
@@ -308,7 +308,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	class Expression_Cast : Expression
+	public class Expression_Cast : Expression
 	{
 		BType Type;
 		Expression Expr;
@@ -325,7 +325,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	class Expression_FunctionCall : Expression
+	public class Expression_FunctionCall : Expression
 	{
 		public Statement_MethodCall Method;
 

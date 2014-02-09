@@ -8,7 +8,7 @@
     <ProjectGuid>{EDAF7AC1-5908-4AF0-B228-26D1E1539233}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Parse_Tree_C_Sharp</RootNamespace>
+    <RootNamespace>BefunGen</RootNamespace>
     <AssemblyName>Parse Tree C-Sharp</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -79,20 +79,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AST\ASTObject.cs" />
-    <Compile Include="AST\Method.cs" />
-    <Compile Include="AST\VarDeclaration.cs" />
-    <Compile Include="AST\Lists.cs" />
-    <Compile Include="AST\Type.cs" />
-    <Compile Include="AST\Expression.cs" />
-    <Compile Include="AST\Statement.cs" />
-    <Compile Include="AST\TextFungeParser.cs" />
-    <Compile Include="AST\GrammarTableMap.cs" />
-    <Compile Include="AST\Literal.cs" />
-    <Compile Include="AST\Program.cs" />
-    <Compile Include="linenum_rtf.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="MyParser.cs" />
     <Compile Include="frmMain.cs">
       <SubType>Form</SubType>
@@ -119,7 +105,6 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <None Include="app.config" />
-    <None Include="ClassDiagram1.cd" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -152,6 +137,12 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BefunGen\BefunGen.csproj">
+      <Project>{1ff871b2-5334-487a-bb1b-da8245c8083f}</Project>
+      <Name>BefunGen</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

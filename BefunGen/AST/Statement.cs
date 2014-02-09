@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace BefunGen.AST
 {
-	abstract class Statement : ASTObject
+	public abstract class Statement : ASTObject
 	{
 		public Statement()
 		{
@@ -11,7 +11,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	class Statement_StatementList : Statement
+	public class Statement_StatementList : Statement
 	{
 		public List<Statement> List;
 
@@ -26,7 +26,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	class Statement_MethodCall : Statement
+	public class Statement_MethodCall : Statement
 	{
 		public List<Expression> CallParameter;
 		public string Identifier;
@@ -51,7 +51,7 @@ namespace BefunGen.AST
 
 	#region Keywords
 
-	class Statement_Label : Statement
+	public class Statement_Label : Statement
 	{
 		public string Identifier;
 
@@ -66,7 +66,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	class Statement_Goto : Statement
+	public class Statement_Goto : Statement
 	{
 		public string TargetIdentifier;
 
@@ -81,7 +81,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	class Statement_Return : Statement
+	public class Statement_Return : Statement
 	{
 		public Expression Value;
 
@@ -101,7 +101,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	class Statement_Out : Statement
+	public class Statement_Out : Statement
 	{
 		public Expression Value;
 
@@ -116,7 +116,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	class Statement_In : Statement
+	public class Statement_In : Statement
 	{
 		public Expression_ValuePointer ValueTarget;
 
@@ -131,7 +131,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	class Statement_Quit : Statement
+	public class Statement_Quit : Statement
 	{
 		public Statement_Quit()
 		{
@@ -147,7 +147,7 @@ namespace BefunGen.AST
 
 	#region Operations
 
-	class Statement_Inc : Statement
+	public class Statement_Inc : Statement
 	{
 		public Expression_ValuePointer Identifier;
 
@@ -162,7 +162,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	class Statement_Dec : Statement
+	public class Statement_Dec : Statement
 	{
 		public Expression_ValuePointer Identifier;
 
@@ -177,7 +177,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	class Statement_Assignment : Statement
+	public class Statement_Assignment : Statement
 	{
 		public Expression_ValuePointer Target;
 		public Expression Expr;
@@ -198,7 +198,7 @@ namespace BefunGen.AST
 
 	#region Constructs
 
-	class Statement_If : Statement
+	public class Statement_If : Statement
 	{
 		public Expression Condition;
 		public Statement Body;
@@ -224,7 +224,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	class Statement_While : Statement
+	public class Statement_While : Statement
 	{
 		public Expression Condition;
 		public Statement Body;
@@ -241,7 +241,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	class Statement_RepeatUntil : Statement
+	public class Statement_RepeatUntil : Statement
 	{
 		public Expression Condition;
 		public Statement Body;

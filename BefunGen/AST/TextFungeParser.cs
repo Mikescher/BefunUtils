@@ -3,7 +3,7 @@ using System.IO;
 
 namespace BefunGen.AST
 {
-	class TextFungeParser
+	public class TextFungeParser
 	{
 		private GOLD.Parser parser;
 
@@ -74,7 +74,7 @@ namespace BefunGen.AST
 						parser.CurrentReduction = GrammarTableMap.CreateNewASTObject(parser.CurrentReduction as GOLD.Reduction);
 						break;
 					case GOLD.ParseMessage.Accept: //Accepted!    
-						result = parser.CurrentReduction;  
+						result = parser.CurrentReduction;
 						done = true;
 						break;
 					case GOLD.ParseMessage.TokenRead: //You don't have to do anything here.

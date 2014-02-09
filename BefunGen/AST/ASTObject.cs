@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace BefunGen.AST
 {
-	abstract class ASTObject
+	public abstract class ASTObject
 	{
 		public ASTObject()
 		{

@@ -1,4 +1,4 @@
-﻿namespace Parse_Tree_C_Sharp
+﻿namespace BefunGen
 {
 	partial class frmMain
 	{
