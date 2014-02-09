@@ -103,7 +103,7 @@ namespace BefunGen.AST.CodeGen
 						commandArr[xw].Insert(0, null);
 					}
 
-					MinX--;
+					MinY--;
 				}
 			}
 
@@ -115,7 +115,7 @@ namespace BefunGen.AST.CodeGen
 			if (!IsIncluded(x, y))
 				expand(x, y);
 
-			commandArr[x][y] = value;
+			commandArr[x - MinX][y - MinY] = value;
 		}
 
 		public BefungeCommand get(int x, int y)
@@ -129,7 +129,7 @@ namespace BefunGen.AST.CodeGen
 		public override string ToString()
 		{
 			StringBuilder builder = new StringBuilder();
-			builder.AppendLine(string.Format("{0}: [{1}-{2}, {3}-{4}] ({5}, {6})", this.GetType().Name, MinX, MaxX, MinY, MaxY, Width, Height));
+			builder.AppendLine(string.Format("{0}: [{1} - {2}, {3} - {4}] ({5}, {6})", this.GetType().Name, MinX, MaxX, MinY, MaxY, Width, Height));
 
 			builder.AppendLine("{");
 			for (int y = MinY; y < MaxY; y++)

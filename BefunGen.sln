@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BefunGen", "BefunGen\BefunG
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Parse Tree C-Sharp", "Parse Tree C-Sharp\Parse Tree C-Sharp.csproj", "{EDAF7AC1-5908-4AF0-B228-26D1E1539233}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BefunGenTest", "BefunGenTest\BefunGenTest.csproj", "{AFE4C79F-1404-4F6E-8F7E-69A99AB9B065}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,6 +21,10 @@ Global
 		{EDAF7AC1-5908-4AF0-B228-26D1E1539233}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EDAF7AC1-5908-4AF0-B228-26D1E1539233}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EDAF7AC1-5908-4AF0-B228-26D1E1539233}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AFE4C79F-1404-4F6E-8F7E-69A99AB9B065}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AFE4C79F-1404-4F6E-8F7E-69A99AB9B065}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AFE4C79F-1404-4F6E-8F7E-69A99AB9B065}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AFE4C79F-1404-4F6E-8F7E-69A99AB9B065}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
