@@ -70,13 +70,16 @@ namespace BefunGen.AST
 						fail(response);
 						done = true;
 						break;
+
 					case GOLD.ParseMessage.Reduction: // Reduction
 						parser.CurrentReduction = GrammarTableMap.CreateNewASTObject(parser.CurrentReduction as GOLD.Reduction);
 						break;
-					case GOLD.ParseMessage.Accept: //Accepted!    
+
+					case GOLD.ParseMessage.Accept: //Accepted!
 						result = parser.CurrentReduction;
 						done = true;
 						break;
+
 					case GOLD.ParseMessage.TokenRead: //You don't have to do anything here.
 						break;
 				}
@@ -94,18 +97,22 @@ namespace BefunGen.AST
 								  "Line: " + (parser.CurrentPosition().Line + 1) + ":" + parser.CurrentPosition().Column + Environment.NewLine +
 								  "Read: " + parser.CurrentToken().Data;
 					break;
+
 				case GOLD.ParseMessage.SyntaxError: //Expecting a different token
 					FailMessage = "Syntax Error:" + Environment.NewLine +
 								  "Line: " + (parser.CurrentPosition().Line + 1) + ":" + parser.CurrentPosition().Column + Environment.NewLine +
 								  "Read: " + parser.CurrentToken().Data + Environment.NewLine +
 								  "Expecting: " + parser.ExpectedSymbols().Text();
 					break;
+
 				case GOLD.ParseMessage.InternalError: //INTERNAL ERROR! Something is horribly wrong.
 					FailMessage = "Internal Error";
 					break;
-				case GOLD.ParseMessage.NotLoadedError: //This error occurs if the CGT was not loaded.                   
+
+				case GOLD.ParseMessage.NotLoadedError: //This error occurs if the CGT was not loaded.
 					FailMessage = "Tables not loaded";
 					break;
+
 				case GOLD.ParseMessage.GroupError: //GROUP ERROR! Unexpected end of file
 					FailMessage = "Runaway group";
 					break;

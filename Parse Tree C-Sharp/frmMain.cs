@@ -157,6 +157,5 @@ namespace BefunGen
 		{
 			doParse();
 		}
-
 	}
 } //Form

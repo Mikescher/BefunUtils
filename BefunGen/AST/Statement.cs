@@ -143,7 +143,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	#endregion
+	#endregion Keywords
 
 	#region Operations
 
@@ -194,7 +194,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	#endregion
+	#endregion Operations
 
 	#region Constructs
 
@@ -258,5 +258,5 @@ namespace BefunGen.AST
 		}
 	}
 
-	#endregion
+	#endregion Constructs
 }

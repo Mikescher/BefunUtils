@@ -29,7 +29,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	#endregion
+	#endregion Parents
 
 	#region Value Literals
 
@@ -93,7 +93,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	#endregion
+	#endregion Value Literals
 
 	#region Array Literals
 
@@ -162,5 +162,5 @@ namespace BefunGen.AST
 		}
 	}
 
-	#endregion
+	#endregion Array Literals
 }

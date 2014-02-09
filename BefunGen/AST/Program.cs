@@ -27,7 +27,6 @@ namespace BefunGen.AST
 	{
 		public Program_Footer()
 		{
-
 		}
 
 		public override string getDebugString()

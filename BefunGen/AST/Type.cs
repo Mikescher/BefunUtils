@@ -1,5 +1,4 @@
-﻿
-namespace BefunGen.AST
+﻿namespace BefunGen.AST
 {
 	public abstract class BType : ASTObject
 	{
@@ -92,7 +91,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	#endregion
+	#endregion Value Types
 
 	#region Array Types
 
@@ -156,5 +155,5 @@ namespace BefunGen.AST
 		}
 	}
 
-	#endregion
+	#endregion Array Types
 }

@@ -1,5 +1,4 @@
-﻿
-namespace BefunGen.AST
+﻿namespace BefunGen.AST
 {
 	public abstract class Expression : ASTObject
 	{
@@ -82,7 +81,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	#endregion
+	#endregion ValuePointer
 
 	#region Binary
 
@@ -156,7 +155,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	#endregion
+	#endregion Binary
 
 	#region Compare
 
@@ -244,7 +243,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	#endregion
+	#endregion Compare
 
 	#region Unary
 
@@ -276,7 +275,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	#endregion
+	#endregion Unary
 
 	#region Other
 
@@ -310,8 +309,8 @@ namespace BefunGen.AST
 
 	public class Expression_Cast : Expression
 	{
-		BType Type;
-		Expression Expr;
+		private BType Type;
+		private Expression Expr;
 
 		public Expression_Cast(BType t, Expression e)
 		{
@@ -340,5 +339,5 @@ namespace BefunGen.AST
 		}
 	}
 
-	#endregion
+	#endregion Other
 }

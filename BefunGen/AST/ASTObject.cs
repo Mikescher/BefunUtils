@@ -8,7 +8,6 @@ namespace BefunGen.AST
 	{
 		public ASTObject()
 		{
-
 		}
 
 		public abstract string getDebugString();

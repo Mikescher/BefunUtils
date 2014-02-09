@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace BefunGen.AST
 {
-	static class GrammarTableMap
+	public static class GrammarTableMap
 	{
 		public enum SymbolIndex
 		{
@@ -145,15 +145,15 @@ namespace BefunGen.AST
 			@Header_Program_Identifier = 1,            // <Header> ::= program Identifier
 			@Footer_End = 2,                           // <Footer> ::= end
 			@Methodlist = 3,                           // <MethodList> ::= <MethodList> <Method>
-			@Methodlist2 = 4,                          // <MethodList> ::= 
+			@Methodlist2 = 4,                          // <MethodList> ::=
 			@Mainstatements = 5,                       // <MainStatements> ::= <MethodBody>
 			@Method = 6,                               // <Method> ::= <MethodHeader> <MethodBody>
 			@Methodbody = 7,                           // <MethodBody> ::= <VarDeclBody> <Statement>
 			@Methodheader_Identifier_Lparen_Rparen = 8,  // <MethodHeader> ::= <Type> Identifier '(' <ParamDecl> ')'
 			@Vardeclbody_Var = 9,                      // <VarDeclBody> ::= var <VarList>
-			@Vardeclbody = 10,                         // <VarDeclBody> ::= 
+			@Vardeclbody = 10,                         // <VarDeclBody> ::=
 			@Paramdecl = 11,                           // <ParamDecl> ::= <ParamList>
-			@Paramdecl2 = 12,                          // <ParamDecl> ::= 
+			@Paramdecl2 = 12,                          // <ParamDecl> ::=
 			@Paramlist_Comma = 13,                     // <ParamList> ::= <ParamList> ',' <Param>
 			@Paramlist = 14,                           // <ParamList> ::= <Param>
 			@Param_Identifier = 15,                    // <Param> ::= <Type> Identifier
@@ -174,7 +174,7 @@ namespace BefunGen.AST
 			@Statement4 = 30,                          // <Statement> ::= <Stmt_Goto>
 			@Statement5 = 31,                          // <Statement> ::= <Stmt_Label>
 			@Statementlist = 32,                       // <StatementList> ::= <StatementList> <Statement>
-			@Statementlist2 = 33,                      // <StatementList> ::= 
+			@Statementlist2 = 33,                      // <StatementList> ::=
 			@Stmt_inc_Identifier_Plusplus = 34,        // <Stmt_Inc> ::= <ValuePointer> '++'
 			@Stmt_inc_Identifier_Minusminus = 35,      // <Stmt_Inc> ::= <ValuePointer> '--'
 			@Stmt_quit_Quit = 36,                      // <Stmt_Quit> ::= quit
@@ -300,7 +300,7 @@ namespace BefunGen.AST
 					break;
 
 				case ProductionIndex.Methodlist2:
-					// <MethodList> ::= 
+					// <MethodList> ::=
 					result = new List_Methods();
 					break;
 
@@ -330,7 +330,7 @@ namespace BefunGen.AST
 					break;
 
 				case ProductionIndex.Vardeclbody:
-					// <VarDeclBody> ::= 
+					// <VarDeclBody> ::=
 					result = new List_VarDeclarations();
 					break;
 
@@ -340,7 +340,7 @@ namespace BefunGen.AST
 					break;
 
 				case ProductionIndex.Paramdecl2:
-					// <ParamDecl> ::= 
+					// <ParamDecl> ::=
 					result = new List_VarDeclarations();
 					break;
 
@@ -445,7 +445,7 @@ namespace BefunGen.AST
 					break;
 
 				case ProductionIndex.Statementlist2:
-					// <StatementList> ::= 
+					// <StatementList> ::=
 					result = new List_Statements();
 					break;
 
@@ -928,7 +928,6 @@ namespace BefunGen.AST
 					// <ValuePointer> ::= Identifier '[' <Expression> ']'
 					result = new Expression_ArrayValuePointer(getStrData(r), (Expression)r.get_Data(2));
 					break;
-
 			}  //switch
 
 			if (result == null)
@@ -971,5 +970,4 @@ namespace BefunGen.AST
 			return (string)r.get_Data(p);
 		}
 	}
-
 }

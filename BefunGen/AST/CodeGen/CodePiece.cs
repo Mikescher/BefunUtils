@@ -7,12 +7,15 @@ namespace BefunGen.AST.CodeGen
 	public class CodePiece
 	{
 		public int MinX { get; private set; } // Minimal
+
 		public int MinY { get; private set; }
 
 		public int MaxX { get; private set; } // Maximal + 1
+
 		public int MaxY { get; private set; }
 
 		public int Width { get { return MaxX - MinX; } }
+
 		public int Height { get { return MaxY - MinY; } }
 
 		private List<List<BefungeCommand>> commandArr = new List<List<BefungeCommand>>();

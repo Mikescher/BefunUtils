@@ -1,5 +1,4 @@
-﻿
-namespace BefunGen.AST
+﻿namespace BefunGen.AST
 {
 	public abstract class VarDeclaration : ASTObject
 	{

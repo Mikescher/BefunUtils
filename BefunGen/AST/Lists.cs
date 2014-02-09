@@ -3,7 +3,6 @@ using System.Collections.Generic;
 
 namespace BefunGen.AST
 {
-
 	/// <summary>
 	/// These Lists are only temporary on AST-Creation - They should NEVER appear in the resulting AST
 	/// </summary>
@@ -11,7 +10,6 @@ namespace BefunGen.AST
 	{
 		public ASTList()
 		{
-
 		}
 	}
 
@@ -23,7 +21,6 @@ namespace BefunGen.AST
 
 		public List_Expressions()
 		{
-
 		}
 
 		public List_Expressions(Expression e)
@@ -49,7 +46,6 @@ namespace BefunGen.AST
 
 		public List_Statements()
 		{
-
 		}
 
 		public List_Statements(Statement s)
@@ -75,7 +71,6 @@ namespace BefunGen.AST
 
 		public List_VarDeclarations()
 		{
-
 		}
 
 		public List_VarDeclarations(VarDeclaration d)
@@ -101,7 +96,6 @@ namespace BefunGen.AST
 
 		public List_Methods()
 		{
-
 		}
 
 		public List_Methods(Method d)
@@ -121,7 +115,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	#endregion
+	#endregion Lists
 
 	#region Literals Lists
 
@@ -131,7 +125,6 @@ namespace BefunGen.AST
 
 		public List_LiteralDigits()
 		{
-
 		}
 
 		public List_LiteralDigits(Literal_Digit e)
@@ -157,7 +150,6 @@ namespace BefunGen.AST
 
 		public List_LiteralInts()
 		{
-
 		}
 
 		public List_LiteralInts(Literal_Int e)
@@ -183,7 +175,6 @@ namespace BefunGen.AST
 
 		public List_LiteralChars()
 		{
-
 		}
 
 		public List_LiteralChars(Literal_Char e)
@@ -209,7 +200,6 @@ namespace BefunGen.AST
 
 		public List_LiteralBools()
 		{
-
 		}
 
 		public List_LiteralBools(Literal_Bool e)
@@ -229,6 +219,5 @@ namespace BefunGen.AST
 		}
 	}
 
-	#endregion
-
+	#endregion Literals Lists
 }
