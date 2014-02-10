@@ -45,6 +45,19 @@ namespace BefunGen.AST
 				return null;
 			}
 
+			if (result == null)
+				return null;
+
+			try
+			{
+				result.link();
+			}
+			catch (Exception e)
+			{
+				FailMessage = e.ToString();
+				return null;
+			}
+
 			return result;
 		}
 

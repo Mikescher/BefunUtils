@@ -1,5 +1,4 @@
-﻿using BefunGen.AST.CodeGen;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -7,7 +6,7 @@ namespace BefunGen.AST
 {
 	public abstract class ASTObject
 	{
-		public ASTObject()
+		public ASTObject() // TODO Add Position Attribut to all AST Objects
 		{
 		}
 

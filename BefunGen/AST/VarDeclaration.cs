@@ -2,61 +2,63 @@
 {
 	public abstract class VarDeclaration : ASTObject
 	{
-		public VarDeclaration()
-		{
-			//--
-		}
-	}
+		private static int _V_ID_COUNTER = 100;
+		protected static int V_ID_COUNTER { get { return _V_ID_COUNTER++; } }
 
-	public class VarDeclaration_Value : VarDeclaration
-	{
-		public BType_Value Type;
-		public string Identifier;
-		public Literal_Value Initial;
+		public readonly BType Type;
+		public readonly string Identifier;
+		public readonly Literal Initial;
+		public readonly int ID;
 
-		public VarDeclaration_Value(BType_Value t, string id)
+		public VarDeclaration(BType t, string ident, Literal init)
 		{
 			this.Type = t;
-			this.Identifier = id;
-			this.Initial = null;
-		}
+			this.Identifier = ident;
+			this.ID = V_ID_COUNTER;
 
-		public VarDeclaration_Value(BType_Value t, string id, Literal_Value v)
-		{
-			this.Type = t;
-			this.Identifier = id;
-			this.Initial = v;
+			if (init == null)
+			{
+				this.Initial = t.getDefaultValue();
+			}
+			else
+			{
+				this.Initial = init;
+			}
 		}
 
 		public override string getDebugString()
 		{
-			return string.Format("{0} {1} ::= {2}", Type.getDebugString(), Identifier, Initial == null ? "NULL" : Initial.getDebugString());
+			return string.Format("{0} {1}{{{2}}} ::= {3}", Type.getDebugString(), Identifier, ID, Initial == null ? "NULL" : Initial.getDebugString());
+		}
+	}
+
+	#region Children
+
+	public class VarDeclaration_Value : VarDeclaration
+	{
+		public VarDeclaration_Value(BType_Value t, string id)
+			: base(t, id, null)
+		{
+		}
+
+		public VarDeclaration_Value(BType_Value t, string id, Literal_Value v)
+			: base(t, id, v)
+		{
 		}
 	}
 
 	public class VarDeclaration_Array : VarDeclaration
 	{
-		public BType_Array Type;
-		public string Identifier;
-		public Literal_Array Initial;
-
 		public VarDeclaration_Array(BType_Array t, string id)
+			: base(t, id, null)
 		{
-			this.Type = t;
-			this.Identifier = id;
-			this.Initial = null;
 		}
 
 		public VarDeclaration_Array(BType_Array t, string id, Literal_Array v)
+			: base(t, id, v)
 		{
-			this.Type = t;
-			this.Identifier = id;
-			this.Initial = v;
-		}
-
-		public override string getDebugString()
-		{
-			return string.Format("{0} {1} ::= {2}", Type.getDebugString(), Identifier, Initial == null ? "NULL" : Initial.getDebugString());
 		}
 	}
+
+	#endregion
 }

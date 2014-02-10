@@ -9,6 +9,8 @@ namespace BefunGen.AST
 		{
 			//--
 		}
+
+		public abstract void linkVariables(Method owner);
 	}
 
 	public class Statement_StatementList : Statement
@@ -23,6 +25,12 @@ namespace BefunGen.AST
 		public override string getDebugString()
 		{
 			return string.Format("#StatementList\n[\n{0}\n]", indent(getDebugStringForList(List)));
+		}
+
+		public override void linkVariables(Method owner)
+		{
+			foreach (Statement s in List)
+				s.linkVariables(owner);
 		}
 	}
 
@@ -47,6 +55,12 @@ namespace BefunGen.AST
 		{
 			return string.Format("#MethodCall ({0})\n#Parameter:\n{1}", Identifier, indent(getDebugStringForList(CallParameter)));
 		}
+
+		public override void linkVariables(Method owner)
+		{
+			foreach (Expression e in CallParameter)
+				e.linkVariables(owner);
+		}
 	}
 
 	#region Keywords
@@ -64,6 +78,11 @@ namespace BefunGen.AST
 		{
 			return string.Format("#LABEL: {0}", Identifier);
 		}
+
+		public override void linkVariables(Method owner)
+		{
+			//NOP
+		}
 	}
 
 	public class Statement_Goto : Statement
@@ -78,6 +97,11 @@ namespace BefunGen.AST
 		public override string getDebugString()
 		{
 			return string.Format("#GOTO: {0}", TargetIdentifier);
+		}
+
+		public override void linkVariables(Method owner)
+		{
+			//NOP
 		}
 	}
 
@@ -99,6 +123,11 @@ namespace BefunGen.AST
 		{
 			return string.Format("#RETURN: {0}", Value.getDebugString());
 		}
+
+		public override void linkVariables(Method owner)
+		{
+			Value.linkVariables(owner);
+		}
 	}
 
 	public class Statement_Out : Statement
@@ -113,6 +142,11 @@ namespace BefunGen.AST
 		public override string getDebugString()
 		{
 			return string.Format("#OUT: {0}", Value.getDebugString());
+		}
+
+		public override void linkVariables(Method owner)
+		{
+			Value.linkVariables(owner);
 		}
 	}
 
@@ -129,6 +163,11 @@ namespace BefunGen.AST
 		{
 			return string.Format("#OUT: {0}", ValueTarget.getDebugString());
 		}
+
+		public override void linkVariables(Method owner)
+		{
+			ValueTarget.linkVariables(owner);
+		}
 	}
 
 	public class Statement_Quit : Statement
@@ -141,6 +180,28 @@ namespace BefunGen.AST
 		{
 			return "#QUIT";
 		}
+
+		public override void linkVariables(Method owner)
+		{
+			//NOP
+		}
+	}
+
+	public class Statement_NOP : Statement // Do Nothing
+	{
+		public Statement_NOP()
+		{
+		}
+
+		public override string getDebugString()
+		{
+			return "#NOP";
+		}
+
+		public override void linkVariables(Method owner)
+		{
+			//NOP
+		}
 	}
 
 	#endregion Keywords
@@ -149,31 +210,41 @@ namespace BefunGen.AST
 
 	public class Statement_Inc : Statement
 	{
-		public Expression_ValuePointer Identifier;
+		public Expression_ValuePointer Target;
 
 		public Statement_Inc(Expression_ValuePointer id)
 		{
-			this.Identifier = id;
+			this.Target = id;
 		}
 
 		public override string getDebugString()
 		{
-			return string.Format("#INC {0}", Identifier.getDebugString());
+			return string.Format("#INC {0}", Target.getDebugString());
+		}
+
+		public override void linkVariables(Method owner)
+		{
+			Target.linkVariables(owner);
 		}
 	}
 
 	public class Statement_Dec : Statement
 	{
-		public Expression_ValuePointer Identifier;
+		public Expression_ValuePointer Target;
 
 		public Statement_Dec(Expression_ValuePointer id)
 		{
-			this.Identifier = id;
+			this.Target = id;
 		}
 
 		public override string getDebugString()
 		{
-			return string.Format("#DEC {0}", Identifier.getDebugString());
+			return string.Format("#DEC {0}", Target.getDebugString());
+		}
+
+		public override void linkVariables(Method owner)
+		{
+			Target.linkVariables(owner);
 		}
 	}
 
@@ -192,6 +263,12 @@ namespace BefunGen.AST
 		{
 			return string.Format("#ASSIGN {0} = {1}", Target.getDebugString(), Expr.getDebugString());
 		}
+
+		public override void linkVariables(Method owner)
+		{
+			Target.linkVariables(owner);
+			Expr.linkVariables(owner);
+		}
 	}
 
 	#endregion Operations
@@ -208,7 +285,7 @@ namespace BefunGen.AST
 		{
 			this.Condition = c;
 			this.Body = b;
-			this.Else = null;
+			this.Else = new Statement_NOP();
 		}
 
 		public Statement_If(Expression c, Statement b, Statement e)
@@ -221,6 +298,13 @@ namespace BefunGen.AST
 		public override string getDebugString()
 		{
 			return string.Format("#IF ({0})\n{1}\n#IFELSE\n{2}", Condition.getDebugString(), indent(Body.getDebugString()), Else == null ? "  NULL" : indent(Else.ToString()));
+		}
+
+		public override void linkVariables(Method owner)
+		{
+			Condition.linkVariables(owner);
+			Body.linkVariables(owner);
+			Else.linkVariables(owner);
 		}
 	}
 
@@ -239,6 +323,12 @@ namespace BefunGen.AST
 		{
 			return string.Format("#WHILE ({0})\n{1}", Condition.getDebugString(), indent(Body.getDebugString()));
 		}
+
+		public override void linkVariables(Method owner)
+		{
+			Condition.linkVariables(owner);
+			Body.linkVariables(owner);
+		}
 	}
 
 	public class Statement_RepeatUntil : Statement
@@ -255,6 +345,12 @@ namespace BefunGen.AST
 		public override string getDebugString()
 		{
 			return string.Format("#REPEAT-UNTIL ({0})\n{1}", Condition.getDebugString(), indent(Body.getDebugString()));
+		}
+
+		public override void linkVariables(Method owner)
+		{
+			Condition.linkVariables(owner);
+			Body.linkVariables(owner);
 		}
 	}
 

@@ -700,6 +700,10 @@ namespace BefunGen.AST
 
 		private static string getStrData(int p, GOLD.Reduction r)
 		{
+			if (r.get_Data(p) == null)
+			{
+				Console.Beep();
+			}
 			return (string)r.get_Data(p);
 		}
 	}

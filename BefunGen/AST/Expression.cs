@@ -1,4 +1,5 @@
-﻿namespace BefunGen.AST
+﻿using BefunGen.AST.Exceptions;
+namespace BefunGen.AST
 {
 	public abstract class Expression : ASTObject
 	{
@@ -6,6 +7,8 @@
 		{
 			//--
 		}
+
+		public abstract void linkVariables(Method owner);
 	}
 
 	public abstract class Expression_Binary : Expression
@@ -17,6 +20,12 @@
 		{
 			this.Left = l;
 			this.Right = r;
+		}
+
+		public override void linkVariables(Method owner)
+		{
+			Left.linkVariables(owner);
+			Right.linkVariables(owner);
 		}
 	}
 
@@ -37,6 +46,11 @@
 		{
 			this.Expr = e;
 		}
+
+		public override void linkVariables(Method owner)
+		{
+			Expr.linkVariables(owner);
+		}
 	}
 
 	public abstract class Expression_ValuePointer : Expression
@@ -51,7 +65,8 @@
 
 	public class Expression_DirectValuePointer : Expression_ValuePointer
 	{
-		public string Identifier;
+		public string Identifier; // Temporary -- before linking;
+		public VarDeclaration_Value Target;
 
 		public Expression_DirectValuePointer(string id)
 		{
@@ -60,13 +75,25 @@
 
 		public override string getDebugString()
 		{
-			return Identifier;
+			return Target.getDebugString();
+		}
+
+		public override void linkVariables(Method owner)
+		{
+			Target = owner.findVariableByIdentifier(Identifier) as VarDeclaration_Value;
+
+			if (Target == null)
+				throw new UnresolvableReferenceException(Identifier);
+
+			Identifier = null;
 		}
 	}
 
 	public class Expression_ArrayValuePointer : Expression_ValuePointer
 	{
 		public string Identifier;
+		public VarDeclaration_Array Target;
+
 		public Expression Index;
 
 		public Expression_ArrayValuePointer(string id, Expression idx)
@@ -77,7 +104,19 @@
 
 		public override string getDebugString()
 		{
-			return string.Format("{0}[{1}]", Identifier, Index.getDebugString());
+			return Target.getDebugString();
+		}
+
+		public override void linkVariables(Method owner)
+		{
+			Target = owner.findVariableByIdentifier(Identifier) as VarDeclaration_Array;
+
+			if (Target == null)
+				throw new UnresolvableReferenceException(Identifier);
+			if (!typeof(BType_Array).IsAssignableFrom(Target.Type.GetType()))
+				throw new IndexOperatorNotDefiniedException();
+
+			Identifier = null;
 		}
 	}
 
@@ -292,6 +331,11 @@
 		{
 			return string.Format("{0}", Value.getDebugString());
 		}
+
+		public override void linkVariables(Method owner)
+		{
+			//NOP
+		}
 	}
 
 	public class Expression_Rand : Expression
@@ -304,6 +348,11 @@
 		public override string getDebugString()
 		{
 			return "#RAND#";
+		}
+
+		public override void linkVariables(Method owner)
+		{
+			//NOP
 		}
 	}
 
@@ -322,6 +371,11 @@
 		{
 			return string.Format("(({0}){1})", Type.getDebugString(), Expr.getDebugString());
 		}
+
+		public override void linkVariables(Method owner)
+		{
+			Expr.linkVariables(owner);
+		}
 	}
 
 	public class Expression_FunctionCall : Expression
@@ -336,6 +390,11 @@
 		public override string getDebugString()
 		{
 			return Method.getDebugString();
+		}
+
+		public override void linkVariables(Method owner)
+		{
+			Method.linkVariables(owner);
 		}
 	}
 

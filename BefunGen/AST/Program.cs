@@ -8,18 +8,31 @@ namespace BefunGen.AST
 	{
 		public string Identifier;
 		public Method MainStatement;
-		public List<Method> MethodList;
+		public List<Method> MethodList; // Includes MainStatement
 
 		public Program(string id, Method m, List<Method> mlst)
 		{
 			this.Identifier = id;
 			this.MainStatement = m;
 			this.MethodList = mlst.ToList();
+
+			MethodList.Add(MainStatement);
 		}
 
 		public override string getDebugString()
 		{
-			return string.Format("#Program ({0})\n[\n{1}\n{2}\n]", Identifier, indent(MainStatement.getDebugString()), indent(getDebugStringForList(MethodList)));
+			return string.Format("#Program ({0})\n[\n{1}\n]", Identifier, indent(getDebugStringForList(MethodList)));
+		}
+
+		public void link()
+		{
+			linkVariables();
+		}
+
+		private void linkVariables()
+		{
+			foreach (Method m in MethodList)
+				m.linkVariables();
 		}
 	}
 

@@ -1,4 +1,6 @@
-﻿namespace BefunGen.AST
+﻿using BefunGen.AST.Exceptions;
+using System.Linq;
+namespace BefunGen.AST
 {
 	public abstract class BType : ASTObject
 	{
@@ -6,6 +8,8 @@
 		{
 			//--
 		}
+
+		public abstract Literal getDefaultValue();
 	}
 
 	public abstract class BType_Value : BType
@@ -35,6 +39,11 @@
 		{
 			return "void";
 		}
+
+		public override Literal getDefaultValue()
+		{
+			throw new VoidObjectCallException();
+		}
 	}
 
 	#region Value Types
@@ -50,6 +59,11 @@
 		{
 			return "int";
 		}
+
+		public override Literal getDefaultValue()
+		{
+			return new Literal_Int(0);
+		}
 	}
 
 	public class BType_Digit : BType_Value
@@ -62,6 +76,11 @@
 		public override string getDebugString()
 		{
 			return "digit";
+		}
+
+		public override Literal getDefaultValue()
+		{
+			return new Literal_Digit(0);
 		}
 	}
 
@@ -76,6 +95,11 @@
 		{
 			return "char";
 		}
+
+		public override Literal getDefaultValue()
+		{
+			return new Literal_Char('0');
+		}
 	}
 
 	public class BType_Bool : BType_Value
@@ -88,6 +112,11 @@
 		public override string getDebugString()
 		{
 			return "bool";
+		}
+
+		public override Literal getDefaultValue()
+		{
+			return new Literal_Bool(false);
 		}
 	}
 
@@ -108,6 +137,11 @@
 		{
 			return string.Format("int[{0}]", Size);
 		}
+
+		public override Literal getDefaultValue()
+		{
+			return new Literal_IntArr(Enumerable.Repeat(0, Size).ToList());
+		}
 	}
 
 	public class BType_CharArr : BType_Array
@@ -122,6 +156,11 @@
 		public override string getDebugString()
 		{
 			return string.Format("char[{0}]", Size);
+		}
+
+		public override Literal getDefaultValue()
+		{
+			return new Literal_CharArr(Enumerable.Repeat('0', Size).ToList());
 		}
 	}
 
@@ -138,6 +177,11 @@
 		{
 			return string.Format("digit[{0}]", Size);
 		}
+
+		public override Literal getDefaultValue()
+		{
+			return new Literal_DigitArr(Enumerable.Repeat((byte)0, Size).ToList());
+		}
 	}
 
 	public class BType_BoolArr : BType_Array
@@ -152,6 +196,11 @@
 		public override string getDebugString()
 		{
 			return string.Format("bool[{0}]", Size);
+		}
+
+		public override Literal getDefaultValue()
+		{
+			return new Literal_IntArr(Enumerable.Repeat(0, Size).ToList());
 		}
 	}
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BefunGen.AST
 {
@@ -9,7 +10,7 @@ namespace BefunGen.AST
 		public string Identifier;
 		public List<VarDeclaration> Parameter;
 
-		public List<VarDeclaration> Variables;
+		public List<VarDeclaration> Variables; // Includes Parameter
 		public Statement Body;
 
 		public Method(Method_Header h, Method_Body b)
@@ -26,6 +27,8 @@ namespace BefunGen.AST
 
 			this.Variables = v;
 			this.Body = b;
+
+			Variables.AddRange(Parameter);
 		}
 
 		public override string getDebugString()
@@ -36,6 +39,16 @@ namespace BefunGen.AST
 				indent(getDebugStringForList(Parameter)),
 				indent(getDebugStringForList(Variables)),
 				indent(Body.getDebugString()));
+		}
+
+		public void linkVariables()
+		{
+			Body.linkVariables(this);
+		}
+
+		public VarDeclaration findVariableByIdentifier(string ident)
+		{
+			return Variables.Count(p => p.Identifier == ident) == 1 ? Variables.Single(p => p.Identifier == ident) : null;
 		}
 	}
 
