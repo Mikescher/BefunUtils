@@ -220,7 +220,7 @@ namespace BefunGen.AST
 
 		public override string getDebugString()
 		{
-			return string.Format("#IF ({0})\n{1}\n#IFELSE\n{2}", Condition.getDebugString(), indent(Body.ToString()), Else == null ? "  NULL" : indent(Else.ToString()));
+			return string.Format("#IF ({0})\n{1}\n#IFELSE\n{2}", Condition.getDebugString(), indent(Body.getDebugString()), Else == null ? "  NULL" : indent(Else.ToString()));
 		}
 	}
 
@@ -237,7 +237,7 @@ namespace BefunGen.AST
 
 		public override string getDebugString()
 		{
-			return string.Format("#WHILE ({0})\n{1}", Condition.getDebugString(), indent(Body.ToString()));
+			return string.Format("#WHILE ({0})\n{1}", Condition.getDebugString(), indent(Body.getDebugString()));
 		}
 	}
 
@@ -254,7 +254,7 @@ namespace BefunGen.AST
 
 		public override string getDebugString()
 		{
-			return string.Format("#REPEAT-UNTIL ({0})\n{1}", Condition.getDebugString(), indent(Body.ToString()));
+			return string.Format("#REPEAT-UNTIL ({0})\n{1}", Condition.getDebugString(), indent(Body.getDebugString()));
 		}
 	}
 
