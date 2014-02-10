@@ -54,7 +54,8 @@ namespace BefunGen
 			btnLoad.Enabled = true;
 
 			String path = Application.StartupPath;
-			path = path.Substring(0, path.LastIndexOf("BefunGen"));
+			if (path.Contains("BefunGen"))
+				path = path.Substring(0, path.LastIndexOf("BefunGen"));
 			path = Path.Combine(path, "BefunGen");
 			path = Path.Combine(path, "TextFunge");
 
