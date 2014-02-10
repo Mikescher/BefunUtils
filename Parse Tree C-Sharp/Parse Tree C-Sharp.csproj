@@ -79,7 +79,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MyParser.cs" />
+    <Compile Include="DemoParser.cs" />
     <Compile Include="frmMain.cs">
       <SubType>Form</SubType>
     </Compile>

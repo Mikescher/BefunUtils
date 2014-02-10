@@ -1,4 +1,4 @@
-﻿using System;
+﻿using BefunGen.AST.Exceptions;
 
 namespace BefunGen.AST.CodeGen
 {
@@ -20,7 +20,7 @@ namespace BefunGen.AST.CodeGen
 		If_Vertical,
 		Stringmode,
 		Stack_Dup,
-		Stack_swap,
+		Stack_Swap,
 		Stack_Pop,
 		Out_Int,
 		Out_ASCII,
@@ -103,7 +103,7 @@ namespace BefunGen.AST.CodeGen
 				case BefungeCommandType.Stack_Dup:
 					return ':';
 
-				case BefungeCommandType.Stack_swap:
+				case BefungeCommandType.Stack_Swap:
 					return '\\';
 
 				case BefungeCommandType.Stack_Pop:
@@ -137,7 +137,7 @@ namespace BefunGen.AST.CodeGen
 					return (char)Param;
 
 				default:
-					throw new InvalidOperationException();
+					throw new InvalidEnumStateException(Type);
 			}
 		}
 	}

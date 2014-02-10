@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BefunGen.AST.CodeGen;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -10,8 +11,6 @@ namespace BefunGen.AST
 		{
 		}
 
-		public abstract string getDebugString();
-
 		protected string getDebugStringForList<T>(List<T> ls) where T : ASTObject
 		{
 			return string.Join("\n", ls.Select(p => p.getDebugString()));
@@ -21,5 +20,7 @@ namespace BefunGen.AST
 		{
 			return string.Join("\n", s.Split(new string[] { "\n" }, StringSplitOptions.None).Select(p => "    " + p));
 		}
+
+		public abstract string getDebugString();
 	}
 }

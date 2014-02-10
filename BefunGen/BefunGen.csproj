@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AST\ASTObject.cs" />
+    <Compile Include="AST\CodeGen\BCHelper.cs" />
     <Compile Include="AST\CodeGen\BefungeCommand.cs" />
     <Compile Include="AST\CodeGen\CodePiece.cs" />
     <Compile Include="AST\Expression.cs" />

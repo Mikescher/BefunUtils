@@ -149,5 +149,17 @@ namespace BefunGen.AST.CodeGen
 
 			return builder.ToString();
 		}
+
+		public void normalize()
+		{
+			int ox = -MinX;
+			int oy = -MinY;
+
+			MinX += ox;
+			MinY += oy;
+
+			MaxX += ox;
+			MaxY += oy;
+		}
 	}
 }

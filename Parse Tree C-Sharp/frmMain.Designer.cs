@@ -41,6 +41,8 @@
 			this.txtAST = new System.Windows.Forms.TextBox();
 			this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
 			this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
+			this.tabPage3 = new System.Windows.Forms.TabPage();
+			this.txtParseTrimTree = new System.Windows.Forms.TextBox();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
@@ -51,6 +53,7 @@
 			this.tabPage2.SuspendLayout();
 			this.tableLayoutPanel2.SuspendLayout();
 			this.tableLayoutPanel3.SuspendLayout();
+			this.tabPage3.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// btnLoad
@@ -160,6 +163,7 @@
 			// 
 			this.tabControl1.Alignment = System.Windows.Forms.TabAlignment.Bottom;
 			this.tabControl1.Controls.Add(this.tabPage1);
+			this.tabControl1.Controls.Add(this.tabPage3);
 			this.tabControl1.Controls.Add(this.tabPage2);
 			this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tabControl1.Location = new System.Drawing.Point(0, 0);
@@ -232,6 +236,31 @@
 			this.tableLayoutPanel3.Size = new System.Drawing.Size(748, 31);
 			this.tableLayoutPanel3.TabIndex = 12;
 			// 
+			// tabPage3
+			// 
+			this.tabPage3.Controls.Add(this.txtParseTrimTree);
+			this.tabPage3.Location = new System.Drawing.Point(4, 4);
+			this.tabPage3.Name = "tabPage3";
+			this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
+			this.tabPage3.Size = new System.Drawing.Size(740, 284);
+			this.tabPage3.TabIndex = 2;
+			this.tabPage3.Text = "Trimmed Tree";
+			this.tabPage3.UseVisualStyleBackColor = true;
+			// 
+			// txtParseTrimTree
+			// 
+			this.txtParseTrimTree.BackColor = System.Drawing.SystemColors.Window;
+			this.txtParseTrimTree.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.txtParseTrimTree.Font = new System.Drawing.Font("Courier New", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.txtParseTrimTree.Location = new System.Drawing.Point(3, 3);
+			this.txtParseTrimTree.Multiline = true;
+			this.txtParseTrimTree.Name = "txtParseTrimTree";
+			this.txtParseTrimTree.ReadOnly = true;
+			this.txtParseTrimTree.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+			this.txtParseTrimTree.Size = new System.Drawing.Size(734, 278);
+			this.txtParseTrimTree.TabIndex = 7;
+			this.txtParseTrimTree.WordWrap = false;
+			// 
 			// frmMain
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -254,6 +283,8 @@
 			this.tableLayoutPanel2.ResumeLayout(false);
 			this.tableLayoutPanel3.ResumeLayout(false);
 			this.tableLayoutPanel3.PerformLayout();
+			this.tabPage3.ResumeLayout(false);
+			this.tabPage3.PerformLayout();
 			this.ResumeLayout(false);
 
 		}
@@ -272,6 +303,8 @@
 		private System.Windows.Forms.TabPage tabPage2;
 		private System.Windows.Forms.TextBox txtAST;
 		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
+		private System.Windows.Forms.TabPage tabPage3;
+		internal System.Windows.Forms.TextBox txtParseTrimTree;
 	}
 }
 

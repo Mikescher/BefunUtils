@@ -2,8 +2,9 @@
 
 using System;
 using System.IO;
+using System.Text;
 
-internal class MyParserClass
+internal class DemoParser
 {
 	private GOLD.Parser parser = new GOLD.Parser();
 
@@ -23,7 +24,7 @@ internal class MyParserClass
 		}
 	}
 
-	public bool Parse(TextReader reader)
+	public bool Parse(TextReader reader, ref string tree, bool Trim)
 	{
 		//This procedure starts the GOLD Parser Engine and handles each of the
 		//messages it returns. Each time a reduction is made, you can create new
@@ -38,7 +39,7 @@ internal class MyParserClass
 		bool accepted = false;          //Was the parse successful?
 
 		parser.Open(reader);
-		parser.TrimReductions = false;  //Please read about this feature before enabling
+		parser.TrimReductions = Trim;  //Please read about this feature before enabling
 
 		done = false;
 		while (!done)
@@ -99,6 +100,60 @@ internal class MyParserClass
 			}
 		} //while
 
+		if (accepted)
+		{
+			tree = DrawReductionTree(Root);
+		}
+		else
+		{
+			tree = FailMessage;
+		}
+
 		return accepted;
+	}
+
+	private string DrawReductionTree(GOLD.Reduction Root)
+	{
+		//This procedure starts the recursion that draws the parse tree.
+		StringBuilder tree = new StringBuilder();
+
+		tree.AppendLine("+-" + Root.Parent.Text(false));
+		DrawReduction(tree, Root, 1);
+
+		return tree.ToString();
+	}
+
+	private void DrawReduction(StringBuilder tree, GOLD.Reduction reduction, int indent)
+	{
+		//This is a simple recursive procedure that draws an ASCII version of the parse
+		//tree
+
+		int n;
+		string indentText = "";
+
+		for (n = 1; n <= indent; n++)
+		{
+			indentText += "| ";
+		}
+
+		//=== Display the children of the reduction
+		for (n = 0; n < reduction.Count(); n++)
+		{
+			switch (reduction[n].Type())
+			{
+				case GOLD.SymbolType.Nonterminal:
+					GOLD.Reduction branch = (GOLD.Reduction)reduction[n].Data;
+
+					tree.AppendLine(indentText + "+-" + branch.Parent.Text(false));
+					DrawReduction(tree, branch, indent + 1);
+					break;
+
+				default:
+					string leaf = (string)reduction[n].Data;
+
+					tree.AppendLine(indentText + "+-" + leaf);
+					break;
+			}
+		}
 	}
 }; //MyParser

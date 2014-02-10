@@ -1,14 +1,13 @@
 ﻿using BefunGen.AST;
 using System;
 using System.IO;
-using System.Text;
 using System.Windows.Forms;
 
 namespace BefunGen
 {
 	public partial class frmMain : Form
 	{
-		private MyParserClass MyParser = new MyParserClass();
+		private DemoParser MyParser = new DemoParser();
 		private TextFungeParser GParser = new TextFungeParser();
 
 		private bool loaded = false;
@@ -73,51 +72,6 @@ namespace BefunGen
 				txtSource.Document.Text = File.ReadAllText(path_tf);
 		}
 
-		private void DrawReductionTree(GOLD.Reduction Root)
-		{
-			//This procedure starts the recursion that draws the parse tree.
-			StringBuilder tree = new StringBuilder();
-
-			tree.AppendLine("+-" + Root.Parent.Text(false));
-			DrawReduction(tree, Root, 1);
-
-			txtParseTree.Text = tree.ToString();
-		}
-
-		private void DrawReduction(StringBuilder tree, GOLD.Reduction reduction, int indent)
-		{
-			//This is a simple recursive procedure that draws an ASCII version of the parse
-			//tree
-
-			int n;
-			string indentText = "";
-
-			for (n = 1; n <= indent; n++)
-			{
-				indentText += "| ";
-			}
-
-			//=== Display the children of the reduction
-			for (n = 0; n < reduction.Count(); n++)
-			{
-				switch (reduction[n].Type())
-				{
-					case GOLD.SymbolType.Nonterminal:
-						GOLD.Reduction branch = (GOLD.Reduction)reduction[n].Data;
-
-						tree.AppendLine(indentText + "+-" + branch.Parent.Text(false));
-						DrawReduction(tree, branch, indent + 1);
-						break;
-
-					default:
-						string leaf = (string)reduction[n].Data;
-
-						tree.AppendLine(indentText + "+-" + leaf);
-						break;
-				}
-			}
-		}
-
 		private void txtSource_TextChanged(object sender, EventArgs e)
 		{
 			doParse();
@@ -127,24 +81,19 @@ namespace BefunGen
 		{
 			if (loaded)
 			{
-				if (MyParser.Parse(new StringReader(txtSource.Document.Text)))
-				{
-					DrawReductionTree(MyParser.Root);
-				}
-				else
-				{
-					txtParseTree.Text = MyParser.FailMessage;
-				}
+				string refout1 = "";
+				MyParser.Parse(new StringReader(txtSource.Document.Text), ref refout1, false);
+				txtParseTree.Text = refout1;
+
+				string refout2 = "";
+				MyParser.Parse(new StringReader(txtSource.Document.Text), ref refout2, true);
+				txtParseTrimTree.Text = refout2;
 
 				BefunGen.AST.Program p = GParser.generateAST(txtSource.Document.Text);
 				if (p == null)
-				{
 					txtAST.Text = GParser.FailMessage;
-				}
 				else
-				{
 					txtAST.Text = p.getDebugString().Replace("\n", Environment.NewLine);
-				}
 			}
 			else
 			{

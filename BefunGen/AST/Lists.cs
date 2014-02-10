@@ -1,4 +1,4 @@
-﻿using System;
+﻿using BefunGen.AST.Exceptions;
 using System.Collections.Generic;
 
 namespace BefunGen.AST
@@ -36,7 +36,7 @@ namespace BefunGen.AST
 
 		public override string getDebugString()
 		{
-			throw new ArgumentException();
+			throw new AccessTemporaryASTObjectException();
 		}
 	}
 
@@ -61,7 +61,7 @@ namespace BefunGen.AST
 
 		public override string getDebugString()
 		{
-			throw new ArgumentException();
+			throw new AccessTemporaryASTObjectException();
 		}
 	}
 
@@ -86,7 +86,7 @@ namespace BefunGen.AST
 
 		public override string getDebugString()
 		{
-			throw new ArgumentException();
+			throw new AccessTemporaryASTObjectException();
 		}
 	}
 
@@ -111,7 +111,7 @@ namespace BefunGen.AST
 
 		public override string getDebugString()
 		{
-			throw new ArgumentException();
+			throw new AccessTemporaryASTObjectException();
 		}
 	}
 
@@ -140,7 +140,7 @@ namespace BefunGen.AST
 
 		public override string getDebugString()
 		{
-			throw new ArgumentException();
+			throw new AccessTemporaryASTObjectException();
 		}
 	}
 
@@ -165,7 +165,7 @@ namespace BefunGen.AST
 
 		public override string getDebugString()
 		{
-			throw new ArgumentException();
+			throw new AccessTemporaryASTObjectException();
 		}
 	}
 
@@ -190,7 +190,7 @@ namespace BefunGen.AST
 
 		public override string getDebugString()
 		{
-			throw new ArgumentException();
+			throw new AccessTemporaryASTObjectException();
 		}
 	}
 
@@ -215,7 +215,7 @@ namespace BefunGen.AST
 
 		public override string getDebugString()
 		{
-			throw new ArgumentException();
+			throw new AccessTemporaryASTObjectException();
 		}
 	}
 
