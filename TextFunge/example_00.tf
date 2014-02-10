@@ -31,7 +31,7 @@ program example
 		int result;
 	begin
 		result = param;
-		while(expo) do
+		while (expo) do
 		begin
 			result = result * param;
 			expo = expo - 1;

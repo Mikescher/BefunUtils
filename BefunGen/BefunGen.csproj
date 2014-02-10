@@ -53,6 +53,7 @@
     <Compile Include="AST\CodeGen\CodePiece.cs" />
     <Compile Include="AST\Expression.cs" />
     <Compile Include="AST\GrammarTableMap.cs" />
+    <Compile Include="AST\GrammarTableSkeleton.cs" />
     <Compile Include="AST\Lists.cs" />
     <Compile Include="AST\Literal.cs" />
     <Compile Include="AST\Method.cs" />

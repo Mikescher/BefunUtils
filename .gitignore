@@ -156,7 +156,7 @@ $RECYCLE.BIN/
 
 GOLD Tools/
 *.~.gr
-*.egt
+#*.egt
 
 
 
