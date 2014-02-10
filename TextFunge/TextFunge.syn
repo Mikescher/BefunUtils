@@ -11,7 +11,7 @@
 		<Keywords>
 			<PatternGroup Name="Keywords" Style="Keyword" CaseSensitive="false">
 				<Patterns>
-				program end begin var in out return if then while do repeat else goto rand true false
+				program end begin var in out return if then while do repeat until else goto rand true false
 				</Patterns>
 			</PatternGroup>
 			
