@@ -22,6 +22,24 @@ namespace BefunGen
 			doLoad();
 		}
 
+		private void btnLoadSYN_Click(object sender, EventArgs e)
+		{
+			doLoadSYN();
+		}
+
+		private void doLoadSYN()
+		{
+			try
+			{
+				txtSource.Document.SyntaxFile = txtSynFile.Text;
+				txtSource.Document.ParseAll();
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show(ex.Message);
+			}
+		}
+
 		private void doLoad()
 		{
 			try
@@ -63,14 +81,22 @@ namespace BefunGen
 
 			if (File.Exists(txtTableFile.Text))
 				doLoad();
+			else
+				txtLog.AppendText(string.Format("EGT not found: {0} \r\n", txtTableFile.Text));
 
 			//#########
 
-			txtSource.Document.SyntaxFile = Path.Combine(path, "TextFunge.syn");
+			txtSynFile.Text = Path.Combine(path, "TextFunge.syn");
+			if (File.Exists(txtSynFile.Text))
+				doLoadSYN();
+			else
+				txtLog.AppendText(string.Format("Syntaxfile not found: {0} \r\n", txtSynFile.Text));
 
 			string path_tf = Path.Combine(path, "example_00.tf");
 			if (File.Exists(path_tf))
 				txtSource.Document.Text = File.ReadAllText(path_tf);
+			else
+				txtLog.AppendText(string.Format("Example not found: {0} \r\n", path_tf));
 		}
 
 		private void txtSource_TextChanged(object sender, EventArgs e)
@@ -82,23 +108,38 @@ namespace BefunGen
 		{
 			if (loaded)
 			{
+				txtLog.Clear();
+
 				string refout1 = "";
 				MyParser.Parse(new StringReader(txtSource.Document.Text), ref refout1, false);
 				txtParseTree.Text = refout1;
+				txtLog.AppendText(string.Format("Reduction Tree: {0}ms\r\n", MyParser.Time));
 
 				string refout2 = "";
 				MyParser.Parse(new StringReader(txtSource.Document.Text), ref refout2, true);
 				txtParseTrimTree.Text = refout2;
+				txtLog.AppendText(string.Format("Trimmed Reduction Tree: {0}ms\r\n", MyParser.Time));
 
 				BefunGen.AST.Program p = GParser.generateAST(txtSource.Document.Text);
 				if (p == null)
 					txtAST.Text = GParser.FailMessage;
 				else
-					txtAST.Text = p.getDebugString().Replace("\n", Environment.NewLine);
+				{
+					txtLog.AppendText(string.Format("AST-Gen: {0}ms\r\n", MyParser.Time));
+
+					long gdst = Environment.TickCount;
+					string debug = p.getDebugString().Replace("\n", Environment.NewLine);
+					gdst = Environment.TickCount - gdst;
+
+					txtAST.Text = debug;
+
+					txtLog.AppendText(string.Format("AST-DebugOut: {0}ms\r\n", gdst));
+				}
 			}
 			else
 			{
 				txtParseTree.Text = "Grammar not loaded";
+				txtParseTrimTree.Text = "Grammar not loaded";
 				txtAST.Text = "Grammar not loaded";
 			}
 		}

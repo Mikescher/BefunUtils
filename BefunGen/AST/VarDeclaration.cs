@@ -57,6 +57,16 @@
 		public VarDeclaration_Array(BType_Array t, string id, Literal_Array v)
 			: base(t, id, v)
 		{
+			int LiteralSize = ((Literal_Array)Initial).Count;
+
+			if (LiteralSize > t.Size) 
+			{
+
+			} 
+			else if (LiteralSize < t.Size) 
+			{
+
+			}
 		}
 	}
 

@@ -8,6 +8,7 @@ namespace BefunGen.AST
 		private GOLD.Parser parser;
 
 		public string FailMessage { get; private set; }
+		public long ParseTime { get; private set; }
 
 		public TextFungeParser()
 		{
@@ -33,6 +34,8 @@ namespace BefunGen.AST
 
 		public Program generateAST(string txt)
 		{
+			ParseTime = Environment.TickCount;
+
 			Program result = null;
 
 			try
@@ -57,6 +60,8 @@ namespace BefunGen.AST
 				FailMessage = e.ToString();
 				return null;
 			}
+
+			ParseTime = Environment.TickCount - ParseTime;
 
 			return result;
 		}

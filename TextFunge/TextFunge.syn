@@ -5,19 +5,46 @@
 </FileTypes>
 
 	<Block Name="Code" Style="Code" IsMultiline="true">
-		<Scope Start="" End="" Style="Scope" Text="..." />
-		
+		<Scope Start="begin" StartIsKeyword="true" End="end" EndIsKeyword="true"  Style="Keyword" Text="Begin..." CauseIndent="true"/>
+		<Scope Start="if" StartIsKeyword="true" End="end" EndIsKeyword="true"  Style="Keyword" Text="If..." CauseIndent="true"/>
+		<Scope Start="(" StartIsKeyword="false" End=")" EndIsKeyword="false"  Style="Code" Text="..." CauseIndent="false"/>
+		<Scope Start="[" StartIsKeyword="false" End="]" EndIsKeyword="false"  Style="Code" Text="..." CauseIndent="false"/>
+		<Scope Start="{" StartIsKeyword="false" End="}" EndIsKeyword="false"  Style="Code" Text="..." CauseIndent="false"/>
 		<!-- Keywords that can exist inside this block -->
 		<Keywords>
 			<PatternGroup Name="Keywords" Style="Keyword" CaseSensitive="false">
 				<Patterns>
-				program end begin var in out return if then while do repeat until else goto rand true false
+					program 
+					end 
+					begin 
+					var 
+					in 
+					out 
+					return 
+					if 
+					then 
+					while 
+					do 
+					repeat 
+					until 
+					else 
+					goto 
+					rand 
+					true 
+					false
 				</Patterns>
 			</PatternGroup>
 			
 			<PatternGroup Name="Types" Style="Keyword" CaseSensitive="false">
 				<Patterns>
-				int integer char character digit bool boolean void
+					int 
+					integer 
+					char 
+					character 
+					digit 
+					bool 
+					boolean 
+					void
 				</Patterns>
 			</PatternGroup>
 			
@@ -29,7 +56,18 @@
 
 		<!-- Operators that can exist inside this block -->
 		<Operators>
-			<PatternGroup name="Operators" Style="Operator">
+			<PatternGroup name="Operators" Style="Operators">
+				<Pattern Text="!" />
+				<Pattern Text="%" />
+				<Pattern Text="*" />
+				<Pattern Text="/" />
+				<Pattern Text="+" />
+				<Pattern Text="-" />
+				<Pattern Text="=" />
+				<Pattern Text="|" />
+				<Pattern Text="&gt;=" />
+				<Pattern Text="&lt;=" />
+				<Pattern Text=":=" />
 			</PatternGroup>
 		</Operators>
 		<!-- Blocks that can exist inside this block -->
@@ -59,7 +97,8 @@
 	<Style Name="Code" ForeColor="" BackColor="" Bold="false" Italic="false" Underline="false" />
 	<Style Name="Scope" ForeColor="" BackColor="" Bold="false" Italic="false" Underline="false" />
 	<Style Name="Comment" ForeColor="Green" BackColor="" Bold="false" Italic="false" Underline="false" />
-	<Style Name="String" ForeColor="Teal" BackColor="" Bold="true" Italic="false" Underline="false" />
+	<Style Name="String" ForeColor="Darkred" BackColor="" Bold="true" Italic="false" Underline="false" />
 	<Style Name="Number" ForeColor="Teal" BackColor="" Bold="true" Italic="false" Underline="false" />
 	<Style Name="Keyword" ForeColor="Blue" BackColor="" Bold="true" Italic="false" Underline="false" />
+	<Style Name="Operators" ForeColor="Red" BackColor="" Bold="false" Italic="false" Underline="false" />
 </Language>

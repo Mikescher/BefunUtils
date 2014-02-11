@@ -23,10 +23,14 @@ namespace BefunGen.AST
 
 	public abstract class Literal_Array : Literal
 	{
+		public int Count { get { return getCount(); } }
+
 		public Literal_Array()
 		{
 			//--
 		}
+
+		protected abstract int getCount();
 	}
 
 	#endregion Parents
@@ -110,6 +114,11 @@ namespace BefunGen.AST
 		{
 			return "{" + string.Join(",", Value.Select(p => p.ToString())) + "}";
 		}
+
+		protected override int getCount()
+		{
+			return Value.Count;
+		}
 	}
 
 	public class Literal_CharArr : Literal_Array
@@ -130,6 +139,11 @@ namespace BefunGen.AST
 		{
 			return "{" + string.Join(",", Value.Select(p => p.ToString())) + "}";
 		}
+
+		protected override int getCount()
+		{
+			return Value.Count;
+		}
 	}
 
 	public class Literal_BoolArr : Literal_Array
@@ -145,6 +159,11 @@ namespace BefunGen.AST
 		{
 			return "{" + string.Join(",", Value.Select(p => p.ToString())) + "}";
 		}
+
+		protected override int getCount()
+		{
+			return Value.Count;
+		}
 	}
 
 	public class Literal_DigitArr : Literal_Array
@@ -159,6 +178,11 @@ namespace BefunGen.AST
 		public override string getDebugString()
 		{
 			return "{" + string.Join(",", Value.Select(p => p.ToString())) + "}";
+		}
+
+		protected override int getCount()
+		{
+			return Value.Count;
 		}
 	}
 

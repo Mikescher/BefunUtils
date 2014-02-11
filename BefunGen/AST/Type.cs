@@ -22,6 +22,8 @@ namespace BefunGen.AST
 
 	public abstract class BType_Array : BType
 	{
+		public int Size;
+
 		public BType_Array()
 		{
 			//--
@@ -126,8 +128,6 @@ namespace BefunGen.AST
 
 	public class BType_IntArr : BType_Array
 	{
-		public int Size;
-
 		public BType_IntArr(int sz)
 		{
 			this.Size = sz;
@@ -146,8 +146,6 @@ namespace BefunGen.AST
 
 	public class BType_CharArr : BType_Array
 	{
-		public int Size;
-
 		public BType_CharArr(int sz)
 		{
 			this.Size = sz;
@@ -166,8 +164,6 @@ namespace BefunGen.AST
 
 	public class BType_DigitArr : BType_Array
 	{
-		public int Size;
-
 		public BType_DigitArr(int sz)
 		{
 			this.Size = sz;
@@ -186,8 +182,6 @@ namespace BefunGen.AST
 
 	public class BType_BoolArr : BType_Array
 	{
-		public int Size;
-
 		public BType_BoolArr(int sz)
 		{
 			this.Size = sz;

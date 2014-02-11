@@ -16,7 +16,7 @@ namespace BefunGen.AST
 			this.MainStatement = m;
 			this.MethodList = mlst.ToList();
 
-			MethodList.Add(MainStatement);
+			MethodList.Insert(0, MainStatement);
 		}
 
 		public override string getDebugString()

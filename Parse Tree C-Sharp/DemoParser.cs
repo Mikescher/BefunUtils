@@ -11,6 +11,8 @@ internal class DemoParser
 	public GOLD.Reduction Root;     //Store the top of the tree
 	public string FailMessage;
 
+	public long Time;
+
 	public bool Setup(string FilePath)
 	{
 		try
@@ -26,13 +28,7 @@ internal class DemoParser
 
 	public bool Parse(TextReader reader, ref string tree, bool Trim)
 	{
-		//This procedure starts the GOLD Parser Engine and handles each of the
-		//messages it returns. Each time a reduction is made, you can create new
-		//custom object and reassign the .CurrentReduction property. Otherwise,
-		//the system will use the Reduction object that was returned.
-		//
-		//The resulting tree will be a pure representation of the language
-		//and will be ready to implement.
+		Time = Environment.TickCount;
 
 		GOLD.ParseMessage response;
 		bool done;                      //Controls when we leave the loop
@@ -108,6 +104,8 @@ internal class DemoParser
 		{
 			tree = FailMessage;
 		}
+
+		Time = Environment.TickCount - Time;
 
 		return accepted;
 	}

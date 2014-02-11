@@ -137,7 +137,7 @@ namespace BefunGen.AST.CodeGen
 					return (char)Param;
 
 				default:
-					throw new InvalidEnumStateException(Type);
+					throw new InvalidBefungeCommandTypeException();
 			}
 		}
 	}

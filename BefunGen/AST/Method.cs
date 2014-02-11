@@ -37,7 +37,7 @@ namespace BefunGen.AST
 				Identifier,
 				ResultType.getDebugString(),
 				indent(getDebugStringForList(Parameter)),
-				indent(getDebugStringForList(Variables)),
+				indent(getDebugStringForList(Variables.Where(p => ! Parameter.Contains(p)).ToList())),
 				indent(Body.getDebugString()));
 		}
 
