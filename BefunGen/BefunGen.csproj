@@ -55,6 +55,9 @@
     <Compile Include="AST\CodeGen\SourceCodePosition.cs" />
     <Compile Include="AST\Exceptions\AccessTemporaryASTObjectException.cs" />
     <Compile Include="AST\Exceptions\ASTException.cs" />
+    <Compile Include="AST\Exceptions\WrongTypeException.cs" />
+    <Compile Include="AST\Exceptions\WrongParameterCountException.cs" />
+    <Compile Include="AST\Exceptions\NoConditionException.cs" />
     <Compile Include="AST\Exceptions\InvalidCompareException.cs" />
     <Compile Include="AST\Exceptions\IndexOperatorNotDefiniedException.cs" />
     <Compile Include="AST\Exceptions\GroupErrorException.cs" />

@@ -31,7 +31,17 @@ namespace BefunGen.AST
 
 		public override string getDebugString()
 		{
-			return string.Format("{0} {1}{{{2}}} ::= {3}", Type.getDebugString(), Identifier, ID, Initial == null ? "NULL" : Initial.getDebugString());
+			return string.Format("{0} {{{1}}} ::= {2}", Type.getDebugString(), ID, Initial == null ? "NULL" : Initial.getDebugString());
+		}
+
+		public string getShortDebugString()
+		{
+			return string.Format("{{{0}}}", ID);
+		}
+
+		public static void resetCounter()
+		{
+			_V_ID_COUNTER = 1;
 		}
 	}
 
@@ -52,6 +62,8 @@ namespace BefunGen.AST
 
 	public class VarDeclaration_Array : VarDeclaration
 	{
+		public BType_Value InternalType { get { return (Type as BType_Array).InternalType; } }
+
 		public VarDeclaration_Array(SourceCodePosition pos, BType_Array t, string id)
 			: base(pos, t, id, null)
 		{
@@ -62,11 +74,11 @@ namespace BefunGen.AST
 		{
 			int LiteralSize = ((Literal_Array)Initial).Count;
 
-			if (LiteralSize > t.Size) 
+			if (LiteralSize > t.Size)
 			{
 				throw new ArrayLiteralTooBigException(pos);
-			} 
-			else if (LiteralSize < t.Size) 
+			}
+			else if (LiteralSize < t.Size)
 			{
 				((Literal_Array)Initial).AppendDefaultValues(t.Size - LiteralSize);
 			}

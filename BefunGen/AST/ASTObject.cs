@@ -11,6 +11,12 @@ namespace BefunGen.AST
 
 		public ASTObject(SourceCodePosition pos)
 		{
+			this.Position = pos;
+		}
+
+		protected string getDebugCommaStringForList<T>(List<T> ls) where T : ASTObject
+		{
+			return string.Join(", ", ls.Select(p => p.getDebugString()));
 		}
 
 		protected string getDebugStringForList<T>(List<T> ls) where T : ASTObject

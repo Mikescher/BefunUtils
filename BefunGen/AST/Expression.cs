@@ -12,6 +12,8 @@ namespace BefunGen.AST
 
 		public abstract void linkVariables(Method owner);
 		public abstract void linkResultTypes();
+		public abstract void linkMethods(Program owner);
+
 		public abstract BType getResultType();
 	}
 
@@ -21,7 +23,7 @@ namespace BefunGen.AST
 		public Expression Right;
 
 		public Expression_Binary(SourceCodePosition pos, Expression l, Expression r)
-			: base (pos)
+			: base(pos)
 		{
 			this.Left = l;
 			this.Right = r;
@@ -31,6 +33,12 @@ namespace BefunGen.AST
 		{
 			Left.linkVariables(owner);
 			Right.linkVariables(owner);
+		}
+
+		public override void linkMethods(Program owner)
+		{
+			Left.linkMethods(owner);
+			Right.linkMethods(owner);
 		}
 	}
 
@@ -52,15 +60,21 @@ namespace BefunGen.AST
 			BType present_R = Right.getResultType();
 			BType wanted_R = new BType_Int(Position);
 
-			if (present_L.isImplicitCastableTo(wanted_L) && present_L != wanted_L)
-				Left = new Expression_Cast(Position, wanted_L, Left);
-			else
-				throw new ImplicitCastException(present_L, wanted_L, Position);
+			if (present_L != wanted_L)
+			{
+				if (present_L.isImplicitCastableTo(wanted_L))
+					Left = new Expression_Cast(Position, wanted_L, Left);
+				else
+					throw new ImplicitCastException(present_L, wanted_L, Position);
+			}
 
-			if (present_R.isImplicitCastableTo(wanted_R) && present_R != wanted_R)
-				Right = new Expression_Cast(Position, wanted_R, Right);
-			else
-				throw new ImplicitCastException(present_R, wanted_R, Position);
+			if (present_R != wanted_R)
+			{
+				if (present_R.isImplicitCastableTo(wanted_R))
+					Right = new Expression_Cast(Position, wanted_R, Right);
+				else
+					throw new ImplicitCastException(present_R, wanted_R, Position);
+			}
 		}
 
 		public override BType getResultType()
@@ -96,8 +110,11 @@ namespace BefunGen.AST
 			{
 				if (present_R.isImplicitCastableTo(present_L) && present_L.isImplicitCastableTo(present_R))
 				{
-					Use Higher
-				} 
+					if (present_R.getPriority() > present_L.getPriority())
+						Right = new Expression_Cast(Position, present_L, Right);
+					else
+						Left = new Expression_Cast(Position, present_R, Left);
+				}
 				else if (present_R.isImplicitCastableTo(present_L))
 				{
 					Right = new Expression_Cast(Position, present_L, Right);
@@ -106,7 +123,7 @@ namespace BefunGen.AST
 				{
 					Left = new Expression_Cast(Position, present_R, Left);
 				}
-				else 
+				else
 				{
 					throw new InvalidCompareException(present_L, present_R, Position);
 				}
@@ -136,6 +153,11 @@ namespace BefunGen.AST
 		{
 			Expr.linkVariables(owner);
 		}
+
+		public override void linkMethods(Program owner)
+		{
+			Expr.linkMethods(owner);
+		}
 	}
 
 	public abstract class Expression_ValuePointer : Expression
@@ -144,6 +166,11 @@ namespace BefunGen.AST
 			: base(pos)
 		{
 			//--
+		}
+
+		public override void linkMethods(Program owner)
+		{
+			//NOP
 		}
 	}
 
@@ -162,7 +189,7 @@ namespace BefunGen.AST
 
 		public override string getDebugString()
 		{
-			return Target.getDebugString();
+			return Target.getShortDebugString();
 		}
 
 		public override void linkVariables(Method owner)
@@ -175,7 +202,8 @@ namespace BefunGen.AST
 			Identifier = null;
 		}
 
-		public override void linkResultTypes() {
+		public override void linkResultTypes()
+		{
 			// NOP
 		}
 
@@ -201,11 +229,13 @@ namespace BefunGen.AST
 
 		public override string getDebugString()
 		{
-			return Target.getDebugString();
+			return Target.getShortDebugString();
 		}
 
 		public override void linkVariables(Method owner)
 		{
+			Index.linkVariables(owner);
+
 			Target = owner.findVariableByIdentifier(Identifier) as VarDeclaration_Array;
 
 			if (Target == null)
@@ -216,19 +246,53 @@ namespace BefunGen.AST
 			Identifier = null;
 		}
 
-		public override void linkResultTypes() 
+		public override void linkResultTypes()
 		{
+			Index.linkResultTypes();
+
 			BType present = Index.getResultType();
 			BType wanted = new BType_Int(Position);
-			if (present.isImplicitCastableTo(wanted) && present != wanted)
-				Index = new Expression_Cast(Position, wanted, Index);
-			else
-				throw new ImplicitCastException(present, wanted, Position);
+
+			if (present != wanted)
+			{
+				if (present.isImplicitCastableTo(wanted))
+					Index = new Expression_Cast(Position, wanted, Index);
+				else
+					throw new ImplicitCastException(present, wanted, Position);
+			}
 		}
 
 		public override BType getResultType()
 		{
-			return Target.Type;
+			return Target.InternalType;
+		}
+	}
+
+	public class Expression_VoidValuePointer : Expression_ValuePointer
+	{
+		public Expression_VoidValuePointer(SourceCodePosition pos)
+			: base(pos)
+		{
+		}
+
+		public override string getDebugString()
+		{
+			return "void";
+		}
+
+		public override void linkVariables(Method owner)
+		{
+			//NOP
+		}
+
+		public override void linkResultTypes()
+		{
+			//NOP
+		}
+
+		public override BType getResultType()
+		{
+			return new BType_Void(Position);
 		}
 	}
 
@@ -410,6 +474,19 @@ namespace BefunGen.AST
 		{
 			return string.Format("(! {1})", Expr.getDebugString());
 		}
+
+		public override void linkResultTypes()
+		{
+			Expr.linkResultTypes();
+
+			if (!(Expr.getResultType() is BType_Bool))
+				throw new ImplicitCastException(Expr.getResultType(), new BType_Bool(Position), Position);
+		}
+
+		public override BType getResultType()
+		{
+			return new BType_Bool(Position);
+		}
 	}
 
 	public class Expression_Negate : Expression_Unary
@@ -423,6 +500,19 @@ namespace BefunGen.AST
 		public override string getDebugString()
 		{
 			return string.Format("(- {1})", Expr.getDebugString());
+		}
+
+		public override void linkResultTypes()
+		{
+			Expr.linkResultTypes();
+
+			if (!(Expr.getResultType() is BType_Int))
+				throw new ImplicitCastException(Expr.getResultType(), new BType_Bool(Position), Position);
+		}
+
+		public override BType getResultType()
+		{
+			return new BType_Int(Position);
 		}
 	}
 
@@ -449,6 +539,21 @@ namespace BefunGen.AST
 		{
 			//NOP
 		}
+
+		public override void linkResultTypes()
+		{
+			//NOP
+		}
+
+		public override void linkMethods(Program owner)
+		{
+			//NOP
+		}
+
+		public override BType getResultType()
+		{
+			return Value.getBType();
+		}
 	}
 
 	public class Expression_Rand : Expression
@@ -467,6 +572,21 @@ namespace BefunGen.AST
 		public override void linkVariables(Method owner)
 		{
 			//NOP
+		}
+
+		public override void linkResultTypes()
+		{
+			// NOP
+		}
+
+		public override void linkMethods(Program owner)
+		{
+			//NOP
+		}
+
+		public override BType getResultType()
+		{
+			return new BType_Bool(Position);
 		}
 	}
 
@@ -491,6 +611,22 @@ namespace BefunGen.AST
 		{
 			Expr.linkVariables(owner);
 		}
+
+		public override void linkResultTypes()
+		{
+			Expr.linkResultTypes();
+
+		}
+
+		public override void linkMethods(Program owner)
+		{
+			//NOP
+		}
+
+		public override BType getResultType()
+		{
+			return Type;
+		}
 	}
 
 	public class Expression_FunctionCall : Expression
@@ -511,6 +647,21 @@ namespace BefunGen.AST
 		public override void linkVariables(Method owner)
 		{
 			Method.linkVariables(owner);
+		}
+
+		public override void linkResultTypes()
+		{
+			// NOP
+		}
+
+		public override void linkMethods(Program owner)
+		{
+			Method.linkMethods(owner);
+		}
+
+		public override BType getResultType()
+		{
+			return Method.Target.ResultType; // TODO return linked Method return type
 		}
 	}
 

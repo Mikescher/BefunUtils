@@ -28,7 +28,8 @@ namespace BefunGen.AST
 
 		public void link()
 		{
-			linkVariables();   // Variables get ther ID
+			linkVariables();   // Variable-uses get their ID
+			linkMethods();	   // Methodcalls get their ID
 			linkResultTypes(); // Statements get their Result-Type (and implicit casting is added)
 		}
 
@@ -38,10 +39,21 @@ namespace BefunGen.AST
 				m.linkVariables();
 		}
 
+		private void linkMethods()
+		{
+			foreach (Method m in MethodList)
+				m.linkMethods(this);
+		}
+
 		private void linkResultTypes()
 		{
 			foreach (Method m in MethodList)
 				m.linkResultTypes();
+		}
+
+		public Method findMethodByIdentifier(string ident)
+		{
+			return MethodList.Count(p => p.Identifier == ident) == 1 ? MethodList.Single(p => p.Identifier == ident) : null;
 		}
 	}
 

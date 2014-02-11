@@ -447,7 +447,7 @@ namespace BefunGen.AST
 
 				case ProductionIndex.Literal_digit_Digitliteral:
 					// <Literal_Digit> ::= DigitLiteral
-					result = new Literal_Digit(p, Convert.ToByte(getStrData(r), 10));
+					result = new Literal_Digit(p, Convert.ToByte(getStrData(r).Substring(1), 10));
 					break;
 
 				case ProductionIndex.Literal_intarr_Lbrace_Rbrace:

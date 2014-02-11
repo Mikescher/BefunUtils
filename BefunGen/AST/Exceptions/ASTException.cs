@@ -1,8 +1,5 @@
 ﻿using BefunGen.AST.CodeGen;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace BefunGen.AST.Exceptions
 {
@@ -18,6 +15,11 @@ namespace BefunGen.AST.Exceptions
 			: base(String.Format("[{0}] Exception '{1}'", pos, msg))
 		{
 
+		}
+
+		public override string ToString()
+		{
+			return base.ToString().Replace(" in ", "\r\n      in ").Replace(@"e:\Eigene Dateien\Dropbox\Eigene EDV\Visual Studio\Projects\BefunGen\", "");
 		}
 	}
 }

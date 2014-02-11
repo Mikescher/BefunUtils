@@ -36,6 +36,8 @@ namespace BefunGen.AST
 
 		public Program generateAST(string txt)
 		{
+			resetCounter();
+
 			ParseTime = Environment.TickCount;
 
 			Program result = null;
@@ -136,6 +138,12 @@ namespace BefunGen.AST
 				case GOLD.ParseMessage.GroupError: //GROUP ERROR! Unexpected end of file
 					throw new GroupErrorException(new SourceCodePosition(parser));
 			}
+		}
+
+		private void resetCounter()
+		{
+			Method.resetCounter();
+			VarDeclaration.resetCounter();
 		}
 	}
 }
