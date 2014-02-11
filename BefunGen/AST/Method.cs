@@ -48,6 +48,11 @@ namespace BefunGen.AST
 			Body.linkVariables(this);
 		}
 
+		public void linkResultTypes()
+		{
+			Body.linkResultTypes();
+		}
+
 		public VarDeclaration findVariableByIdentifier(string ident)
 		{
 			return Variables.Count(p => p.Identifier == ident) == 1 ? Variables.Single(p => p.Identifier == ident) : null;

@@ -13,6 +13,7 @@ namespace BefunGen.AST
 		}
 
 		public abstract void linkVariables(Method owner);
+		public abstract void linkResultTypes();
 	}
 
 	public class Statement_StatementList : Statement
@@ -34,6 +35,12 @@ namespace BefunGen.AST
 		{
 			foreach (Statement s in List)
 				s.linkVariables(owner);
+		}
+
+		public override void linkResultTypes()
+		{
+			foreach (Statement s in List)
+				s.linkResultTypes();
 		}
 	}
 
@@ -66,6 +73,12 @@ namespace BefunGen.AST
 			foreach (Expression e in CallParameter)
 				e.linkVariables(owner);
 		}
+
+		public override void linkResultTypes()
+		{
+			foreach (Expression e in CallParameter)
+				e.linkResultTypes();
+		}
 	}
 
 	#region Keywords
@@ -89,6 +102,11 @@ namespace BefunGen.AST
 		{
 			//NOP
 		}
+
+		public override void linkResultTypes()
+		{
+			//NOP
+		}
 	}
 
 	public class Statement_Goto : Statement
@@ -107,6 +125,11 @@ namespace BefunGen.AST
 		}
 
 		public override void linkVariables(Method owner)
+		{
+			//NOP
+		}
+
+		public override void linkResultTypes()
 		{
 			//NOP
 		}
@@ -137,6 +160,11 @@ namespace BefunGen.AST
 		{
 			Value.linkVariables(owner);
 		}
+
+		public override void linkResultTypes()
+		{
+			Value.linkResultTypes();
+		}
 	}
 
 	public class Statement_Out : Statement
@@ -157,6 +185,11 @@ namespace BefunGen.AST
 		public override void linkVariables(Method owner)
 		{
 			Value.linkVariables(owner);
+		}
+
+		public override void linkResultTypes()
+		{
+			Value.linkResultTypes();
 		}
 	}
 
@@ -179,6 +212,11 @@ namespace BefunGen.AST
 		{
 			ValueTarget.linkVariables(owner);
 		}
+
+		public override void linkResultTypes()
+		{
+			ValueTarget.linkResultTypes();
+		}
 	}
 
 	public class Statement_Quit : Statement
@@ -197,6 +235,11 @@ namespace BefunGen.AST
 		{
 			//NOP
 		}
+
+		public override void linkResultTypes()
+		{
+			//NOP
+		}
 	}
 
 	public class Statement_NOP : Statement // Do Nothing
@@ -212,6 +255,11 @@ namespace BefunGen.AST
 		}
 
 		public override void linkVariables(Method owner)
+		{
+			//NOP
+		}
+
+		public override void linkResultTypes()
 		{
 			//NOP
 		}
@@ -240,6 +288,11 @@ namespace BefunGen.AST
 		{
 			Target.linkVariables(owner);
 		}
+
+		public override void linkResultTypes()
+		{
+			Target.linkResultTypes();
+		}
 	}
 
 	public class Statement_Dec : Statement
@@ -260,6 +313,11 @@ namespace BefunGen.AST
 		public override void linkVariables(Method owner)
 		{
 			Target.linkVariables(owner);
+		}
+
+		public override void linkResultTypes()
+		{
+			Target.linkResultTypes();
 		}
 	}
 
@@ -284,6 +342,12 @@ namespace BefunGen.AST
 		{
 			Target.linkVariables(owner);
 			Expr.linkVariables(owner);
+		}
+
+		public override void linkResultTypes()
+		{
+			Target.linkResultTypes();
+			Expr.linkResultTypes();
 		}
 	}
 
@@ -324,6 +388,13 @@ namespace BefunGen.AST
 			Body.linkVariables(owner);
 			Else.linkVariables(owner);
 		}
+
+		public override void linkResultTypes()
+		{
+			Condition.linkResultTypes();
+			Body.linkResultTypes();
+			Else.linkResultTypes();
+		}
 	}
 
 	public class Statement_While : Statement
@@ -348,6 +419,12 @@ namespace BefunGen.AST
 			Condition.linkVariables(owner);
 			Body.linkVariables(owner);
 		}
+
+		public override void linkResultTypes()
+		{
+			Condition.linkResultTypes();
+			Body.linkResultTypes();
+		}
 	}
 
 	public class Statement_RepeatUntil : Statement
@@ -371,6 +448,12 @@ namespace BefunGen.AST
 		{
 			Condition.linkVariables(owner);
 			Body.linkVariables(owner);
+		}
+
+		public override void linkResultTypes()
+		{
+			Condition.linkResultTypes();
+			Body.linkResultTypes();
 		}
 	}
 

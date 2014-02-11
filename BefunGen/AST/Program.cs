@@ -28,13 +28,20 @@ namespace BefunGen.AST
 
 		public void link()
 		{
-			linkVariables();
+			linkVariables();   // Variables get ther ID
+			linkResultTypes(); // Statements get their Result-Type (and implicit casting is added)
 		}
 
 		private void linkVariables()
 		{
 			foreach (Method m in MethodList)
 				m.linkVariables();
+		}
+
+		private void linkResultTypes()
+		{
+			foreach (Method m in MethodList)
+				m.linkResultTypes();
 		}
 	}
 

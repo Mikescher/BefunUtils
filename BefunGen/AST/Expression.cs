@@ -11,6 +11,8 @@ namespace BefunGen.AST
 		}
 
 		public abstract void linkVariables(Method owner);
+		public abstract void linkResultTypes();
+		public abstract BType getResultType();
 	}
 
 	public abstract class Expression_Binary : Expression
@@ -32,12 +34,91 @@ namespace BefunGen.AST
 		}
 	}
 
+	public abstract class Expression_BinaryMathOperation : Expression_Binary
+	{
+		public Expression_BinaryMathOperation(SourceCodePosition pos, Expression l, Expression r)
+			: base(pos, l, r)
+		{
+		}
+
+		public override void linkResultTypes()
+		{
+			Left.linkResultTypes();
+			Right.linkResultTypes();
+
+			BType present_L = Left.getResultType();
+			BType wanted_L = new BType_Int(Position);
+
+			BType present_R = Right.getResultType();
+			BType wanted_R = new BType_Int(Position);
+
+			if (present_L.isImplicitCastableTo(wanted_L) && present_L != wanted_L)
+				Left = new Expression_Cast(Position, wanted_L, Left);
+			else
+				throw new ImplicitCastException(present_L, wanted_L, Position);
+
+			if (present_R.isImplicitCastableTo(wanted_R) && present_R != wanted_R)
+				Right = new Expression_Cast(Position, wanted_R, Right);
+			else
+				throw new ImplicitCastException(present_R, wanted_R, Position);
+		}
+
+		public override BType getResultType()
+		{
+			if (Left.getResultType() != Right.getResultType())
+				throw new InvalidASTStateException(Position);
+
+			return Left.getResultType();
+		}
+	}
+
 	public abstract class Expression_Compare : Expression_Binary
 	{
 		public Expression_Compare(SourceCodePosition pos, Expression l, Expression r)
 			: base(pos, l, r)
 		{
 			//--
+		}
+
+		public override void linkResultTypes()
+		{
+			Left.linkResultTypes();
+			Right.linkResultTypes();
+
+			BType present_L = Left.getResultType();
+
+			BType present_R = Right.getResultType();
+
+			if (present_L is BType_Array || present_R is BType_Array)
+				throw new InvalidCompareException(present_L, present_R, Position);
+
+			if (present_L != present_R)
+			{
+				if (present_R.isImplicitCastableTo(present_L) && present_L.isImplicitCastableTo(present_R))
+				{
+					Use Higher
+				} 
+				else if (present_R.isImplicitCastableTo(present_L))
+				{
+					Right = new Expression_Cast(Position, present_L, Right);
+				}
+				else if (present_L.isImplicitCastableTo(present_R))
+				{
+					Left = new Expression_Cast(Position, present_R, Left);
+				}
+				else 
+				{
+					throw new InvalidCompareException(present_L, present_R, Position);
+				}
+			}
+		}
+
+		public override BType getResultType()
+		{
+			if (Left.getResultType() != Right.getResultType())
+				throw new InvalidASTStateException(Position);
+
+			return new BType_Bool(new SourceCodePosition());
 		}
 	}
 
@@ -93,6 +174,15 @@ namespace BefunGen.AST
 
 			Identifier = null;
 		}
+
+		public override void linkResultTypes() {
+			// NOP
+		}
+
+		public override BType getResultType()
+		{
+			return Target.Type;
+		}
 	}
 
 	public class Expression_ArrayValuePointer : Expression_ValuePointer
@@ -125,13 +215,28 @@ namespace BefunGen.AST
 
 			Identifier = null;
 		}
+
+		public override void linkResultTypes() 
+		{
+			BType present = Index.getResultType();
+			BType wanted = new BType_Int(Position);
+			if (present.isImplicitCastableTo(wanted) && present != wanted)
+				Index = new Expression_Cast(Position, wanted, Index);
+			else
+				throw new ImplicitCastException(present, wanted, Position);
+		}
+
+		public override BType getResultType()
+		{
+			return Target.Type;
+		}
 	}
 
 	#endregion ValuePointer
 
-	#region Binary
+	#region BinaryMathOperation
 
-	public class Expression_Mult : Expression_Binary
+	public class Expression_Mult : Expression_BinaryMathOperation
 	{
 		public Expression_Mult(SourceCodePosition pos, Expression l, Expression r)
 			: base(pos, l, r)
@@ -145,7 +250,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	public class Expression_Div : Expression_Binary
+	public class Expression_Div : Expression_BinaryMathOperation
 	{
 		public Expression_Div(SourceCodePosition pos, Expression l, Expression r)
 			: base(pos, l, r)
@@ -159,7 +264,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	public class Expression_Mod : Expression_Binary
+	public class Expression_Mod : Expression_BinaryMathOperation
 	{
 		public Expression_Mod(SourceCodePosition pos, Expression l, Expression r)
 			: base(pos, l, r)
@@ -173,7 +278,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	public class Expression_Add : Expression_Binary
+	public class Expression_Add : Expression_BinaryMathOperation
 	{
 		public Expression_Add(SourceCodePosition pos, Expression l, Expression r)
 			: base(pos, l, r)
@@ -187,7 +292,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	public class Expression_Sub : Expression_Binary
+	public class Expression_Sub : Expression_BinaryMathOperation
 	{
 		public Expression_Sub(SourceCodePosition pos, Expression l, Expression r)
 			: base(pos, l, r)

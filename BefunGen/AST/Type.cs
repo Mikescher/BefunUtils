@@ -5,13 +5,52 @@ namespace BefunGen.AST
 {
 	public abstract class BType : ASTObject
 	{
+		protected const int PRIORITY_VOID  = 0;
+		protected const int PRIORITY_BOOL  = 1;
+		protected const int PRIORITY_DIGIT = 2;
+		protected const int PRIORITY_CHAR  = 3;
+		protected const int PRIORITY_INT   = 4;
+
 		public BType(SourceCodePosition pos)
 			: base(pos)
 		{
 			//--
 		}
 
+		public override bool Equals(System.Object obj)
+		{
+			if (obj == null) 
+				return false;
+
+			return this.Equals(obj as BType);
+		}
+
+		public virtual bool Equals(BType p)
+		{
+			if (p == null) 
+				return false;
+
+			return this.GetType() == p.GetType();
+		}
+
+		public static bool operator ==(BType a, BType b)
+		{
+			return a.Equals(b);
+		}
+
+		public static bool operator !=(BType a, BType b)
+		{
+			return ! a.Equals(b);
+		}
+
+		public override int GetHashCode()
+		{
+			return - getPriority();
+		}
+
 		public abstract Literal getDefaultValue();
+		public abstract bool isImplicitCastableTo(BType other);
+		public abstract int getPriority();
 	}
 
 	public abstract class BType_Value : BType
@@ -32,6 +71,19 @@ namespace BefunGen.AST
 		{
 			//--
 		}
+
+		public override bool Equals(BType p)
+		{
+			if (p == null)
+				return false;
+
+			return this.GetType() == p.GetType() && (p as BType_Array).Size == Size;
+		}
+
+		public override int GetHashCode()
+		{
+			return getPriority() * (Size+1);
+		}
 	}
 
 	public class BType_Void : BType // neither Array nor Value ...
@@ -50,6 +102,16 @@ namespace BefunGen.AST
 		public override Literal getDefaultValue()
 		{
 			throw new VoidObjectCallException(Position);
+		}
+
+		public override bool isImplicitCastableTo(BType other)
+		{
+			return false;
+		}
+
+		public override int getPriority()
+		{
+			return PRIORITY_VOID;
 		}
 	}
 
@@ -72,6 +134,16 @@ namespace BefunGen.AST
 		{
 			return new Literal_Int(new SourceCodePosition(), 0);
 		}
+
+		public override bool isImplicitCastableTo(BType other)
+		{
+			return (other is BType_Int);
+		}
+
+		public override int getPriority()
+		{
+			return PRIORITY_INT;
+		}
 	}
 
 	public class BType_Digit : BType_Value
@@ -90,6 +162,16 @@ namespace BefunGen.AST
 		public override Literal getDefaultValue()
 		{
 			return new Literal_Digit(new SourceCodePosition(), 0);
+		}
+
+		public override bool isImplicitCastableTo(BType other)
+		{
+			return (other is BType_Digit || other is BType_Int);
+		}
+
+		public override int getPriority()
+		{
+			return PRIORITY_DIGIT;
 		}
 	}
 
@@ -110,6 +192,16 @@ namespace BefunGen.AST
 		{
 			return new Literal_Char(new SourceCodePosition(), '0');
 		}
+
+		public override bool isImplicitCastableTo(BType other)
+		{
+			return (other is BType_Char);
+		}
+
+		public override int getPriority()
+		{
+			return PRIORITY_CHAR;
+		}
 	}
 
 	public class BType_Bool : BType_Value
@@ -128,6 +220,16 @@ namespace BefunGen.AST
 		public override Literal getDefaultValue()
 		{
 			return new Literal_Bool(new SourceCodePosition(), false);
+		}
+
+		public override bool isImplicitCastableTo(BType other)
+		{
+			return (other is BType_Bool);
+		}
+
+		public override int getPriority()
+		{
+			return PRIORITY_BOOL;
 		}
 	}
 
@@ -152,6 +254,11 @@ namespace BefunGen.AST
 		{
 			return new Literal_IntArr(new SourceCodePosition(), Enumerable.Repeat(0, Size).ToList());
 		}
+
+		public override bool isImplicitCastableTo(BType other)
+		{
+			return (other is BType_Array && (other as BType_Array).Size == Size && (other is BType_IntArr));
+		}
 	}
 
 	public class BType_CharArr : BType_Array
@@ -170,6 +277,11 @@ namespace BefunGen.AST
 		public override Literal getDefaultValue()
 		{
 			return new Literal_CharArr(new SourceCodePosition(), Enumerable.Repeat('0', Size).ToList());
+		}
+
+		public override bool isImplicitCastableTo(BType other)
+		{
+			return (other is BType_Array && (other as BType_Array).Size == Size && (other is BType_CharArr));
 		}
 	}
 
@@ -190,6 +302,11 @@ namespace BefunGen.AST
 		{
 			return new Literal_DigitArr(new SourceCodePosition(), Enumerable.Repeat((byte)0, Size).ToList());
 		}
+
+		public override bool isImplicitCastableTo(BType other)
+		{
+			return (other is BType_Array && (other as BType_Array).Size == Size && (other is BType_DigitArr || other is BType_IntArr));
+		}
 	}
 
 	public class BType_BoolArr : BType_Array
@@ -208,6 +325,11 @@ namespace BefunGen.AST
 		public override Literal getDefaultValue()
 		{
 			return new Literal_IntArr(new SourceCodePosition(), Enumerable.Repeat(0, Size).ToList());
+		}
+
+		public override bool isImplicitCastableTo(BType other)
+		{
+			return (other is BType_Array && (other as BType_Array).Size == Size && (other is BType_BoolArr));
 		}
 	}
 

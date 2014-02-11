@@ -55,14 +55,17 @@
     <Compile Include="AST\CodeGen\SourceCodePosition.cs" />
     <Compile Include="AST\Exceptions\AccessTemporaryASTObjectException.cs" />
     <Compile Include="AST\Exceptions\ASTException.cs" />
+    <Compile Include="AST\Exceptions\InvalidCompareException.cs" />
     <Compile Include="AST\Exceptions\IndexOperatorNotDefiniedException.cs" />
     <Compile Include="AST\Exceptions\GroupErrorException.cs" />
     <Compile Include="AST\Exceptions\NotLoadedErrorException.cs" />
     <Compile Include="AST\Exceptions\InternalErrorException.cs" />
     <Compile Include="AST\Exceptions\SyntaxErrorException.cs" />
+    <Compile Include="AST\Exceptions\ImplicitCastException.cs" />
     <Compile Include="AST\Exceptions\UnresolvableReferenceException.cs" />
     <Compile Include="AST\Exceptions\ArrayLiteralTooBigException.cs" />
     <Compile Include="AST\Exceptions\LexicalErrorException.cs" />
+    <Compile Include="AST\Exceptions\InvalidASTStateException.cs" />
     <Compile Include="AST\Exceptions\VoidObjectCallException.cs" />
     <Compile Include="AST\Exceptions\InvalidBefungeCommandTypeException.cs" />
     <Compile Include="AST\Expression.cs" />
