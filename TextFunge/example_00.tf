@@ -1,55 +1,72 @@
 /*
- * Example Program
+ * Example Program II
  * 4 Grammar Testing
  *
 */
 
 program example
-	var
-		digit[16] txt;
-		int[4] test := {1, 2, 3, 4};
-		int dt;
-		digit x;
+	var 
+	 char[32] name;
 	begin
-		dt = test[1];
-		dt = getVal(dt + rand, 3);
-		x = (digit)dt;
-
-		if (rand) then // 50\50 Chance
-			out getInputStr(); 
-		end
-
-		if (x) then
-			return true;
-		else
-			return false;
-		end
+		//Insert Name
+		name = getInputStr();
+		
+		out name;
+		
+		// Print Fibbonacci
+		
+		/* doFiber(100); */
+		
+		out doFiber(44, 12);
 	end
 
-	int getVal(int param, int expo)
+	void doFiber(int max)
 	var
-		int result;
+		int last := 0;
+		int curr := 1;
+		int tmp;
 	begin
-		result = param;
-		while (expo) do
-		begin
-			result = result * param;
-			expo = expo - 1;
-		end 
 
-		return param;
-	end
-
-	char[16] getInputStr()
-	var
-		int count := 16;
-		char[16] result;
-	begin
 		repeat
 		begin
-			in result[16-count];
-			count--;
+			out curr;
+			
+			tmp = curr + last;
+			last = curr;
+			curr = tmp;
+		end until (last > max)
+	end
+
+	int euclid(int a, int b) 
+	begin
+		if (a == 0) then
+			return b;
+		else 
+			if (b == 0) then
+				return a;
+			else 
+				if (a > b) then
+					return euclid(a - b, b);
+				else
+					return euclid(a, b - a);
+				end
+			end
 		end
-		until (count == 0)
+	end
+	 
+	char[32] getInputStr()
+	var
+		char[32] input;
+		int current := 0;
+		char last := 'X';
+	begin
+		
+		while(current < 32) do
+		begin
+		in input[current];
+			current++;
+		end
+
+		return input;
 	end
 end

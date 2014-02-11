@@ -42,7 +42,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	public abstract class Expression_BinaryMathOperation : Expression_Binary
+	public abstract class Expression_BinaryMathOperation : Expression_Binary //TODO Add AND | OR | XOR etc etc
 	{
 		public Expression_BinaryMathOperation(SourceCodePosition pos, Expression l, Expression r)
 			: base(pos, l, r)
