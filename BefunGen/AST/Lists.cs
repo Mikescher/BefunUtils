@@ -1,4 +1,5 @@
-﻿using BefunGen.AST.Exceptions;
+﻿using BefunGen.AST.CodeGen;
+using BefunGen.AST.Exceptions;
 using System.Collections.Generic;
 
 namespace BefunGen.AST
@@ -8,7 +9,8 @@ namespace BefunGen.AST
 	/// </summary>
 	public abstract class ASTList : ASTObject
 	{
-		public ASTList()
+		public ASTList(SourceCodePosition pos)
+			: base(pos)
 		{
 		}
 	}
@@ -19,11 +21,13 @@ namespace BefunGen.AST
 	{
 		public List<Expression> List = new List<Expression>();
 
-		public List_Expressions()
+		public List_Expressions(SourceCodePosition pos)
+			: base(pos)
 		{
 		}
 
-		public List_Expressions(Expression e)
+		public List_Expressions(SourceCodePosition pos, Expression e)
+			: base(pos)
 		{
 			List.Add(e);
 		}
@@ -36,7 +40,7 @@ namespace BefunGen.AST
 
 		public override string getDebugString()
 		{
-			throw new AccessTemporaryASTObjectException();
+			throw new AccessTemporaryASTObjectException(Position);
 		}
 	}
 
@@ -44,11 +48,13 @@ namespace BefunGen.AST
 	{
 		public List<Statement> List = new List<Statement>();
 
-		public List_Statements()
+		public List_Statements(SourceCodePosition pos)
+			: base(pos)
 		{
 		}
 
-		public List_Statements(Statement s)
+		public List_Statements(SourceCodePosition pos, Statement s)
+			: base(pos)
 		{
 			List.Add(s);
 		}
@@ -61,7 +67,7 @@ namespace BefunGen.AST
 
 		public override string getDebugString()
 		{
-			throw new AccessTemporaryASTObjectException();
+			throw new AccessTemporaryASTObjectException(Position);
 		}
 	}
 
@@ -69,11 +75,13 @@ namespace BefunGen.AST
 	{
 		public List<VarDeclaration> List = new List<VarDeclaration>();
 
-		public List_VarDeclarations()
+		public List_VarDeclarations(SourceCodePosition pos)
+			: base(pos)
 		{
 		}
 
-		public List_VarDeclarations(VarDeclaration d)
+		public List_VarDeclarations(SourceCodePosition pos, VarDeclaration d)
+			: base(pos)
 		{
 			List.Add(d);
 		}
@@ -86,7 +94,7 @@ namespace BefunGen.AST
 
 		public override string getDebugString()
 		{
-			throw new AccessTemporaryASTObjectException();
+			throw new AccessTemporaryASTObjectException(Position);
 		}
 	}
 
@@ -94,11 +102,13 @@ namespace BefunGen.AST
 	{
 		public List<Method> List = new List<Method>();
 
-		public List_Methods()
+		public List_Methods(SourceCodePosition pos)
+			: base(pos)
 		{
 		}
 
-		public List_Methods(Method d)
+		public List_Methods(SourceCodePosition pos, Method d)
+			: base(pos)
 		{
 			List.Add(d);
 		}
@@ -111,7 +121,7 @@ namespace BefunGen.AST
 
 		public override string getDebugString()
 		{
-			throw new AccessTemporaryASTObjectException();
+			throw new AccessTemporaryASTObjectException(Position);
 		}
 	}
 
@@ -123,11 +133,13 @@ namespace BefunGen.AST
 	{
 		public List<Literal_Digit> List = new List<Literal_Digit>();
 
-		public List_LiteralDigits()
+		public List_LiteralDigits(SourceCodePosition pos)
+			: base(pos)
 		{
 		}
 
-		public List_LiteralDigits(Literal_Digit e)
+		public List_LiteralDigits(SourceCodePosition pos, Literal_Digit e)
+			: base(pos)
 		{
 			List.Add(e);
 		}
@@ -140,7 +152,7 @@ namespace BefunGen.AST
 
 		public override string getDebugString()
 		{
-			throw new AccessTemporaryASTObjectException();
+			throw new AccessTemporaryASTObjectException(Position);
 		}
 	}
 
@@ -148,11 +160,13 @@ namespace BefunGen.AST
 	{
 		public List<Literal_Int> List = new List<Literal_Int>();
 
-		public List_LiteralInts()
+		public List_LiteralInts(SourceCodePosition pos)
+			: base(pos)
 		{
 		}
 
-		public List_LiteralInts(Literal_Int e)
+		public List_LiteralInts(SourceCodePosition pos, Literal_Int e)
+			: base(pos)
 		{
 			List.Add(e);
 		}
@@ -165,7 +179,7 @@ namespace BefunGen.AST
 
 		public override string getDebugString()
 		{
-			throw new AccessTemporaryASTObjectException();
+			throw new AccessTemporaryASTObjectException(Position);
 		}
 	}
 
@@ -173,11 +187,13 @@ namespace BefunGen.AST
 	{
 		public List<Literal_Char> List = new List<Literal_Char>();
 
-		public List_LiteralChars()
+		public List_LiteralChars(SourceCodePosition pos)
+			: base(pos)
 		{
 		}
 
-		public List_LiteralChars(Literal_Char e)
+		public List_LiteralChars(SourceCodePosition pos, Literal_Char e)
+			: base(pos)
 		{
 			List.Add(e);
 		}
@@ -190,7 +206,7 @@ namespace BefunGen.AST
 
 		public override string getDebugString()
 		{
-			throw new AccessTemporaryASTObjectException();
+			throw new AccessTemporaryASTObjectException(Position);
 		}
 	}
 
@@ -198,11 +214,13 @@ namespace BefunGen.AST
 	{
 		public List<Literal_Bool> List = new List<Literal_Bool>();
 
-		public List_LiteralBools()
+		public List_LiteralBools(SourceCodePosition pos)
+			: base(pos)
 		{
 		}
 
-		public List_LiteralBools(Literal_Bool e)
+		public List_LiteralBools(SourceCodePosition pos, Literal_Bool e)
+			: base(pos)
 		{
 			List.Add(e);
 		}
@@ -215,7 +233,7 @@ namespace BefunGen.AST
 
 		public override string getDebugString()
 		{
-			throw new AccessTemporaryASTObjectException();
+			throw new AccessTemporaryASTObjectException(Position);
 		}
 	}
 

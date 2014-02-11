@@ -1,11 +1,12 @@
-﻿using System;
+﻿using BefunGen.AST.CodeGen;
+using System;
 
 namespace BefunGen.AST.Exceptions
 {
-	public class ArrayLiteralTooBigException : Exception
+	public class ArrayLiteralTooBigException : ASTException
 	{
-		public ArrayLiteralTooBigException()
-			: base("Operation not possible on <void>")
+		public ArrayLiteralTooBigException(SourceCodePosition pos)
+			: base("ArrayLiteral is too big for Variable", pos)
 		{
 		}
 	}

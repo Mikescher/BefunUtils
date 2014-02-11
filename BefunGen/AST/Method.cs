@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BefunGen.AST.CodeGen;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -13,13 +14,14 @@ namespace BefunGen.AST
 		public List<VarDeclaration> Variables; // Includes Parameter
 		public Statement Body;
 
-		public Method(Method_Header h, Method_Body b)
-			: this(h.ResultType, h.Identifier, h.Parameter, b.Variables, b.Body)
+		public Method(SourceCodePosition pos, Method_Header h, Method_Body b)
+			: this(pos, h.ResultType, h.Identifier, h.Parameter, b.Variables, b.Body)
 		{
 			//--
 		}
 
-		public Method(BType t, string id, List<VarDeclaration> p, List<VarDeclaration> v, Statement b)
+		public Method(SourceCodePosition pos, BType t, string id, List<VarDeclaration> p, List<VarDeclaration> v, Statement b)
+			: base(pos)
 		{
 			this.ResultType = t;
 			this.Identifier = id;
@@ -58,7 +60,8 @@ namespace BefunGen.AST
 		public string Identifier;
 		public List<VarDeclaration> Parameter;
 
-		public Method_Header(BType t, string id, List<VarDeclaration> p)
+		public Method_Header(SourceCodePosition pos, BType t, string id, List<VarDeclaration> p)
+			: base(pos)
 		{
 			this.ResultType = t;
 			this.Identifier = id;
@@ -76,7 +79,8 @@ namespace BefunGen.AST
 		public List<VarDeclaration> Variables;
 		public Statement Body;
 
-		public Method_Body(List<VarDeclaration> v, Statement b)
+		public Method_Body(SourceCodePosition pos, List<VarDeclaration> v, Statement b)
+			: base(pos)
 		{
 			this.Variables = v;
 			this.Body = b;

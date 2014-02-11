@@ -1,11 +1,12 @@
-﻿using System;
+﻿using BefunGen.AST.CodeGen;
+using System;
 
 namespace BefunGen.AST.Exceptions
 {
-	public class UnresolvableReferenceException : Exception
+	public class UnresolvableReferenceException : ASTException
 	{
-		public UnresolvableReferenceException(string s)
-			: base("Could not resolve reference: '" + s + "'")
+		public UnresolvableReferenceException(string s, SourceCodePosition pos)
+			: base("Could not resolve reference: '" + s + "'", pos)
 		{
 		}
 	}

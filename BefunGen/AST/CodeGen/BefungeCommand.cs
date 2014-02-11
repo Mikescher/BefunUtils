@@ -137,7 +137,7 @@ namespace BefunGen.AST.CodeGen
 					return (char)Param;
 
 				default:
-					throw new InvalidBefungeCommandTypeException();
+					throw new InvalidBefungeCommandTypeException(new SourceCodePosition());
 			}
 		}
 	}

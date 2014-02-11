@@ -1,21 +1,26 @@
-﻿using System.Collections.Generic;
+﻿using BefunGen.AST.CodeGen;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace BefunGen.AST
 {
 	public abstract class Literal : ASTObject
 	{
-		public Literal()
+		public Literal(SourceCodePosition pos)
+			: base(pos)
 		{
 			//--
 		}
+
+		public abstract BType getBType();
 	}
 
 	#region Parents
 
 	public abstract class Literal_Value : Literal
 	{
-		public Literal_Value()
+		public Literal_Value(SourceCodePosition pos)
+			: base(pos)
 		{
 			//--
 		}
@@ -25,12 +30,20 @@ namespace BefunGen.AST
 	{
 		public int Count { get { return getCount(); } }
 
-		public Literal_Array()
+		public Literal_Array(SourceCodePosition pos)
+			: base(pos)
 		{
 			//--
 		}
 
 		protected abstract int getCount();
+		protected abstract void AppendDefaultValue();
+
+		public void AppendDefaultValues(int cnt)
+		{
+			for (int i = 0; i < cnt; i++)
+				AppendDefaultValue();
+		}
 	}
 
 	#endregion Parents
@@ -41,7 +54,8 @@ namespace BefunGen.AST
 	{
 		public int Value;
 
-		public Literal_Int(int v)
+		public Literal_Int(SourceCodePosition pos, int v)
+			: base(pos)
 		{
 			this.Value = v;
 		}
@@ -49,6 +63,11 @@ namespace BefunGen.AST
 		public override string getDebugString()
 		{
 			return Value.ToString();
+		}
+
+		public override BType getBType()
+		{
+			return new BType_Int(new SourceCodePosition());
 		}
 	}
 
@@ -56,7 +75,8 @@ namespace BefunGen.AST
 	{
 		public char Value;
 
-		public Literal_Char(char v)
+		public Literal_Char(SourceCodePosition pos, char v)
+			: base(pos)
 		{
 			this.Value = v;
 		}
@@ -64,6 +84,11 @@ namespace BefunGen.AST
 		public override string getDebugString()
 		{
 			return Value.ToString();
+		}
+
+		public override BType getBType()
+		{
+			return new BType_Char(new SourceCodePosition());
 		}
 	}
 
@@ -71,7 +96,8 @@ namespace BefunGen.AST
 	{
 		public bool Value;
 
-		public Literal_Bool(bool v)
+		public Literal_Bool(SourceCodePosition pos, bool v)
+			: base(pos)
 		{
 			this.Value = v;
 		}
@@ -79,6 +105,11 @@ namespace BefunGen.AST
 		public override string getDebugString()
 		{
 			return Value.ToString();
+		}
+
+		public override BType getBType()
+		{
+			return new BType_Bool(new SourceCodePosition());
 		}
 	}
 
@@ -86,7 +117,8 @@ namespace BefunGen.AST
 	{
 		public byte Value;
 
-		public Literal_Digit(byte v)
+		public Literal_Digit(SourceCodePosition pos, byte v)
+			: base(pos)
 		{
 			this.Value = v;
 		}
@@ -94,6 +126,11 @@ namespace BefunGen.AST
 		public override string getDebugString()
 		{
 			return Value.ToString();
+		}
+
+		public override BType getBType()
+		{
+			return new BType_Digit(new SourceCodePosition());
 		}
 	}
 
@@ -105,7 +142,8 @@ namespace BefunGen.AST
 	{
 		public List<int> Value = new List<int>();
 
-		public Literal_IntArr(List<int> v)
+		public Literal_IntArr(SourceCodePosition pos, List<int> v)
+			: base(pos)
 		{
 			this.Value = v.ToList();
 		}
@@ -119,18 +157,30 @@ namespace BefunGen.AST
 		{
 			return Value.Count;
 		}
+
+		public override BType getBType()
+		{
+			return new BType_IntArr(new SourceCodePosition(), Count);
+		}
+
+		protected override void AppendDefaultValue()
+		{
+			Value.Add(0);
+		}
 	}
 
 	public class Literal_CharArr : Literal_Array
 	{
 		public List<char> Value = new List<char>();
 
-		public Literal_CharArr(List<char> v)
+		public Literal_CharArr(SourceCodePosition pos, List<char> v)
+			: base(pos)
 		{
 			this.Value = v.ToList();
 		}
 
-		public Literal_CharArr(string v)
+		public Literal_CharArr(SourceCodePosition pos, string v)
+			: base(pos)
 		{
 			this.Value = v.ToCharArray().ToList();
 		}
@@ -144,13 +194,24 @@ namespace BefunGen.AST
 		{
 			return Value.Count;
 		}
+
+		public override BType getBType()
+		{
+			return new BType_CharArr(new SourceCodePosition(), Count);
+		}
+
+		protected override void AppendDefaultValue()
+		{
+			Value.Add('0');
+		}
 	}
 
 	public class Literal_BoolArr : Literal_Array
 	{
 		public List<bool> Value = new List<bool>();
 
-		public Literal_BoolArr(List<bool> v)
+		public Literal_BoolArr(SourceCodePosition pos, List<bool> v)
+			: base(pos)
 		{
 			this.Value = v.ToList();
 		}
@@ -163,6 +224,16 @@ namespace BefunGen.AST
 		protected override int getCount()
 		{
 			return Value.Count;
+		}
+
+		public override BType getBType()
+		{
+			return new BType_BoolArr(new SourceCodePosition(), Count);
+		}
+
+		protected override void AppendDefaultValue()
+		{
+			Value.Add(false);
 		}
 	}
 
@@ -170,7 +241,8 @@ namespace BefunGen.AST
 	{
 		public List<byte> Value = new List<byte>();
 
-		public Literal_DigitArr(List<byte> v)
+		public Literal_DigitArr(SourceCodePosition pos, List<byte> v)
+			: base(pos)
 		{
 			this.Value = v.ToList();
 		}
@@ -183,6 +255,16 @@ namespace BefunGen.AST
 		protected override int getCount()
 		{
 			return Value.Count;
+		}
+
+		public override BType getBType()
+		{
+			return new BType_DigitArr(new SourceCodePosition(), Count);
+		}
+
+		protected override void AppendDefaultValue()
+		{
+			Value.Add(0);
 		}
 	}
 

@@ -1,11 +1,12 @@
-﻿using System;
+﻿using BefunGen.AST.CodeGen;
+using System;
 
 namespace BefunGen.AST.Exceptions
 {
-	public class VoidObjectCallException : Exception
+	public class VoidObjectCallException : ASTException
 	{
-		public VoidObjectCallException()
-			: base("Operation not possible on <void>")
+		public VoidObjectCallException(SourceCodePosition pos)
+			: base("Operation not possible on <void>", pos)
 		{
 		}
 	}

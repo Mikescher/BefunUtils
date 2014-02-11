@@ -3,10 +3,10 @@ using System;
 
 namespace BefunGen.AST.Exceptions
 {
-	public class InvalidBefungeCommandTypeException : Exception
+	public class InvalidBefungeCommandTypeException : ASTException
 	{
-		public InvalidBefungeCommandTypeException()
-			: base("BefungeCMD-Enum is in an impossible State")
+		public InvalidBefungeCommandTypeException(SourceCodePosition pos)
+			: base("BefungeCMD-Enum is in an impossible State", pos)
 		{
 		}
 	}

@@ -1,11 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using BefunGen.AST.CodeGen;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace BefunGen.AST
 {
 	public abstract class Statement : ASTObject
 	{
-		public Statement()
+		public Statement(SourceCodePosition pos)
+			: base(pos)
 		{
 			//--
 		}
@@ -17,7 +19,8 @@ namespace BefunGen.AST
 	{
 		public List<Statement> List;
 
-		public Statement_StatementList(List<Statement> sl)
+		public Statement_StatementList(SourceCodePosition pos, List<Statement> sl)
+			: base(pos)
 		{
 			List = sl.ToList();
 		}
@@ -39,13 +42,15 @@ namespace BefunGen.AST
 		public List<Expression> CallParameter;
 		public string Identifier;
 
-		public Statement_MethodCall(string id)
+		public Statement_MethodCall(SourceCodePosition pos, string id)
+			: base(pos)
 		{
 			this.Identifier = id;
 			this.CallParameter = new List<Expression>();
 		}
 
-		public Statement_MethodCall(string id, List<Expression> cp)
+		public Statement_MethodCall(SourceCodePosition pos, string id, List<Expression> cp)
+			: base(pos)
 		{
 			this.Identifier = id;
 			this.CallParameter = cp.ToList();
@@ -69,7 +74,8 @@ namespace BefunGen.AST
 	{
 		public string Identifier;
 
-		public Statement_Label(string id)
+		public Statement_Label(SourceCodePosition pos, string id)
+			: base(pos)
 		{
 			this.Identifier = id;
 		}
@@ -89,7 +95,8 @@ namespace BefunGen.AST
 	{
 		public string TargetIdentifier;
 
-		public Statement_Goto(string id)
+		public Statement_Goto(SourceCodePosition pos, string id)
+			: base(pos)
 		{
 			this.TargetIdentifier = id;
 		}
@@ -109,12 +116,14 @@ namespace BefunGen.AST
 	{
 		public Expression Value;
 
-		public Statement_Return()
+		public Statement_Return(SourceCodePosition pos)
+			: base(pos)
 		{
 			this.Value = null;
 		}
 
-		public Statement_Return(Expression v)
+		public Statement_Return(SourceCodePosition pos, Expression v)
+			: base(pos)
 		{
 			this.Value = v;
 		}
@@ -134,7 +143,8 @@ namespace BefunGen.AST
 	{
 		public Expression Value;
 
-		public Statement_Out(Expression v)
+		public Statement_Out(SourceCodePosition pos, Expression v)
+			: base(pos)
 		{
 			this.Value = v;
 		}
@@ -154,7 +164,8 @@ namespace BefunGen.AST
 	{
 		public Expression_ValuePointer ValueTarget;
 
-		public Statement_In(Expression_ValuePointer vt)
+		public Statement_In(SourceCodePosition pos, Expression_ValuePointer vt)
+			: base(pos)
 		{
 			this.ValueTarget = vt;
 		}
@@ -172,7 +183,8 @@ namespace BefunGen.AST
 
 	public class Statement_Quit : Statement
 	{
-		public Statement_Quit()
+		public Statement_Quit(SourceCodePosition pos)
+			: base(pos)
 		{
 		}
 
@@ -189,7 +201,8 @@ namespace BefunGen.AST
 
 	public class Statement_NOP : Statement // Do Nothing
 	{
-		public Statement_NOP()
+		public Statement_NOP(SourceCodePosition pos)
+			: base(pos)
 		{
 		}
 
@@ -212,7 +225,8 @@ namespace BefunGen.AST
 	{
 		public Expression_ValuePointer Target;
 
-		public Statement_Inc(Expression_ValuePointer id)
+		public Statement_Inc(SourceCodePosition pos, Expression_ValuePointer id)
+			: base(pos)
 		{
 			this.Target = id;
 		}
@@ -232,7 +246,8 @@ namespace BefunGen.AST
 	{
 		public Expression_ValuePointer Target;
 
-		public Statement_Dec(Expression_ValuePointer id)
+		public Statement_Dec(SourceCodePosition pos, Expression_ValuePointer id)
+			: base(pos)
 		{
 			this.Target = id;
 		}
@@ -253,7 +268,8 @@ namespace BefunGen.AST
 		public Expression_ValuePointer Target;
 		public Expression Expr;
 
-		public Statement_Assignment(Expression_ValuePointer t, Expression e)
+		public Statement_Assignment(SourceCodePosition pos, Expression_ValuePointer t, Expression e)
+			: base(pos)
 		{
 			this.Target = t;
 			this.Expr = e;
@@ -281,14 +297,16 @@ namespace BefunGen.AST
 		public Statement Body;
 		public Statement Else;
 
-		public Statement_If(Expression c, Statement b)
+		public Statement_If(SourceCodePosition pos, Expression c, Statement b)
+			: base(pos)
 		{
 			this.Condition = c;
 			this.Body = b;
-			this.Else = new Statement_NOP();
+			this.Else = new Statement_NOP(new SourceCodePosition());
 		}
 
-		public Statement_If(Expression c, Statement b, Statement e)
+		public Statement_If(SourceCodePosition pos, Expression c, Statement b, Statement e)
+			: base(pos)
 		{
 			this.Condition = c;
 			this.Body = b;
@@ -313,7 +331,8 @@ namespace BefunGen.AST
 		public Expression Condition;
 		public Statement Body;
 
-		public Statement_While(Expression c, Statement b)
+		public Statement_While(SourceCodePosition pos, Expression c, Statement b)
+			: base(pos)
 		{
 			this.Condition = c;
 			this.Body = b;
@@ -336,7 +355,8 @@ namespace BefunGen.AST
 		public Expression Condition;
 		public Statement Body;
 
-		public Statement_RepeatUntil(Expression c, Statement b)
+		public Statement_RepeatUntil(SourceCodePosition pos, Expression c, Statement b)
+			: base(pos)
 		{
 			this.Condition = c;
 			this.Body = b;

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using BefunGen.AST.CodeGen;
+using BefunGen.AST.Exceptions;
+using System;
 using System.IO;
 
 namespace BefunGen.AST
@@ -42,9 +44,14 @@ namespace BefunGen.AST
 			{
 				result = (Program)parse(txt);
 			}
-			catch (Exception e)
+			catch (ASTException e)
 			{
 				FailMessage = e.ToString();
+				return null;
+			}
+			catch (Exception e)
+			{
+				FailMessage = "FATAL EXCEPTION:\r\n" + e.ToString();
 				return null;
 			}
 
@@ -55,9 +62,14 @@ namespace BefunGen.AST
 			{
 				result.link();
 			}
-			catch (Exception e)
+			catch (ASTException e)
 			{
 				FailMessage = e.ToString();
+				return null;
+			}
+			catch (Exception e)
+			{
+				FailMessage = "FATAL EXCEPTION:\r\n" + e.ToString();
 				return null;
 			}
 
@@ -86,11 +98,10 @@ namespace BefunGen.AST
 					case GOLD.ParseMessage.NotLoadedError:
 					case GOLD.ParseMessage.GroupError:
 						fail(response);
-						done = true;
 						break;
 
 					case GOLD.ParseMessage.Reduction: // Reduction
-						parser.CurrentReduction = GrammarTableMap.CreateNewASTObject(parser.CurrentReduction as GOLD.Reduction);
+						parser.CurrentReduction = GrammarTableMap.CreateNewASTObject(parser.CurrentReduction as GOLD.Reduction, parser.CurrentPosition());
 						break;
 
 					case GOLD.ParseMessage.Accept: //Accepted!
@@ -111,29 +122,19 @@ namespace BefunGen.AST
 			switch (msg)
 			{
 				case GOLD.ParseMessage.LexicalError: //Cannot recognize token
-					FailMessage = "Lexical Error:" + Environment.NewLine +
-								  "Line: " + (parser.CurrentPosition().Line + 1) + ":" + parser.CurrentPosition().Column + Environment.NewLine +
-								  "Read: " + parser.CurrentToken().Data;
-					break;
+					throw new LexicalErrorException(parser.CurrentToken().Data, new SourceCodePosition(parser));
 
 				case GOLD.ParseMessage.SyntaxError: //Expecting a different token
-					FailMessage = "Syntax Error:" + Environment.NewLine +
-								  "Line: " + (parser.CurrentPosition().Line + 1) + ":" + parser.CurrentPosition().Column + Environment.NewLine +
-								  "Read: " + parser.CurrentToken().Data + Environment.NewLine +
-								  "Expecting: " + parser.ExpectedSymbols().Text();
-					break;
+					throw new SyntaxErrorException(parser.CurrentToken().Data, parser.ExpectedSymbols().Text(), new SourceCodePosition(parser));
 
 				case GOLD.ParseMessage.InternalError: //INTERNAL ERROR! Something is horribly wrong.
-					FailMessage = "Internal Error";
-					break;
+					throw new InternalErrorException(new SourceCodePosition(parser));
 
 				case GOLD.ParseMessage.NotLoadedError: //This error occurs if the CGT was not loaded.
-					FailMessage = "Tables not loaded";
-					break;
+					throw new NotLoadedErrorException(new SourceCodePosition(parser));
 
 				case GOLD.ParseMessage.GroupError: //GROUP ERROR! Unexpected end of file
-					FailMessage = "Runaway group";
-					break;
+					throw new GroupErrorException(new SourceCodePosition(parser));
 			}
 		}
 	}

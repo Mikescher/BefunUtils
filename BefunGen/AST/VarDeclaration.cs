@@ -1,4 +1,6 @@
-﻿namespace BefunGen.AST
+﻿using BefunGen.AST.CodeGen;
+using BefunGen.AST.Exceptions;
+namespace BefunGen.AST
 {
 	public abstract class VarDeclaration : ASTObject
 	{
@@ -10,7 +12,8 @@
 		public readonly Literal Initial;
 		public readonly int ID;
 
-		public VarDeclaration(BType t, string ident, Literal init)
+		public VarDeclaration(SourceCodePosition pos, BType t, string ident, Literal init)
+			: base(pos)
 		{
 			this.Type = t;
 			this.Identifier = ident;
@@ -36,36 +39,36 @@
 
 	public class VarDeclaration_Value : VarDeclaration
 	{
-		public VarDeclaration_Value(BType_Value t, string id)
-			: base(t, id, null)
+		public VarDeclaration_Value(SourceCodePosition pos, BType_Value t, string id)
+			: base(pos, t, id, null)
 		{
 		}
 
-		public VarDeclaration_Value(BType_Value t, string id, Literal_Value v)
-			: base(t, id, v)
+		public VarDeclaration_Value(SourceCodePosition pos, BType_Value t, string id, Literal_Value v)
+			: base(pos, t, id, v)
 		{
 		}
 	}
 
 	public class VarDeclaration_Array : VarDeclaration
 	{
-		public VarDeclaration_Array(BType_Array t, string id)
-			: base(t, id, null)
+		public VarDeclaration_Array(SourceCodePosition pos, BType_Array t, string id)
+			: base(pos, t, id, null)
 		{
 		}
 
-		public VarDeclaration_Array(BType_Array t, string id, Literal_Array v)
-			: base(t, id, v)
+		public VarDeclaration_Array(SourceCodePosition pos, BType_Array t, string id, Literal_Array v)
+			: base(pos, t, id, v)
 		{
 			int LiteralSize = ((Literal_Array)Initial).Count;
 
 			if (LiteralSize > t.Size) 
 			{
-
+				throw new ArrayLiteralTooBigException(pos);
 			} 
 			else if (LiteralSize < t.Size) 
 			{
-
+				((Literal_Array)Initial).AppendDefaultValues(t.Size - LiteralSize);
 			}
 		}
 	}

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BefunGen.AST.CodeGen;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -10,7 +11,8 @@ namespace BefunGen.AST
 		public Method MainStatement;
 		public List<Method> MethodList; // Includes MainStatement
 
-		public Program(string id, Method m, List<Method> mlst)
+		public Program(SourceCodePosition pos, string id, Method m, List<Method> mlst)
+			: base(pos)
 		{
 			this.Identifier = id;
 			this.MainStatement = m;
@@ -38,7 +40,8 @@ namespace BefunGen.AST
 
 	public class Program_Footer : ASTObject // TEMPORARY -- NOT IN RESULTING AST
 	{
-		public Program_Footer()
+		public Program_Footer(SourceCodePosition pos)
+			: base(pos)
 		{
 		}
 
@@ -52,7 +55,8 @@ namespace BefunGen.AST
 	{
 		public string Identifier;
 
-		public Program_Header(string id)
+		public Program_Header(SourceCodePosition pos, string id)
+			: base(pos)
 		{
 			this.Identifier = id;
 		}

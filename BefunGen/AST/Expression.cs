@@ -1,9 +1,11 @@
-﻿using BefunGen.AST.Exceptions;
+﻿using BefunGen.AST.CodeGen;
+using BefunGen.AST.Exceptions;
 namespace BefunGen.AST
 {
 	public abstract class Expression : ASTObject
 	{
-		public Expression()
+		public Expression(SourceCodePosition pos)
+			: base(pos)
 		{
 			//--
 		}
@@ -16,7 +18,8 @@ namespace BefunGen.AST
 		public Expression Left;
 		public Expression Right;
 
-		public Expression_Binary(Expression l, Expression r)
+		public Expression_Binary(SourceCodePosition pos, Expression l, Expression r)
+			: base (pos)
 		{
 			this.Left = l;
 			this.Right = r;
@@ -31,8 +34,8 @@ namespace BefunGen.AST
 
 	public abstract class Expression_Compare : Expression_Binary
 	{
-		public Expression_Compare(Expression l, Expression r)
-			: base(l, r)
+		public Expression_Compare(SourceCodePosition pos, Expression l, Expression r)
+			: base(pos, l, r)
 		{
 			//--
 		}
@@ -42,7 +45,8 @@ namespace BefunGen.AST
 	{
 		public Expression Expr;
 
-		public Expression_Unary(Expression e)
+		public Expression_Unary(SourceCodePosition pos, Expression e)
+			: base(pos)
 		{
 			this.Expr = e;
 		}
@@ -55,7 +59,8 @@ namespace BefunGen.AST
 
 	public abstract class Expression_ValuePointer : Expression
 	{
-		public Expression_ValuePointer()
+		public Expression_ValuePointer(SourceCodePosition pos)
+			: base(pos)
 		{
 			//--
 		}
@@ -68,7 +73,8 @@ namespace BefunGen.AST
 		public string Identifier; // Temporary -- before linking;
 		public VarDeclaration_Value Target;
 
-		public Expression_DirectValuePointer(string id)
+		public Expression_DirectValuePointer(SourceCodePosition pos, string id)
+			: base(pos)
 		{
 			this.Identifier = id;
 		}
@@ -83,7 +89,7 @@ namespace BefunGen.AST
 			Target = owner.findVariableByIdentifier(Identifier) as VarDeclaration_Value;
 
 			if (Target == null)
-				throw new UnresolvableReferenceException(Identifier);
+				throw new UnresolvableReferenceException(Identifier, Position);
 
 			Identifier = null;
 		}
@@ -96,7 +102,8 @@ namespace BefunGen.AST
 
 		public Expression Index;
 
-		public Expression_ArrayValuePointer(string id, Expression idx)
+		public Expression_ArrayValuePointer(SourceCodePosition pos, string id, Expression idx)
+			: base(pos)
 		{
 			this.Identifier = id;
 			this.Index = idx;
@@ -112,9 +119,9 @@ namespace BefunGen.AST
 			Target = owner.findVariableByIdentifier(Identifier) as VarDeclaration_Array;
 
 			if (Target == null)
-				throw new UnresolvableReferenceException(Identifier);
+				throw new UnresolvableReferenceException(Identifier, Position);
 			if (!typeof(BType_Array).IsAssignableFrom(Target.Type.GetType()))
-				throw new IndexOperatorNotDefiniedException();
+				throw new IndexOperatorNotDefiniedException(Position);
 
 			Identifier = null;
 		}
@@ -126,8 +133,8 @@ namespace BefunGen.AST
 
 	public class Expression_Mult : Expression_Binary
 	{
-		public Expression_Mult(Expression l, Expression r)
-			: base(l, r)
+		public Expression_Mult(SourceCodePosition pos, Expression l, Expression r)
+			: base(pos, l, r)
 		{
 			//--
 		}
@@ -140,8 +147,8 @@ namespace BefunGen.AST
 
 	public class Expression_Div : Expression_Binary
 	{
-		public Expression_Div(Expression l, Expression r)
-			: base(l, r)
+		public Expression_Div(SourceCodePosition pos, Expression l, Expression r)
+			: base(pos, l, r)
 		{
 			//--
 		}
@@ -154,8 +161,8 @@ namespace BefunGen.AST
 
 	public class Expression_Mod : Expression_Binary
 	{
-		public Expression_Mod(Expression l, Expression r)
-			: base(l, r)
+		public Expression_Mod(SourceCodePosition pos, Expression l, Expression r)
+			: base(pos, l, r)
 		{
 			//--
 		}
@@ -168,8 +175,8 @@ namespace BefunGen.AST
 
 	public class Expression_Add : Expression_Binary
 	{
-		public Expression_Add(Expression l, Expression r)
-			: base(l, r)
+		public Expression_Add(SourceCodePosition pos, Expression l, Expression r)
+			: base(pos, l, r)
 		{
 			//--
 		}
@@ -182,8 +189,8 @@ namespace BefunGen.AST
 
 	public class Expression_Sub : Expression_Binary
 	{
-		public Expression_Sub(Expression l, Expression r)
-			: base(l, r)
+		public Expression_Sub(SourceCodePosition pos, Expression l, Expression r)
+			: base(pos, l, r)
 		{
 			//--
 		}
@@ -200,8 +207,8 @@ namespace BefunGen.AST
 
 	public class Expression_Equals : Expression_Compare
 	{
-		public Expression_Equals(Expression l, Expression r)
-			: base(l, r)
+		public Expression_Equals(SourceCodePosition pos, Expression l, Expression r)
+			: base(pos, l, r)
 		{
 			//--
 		}
@@ -214,8 +221,8 @@ namespace BefunGen.AST
 
 	public class Expression_Unequals : Expression_Compare
 	{
-		public Expression_Unequals(Expression l, Expression r)
-			: base(l, r)
+		public Expression_Unequals(SourceCodePosition pos, Expression l, Expression r)
+			: base(pos, l, r)
 		{
 			//--
 		}
@@ -228,8 +235,8 @@ namespace BefunGen.AST
 
 	public class Expression_Greater : Expression_Compare
 	{
-		public Expression_Greater(Expression l, Expression r)
-			: base(l, r)
+		public Expression_Greater(SourceCodePosition pos, Expression l, Expression r)
+			: base(pos, l, r)
 		{
 			//--
 		}
@@ -242,8 +249,8 @@ namespace BefunGen.AST
 
 	public class Expression_Lesser : Expression_Compare
 	{
-		public Expression_Lesser(Expression l, Expression r)
-			: base(l, r)
+		public Expression_Lesser(SourceCodePosition pos, Expression l, Expression r)
+			: base(pos, l, r)
 		{
 			//--
 		}
@@ -256,8 +263,8 @@ namespace BefunGen.AST
 
 	public class Expression_GreaterEquals : Expression_Compare
 	{
-		public Expression_GreaterEquals(Expression l, Expression r)
-			: base(l, r)
+		public Expression_GreaterEquals(SourceCodePosition pos, Expression l, Expression r)
+			: base(pos, l, r)
 		{
 			//--
 		}
@@ -270,8 +277,8 @@ namespace BefunGen.AST
 
 	public class Expression_LesserEquals : Expression_Compare
 	{
-		public Expression_LesserEquals(Expression l, Expression r)
-			: base(l, r)
+		public Expression_LesserEquals(SourceCodePosition pos, Expression l, Expression r)
+			: base(pos, l, r)
 		{
 			//--
 		}
@@ -288,8 +295,8 @@ namespace BefunGen.AST
 
 	public class Expression_Not : Expression_Unary
 	{
-		public Expression_Not(Expression e)
-			: base(e)
+		public Expression_Not(SourceCodePosition pos, Expression e)
+			: base(pos, e)
 		{
 			//--
 		}
@@ -302,8 +309,8 @@ namespace BefunGen.AST
 
 	public class Expression_Negate : Expression_Unary
 	{
-		public Expression_Negate(Expression e)
-			: base(e)
+		public Expression_Negate(SourceCodePosition pos, Expression e)
+			: base(pos, e)
 		{
 			//--
 		}
@@ -322,7 +329,8 @@ namespace BefunGen.AST
 	{
 		public Literal Value;
 
-		public Expression_Literal(Literal l)
+		public Expression_Literal(SourceCodePosition pos, Literal l)
+			: base(pos)
 		{
 			this.Value = l;
 		}
@@ -340,7 +348,8 @@ namespace BefunGen.AST
 
 	public class Expression_Rand : Expression
 	{
-		public Expression_Rand()
+		public Expression_Rand(SourceCodePosition pos)
+			: base(pos)
 		{
 			//--
 		}
@@ -361,7 +370,8 @@ namespace BefunGen.AST
 		private BType Type;
 		private Expression Expr;
 
-		public Expression_Cast(BType t, Expression e)
+		public Expression_Cast(SourceCodePosition pos, BType t, Expression e)
+			: base(pos)
 		{
 			this.Type = t;
 			this.Expr = e;
@@ -382,7 +392,8 @@ namespace BefunGen.AST
 	{
 		public Statement_MethodCall Method;
 
-		public Expression_FunctionCall(Statement_MethodCall mc)
+		public Expression_FunctionCall(SourceCodePosition pos, Statement_MethodCall mc)
+			: base(pos)
 		{
 			this.Method = mc;
 		}
