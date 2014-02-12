@@ -1,6 +1,5 @@
 ﻿using BefunGen.AST.CodeGen;
 using BefunGen.AST.Exceptions;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -93,5 +92,4 @@ namespace BefunGen.AST
 //TODO Add Boolsche Compare
 //TODO cant reference Array-Vars
 //TODO LineNumbers not alwas right
-//TODO parse on second WOrker-Thread
 //TODO Syntaxbox Enter after end --> slicing

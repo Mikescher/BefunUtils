@@ -1,11 +1,8 @@
 ﻿using BefunGen.AST;
 using System;
 using System.IO;
-using System.Linq.Expressions;
-using System.Reflection;
 using System.Threading;
 using System.Windows.Forms;
-using BefunGen;
 
 namespace BefunGen
 {
@@ -39,8 +36,8 @@ namespace BefunGen
 		{
 			try
 			{
-				//txtSource.Document.SyntaxFile = txtSynFile.Text;
-				//txtSource.Document.ParseAll();
+				txtSource.Document.SyntaxFile = txtSynFile.Text;
+				txtSource.Document.ParseAll();
 			}
 			catch (Exception ex)
 			{
@@ -72,13 +69,7 @@ namespace BefunGen
 		{
 			btnLoad.Enabled = true;
 
-			String path = Application.StartupPath;
-			if (path.Contains("BefunGen"))
-				path = path.Substring(0, path.LastIndexOf("BefunGen"));
-			path = Path.Combine(path, "BefunGen");
-			path = Path.Combine(path, "TextFunge");
-
-			txtTableFile.Text = Path.Combine(path, "TextFunge.egt");
+			txtTableFile.Text = Path.Combine(Application.StartupPath, "TextFunge.egt");
 
 			if (File.Exists(txtTableFile.Text))
 				doLoad();
@@ -87,17 +78,17 @@ namespace BefunGen
 
 			//#########
 
-			txtSynFile.Text = Path.Combine(path, "TextFunge.syn");
+			txtSynFile.Text = Path.Combine(Application.StartupPath, "TextFunge.syn");
 			if (File.Exists(txtSynFile.Text))
 				doLoadSYN();
 			else
 				txtLog.AppendText(string.Format("Syntaxfile not found: {0} \r\n", txtSynFile.Text));
 
-			string path_tf = Path.Combine(path, "example_00.tf");
+			string path_tf = Path.Combine(Application.StartupPath, "example_00.tf");
 			if (File.Exists(path_tf))
 			{
-				txtSource.Text = File.ReadAllText(path_tf);
-				currentSC = txtSource.Text;
+				txtSource.Document.Text = File.ReadAllText(path_tf);
+				currentSC = txtSource.Document.Text;
 			}
 			else
 				txtLog.AppendText(string.Format("Example not found: {0} \r\n", path_tf));
@@ -108,7 +99,7 @@ namespace BefunGen
 
 		private void txtSource_TextChanged(object sender, EventArgs e)
 		{
-			currentSC = txtSource.Text;
+			currentSC = txtSource.Document.Text;
 		}
 
 		private Tuple<string, string, string, string> doParse(string txt)
@@ -158,7 +149,7 @@ namespace BefunGen
 
 		private void txtSource_KeyPress(object sender, KeyPressEventArgs e)
 		{
-			currentSC = txtSource.Text;
+			currentSC = txtSource.Document.Text;
 		}
 
 		private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
@@ -195,7 +186,7 @@ namespace BefunGen
 				}
 				else
 				{
-					Thread.Sleep(500);
+					Thread.Sleep(100);
 				}
 			}
 		}

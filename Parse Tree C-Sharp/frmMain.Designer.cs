@@ -28,9 +28,11 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+			this.components = new System.ComponentModel.Container();
 			this.btnLoad = new System.Windows.Forms.Button();
 			this.txtTableFile = new System.Windows.Forms.TextBox();
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+			this.txtSource = new Alsing.Windows.Forms.SyntaxBoxControl();
 			this.tabControl1 = new System.Windows.Forms.TabControl();
 			this.tabPage1 = new System.Windows.Forms.TabPage();
 			this.txtParseTree = new System.Windows.Forms.TextBox();
@@ -44,7 +46,6 @@
 			this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
 			this.btnLoadSYN = new System.Windows.Forms.Button();
 			this.txtSynFile = new System.Windows.Forms.TextBox();
-			this.txtSource = new ScintillaNET.Scintilla();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
@@ -56,7 +57,6 @@
 			this.tabPage4.SuspendLayout();
 			this.tableLayoutPanel2.SuspendLayout();
 			this.tableLayoutPanel3.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.txtSource)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// btnLoad
@@ -95,6 +95,43 @@
 			this.splitContainer1.Size = new System.Drawing.Size(686, 466);
 			this.splitContainer1.SplitterDistance = 218;
 			this.splitContainer1.TabIndex = 11;
+			// 
+			// txtSource
+			// 
+			this.txtSource.ActiveView = Alsing.Windows.Forms.ActiveView.BottomRight;
+			this.txtSource.AutoListPosition = null;
+			this.txtSource.AutoListSelectedText = "a123";
+			this.txtSource.AutoListVisible = false;
+			this.txtSource.BackColor = System.Drawing.Color.White;
+			this.txtSource.BorderStyle = Alsing.Windows.Forms.BorderStyle.None;
+			this.txtSource.CopyAsRTF = false;
+			this.txtSource.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.txtSource.FontName = "Courier new";
+			this.txtSource.HighLightActiveLine = true;
+			this.txtSource.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+			this.txtSource.Indent = Alsing.Windows.Forms.SyntaxBox.IndentStyle.Smart;
+			this.txtSource.InfoTipCount = 1;
+			this.txtSource.InfoTipPosition = null;
+			this.txtSource.InfoTipSelectedIndex = 1;
+			this.txtSource.InfoTipVisible = false;
+			this.txtSource.Location = new System.Drawing.Point(0, 0);
+			this.txtSource.LockCursorUpdate = false;
+			this.txtSource.Name = "txtSource";
+			this.txtSource.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+			this.txtSource.ShowGutterMargin = false;
+			this.txtSource.ShowScopeIndicator = false;
+			this.txtSource.ShowTabGuides = true;
+			this.txtSource.Size = new System.Drawing.Size(686, 218);
+			this.txtSource.SmoothScroll = true;
+			this.txtSource.SplitView = false;
+			this.txtSource.SplitviewH = -4;
+			this.txtSource.SplitviewV = -4;
+			this.txtSource.TabGuideColor = System.Drawing.Color.FromArgb(((int)(((byte)(233)))), ((int)(((byte)(233)))), ((int)(((byte)(233)))));
+			this.txtSource.TabIndex = 5;
+			this.txtSource.TabSize = 2;
+			this.txtSource.WhitespaceColor = System.Drawing.SystemColors.ControlDark;
+			this.txtSource.TextChanged += new System.EventHandler(this.txtSource_TextChanged);
+			this.txtSource.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtSource_KeyPress);
 			// 
 			// tabControl1
 			// 
@@ -256,18 +293,6 @@
 			this.txtSynFile.Size = new System.Drawing.Size(580, 20);
 			this.txtSynFile.TabIndex = 11;
 			// 
-			// txtSource
-			// 
-			this.txtSource.ConfigurationManager.CustomLocation = "ScintillaNet.xml";
-			this.txtSource.ConfigurationManager.Language = "pascal";
-			this.txtSource.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.txtSource.Location = new System.Drawing.Point(0, 0);
-			this.txtSource.Name = "txtSource";
-			this.txtSource.Size = new System.Drawing.Size(686, 218);
-			this.txtSource.TabIndex = 6;
-			this.txtSource.TextChanged += new System.EventHandler(this.txtSource_TextChanged);
-			this.txtSource.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtSource_KeyPress);
-			// 
 			// frmMain
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -294,7 +319,6 @@
 			this.tableLayoutPanel2.ResumeLayout(false);
 			this.tableLayoutPanel3.ResumeLayout(false);
 			this.tableLayoutPanel3.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.txtSource)).EndInit();
 			this.ResumeLayout(false);
 
 		}
@@ -308,6 +332,7 @@
 		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
 		private System.Windows.Forms.Button btnLoadSYN;
 		private System.Windows.Forms.TextBox txtSynFile;
+		internal Alsing.Windows.Forms.SyntaxBoxControl txtSource;
 		private System.Windows.Forms.TabControl tabControl1;
 		private System.Windows.Forms.TabPage tabPage1;
 		internal System.Windows.Forms.TextBox txtParseTree;
@@ -317,7 +342,6 @@
 		private System.Windows.Forms.TextBox txtAST;
 		private System.Windows.Forms.TabPage tabPage4;
 		private System.Windows.Forms.TextBox txtLog;
-		private ScintillaNET.Scintilla txtSource;
 	}
 }
 
