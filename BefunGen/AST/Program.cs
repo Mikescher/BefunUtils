@@ -91,5 +91,4 @@ namespace BefunGen.AST
 //TODO Add MethodCall Stmt
 //TODO Add Boolsche Compare
 //TODO cant reference Array-Vars
-//TODO LineNumbers not alwas right
-//TODO Syntaxbox Enter after end --> slicing
+//TODO Allow out charArray

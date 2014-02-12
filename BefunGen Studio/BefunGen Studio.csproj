@@ -120,9 +120,6 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <None Include="Resources\TextFunge.syn" />
-    <None Include="TextFunge.egt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="TextFunge.syn">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

@@ -1,5 +1,6 @@
 ﻿using BefunGen.AST.CodeGen;
 using BefunGen.AST.Exceptions;
+using BefunGen.Properties;
 using System;
 using System.IO;
 
@@ -15,13 +16,8 @@ namespace BefunGen.AST
 		public TextFungeParser()
 		{
 			parser = new GOLD.Parser();
-		}
 
-		public TextFungeParser(BinaryReader tables)
-		{
-			parser = new GOLD.Parser();
-
-			loadTables(tables);
+			loadTables(new BinaryReader(new MemoryStream(Resources.TextFunge_egt)));
 		}
 
 		public bool loadTables(BinaryReader r)
@@ -144,6 +140,11 @@ namespace BefunGen.AST
 		{
 			Method.resetCounter();
 			VarDeclaration.resetCounter();
+		}
+
+		public string getGrammarDefinition()
+		{
+			return Resources.TextFunge_grm;
 		}
 	}
 }

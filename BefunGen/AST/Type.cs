@@ -81,7 +81,7 @@ namespace BefunGen.AST
 
 		public override bool Equals(BType p)
 		{
-			if (p == null)
+			if ((object)p == null)
 				return false;
 
 			return this.GetType() == p.GetType() && (p as BType_Array).Size == Size;

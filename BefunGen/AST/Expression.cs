@@ -179,7 +179,7 @@ namespace BefunGen.AST
 	public class Expression_DirectValuePointer : Expression_ValuePointer
 	{
 		public string Identifier; // Temporary -- before linking;
-		public VarDeclaration_Value Target;
+		public VarDeclaration Target; // Could also be an array without index
 
 		public Expression_DirectValuePointer(SourceCodePosition pos, string id)
 			: base(pos)
@@ -194,7 +194,7 @@ namespace BefunGen.AST
 
 		public override void linkVariables(Method owner)
 		{
-			Target = owner.findVariableByIdentifier(Identifier) as VarDeclaration_Value;
+			Target = owner.findVariableByIdentifier(Identifier) as VarDeclaration;
 
 			if (Target == null)
 				throw new UnresolvableReferenceException(Identifier, Position);

@@ -6,12 +6,17 @@
 
 program example
 	var 
-	 char[32] name;
+		char[32] name;
+		int i := 0;
 	begin
 		//Insert Name
 		name = getInputStr();
 		
-		out name;
+		while (i < 32) do
+		begin
+			out name[i];
+			i++;
+		end
 		
 		// Print Fibbonacci
 		

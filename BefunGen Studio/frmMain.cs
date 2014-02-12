@@ -102,12 +102,15 @@ namespace BefunGen
 			currentSC = txtSource.Document.Text;
 		}
 
-		private Tuple<string, string, string, string> doParse(string txt)
+		private Tuple<string, string, string, string, string> doParse(string txt)
 		{
+			long time_full = Environment.TickCount;
+
 			string redtree = "";
 			string trimtree = "";
 			string asttree = "";
 			string log = "";
+			string grammar = "";
 
 			if (loaded)
 			{
@@ -126,7 +129,7 @@ namespace BefunGen
 					asttree = GParser.FailMessage;
 				else
 				{
-					txtLog.AppendText(string.Format("AST-Gen: {0}ms\r\n", MyParser.Time));
+					log += (string.Format("AST-Gen: {0}ms\r\n", MyParser.Time));
 
 					long gdst = Environment.TickCount;
 					string debug = p.getDebugString().Replace("\n", Environment.NewLine);
@@ -136,6 +139,8 @@ namespace BefunGen
 
 					log += (string.Format("AST-DebugOut: {0}ms\r\n", gdst));
 				}
+
+				grammar = GParser.getGrammarDefinition();
 			}
 			else
 			{
@@ -144,7 +149,12 @@ namespace BefunGen
 				asttree = "Grammar not loaded";
 			}
 
-			return Tuple.Create(redtree, trimtree, asttree, log);
+			time_full = Environment.TickCount - time_full;
+
+			log += "\r\n----------\r\n";
+			log += (string.Format("Parse: {0}ms\r\n", time_full));
+
+			return Tuple.Create(redtree, trimtree, asttree, log, grammar);
 		}
 
 		private void txtSource_KeyPress(object sender, KeyPressEventArgs e)
@@ -181,6 +191,7 @@ namespace BefunGen
 					txtParseTrimTree.SetPropertyThreadSafe(() => txtParseTrimTree.Text, result.Item2);
 					txtAST.SetPropertyThreadSafe(() => txtAST.Text, result.Item3);
 					txtLog.SetPropertyThreadSafe(() => txtLog.Text, result.Item4);
+					txtGrammar.SetPropertyThreadSafe(() => txtGrammar.Text, result.Item5);
 
 					currentTxt = newtxt;
 				}
