@@ -13,7 +13,7 @@ internal class DemoParser
 
 	public long Time;
 
-	public bool Setup(string FilePath)
+	public bool Setup(BinaryReader FilePath)
 	{
 		try
 		{

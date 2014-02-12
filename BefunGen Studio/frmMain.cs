@@ -49,7 +49,7 @@ namespace BefunGen
 		{
 			try
 			{
-				if (MyParser.Setup(txtTableFile.Text) && GParser.loadTables(txtTableFile.Text))
+				if (MyParser.Setup(new BinaryReader(new MemoryStream(GParser.getGrammar()))))
 				{
 					loaded = true;
 				}
@@ -67,8 +67,6 @@ namespace BefunGen
 
 		private void frmMain_Load(object sender, EventArgs e)
 		{
-			btnLoad.Enabled = true;
-
 			txtTableFile.Text = Path.Combine(Application.StartupPath, "TextFunge.egt");
 
 			if (File.Exists(txtTableFile.Text))
@@ -92,6 +90,12 @@ namespace BefunGen
 			}
 			else
 				txtLog.AppendText(string.Format("Example not found: {0} \r\n", path_tf));
+
+			//##########
+
+			doLoad();
+
+			//##########
 
 			parseThread = new Thread(work);
 			parseThread.Start();

@@ -17,7 +17,7 @@ namespace BefunGen.AST
 		{
 			parser = new GOLD.Parser();
 
-			loadTables(new BinaryReader(new MemoryStream(Resources.TextFunge_egt)));
+			loadTables(new BinaryReader(new MemoryStream(getGrammar())));
 		}
 
 		public bool loadTables(BinaryReader r)
@@ -145,6 +145,11 @@ namespace BefunGen.AST
 		public string getGrammarDefinition()
 		{
 			return Resources.TextFunge_grm;
+		}
+
+		public byte[] getGrammar()
+		{
+			return Resources.TextFunge_egt;
 		}
 	}
 }

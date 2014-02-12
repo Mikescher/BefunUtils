@@ -65,6 +65,7 @@
 			// btnLoad
 			// 
 			this.btnLoad.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.btnLoad.Enabled = false;
 			this.btnLoad.Location = new System.Drawing.Point(589, 3);
 			this.btnLoad.Name = "btnLoad";
 			this.btnLoad.Size = new System.Drawing.Size(94, 26);
@@ -281,6 +282,7 @@
 			// btnLoadSYN
 			// 
 			this.btnLoadSYN.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.btnLoadSYN.Enabled = false;
 			this.btnLoadSYN.Location = new System.Drawing.Point(589, 35);
 			this.btnLoadSYN.Name = "btnLoadSYN";
 			this.btnLoadSYN.Size = new System.Drawing.Size(94, 26);
