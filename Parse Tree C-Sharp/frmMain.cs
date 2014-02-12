@@ -1,7 +1,11 @@
 ﻿using BefunGen.AST;
 using System;
 using System.IO;
+using System.Linq.Expressions;
+using System.Reflection;
+using System.Threading;
 using System.Windows.Forms;
+using BefunGen;
 
 namespace BefunGen
 {
@@ -11,6 +15,10 @@ namespace BefunGen
 		private TextFungeParser GParser = new TextFungeParser();
 
 		private bool loaded = false;
+
+		private string currentSC = "";
+		private Thread parseThread;
+		bool threadRunning = true;
 
 		public frmMain()
 		{
@@ -31,8 +39,8 @@ namespace BefunGen
 		{
 			try
 			{
-				txtSource.Document.SyntaxFile = txtSynFile.Text;
-				txtSource.Document.ParseAll();
+				//txtSource.Document.SyntaxFile = txtSynFile.Text;
+				//txtSource.Document.ParseAll();
 			}
 			catch (Exception ex)
 			{
@@ -58,13 +66,6 @@ namespace BefunGen
 			{
 				MessageBox.Show(ex.Message);
 			}
-
-			doParse();
-		}
-
-		private void btnParse_Click(object sender, EventArgs e)
-		{
-			doParse();
 		}
 
 		private void frmMain_Load(object sender, EventArgs e)
@@ -94,35 +95,44 @@ namespace BefunGen
 
 			string path_tf = Path.Combine(path, "example_00.tf");
 			if (File.Exists(path_tf))
-				txtSource.Document.Text = File.ReadAllText(path_tf);
+			{
+				txtSource.Text = File.ReadAllText(path_tf);
+				currentSC = txtSource.Text;
+			}
 			else
 				txtLog.AppendText(string.Format("Example not found: {0} \r\n", path_tf));
+
+			parseThread = new Thread(work);
+			parseThread.Start();
 		}
 
 		private void txtSource_TextChanged(object sender, EventArgs e)
 		{
-			doParse();
+			currentSC = txtSource.Text;
 		}
 
-		private void doParse()
+		private Tuple<string, string, string, string> doParse(string txt)
 		{
+			string redtree = "";
+			string trimtree = "";
+			string asttree = "";
+			string log = "";
+
 			if (loaded)
 			{
-				txtLog.Clear();
-
 				string refout1 = "";
-				MyParser.Parse(new StringReader(txtSource.Document.Text), ref refout1, false);
-				txtParseTree.Text = refout1;
-				txtLog.AppendText(string.Format("Reduction Tree: {0}ms\r\n", MyParser.Time));
+				MyParser.Parse(new StringReader(txt), ref refout1, false);
+				redtree = refout1;
+				log += (string.Format("Reduction Tree: {0}ms\r\n", MyParser.Time));
 
 				string refout2 = "";
-				MyParser.Parse(new StringReader(txtSource.Document.Text), ref refout2, true);
-				txtParseTrimTree.Text = refout2;
-				txtLog.AppendText(string.Format("Trimmed Reduction Tree: {0}ms\r\n", MyParser.Time));
+				MyParser.Parse(new StringReader(txt), ref refout2, true);
+				trimtree = refout2;
+				log += (string.Format("Trimmed Reduction Tree: {0}ms\r\n", MyParser.Time));
 
-				BefunGen.AST.Program p = GParser.generateAST(txtSource.Document.Text);
+				BefunGen.AST.Program p = GParser.generateAST(txt);
 				if (p == null)
-					txtAST.Text = GParser.FailMessage;
+					asttree = GParser.FailMessage;
 				else
 				{
 					txtLog.AppendText(string.Format("AST-Gen: {0}ms\r\n", MyParser.Time));
@@ -131,22 +141,63 @@ namespace BefunGen
 					string debug = p.getDebugString().Replace("\n", Environment.NewLine);
 					gdst = Environment.TickCount - gdst;
 
-					txtAST.Text = debug;
+					asttree = debug;
 
-					txtLog.AppendText(string.Format("AST-DebugOut: {0}ms\r\n", gdst));
+					log += (string.Format("AST-DebugOut: {0}ms\r\n", gdst));
 				}
 			}
 			else
 			{
-				txtParseTree.Text = "Grammar not loaded";
-				txtParseTrimTree.Text = "Grammar not loaded";
-				txtAST.Text = "Grammar not loaded";
+				redtree = "Grammar not loaded";
+				trimtree = "Grammar not loaded";
+				asttree = "Grammar not loaded";
 			}
+
+			return Tuple.Create(redtree, trimtree, asttree, log);
 		}
 
 		private void txtSource_KeyPress(object sender, KeyPressEventArgs e)
 		{
-			doParse();
+			currentSC = txtSource.Text;
+		}
+
+		private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
+		{
+			threadRunning = false;
+		}
+
+		private void work()
+		{
+			string currentTxt = null;
+
+			while (threadRunning)
+			{
+				string newtxt = currentSC;
+
+				if (newtxt != currentTxt)
+				{
+					bool hasChangedAgain = true;
+					while (hasChangedAgain)
+					{
+						Thread.Sleep(500);
+						hasChangedAgain = (currentSC != newtxt);
+						newtxt = currentSC;
+					}
+
+					var result = doParse(newtxt);
+
+					txtParseTree.SetPropertyThreadSafe(() => txtParseTree.Text, result.Item1);
+					txtParseTrimTree.SetPropertyThreadSafe(() => txtParseTrimTree.Text, result.Item2);
+					txtAST.SetPropertyThreadSafe(() => txtAST.Text, result.Item3);
+					txtLog.SetPropertyThreadSafe(() => txtLog.Text, result.Item4);
+
+					currentTxt = newtxt;
+				}
+				else
+				{
+					Thread.Sleep(500);
+				}
+			}
 		}
 	}
 } //Form
