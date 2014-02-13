@@ -175,6 +175,11 @@ namespace BefunGen.AST
 					result = (Statement)r.get_Data(0);
 					break;
 
+				case ProductionIndex.Statement6:
+					// <Statement> ::= <Stmt_Call>
+					//TODO
+					break;
+
 				case ProductionIndex.Statementlist:
 					// <StatementList> ::= <StatementList> <Statement>
 					result = ((List_Statements)r.get_Data(0)).Append((Statement)r.get_Data(1));
@@ -185,12 +190,12 @@ namespace BefunGen.AST
 					result = new List_Statements(p);
 					break;
 
-				case ProductionIndex.Stmt_inc_Identifier_Plusplus:
+				case ProductionIndex.Stmt_inc_Plusplus:
 					// <Stmt_Inc> ::= <ValuePointer> '++'
 					result = new Statement_Inc(p, (Expression_ValuePointer)r.get_Data(0));
 					break;
 
-				case ProductionIndex.Stmt_inc_Identifier_Minusminus:
+				case ProductionIndex.Stmt_inc_Minusminus:
 					// <Stmt_Inc> ::= <ValuePointer> '--'
 					result = new Statement_Dec(p, (Expression_ValuePointer)r.get_Data(0));
 					break;
@@ -215,6 +220,11 @@ namespace BefunGen.AST
 					result = new Statement_Out(p, (Expression)r.get_Data(1));
 					break;
 
+				case ProductionIndex.Stmt_out_Out2:
+					// <Stmt_Out> ::= out <Literal_String>
+					//TODO
+					break;
+
 				case ProductionIndex.Stmt_in_In:
 					// <Stmt_In> ::= in <ValuePointer>
 					result = new Statement_In(p, (Expression_ValuePointer)r.get_Data(1));
@@ -233,6 +243,16 @@ namespace BefunGen.AST
 				case ProductionIndex.Stmt_return_Return2:
 					// <Stmt_Return> ::= return
 					result = new Statement_Return(p);
+					break;
+
+				case ProductionIndex.Stmt_call_Identifier_Lparen_Rparen:
+					// <Stmt_Call> ::= Identifier '(' <ExpressionList> ')'
+					//TODO
+					break;
+
+				case ProductionIndex.Stmt_call_Identifier_Lparen_Rparen2:
+					// <Stmt_Call> ::= Identifier '(' ')'
+					//TODO
 					break;
 
 				case ProductionIndex.Stmt_if_If_Lparen_Rparen_Then_End:
@@ -516,8 +536,28 @@ namespace BefunGen.AST
 					break;
 
 				case ProductionIndex.Expression:
-					// <Expression> ::= <Expr Eq>
+					// <Expression> ::= <Expr Bool>
 					result = (Expression)r.get_Data(0);
+					break;
+
+				case ProductionIndex.Exprbool_Ampamp:
+					// <Expr Bool> ::= <Expr Bool> '&&' <Expr Eq>
+					//TODO
+					break;
+
+				case ProductionIndex.Exprbool_Pipepipe:
+					// <Expr Bool> ::= <Expr Bool> '||' <Expr Eq>
+					//TODO
+					break;
+
+				case ProductionIndex.Exprbool_Caret:
+					// <Expr Bool> ::= <Expr Bool> '^' <Expr Eq>
+					//TODO
+					break;
+
+				case ProductionIndex.Exprbool:
+					// <Expr Bool> ::= <Expr Eq>
+					//TODO
 					break;
 
 				case ProductionIndex.Expreq_Eqeq:
