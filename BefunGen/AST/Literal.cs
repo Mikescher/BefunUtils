@@ -76,15 +76,22 @@ namespace BefunGen.AST
 		{
 			CodePiece p = new CodePiece();
 
-			if (Value >= 0 && Value <= 9)
+			if (CodeGenOptions.AutoDigitizeNumberLiterals && Value >= 0 && Value <= 9)
 			{
 				p[0, 0] = BCHelper.chr(Value);
 			}
 			else
 			{
-				p[0, 0] = BCHelper.Stringmode;
-				p[1, 0] = BCHelper.chr(Value);
-				p[2, 0] = BCHelper.Stringmode;
+				if (CodeGenOptions.NumberLiteralRepresentation == NumberRep.CharKonstant)
+				{
+					p[0, 0] = BCHelper.Stringmode;
+					p[1, 0] = BCHelper.chr(Value);
+					p[2, 0] = BCHelper.Stringmode;
+				}
+				else if (CodeGenOptions.NumberLiteralRepresentation == NumberRep.Base9)
+				{
+					p = Base9Converter.generateCodeForLiteral(Value);
+				}
 			}
 
 			return p;
@@ -153,7 +160,7 @@ namespace BefunGen.AST
 		public override CodePiece generateCode()
 		{
 			CodePiece p = new CodePiece();
-			p[0, 0] = BCHelper.chr(Value ? 1 : 0);
+			p[0, 0] = BCHelper.dig(Value ? (byte)1 : (byte)0);
 			return p;
 		}
 	}
@@ -181,7 +188,7 @@ namespace BefunGen.AST
 		public override CodePiece generateCode()
 		{
 			CodePiece p = new CodePiece();
-			p[0, 0] = BCHelper.chr(Value);
+			p[0, 0] = BCHelper.dig(Value);
 			return p;
 		}
 	}
@@ -228,7 +235,7 @@ namespace BefunGen.AST
 			p[i++, 0] = BCHelper.Stringmode;
 			foreach (int val in Value)
 			{
-				p[i++, 0] = BCHelper.chr(val);
+				p[i++, 0] = BCHelper.chr(val); //TODO What when charcode == " ? 
 			}
 			p[i++, 0] = BCHelper.Stringmode;
 
@@ -325,7 +332,7 @@ namespace BefunGen.AST
 
 			foreach (bool val in Value)
 			{
-				p[i++, 0] = BCHelper.chr(val ? 1 : 0);
+				p[i++, 0] = BCHelper.dig(val ? (byte)1 : (byte)0);
 			}
 
 			return p;
@@ -369,7 +376,7 @@ namespace BefunGen.AST
 
 			foreach (byte val in Value)
 			{
-				p[i++, 0] = BCHelper.chr(val);
+				p[i++, 0] = BCHelper.dig(val);
 			}
 
 			return p;

@@ -1,5 +1,6 @@
 ﻿using BefunGen.AST.CodeGen;
 using BefunGen.AST.Exceptions;
+using System;
 namespace BefunGen.AST
 {
 	public abstract class Expression : ASTObject
@@ -15,6 +16,8 @@ namespace BefunGen.AST
 		public abstract void linkMethods(Program owner);
 
 		public abstract BType getResultType();
+
+		public abstract CodePiece generateCode();
 	}
 
 	#region Parents
@@ -259,6 +262,11 @@ namespace BefunGen.AST
 		{
 			return Target.Type;
 		}
+
+		public override CodePiece generateCode()
+		{
+			throw new NotImplementedException(); //TODO Implement
+		}
 	}
 
 	public class Expression_ArrayValuePointer : Expression_ValuePointer
@@ -314,6 +322,11 @@ namespace BefunGen.AST
 		{
 			return Target.InternalType;
 		}
+
+		public override CodePiece generateCode()
+		{
+			throw new NotImplementedException(); //TODO Implement
+		}
 	}
 
 	public class Expression_VoidValuePointer : Expression_ValuePointer
@@ -342,6 +355,11 @@ namespace BefunGen.AST
 		{
 			return new BType_Void(Position);
 		}
+
+		public override CodePiece generateCode()
+		{
+			throw new NotImplementedException(); //TODO Implement
+		}
 	}
 
 	#endregion ValuePointer
@@ -360,6 +378,17 @@ namespace BefunGen.AST
 		{
 			return string.Format("({0} * {1})", Left.getDebugString(), Right.getDebugString());
 		}
+
+		public override CodePiece generateCode()
+		{
+			CodePiece p = CodePiece.CombineHorizontal(Left.generateCode(), Right.generateCode());
+
+			p.normalize();
+
+			p[p.Width, 0] = BCHelper.Mult;
+
+			return p;
+		}
 	}
 
 	public class Expression_Div : Expression_BinaryMathOperation
@@ -373,6 +402,17 @@ namespace BefunGen.AST
 		public override string getDebugString()
 		{
 			return string.Format("({0} / {1})", Left.getDebugString(), Right.getDebugString());
+		}
+
+		public override CodePiece generateCode()
+		{
+			CodePiece p = CodePiece.CombineHorizontal(Left.generateCode(), Right.generateCode()); //TODO Optimize: when Left ends with " and right starts with " then trim both " away.
+
+			p.normalize();
+
+			p[p.Width, 0] = BCHelper.Div;
+
+			return p;
 		}
 	}
 
@@ -388,6 +428,17 @@ namespace BefunGen.AST
 		{
 			return string.Format("({0} % {1})", Left.getDebugString(), Right.getDebugString());
 		}
+
+		public override CodePiece generateCode()
+		{
+			CodePiece p = CodePiece.CombineHorizontal(Left.generateCode(), Right.generateCode());
+
+			p.normalize();
+
+			p[p.Width, 0] = BCHelper.Modulo;
+
+			return p;
+		}
 	}
 
 	public class Expression_Add : Expression_BinaryMathOperation
@@ -402,6 +453,17 @@ namespace BefunGen.AST
 		{
 			return string.Format("({0} + {1})", Left.getDebugString(), Right.getDebugString());
 		}
+
+		public override CodePiece generateCode()
+		{
+			CodePiece p = CodePiece.CombineHorizontal(Left.generateCode(), Right.generateCode());
+
+			p.normalize();
+
+			p[p.Width, 0] = BCHelper.Add;
+
+			return p;
+		}
 	}
 
 	public class Expression_Sub : Expression_BinaryMathOperation
@@ -415,6 +477,17 @@ namespace BefunGen.AST
 		public override string getDebugString()
 		{
 			return string.Format("({0} - {1})", Left.getDebugString(), Right.getDebugString());
+		}
+
+		public override CodePiece generateCode()
+		{
+			CodePiece p = CodePiece.CombineHorizontal(Left.generateCode(), Right.generateCode());
+
+			p.normalize();
+
+			p[p.Width, 0] = BCHelper.Sub;
+
+			return p;
 		}
 	}
 
@@ -434,6 +507,11 @@ namespace BefunGen.AST
 		{
 			return string.Format("({0} AND {1})", Left.getDebugString(), Right.getDebugString());
 		}
+
+		public override CodePiece generateCode()
+		{
+			throw new NotImplementedException(); //TODO Implement
+		}
 	}
 
 	public class Expression_Or : Expression_BinaryBoolOperation
@@ -448,6 +526,11 @@ namespace BefunGen.AST
 		{
 			return string.Format("({0} OR {1})", Left.getDebugString(), Right.getDebugString());
 		}
+
+		public override CodePiece generateCode()
+		{
+			throw new NotImplementedException(); //TODO Implement
+		}
 	}
 
 	public class Expression_Xor : Expression_BinaryBoolOperation
@@ -461,6 +544,11 @@ namespace BefunGen.AST
 		public override string getDebugString()
 		{
 			return string.Format("({0} XOR {1})", Left.getDebugString(), Right.getDebugString());
+		}
+
+		public override CodePiece generateCode()
+		{
+			throw new NotImplementedException(); //TODO Implement
 		}
 	}
 
@@ -480,6 +568,11 @@ namespace BefunGen.AST
 		{
 			return string.Format("({0} == {1})", Left.getDebugString(), Right.getDebugString());
 		}
+
+		public override CodePiece generateCode()
+		{
+			throw new NotImplementedException(); //TODO Implement
+		}
 	}
 
 	public class Expression_Unequals : Expression_Compare
@@ -493,6 +586,11 @@ namespace BefunGen.AST
 		public override string getDebugString()
 		{
 			return string.Format("({0} != {1})", Left.getDebugString(), Right.getDebugString());
+		}
+
+		public override CodePiece generateCode()
+		{
+			throw new NotImplementedException(); //TODO Implement
 		}
 	}
 
@@ -508,6 +606,11 @@ namespace BefunGen.AST
 		{
 			return string.Format("({0} > {1})", Left.getDebugString(), Right.getDebugString());
 		}
+
+		public override CodePiece generateCode()
+		{
+			throw new NotImplementedException(); //TODO Implement
+		}
 	}
 
 	public class Expression_Lesser : Expression_Compare
@@ -521,6 +624,11 @@ namespace BefunGen.AST
 		public override string getDebugString()
 		{
 			return string.Format("({0} < {1})", Left.getDebugString(), Right.getDebugString());
+		}
+
+		public override CodePiece generateCode()
+		{
+			throw new NotImplementedException(); //TODO Implement
 		}
 	}
 
@@ -536,6 +644,11 @@ namespace BefunGen.AST
 		{
 			return string.Format("({0} >= {1})", Left.getDebugString(), Right.getDebugString());
 		}
+
+		public override CodePiece generateCode()
+		{
+			throw new NotImplementedException(); //TODO Implement
+		}
 	}
 
 	public class Expression_LesserEquals : Expression_Compare
@@ -549,6 +662,11 @@ namespace BefunGen.AST
 		public override string getDebugString()
 		{
 			return string.Format("({0} <= {1})", Left.getDebugString(), Right.getDebugString());
+		}
+
+		public override CodePiece generateCode()
+		{
+			throw new NotImplementedException(); //TODO Implement
 		}
 	}
 
@@ -581,6 +699,11 @@ namespace BefunGen.AST
 		{
 			return new BType_Bool(Position);
 		}
+
+		public override CodePiece generateCode()
+		{
+			throw new NotImplementedException(); //TODO Implement
+		}
 	}
 
 	public class Expression_Negate : Expression_Unary
@@ -607,6 +730,11 @@ namespace BefunGen.AST
 		public override BType getResultType()
 		{
 			return new BType_Int(Position);
+		}
+
+		public override CodePiece generateCode()
+		{
+			throw new NotImplementedException(); //TODO Implement
 		}
 	}
 
@@ -648,6 +776,11 @@ namespace BefunGen.AST
 		{
 			return Value.getBType();
 		}
+
+		public override CodePiece generateCode()
+		{
+			return Value.generateCode();
+		}
 	}
 
 	public class Expression_Rand : Expression
@@ -681,6 +814,11 @@ namespace BefunGen.AST
 		public override BType getResultType()
 		{
 			return new BType_Bool(Position);
+		}
+
+		public override CodePiece generateCode()
+		{
+			throw new NotImplementedException(); //TODO Implement
 		}
 	}
 
@@ -721,6 +859,11 @@ namespace BefunGen.AST
 		{
 			return Type;
 		}
+
+		public override CodePiece generateCode()
+		{
+			throw new NotImplementedException(); //TODO Implement
+		}
 	}
 
 	public class Expression_FunctionCall : Expression
@@ -756,6 +899,11 @@ namespace BefunGen.AST
 		public override BType getResultType()
 		{
 			return Method.Target.ResultType;
+		}
+
+		public override CodePiece generateCode()
+		{
+			throw new NotImplementedException(); //TODO Implement
 		}
 	}
 

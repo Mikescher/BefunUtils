@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -115,6 +116,9 @@ namespace BefunGen.AST.CodeGen
 			if (!IsIncluded(x, y))
 				expand(x, y);
 
+			if (commandArr[x - MinX][y - MinY] != null)
+				throw new Exception("[DBG] WARNING: Modification of CodePiece : " + x + "|" + y);
+
 			commandArr[x - MinX][y - MinY] = value;
 		}
 
@@ -134,7 +138,6 @@ namespace BefunGen.AST.CodeGen
 			builder.AppendLine("{");
 			for (int y = MinY; y < MaxY; y++)
 			{
-				builder.Append("  ");
 				for (int x = MinX; x < MaxX; x++)
 				{
 					BefungeCommand bc = this[x, y];
@@ -160,6 +163,71 @@ namespace BefunGen.AST.CodeGen
 
 			MaxX += ox;
 			MaxY += oy;
+		}
+
+		public CodePiece copy()
+		{
+			CodePiece result = new CodePiece();
+			for (int x = 0; x < commandArr.Count; x++)
+			{
+				for (int y = 0; y < commandArr[x].Count; y++)
+				{
+					result[x, y] = commandArr[x][y];
+				}
+			}
+
+			result.MinX = MinX;
+			result.MinY = MinY;
+
+			result.MaxX = MaxX;
+			result.MaxY = MaxY;
+
+			return result;
+		}
+
+		public CodePiece copyNormalized()
+		{
+			CodePiece result = copy();
+			result.normalize();
+			return result;
+		}
+
+		public static CodePiece CombineHorizontal(CodePiece left, CodePiece right)
+		{
+			// TODO Dont normalize - Add resprective to Y-Offset (IS IMPORTANT !!)
+			CodePiece c_l = left.copyNormalized();
+			CodePiece c_r = right.copyNormalized();
+
+			int offset = c_l.Width;
+
+			for (int x = 0; x < c_r.Width; x++)
+			{
+				for (int y = 0; y < c_r.Height; y++)
+				{
+					c_l[offset + x, y] = c_r[x, y];
+				}
+			}
+
+			return c_l;
+		}
+
+		public static CodePiece CombineVertical(CodePiece top, CodePiece bottom)
+		{
+			// TODO Dont normalize - Add resprective to X-Offset (IS IMPORTANT !!)
+			CodePiece c_t = top.copyNormalized();
+			CodePiece c_b = bottom.copyNormalized();
+
+			int offset = c_t.Height;
+
+			for (int x = 0; x < c_b.Width; x++)
+			{
+				for (int y = 0; y < c_b.Height; y++)
+				{
+					c_t[x, offset + y] = c_b[x, y];
+				}
+			}
+
+			return c_t;
 		}
 	}
 }

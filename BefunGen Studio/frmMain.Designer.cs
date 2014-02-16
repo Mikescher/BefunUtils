@@ -42,12 +42,16 @@
 			this.txtAST = new System.Windows.Forms.TextBox();
 			this.tabPage4 = new System.Windows.Forms.TabPage();
 			this.txtLog = new System.Windows.Forms.TextBox();
+			this.tabPage5 = new System.Windows.Forms.TabPage();
+			this.txtGrammar = new System.Windows.Forms.TextBox();
+			this.tabPage6 = new System.Windows.Forms.TabPage();
+			this.txtCode = new System.Windows.Forms.TextBox();
+			this.tabPage7 = new System.Windows.Forms.TabPage();
+			this.txtDebug = new System.Windows.Forms.TextBox();
 			this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
 			this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
 			this.btnLoadSYN = new System.Windows.Forms.Button();
 			this.txtSynFile = new System.Windows.Forms.TextBox();
-			this.tabPage5 = new System.Windows.Forms.TabPage();
-			this.txtGrammar = new System.Windows.Forms.TextBox();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
@@ -57,9 +61,11 @@
 			this.tabPage3.SuspendLayout();
 			this.tabPage2.SuspendLayout();
 			this.tabPage4.SuspendLayout();
+			this.tabPage5.SuspendLayout();
+			this.tabPage6.SuspendLayout();
+			this.tabPage7.SuspendLayout();
 			this.tableLayoutPanel2.SuspendLayout();
 			this.tableLayoutPanel3.SuspendLayout();
-			this.tabPage5.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// btnLoad
@@ -145,6 +151,8 @@
 			this.tabControl1.Controls.Add(this.tabPage2);
 			this.tabControl1.Controls.Add(this.tabPage4);
 			this.tabControl1.Controls.Add(this.tabPage5);
+			this.tabControl1.Controls.Add(this.tabPage6);
+			this.tabControl1.Controls.Add(this.tabPage7);
 			this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tabControl1.Location = new System.Drawing.Point(0, 0);
 			this.tabControl1.Name = "tabControl1";
@@ -246,6 +254,74 @@
 			this.txtLog.Size = new System.Drawing.Size(672, 212);
 			this.txtLog.TabIndex = 0;
 			// 
+			// tabPage5
+			// 
+			this.tabPage5.Controls.Add(this.txtGrammar);
+			this.tabPage5.Location = new System.Drawing.Point(4, 4);
+			this.tabPage5.Name = "tabPage5";
+			this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
+			this.tabPage5.Size = new System.Drawing.Size(678, 218);
+			this.tabPage5.TabIndex = 4;
+			this.tabPage5.Text = "Grammar";
+			this.tabPage5.UseVisualStyleBackColor = true;
+			// 
+			// txtGrammar
+			// 
+			this.txtGrammar.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.txtGrammar.Location = new System.Drawing.Point(3, 3);
+			this.txtGrammar.Multiline = true;
+			this.txtGrammar.Name = "txtGrammar";
+			this.txtGrammar.ReadOnly = true;
+			this.txtGrammar.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+			this.txtGrammar.Size = new System.Drawing.Size(672, 212);
+			this.txtGrammar.TabIndex = 0;
+			// 
+			// tabPage6
+			// 
+			this.tabPage6.Controls.Add(this.txtCode);
+			this.tabPage6.Location = new System.Drawing.Point(4, 4);
+			this.tabPage6.Name = "tabPage6";
+			this.tabPage6.Padding = new System.Windows.Forms.Padding(3);
+			this.tabPage6.Size = new System.Drawing.Size(678, 218);
+			this.tabPage6.TabIndex = 5;
+			this.tabPage6.Text = "Code";
+			this.tabPage6.UseVisualStyleBackColor = true;
+			// 
+			// txtCode
+			// 
+			this.txtCode.BackColor = System.Drawing.Color.White;
+			this.txtCode.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.txtCode.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.txtCode.Location = new System.Drawing.Point(3, 3);
+			this.txtCode.Multiline = true;
+			this.txtCode.Name = "txtCode";
+			this.txtCode.ReadOnly = true;
+			this.txtCode.Size = new System.Drawing.Size(672, 212);
+			this.txtCode.TabIndex = 0;
+			// 
+			// tabPage7
+			// 
+			this.tabPage7.Controls.Add(this.txtDebug);
+			this.tabPage7.Location = new System.Drawing.Point(4, 4);
+			this.tabPage7.Name = "tabPage7";
+			this.tabPage7.Padding = new System.Windows.Forms.Padding(3);
+			this.tabPage7.Size = new System.Drawing.Size(678, 218);
+			this.tabPage7.TabIndex = 6;
+			this.tabPage7.Text = "Debug";
+			this.tabPage7.UseVisualStyleBackColor = true;
+			// 
+			// txtDebug
+			// 
+			this.txtDebug.BackColor = System.Drawing.Color.White;
+			this.txtDebug.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.txtDebug.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.txtDebug.Location = new System.Drawing.Point(3, 3);
+			this.txtDebug.Multiline = true;
+			this.txtDebug.Name = "txtDebug";
+			this.txtDebug.ReadOnly = true;
+			this.txtDebug.Size = new System.Drawing.Size(672, 212);
+			this.txtDebug.TabIndex = 0;
+			// 
 			// tableLayoutPanel2
 			// 
 			this.tableLayoutPanel2.ColumnCount = 1;
@@ -299,28 +375,6 @@
 			this.txtSynFile.Size = new System.Drawing.Size(580, 20);
 			this.txtSynFile.TabIndex = 11;
 			// 
-			// tabPage5
-			// 
-			this.tabPage5.Controls.Add(this.txtGrammar);
-			this.tabPage5.Location = new System.Drawing.Point(4, 4);
-			this.tabPage5.Name = "tabPage5";
-			this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPage5.Size = new System.Drawing.Size(678, 218);
-			this.tabPage5.TabIndex = 4;
-			this.tabPage5.Text = "Grammar";
-			this.tabPage5.UseVisualStyleBackColor = true;
-			// 
-			// txtGrammar
-			// 
-			this.txtGrammar.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.txtGrammar.Location = new System.Drawing.Point(3, 3);
-			this.txtGrammar.Multiline = true;
-			this.txtGrammar.Name = "txtGrammar";
-			this.txtGrammar.ReadOnly = true;
-			this.txtGrammar.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.txtGrammar.Size = new System.Drawing.Size(672, 212);
-			this.txtGrammar.TabIndex = 0;
-			// 
 			// frmMain
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -344,11 +398,15 @@
 			this.tabPage2.PerformLayout();
 			this.tabPage4.ResumeLayout(false);
 			this.tabPage4.PerformLayout();
+			this.tabPage5.ResumeLayout(false);
+			this.tabPage5.PerformLayout();
+			this.tabPage6.ResumeLayout(false);
+			this.tabPage6.PerformLayout();
+			this.tabPage7.ResumeLayout(false);
+			this.tabPage7.PerformLayout();
 			this.tableLayoutPanel2.ResumeLayout(false);
 			this.tableLayoutPanel3.ResumeLayout(false);
 			this.tableLayoutPanel3.PerformLayout();
-			this.tabPage5.ResumeLayout(false);
-			this.tabPage5.PerformLayout();
 			this.ResumeLayout(false);
 
 		}
@@ -374,6 +432,10 @@
 		private System.Windows.Forms.TextBox txtLog;
 		private System.Windows.Forms.TabPage tabPage5;
 		private System.Windows.Forms.TextBox txtGrammar;
+		private System.Windows.Forms.TabPage tabPage6;
+		private System.Windows.Forms.TextBox txtCode;
+		private System.Windows.Forms.TabPage tabPage7;
+		private System.Windows.Forms.TextBox txtDebug;
 	}
 }
 

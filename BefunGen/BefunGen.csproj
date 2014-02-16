@@ -49,8 +49,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AST\ASTObject.cs" />
+    <Compile Include="AST\CodeGen\Base9Converter.cs" />
     <Compile Include="AST\CodeGen\BCHelper.cs" />
     <Compile Include="AST\CodeGen\BefungeCommand.cs" />
+    <Compile Include="AST\CodeGen\CodeGenOptions.cs" />
     <Compile Include="AST\CodeGen\CodePiece.cs" />
     <Compile Include="AST\CodeGen\SourceCodePosition.cs" />
     <Compile Include="AST\Exceptions\AccessTemporaryASTObjectException.cs" />

@@ -137,5 +137,10 @@ namespace BefunGen.AST.CodeGen
 		{
 			return new BefungeCommand(BefungeCommandType.Other, v);
 		}
+
+		public static BefungeCommand dig(byte v)
+		{
+			return new BefungeCommand(BefungeCommandType.Other, '0' + v);
+		}
 	}
 }
