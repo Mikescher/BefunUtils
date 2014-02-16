@@ -176,8 +176,8 @@ namespace BefunGen.AST
 					break;
 
 				case ProductionIndex.Statement6:
-					// <Statement> ::= <Stmt_Call>
-					//TODO
+					// <Statement> ::= <Stmt_Call> ';'
+					result = (Statement)r.get_Data(0);
 					break;
 
 				case ProductionIndex.Statementlist:
@@ -222,7 +222,7 @@ namespace BefunGen.AST
 
 				case ProductionIndex.Stmt_out_Out2:
 					// <Stmt_Out> ::= out <Literal_String>
-					//TODO
+					result = new Statement_Out_CharArrLiteral(p, (Literal_CharArr)r.get_Data(1));
 					break;
 
 				case ProductionIndex.Stmt_in_In:
@@ -247,12 +247,12 @@ namespace BefunGen.AST
 
 				case ProductionIndex.Stmt_call_Identifier_Lparen_Rparen:
 					// <Stmt_Call> ::= Identifier '(' <ExpressionList> ')'
-					//TODO
+					result = new Statement_MethodCall(p, getStrData(r), ((List_Expressions)r.get_Data(2)).List);
 					break;
 
 				case ProductionIndex.Stmt_call_Identifier_Lparen_Rparen2:
 					// <Stmt_Call> ::= Identifier '(' ')'
-					//TODO
+					result = new Statement_MethodCall(p, getStrData(r));
 					break;
 
 				case ProductionIndex.Stmt_if_If_Lparen_Rparen_Then_End:
@@ -542,22 +542,22 @@ namespace BefunGen.AST
 
 				case ProductionIndex.Exprbool_Ampamp:
 					// <Expr Bool> ::= <Expr Bool> '&&' <Expr Eq>
-					//TODO
+					result = new Expression_And(p, (Expression)r.get_Data(0), (Expression)r.get_Data(2));
 					break;
 
 				case ProductionIndex.Exprbool_Pipepipe:
 					// <Expr Bool> ::= <Expr Bool> '||' <Expr Eq>
-					//TODO
+					result = new Expression_Or(p, (Expression)r.get_Data(0), (Expression)r.get_Data(2));
 					break;
 
 				case ProductionIndex.Exprbool_Caret:
 					// <Expr Bool> ::= <Expr Bool> '^' <Expr Eq>
-					//TODO
+					result = new Expression_Xor(p, (Expression)r.get_Data(0), (Expression)r.get_Data(2));
 					break;
 
 				case ProductionIndex.Exprbool:
 					// <Expr Bool> ::= <Expr Eq>
-					//TODO
+					result = (Expression)r.get_Data(0);
 					break;
 
 				case ProductionIndex.Expreq_Eqeq:

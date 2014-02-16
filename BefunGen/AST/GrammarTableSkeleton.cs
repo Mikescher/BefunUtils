@@ -224,7 +224,7 @@ namespace BefunGen.AST
 		@Statement3 = 29,                          // <Statement> ::= <Stmt_Repeat>
 		@Statement4 = 30,                          // <Statement> ::= <Stmt_Goto>
 		@Statement5 = 31,                          // <Statement> ::= <Stmt_Label>
-		@Statement6 = 32,                          // <Statement> ::= <Stmt_Call>
+		@Statement6 = 32,                          // <Statement> ::= <Stmt_Call> ';'
 		@Statementlist = 33,                       // <StatementList> ::= <StatementList> <Statement>
 		@Statementlist2 = 34,                      // <StatementList> ::=
 		@Stmt_inc_Plusplus = 35,                   // <Stmt_Inc> ::= <ValuePointer> '++'

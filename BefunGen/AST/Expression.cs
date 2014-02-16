@@ -42,7 +42,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	public abstract class Expression_BinaryMathOperation : Expression_Binary //TODO Add AND | OR | XOR etc etc
+	public abstract class Expression_BinaryMathOperation : Expression_Binary
 	{
 		public Expression_BinaryMathOperation(SourceCodePosition pos, Expression l, Expression r)
 			: base(pos, l, r)
@@ -59,6 +59,50 @@ namespace BefunGen.AST
 
 			BType present_R = Right.getResultType();
 			BType wanted_R = new BType_Int(Position);
+
+			if (present_L != wanted_L)
+			{
+				if (present_L.isImplicitCastableTo(wanted_L))
+					Left = new Expression_Cast(Position, wanted_L, Left);
+				else
+					throw new ImplicitCastException(present_L, wanted_L, Position);
+			}
+
+			if (present_R != wanted_R)
+			{
+				if (present_R.isImplicitCastableTo(wanted_R))
+					Right = new Expression_Cast(Position, wanted_R, Right);
+				else
+					throw new ImplicitCastException(present_R, wanted_R, Position);
+			}
+		}
+
+		public override BType getResultType()
+		{
+			if (Left.getResultType() != Right.getResultType())
+				throw new InvalidASTStateException(Position);
+
+			return Left.getResultType();
+		}
+	}
+
+	public abstract class Expression_BinaryBoolOperation : Expression_Binary
+	{
+		public Expression_BinaryBoolOperation(SourceCodePosition pos, Expression l, Expression r)
+			: base(pos, l, r)
+		{
+		}
+
+		public override void linkResultTypes()
+		{
+			Left.linkResultTypes();
+			Right.linkResultTypes();
+
+			BType present_L = Left.getResultType();
+			BType wanted_L = new BType_Bool(Position);
+
+			BType present_R = Right.getResultType();
+			BType wanted_R = new BType_Bool(Position);
 
 			if (present_L != wanted_L)
 			{
@@ -372,6 +416,52 @@ namespace BefunGen.AST
 
 	#endregion Binary
 
+	#region BinaryBoolOperation
+
+	public class Expression_And : Expression_BinaryBoolOperation
+	{
+		public Expression_And(SourceCodePosition pos, Expression l, Expression r)
+			: base(pos, l, r)
+		{
+			//--
+		}
+
+		public override string getDebugString()
+		{
+			return string.Format("({0} AND {1})", Left.getDebugString(), Right.getDebugString());
+		}
+	}
+
+	public class Expression_Or : Expression_BinaryBoolOperation
+	{
+		public Expression_Or(SourceCodePosition pos, Expression l, Expression r)
+			: base(pos, l, r)
+		{
+			//--
+		}
+
+		public override string getDebugString()
+		{
+			return string.Format("({0} OR {1})", Left.getDebugString(), Right.getDebugString());
+		}
+	}
+
+	public class Expression_Xor : Expression_BinaryBoolOperation
+	{
+		public Expression_Xor(SourceCodePosition pos, Expression l, Expression r)
+			: base(pos, l, r)
+		{
+			//--
+		}
+
+		public override string getDebugString()
+		{
+			return string.Format("({0} XOR {1})", Left.getDebugString(), Right.getDebugString());
+		}
+	}
+
+	#endregion
+
 	#region Compare
 
 	public class Expression_Equals : Expression_Compare
@@ -661,7 +751,7 @@ namespace BefunGen.AST
 
 		public override BType getResultType()
 		{
-			return Method.Target.ResultType; // TODO return linked Method return type
+			return Method.Target.ResultType;
 		}
 	}
 

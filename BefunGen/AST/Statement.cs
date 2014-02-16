@@ -78,7 +78,7 @@ namespace BefunGen.AST
 
 		public override string getDebugString()
 		{
-			return string.Format("( #MethodCall {{{0}}} --> #Parameter: ({1}) )", Target.ID, indent(getDebugCommaStringForList(CallParameter)));
+			return string.Format("#MethodCall {{{0}}} --> #Parameter: ({1})", Target.ID, indent(getDebugCommaStringForList(CallParameter)));
 		}
 
 		public override void linkVariables(Method owner)
@@ -264,6 +264,37 @@ namespace BefunGen.AST
 		public override void linkMethods(Program owner)
 		{
 			Value.linkMethods(owner);
+		}
+	}
+
+	public class Statement_Out_CharArrLiteral : Statement
+	{
+		public Literal_CharArr Value;
+
+		public Statement_Out_CharArrLiteral(SourceCodePosition pos, Literal_CharArr v)
+			: base(pos)
+		{
+			this.Value = v;
+		}
+
+		public override string getDebugString()
+		{
+			return string.Format("#OUT {0}", Value.getDebugString());
+		}
+
+		public override void linkVariables(Method owner)
+		{
+			//NOP
+		}
+
+		public override void linkResultTypes(Method owner)
+		{
+			//NOP
+		}
+
+		public override void linkMethods(Program owner)
+		{
+			//NOP
 		}
 	}
 
@@ -456,7 +487,7 @@ namespace BefunGen.AST
 
 		public override string getDebugString()
 		{
-			return string.Format("#ASSIGN {0} = {1}", Target.getDebugString(), Expr.getDebugString());
+			return string.Format("#ASSIGN {0} = ({1})", Target.getDebugString(), Expr.getDebugString());
 		}
 
 		public override void linkVariables(Method owner)

@@ -97,7 +97,7 @@ HexLiteral             = 0x{Hex Digit}+
                        |   <Stmt_Repeat>
                        |   <Stmt_Goto>
                        |   <Stmt_Label>
-                       |   <Stmt_Call>
+                       |   <Stmt_Call> ';'
 
 <StatementList>        ::= <StatementList> <Statement>
                        |

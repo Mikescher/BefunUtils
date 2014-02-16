@@ -86,9 +86,3 @@ namespace BefunGen.AST
 		}
 	}
 }
-
-
-//TODO - Add MethodCall Stmt
-//TODO - Add Boolsche Compare
-//TODO cant reference Array-Vars
-//TODO Allow out charArray

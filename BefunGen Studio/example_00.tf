@@ -9,6 +9,8 @@ program example
 		char[32] name;
 		int i := 0;
 	begin
+		out "Example Project 00";
+		
 		//Insert Name
 		name = getInputStr();
 		
@@ -20,7 +22,7 @@ program example
 		
 		// Print Fibbonacci
 		
-		/* doFiber(100); */
+		doFiber(100);
 		
 		out doFiber(44, 12);
 	end
@@ -66,9 +68,9 @@ program example
 		char last := 'X';
 	begin
 		
-		while(current < 32) do
+		while(current < 32 && current >= 0 ) do
 		begin
-		in input[current];
+			in input[current];
 			current++;
 		end
 
