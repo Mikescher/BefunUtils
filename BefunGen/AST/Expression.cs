@@ -17,6 +17,8 @@ namespace BefunGen.AST
 		public abstract BType getResultType();
 	}
 
+	#region Parents
+
 	public abstract class Expression_Binary : Expression
 	{
 		public Expression Left;
@@ -217,6 +219,8 @@ namespace BefunGen.AST
 			//NOP
 		}
 	}
+
+	#endregion
 
 	#region ValuePointer
 

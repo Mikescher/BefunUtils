@@ -53,7 +53,7 @@ namespace BefunGen.AST
 
 		public Method findMethodByIdentifier(string ident)
 		{
-			return MethodList.Count(p => p.Identifier == ident) == 1 ? MethodList.Single(p => p.Identifier == ident) : null;
+			return MethodList.Count(p => p.Identifier.ToLower() == ident.ToLower()) == 1 ? MethodList.Single(p => p.Identifier.ToLower() == ident.ToLower()) : null;
 		}
 	}
 

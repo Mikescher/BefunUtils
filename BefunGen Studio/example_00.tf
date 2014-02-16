@@ -22,12 +22,18 @@ program example
 		
 		// Print Fibbonacci
 		
+		if (name[0] == 'n') then
+			goto lbl2
+		end
+		
 		doFiber(100);
+		
+		lbl2:
 		
 		out doFiber(44, 12);
 	end
 
-	void doFiber(int max)
+	void DoFiber(int max)
 	var
 		int last := 0;
 		int curr := 1;

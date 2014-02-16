@@ -15,9 +15,12 @@ namespace BefunGen.AST
 
 		public abstract void linkVariables(Method owner);
 		public abstract void linkResultTypes(Method owner);
-
 		public abstract void linkMethods(Program owner);
+
+		public abstract Statement_Label findLabelByIdentifier(string ident);
 	}
+
+	#region Other
 
 	public class Statement_StatementList : Statement
 	{
@@ -52,6 +55,22 @@ namespace BefunGen.AST
 		{
 			foreach (Statement s in List)
 				s.linkResultTypes(owner);
+		}
+
+		public override Statement_Label findLabelByIdentifier(string ident)
+		{
+			Statement_Label result = null;
+
+			foreach (Statement s in List)
+			{
+				Statement_Label found = s.findLabelByIdentifier(ident);
+				if (found != null && result != null)
+					return null;
+				if (found != null && result == null)
+					result = found;
+			}
+
+			return result;
 		}
 	}
 
@@ -119,23 +138,40 @@ namespace BefunGen.AST
 				}
 			}
 		}
+
+		public override Statement_Label findLabelByIdentifier(string ident)
+		{
+			return null;
+		}
 	}
+
+	#endregion
 
 	#region Keywords
 
 	public class Statement_Label : Statement
 	{
-		public string Identifier;
+		private static int _L_ID_COUNTER = 100;
+		protected static int L_ID_COUNTER { get { return _L_ID_COUNTER++; } }
 
-		public Statement_Label(SourceCodePosition pos, string id)
+		public string Identifier;
+		public readonly int ID;
+
+		public Statement_Label(SourceCodePosition pos, string ident)
 			: base(pos)
 		{
-			this.Identifier = id;
+			this.Identifier = ident;
+			ID = L_ID_COUNTER;
+		}
+
+		public static void resetCounter()
+		{
+			_L_ID_COUNTER = 1;
 		}
 
 		public override string getDebugString()
 		{
-			return string.Format("#LABEL: {0}", Identifier);
+			return string.Format("#LABEL: {{{0}}}", ID);
 		}
 
 		public override void linkVariables(Method owner)
@@ -152,11 +188,17 @@ namespace BefunGen.AST
 		{
 			//NOP
 		}
+
+		public override Statement_Label findLabelByIdentifier(string ident)
+		{
+			return ident.ToLower() == Identifier.ToLower() ? this : null;
+		}
 	}
 
-	public class Statement_Goto : Statement // TODO GOTO & Label linking
+	public class Statement_Goto : Statement
 	{
 		public string TargetIdentifier;
+		public Statement_Label Target;
 
 		public Statement_Goto(SourceCodePosition pos, string id)
 			: base(pos)
@@ -166,12 +208,14 @@ namespace BefunGen.AST
 
 		public override string getDebugString()
 		{
-			return string.Format("#GOTO: {0}", TargetIdentifier);
+			return string.Format("#GOTO: {{{0}}}", Target.ID);
 		}
 
 		public override void linkVariables(Method owner)
 		{
-			//NOP
+			Target = owner.findLabelByIdentifier(TargetIdentifier);
+			if (Target == null)
+				throw new UnresolvableReferenceException(TargetIdentifier, Position);
 		}
 
 		public override void linkMethods(Program owner)
@@ -182,6 +226,11 @@ namespace BefunGen.AST
 		public override void linkResultTypes(Method owner)
 		{
 			//NOP
+		}
+
+		public override Statement_Label findLabelByIdentifier(string ident)
+		{
+			return null;
 		}
 	}
 
@@ -231,6 +280,11 @@ namespace BefunGen.AST
 					throw new ImplicitCastException(present, expected, Value.Position);
 			}
 		}
+
+		public override Statement_Label findLabelByIdentifier(string ident)
+		{
+			return null;
+		}
 	}
 
 	public class Statement_Out : Statement
@@ -265,6 +319,11 @@ namespace BefunGen.AST
 		{
 			Value.linkMethods(owner);
 		}
+
+		public override Statement_Label findLabelByIdentifier(string ident)
+		{
+			return null;
+		}
 	}
 
 	public class Statement_Out_CharArrLiteral : Statement
@@ -295,6 +354,11 @@ namespace BefunGen.AST
 		public override void linkMethods(Program owner)
 		{
 			//NOP
+		}
+
+		public override Statement_Label findLabelByIdentifier(string ident)
+		{
+			return null;
 		}
 	}
 
@@ -335,6 +399,11 @@ namespace BefunGen.AST
 		{
 			ValueTarget.linkMethods(owner);
 		}
+
+		public override Statement_Label findLabelByIdentifier(string ident)
+		{
+			return null;
+		}
 	}
 
 	public class Statement_Quit : Statement
@@ -363,6 +432,11 @@ namespace BefunGen.AST
 		{
 			//NOP
 		}
+
+		public override Statement_Label findLabelByIdentifier(string ident)
+		{
+			return null;
+		}
 	}
 
 	public class Statement_NOP : Statement // NO OPERATION
@@ -390,6 +464,11 @@ namespace BefunGen.AST
 		public override void linkMethods(Program owner)
 		{
 			//NOP
+		}
+
+		public override Statement_Label findLabelByIdentifier(string ident)
+		{
+			return null;
 		}
 	}
 
@@ -433,6 +512,11 @@ namespace BefunGen.AST
 				throw new WrongTypeException(present, new List<BType>() { new BType_Int(null), new BType_Digit(null), new BType_Char(null) }, Target.Position);
 			}
 		}
+
+		public override Statement_Label findLabelByIdentifier(string ident)
+		{
+			return null;
+		}
 	}
 
 	public class Statement_Dec : Statement
@@ -470,6 +554,11 @@ namespace BefunGen.AST
 			{
 				throw new WrongTypeException(present, new List<BType>() { new BType_Int(null), new BType_Digit(null), new BType_Char(null) }, Target.Position);
 			}
+		}
+
+		public override Statement_Label findLabelByIdentifier(string ident)
+		{
+			return null;
 		}
 	}
 
@@ -517,6 +606,11 @@ namespace BefunGen.AST
 				else
 					throw new ImplicitCastException(present, expected, Expr.Position);
 			}
+		}
+
+		public override Statement_Label findLabelByIdentifier(string ident)
+		{
+			return null;
 		}
 	}
 
@@ -582,6 +676,11 @@ namespace BefunGen.AST
 					throw new ImplicitCastException(present, expected, Condition.Position);
 			}
 		}
+
+		public override Statement_Label findLabelByIdentifier(string ident)
+		{
+			return null;
+		}
 	}
 
 	public class Statement_While : Statement
@@ -629,6 +728,11 @@ namespace BefunGen.AST
 					throw new ImplicitCastException(present, expected, Condition.Position);
 			}
 		}
+
+		public override Statement_Label findLabelByIdentifier(string ident)
+		{
+			return null;
+		}
 	}
 
 	public class Statement_RepeatUntil : Statement
@@ -675,6 +779,11 @@ namespace BefunGen.AST
 				else
 					throw new ImplicitCastException(present, expected, Condition.Position);
 			}
+		}
+
+		public override Statement_Label findLabelByIdentifier(string ident)
+		{
+			return null;
 		}
 	}
 

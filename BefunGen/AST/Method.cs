@@ -1,5 +1,5 @@
 ﻿using BefunGen.AST.CodeGen;
-using System;
+using BefunGen.AST.Exceptions;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -56,6 +56,11 @@ namespace BefunGen.AST
 			Body.linkVariables(this);
 		}
 
+		public void linkMethods(Program owner)
+		{
+			Body.linkMethods(owner);
+		}
+
 		public void linkResultTypes()
 		{
 			Body.linkResultTypes(this);
@@ -63,17 +68,17 @@ namespace BefunGen.AST
 
 		public VarDeclaration findVariableByIdentifier(string ident)
 		{
-			return Variables.Count(p => p.Identifier == ident) == 1 ? Variables.Single(p => p.Identifier == ident) : null;
+			return Variables.Count(p => p.Identifier.ToLower() == ident.ToLower()) == 1 ? Variables.Single(p => p.Identifier.ToLower() == ident.ToLower()) : null;
+		}
+
+		public Statement_Label findLabelByIdentifier(string ident)
+		{
+			return Body.findLabelByIdentifier(ident);
 		}
 
 		public static void resetCounter()
 		{
 			_M_ID_COUNTER = 1;
-		}
-
-		public void linkMethods(Program owner)
-		{
-			Body.linkMethods(owner);
 		}
 	}
 
@@ -93,7 +98,7 @@ namespace BefunGen.AST
 
 		public override string getDebugString()
 		{
-			throw new ArgumentException();
+			throw new InvalidASTStateException(Position);
 		}
 	}
 
@@ -111,7 +116,7 @@ namespace BefunGen.AST
 
 		public override string getDebugString()
 		{
-			throw new ArgumentException();
+			throw new InvalidASTStateException(Position);
 		}
 	}
 }

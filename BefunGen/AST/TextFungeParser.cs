@@ -140,6 +140,7 @@ namespace BefunGen.AST
 		{
 			Method.resetCounter();
 			VarDeclaration.resetCounter();
+			Statement_Label.resetCounter();
 		}
 
 		public string getGrammarDefinition()
