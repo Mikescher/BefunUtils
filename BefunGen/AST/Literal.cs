@@ -13,6 +13,8 @@ namespace BefunGen.AST
 		}
 
 		public abstract BType getBType();
+
+		public abstract CodePiece generateCode();
 	}
 
 	#region Parents
@@ -52,7 +54,7 @@ namespace BefunGen.AST
 
 	public class Literal_Int : Literal_Value
 	{
-		public int Value;
+		public readonly int Value;
 
 		public Literal_Int(SourceCodePosition pos, int v)
 			: base(pos)
@@ -69,11 +71,29 @@ namespace BefunGen.AST
 		{
 			return new BType_Int(new SourceCodePosition());
 		}
+
+		public override CodePiece generateCode()
+		{
+			CodePiece p = new CodePiece();
+
+			if (Value >= 0 && Value <= 9)
+			{
+				p[0, 0] = BCHelper.chr(Value);
+			}
+			else
+			{
+				p[0, 0] = BCHelper.Stringmode;
+				p[1, 0] = BCHelper.chr(Value);
+				p[2, 0] = BCHelper.Stringmode;
+			}
+
+			return p;
+		}
 	}
 
 	public class Literal_Char : Literal_Value
 	{
-		public char Value;
+		public readonly char Value;
 
 		public Literal_Char(SourceCodePosition pos, char v)
 			: base(pos)
@@ -90,11 +110,29 @@ namespace BefunGen.AST
 		{
 			return new BType_Char(new SourceCodePosition());
 		}
+
+		public override CodePiece generateCode()
+		{
+			CodePiece p = new CodePiece();
+
+			if (Value >= 0 && Value <= 9)
+			{
+				p[0, 0] = BCHelper.chr(Value);
+			}
+			else
+			{
+				p[0, 0] = BCHelper.Stringmode;
+				p[1, 0] = BCHelper.chr(Value);
+				p[2, 0] = BCHelper.Stringmode;
+			}
+
+			return p;
+		}
 	}
 
 	public class Literal_Bool : Literal_Value
 	{
-		public bool Value;
+		public readonly bool Value;
 
 		public Literal_Bool(SourceCodePosition pos, bool v)
 			: base(pos)
@@ -111,11 +149,18 @@ namespace BefunGen.AST
 		{
 			return new BType_Bool(new SourceCodePosition());
 		}
+
+		public override CodePiece generateCode()
+		{
+			CodePiece p = new CodePiece();
+			p[0, 0] = BCHelper.chr(Value ? 1 : 0);
+			return p;
+		}
 	}
 
 	public class Literal_Digit : Literal_Value
 	{
-		public byte Value;
+		public readonly byte Value;
 
 		public Literal_Digit(SourceCodePosition pos, byte v)
 			: base(pos)
@@ -131,6 +176,13 @@ namespace BefunGen.AST
 		public override BType getBType()
 		{
 			return new BType_Digit(new SourceCodePosition());
+		}
+
+		public override CodePiece generateCode()
+		{
+			CodePiece p = new CodePiece();
+			p[0, 0] = BCHelper.chr(Value);
+			return p;
 		}
 	}
 
@@ -166,6 +218,21 @@ namespace BefunGen.AST
 		protected override void AppendDefaultValue()
 		{
 			Value.Add(0);
+		}
+
+		public override CodePiece generateCode()
+		{
+			CodePiece p = new CodePiece();
+			int i = 0;
+
+			p[i++, 0] = BCHelper.Stringmode;
+			foreach (int val in Value)
+			{
+				p[i++, 0] = BCHelper.chr(val);
+			}
+			p[i++, 0] = BCHelper.Stringmode;
+
+			return p;
 		}
 	}
 
@@ -204,6 +271,21 @@ namespace BefunGen.AST
 		{
 			Value.Add('0');
 		}
+
+		public override CodePiece generateCode()
+		{
+			CodePiece p = new CodePiece();
+			int i = 0;
+
+			p[i++, 0] = BCHelper.Stringmode;
+			foreach (char val in Value)
+			{
+				p[i++, 0] = BCHelper.chr(val);
+			}
+			p[i++, 0] = BCHelper.Stringmode;
+
+			return p;
+		}
 	}
 
 	public class Literal_BoolArr : Literal_Array
@@ -235,6 +317,19 @@ namespace BefunGen.AST
 		{
 			Value.Add(false);
 		}
+
+		public override CodePiece generateCode()
+		{
+			CodePiece p = new CodePiece();
+			int i = 0;
+
+			foreach (bool val in Value)
+			{
+				p[i++, 0] = BCHelper.chr(val ? 1 : 0);
+			}
+
+			return p;
+		}
 	}
 
 	public class Literal_DigitArr : Literal_Array
@@ -265,6 +360,19 @@ namespace BefunGen.AST
 		protected override void AppendDefaultValue()
 		{
 			Value.Add(0);
+		}
+
+		public override CodePiece generateCode()
+		{
+			CodePiece p = new CodePiece();
+			int i = 0;
+
+			foreach (byte val in Value)
+			{
+				p[i++, 0] = BCHelper.chr(val);
+			}
+
+			return p;
 		}
 	}
 

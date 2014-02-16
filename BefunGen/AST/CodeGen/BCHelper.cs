@@ -132,5 +132,10 @@ namespace BefunGen.AST.CodeGen
 		{
 			get { return new BefungeCommand(BefungeCommandType.Stop); }
 		}
+
+		public static BefungeCommand chr(int v)
+		{
+			return new BefungeCommand(BefungeCommandType.Other, v);
+		}
 	}
 }
