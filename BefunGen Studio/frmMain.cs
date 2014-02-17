@@ -64,17 +64,6 @@ namespace BefunGen
 			{
 				MessageBox.Show(ex.Message);
 			}
-
-			// DEBUG //
-
-			SourceCodePosition p = new SourceCodePosition();
-			Expression e = (new Expression_Mult(p,
-								new Expression_Literal(p, new Literal_Digit(p, 4)),
-								new Expression_Add(p,
-									new Expression_Literal(p, new Literal_Int(p, 1337)),
-									new Expression_Literal(p, new Literal_Bool(p, true)))));
-			CodePiece pc = e.generateCode();
-			txtDebug.Text = pc.ToString();
 		}
 
 		private void frmMain_Load(object sender, EventArgs e)
@@ -216,6 +205,18 @@ namespace BefunGen
 					Thread.Sleep(100);
 				}
 			}
+		}
+
+		private void btnExecuteDebug_Click(object sender, EventArgs earg)
+		{
+			SourceCodePosition p = new SourceCodePosition();
+			Expression e = (new Expression_Mult(p,
+								new Expression_Literal(p, new Literal_Digit(p, 4)),
+								new Expression_Add(p,
+									new Expression_Literal(p, new Literal_Int(p, 1337)),
+									new Expression_Rand(p))));
+			CodePiece pc = e.generateCode();
+			txtDebug.Text = pc.ToString();
 		}
 	}
 } //Form

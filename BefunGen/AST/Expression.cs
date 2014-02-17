@@ -12,7 +12,7 @@ namespace BefunGen.AST
 		}
 
 		public abstract void linkVariables(Method owner);
-		public abstract void linkResultTypes();
+		public abstract void linkResultTypes(Method owner);
 		public abstract void linkMethods(Program owner);
 
 		public abstract BType getResultType();
@@ -54,10 +54,10 @@ namespace BefunGen.AST
 		{
 		}
 
-		public override void linkResultTypes()
+		public override void linkResultTypes(Method owner)
 		{
-			Left.linkResultTypes();
-			Right.linkResultTypes();
+			Left.linkResultTypes(owner);
+			Right.linkResultTypes(owner);
 
 			BType present_L = Left.getResultType();
 			BType wanted_L = new BType_Int(Position);
@@ -98,10 +98,10 @@ namespace BefunGen.AST
 		{
 		}
 
-		public override void linkResultTypes()
+		public override void linkResultTypes(Method owner)
 		{
-			Left.linkResultTypes();
-			Right.linkResultTypes();
+			Left.linkResultTypes(owner);
+			Right.linkResultTypes(owner);
 
 			BType present_L = Left.getResultType();
 			BType wanted_L = new BType_Bool(Position);
@@ -143,10 +143,10 @@ namespace BefunGen.AST
 			//--
 		}
 
-		public override void linkResultTypes()
+		public override void linkResultTypes(Method owner)
 		{
-			Left.linkResultTypes();
-			Right.linkResultTypes();
+			Left.linkResultTypes(owner);
+			Right.linkResultTypes(owner);
 
 			BType present_L = Left.getResultType();
 
@@ -253,7 +253,7 @@ namespace BefunGen.AST
 			Identifier = null;
 		}
 
-		public override void linkResultTypes()
+		public override void linkResultTypes(Method owner)
 		{
 			// NOP
 		}
@@ -302,9 +302,9 @@ namespace BefunGen.AST
 			Identifier = null;
 		}
 
-		public override void linkResultTypes()
+		public override void linkResultTypes(Method owner)
 		{
-			Index.linkResultTypes();
+			Index.linkResultTypes(owner);
 
 			BType present = Index.getResultType();
 			BType wanted = new BType_Int(Position);
@@ -346,7 +346,7 @@ namespace BefunGen.AST
 			//NOP
 		}
 
-		public override void linkResultTypes()
+		public override void linkResultTypes(Method owner)
 		{
 			//NOP
 		}
@@ -383,9 +383,7 @@ namespace BefunGen.AST
 		{
 			CodePiece p = CodePiece.CombineHorizontal(Left.generateCode(), Right.generateCode());
 
-			p.normalize();
-
-			p[p.Width, 0] = BCHelper.Mult;
+			p[p.MaxX, 0] = BCHelper.Mult;
 
 			return p;
 		}
@@ -408,9 +406,7 @@ namespace BefunGen.AST
 		{
 			CodePiece p = CodePiece.CombineHorizontal(Left.generateCode(), Right.generateCode()); //TODO Optimize: when Left ends with " and right starts with " then trim both " away.
 
-			p.normalize();
-
-			p[p.Width, 0] = BCHelper.Div;
+			p[p.MaxX, 0] = BCHelper.Div;
 
 			return p;
 		}
@@ -433,9 +429,7 @@ namespace BefunGen.AST
 		{
 			CodePiece p = CodePiece.CombineHorizontal(Left.generateCode(), Right.generateCode());
 
-			p.normalize();
-
-			p[p.Width, 0] = BCHelper.Modulo;
+			p[p.MaxX, 0] = BCHelper.Modulo;
 
 			return p;
 		}
@@ -458,9 +452,7 @@ namespace BefunGen.AST
 		{
 			CodePiece p = CodePiece.CombineHorizontal(Left.generateCode(), Right.generateCode());
 
-			p.normalize();
-
-			p[p.Width, 0] = BCHelper.Add;
+			p[p.MaxX, 0] = BCHelper.Add;
 
 			return p;
 		}
@@ -483,9 +475,7 @@ namespace BefunGen.AST
 		{
 			CodePiece p = CodePiece.CombineHorizontal(Left.generateCode(), Right.generateCode());
 
-			p.normalize();
-
-			p[p.Width, 0] = BCHelper.Sub;
+			p[p.MaxX, 0] = BCHelper.Sub;
 
 			return p;
 		}
@@ -687,9 +677,9 @@ namespace BefunGen.AST
 			return string.Format("(! {1})", Expr.getDebugString());
 		}
 
-		public override void linkResultTypes()
+		public override void linkResultTypes(Method owner)
 		{
-			Expr.linkResultTypes();
+			Expr.linkResultTypes(owner);
 
 			if (!(Expr.getResultType() is BType_Bool))
 				throw new ImplicitCastException(Expr.getResultType(), new BType_Bool(Position), Position);
@@ -719,9 +709,9 @@ namespace BefunGen.AST
 			return string.Format("(- {1})", Expr.getDebugString());
 		}
 
-		public override void linkResultTypes()
+		public override void linkResultTypes(Method owner)
 		{
-			Expr.linkResultTypes();
+			Expr.linkResultTypes(owner);
 
 			if (!(Expr.getResultType() is BType_Int))
 				throw new ImplicitCastException(Expr.getResultType(), new BType_Bool(Position), Position);
@@ -762,7 +752,7 @@ namespace BefunGen.AST
 			//NOP
 		}
 
-		public override void linkResultTypes()
+		public override void linkResultTypes(Method owner)
 		{
 			//NOP
 		}
@@ -801,7 +791,7 @@ namespace BefunGen.AST
 			//NOP
 		}
 
-		public override void linkResultTypes()
+		public override void linkResultTypes(Method owner)
 		{
 			// NOP
 		}
@@ -818,7 +808,34 @@ namespace BefunGen.AST
 
 		public override CodePiece generateCode()
 		{
-			throw new NotImplementedException(); //TODO Implement
+			//  >>1v
+			// #^?0>>
+			//   > 0^
+
+			CodePiece p = new CodePiece();
+
+			p[0, -1] = BCHelper.Empty;
+			p[1, -1] = BCHelper.PC_Right;
+			p[2, -1] = BCHelper.PC_Right;
+			p[3, -1] = BCHelper.Digit_1;
+			p[4, -1] = BCHelper.PC_Down;
+			p[5, -1] = BCHelper.Empty;
+
+			p[0, 0] = BCHelper.PC_Jump;
+			p[1, 0] = BCHelper.PC_Up;
+			p[2, 0] = BCHelper.PC_Random;
+			p[3, 0] = BCHelper.Digit_0;
+			p[4, 0] = BCHelper.PC_Right;
+			p[5, 0] = BCHelper.PC_Right;
+
+			p[0, 1] = BCHelper.Empty;
+			p[1, 1] = BCHelper.Empty;
+			p[2, 1] = BCHelper.PC_Right;
+			p[3, 1] = BCHelper.Empty;
+			p[4, 1] = BCHelper.Digit_0;
+			p[5, 1] = BCHelper.PC_Up;
+
+			return p;
 		}
 	}
 
@@ -844,9 +861,9 @@ namespace BefunGen.AST
 			Expr.linkVariables(owner);
 		}
 
-		public override void linkResultTypes()
+		public override void linkResultTypes(Method owner)
 		{
-			Expr.linkResultTypes();
+			Expr.linkResultTypes(owner);
 
 		}
 
@@ -886,9 +903,9 @@ namespace BefunGen.AST
 			Method.linkVariables(owner);
 		}
 
-		public override void linkResultTypes()
+		public override void linkResultTypes(Method owner)
 		{
-			// NOP
+			Method.linkResultTypes(owner);
 		}
 
 		public override void linkMethods(Program owner)

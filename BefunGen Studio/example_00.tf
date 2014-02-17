@@ -30,7 +30,7 @@ program example
 		
 		lbl2:
 		
-		out doFiber(44, 12);
+		out euclid(44, 12);
 	end
 
 	void DoFiber(int max)

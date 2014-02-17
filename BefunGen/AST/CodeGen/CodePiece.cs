@@ -53,7 +53,7 @@ namespace BefunGen.AST.CodeGen
 
 				while (MaxX < newMaxX)
 				{
-					commandArr.Add(Enumerable.Repeat((BefungeCommand)null, Height).ToList());
+					commandArr.Add(Enumerable.Repeat(BCHelper.Empty, Height).ToList());
 
 					MaxX++;
 				}
@@ -66,7 +66,7 @@ namespace BefunGen.AST.CodeGen
 
 				while (MinX > newMinX)
 				{
-					commandArr.Insert(0, Enumerable.Repeat((BefungeCommand)null, Height).ToList());
+					commandArr.Insert(0, Enumerable.Repeat(BCHelper.Empty, Height).ToList());
 
 					MinX--;
 				}
@@ -85,7 +85,7 @@ namespace BefunGen.AST.CodeGen
 				{
 					for (int xw = 0; xw < Width; xw++)
 					{
-						commandArr[xw].Add(null);
+						commandArr[xw].Add(BCHelper.Empty);
 					}
 
 					MaxY++;
@@ -101,7 +101,7 @@ namespace BefunGen.AST.CodeGen
 				{
 					for (int xw = 0; xw < Width; xw++)
 					{
-						commandArr[xw].Insert(0, null);
+						commandArr[xw].Insert(0, BCHelper.Empty);
 					}
 
 					MinY--;
@@ -116,7 +116,7 @@ namespace BefunGen.AST.CodeGen
 			if (!IsIncluded(x, y))
 				expand(x, y);
 
-			if (commandArr[x - MinX][y - MinY] != null)
+			if (commandArr[x - MinX][y - MinY].Type != BefungeCommandType.NOP)
 				throw new Exception("[DBG] WARNING: Modification of CodePiece : " + x + "|" + y);
 
 			commandArr[x - MinX][y - MinY] = value;
@@ -155,14 +155,22 @@ namespace BefunGen.AST.CodeGen
 
 		public void normalize()
 		{
-			int ox = -MinX;
+			normalizeX();
+			normalizeY();
+		}
+
+		private void normalizeY()
+		{
 			int oy = -MinY;
-
-			MinX += ox;
 			MinY += oy;
-
-			MaxX += ox;
 			MaxY += oy;
+		}
+
+		private void normalizeX()
+		{
+			int ox = -MinX;
+			MinX += ox;
+			MaxX += ox;
 		}
 
 		public CodePiece copy()
@@ -194,15 +202,17 @@ namespace BefunGen.AST.CodeGen
 
 		public static CodePiece CombineHorizontal(CodePiece left, CodePiece right)
 		{
-			// TODO Dont normalize - Add resprective to Y-Offset (IS IMPORTANT !!)
-			CodePiece c_l = left.copyNormalized();
-			CodePiece c_r = right.copyNormalized();
+			CodePiece c_l = left.copy();
+			CodePiece c_r = right.copy();
+
+			c_l.normalizeX();
+			c_r.normalizeX();
 
 			int offset = c_l.Width;
 
-			for (int x = 0; x < c_r.Width; x++)
+			for (int x = c_r.MinX; x < c_r.MaxX; x++)
 			{
-				for (int y = 0; y < c_r.Height; y++)
+				for (int y = c_r.MinY; y < c_r.MaxY; y++)
 				{
 					c_l[offset + x, y] = c_r[x, y];
 				}
@@ -213,15 +223,17 @@ namespace BefunGen.AST.CodeGen
 
 		public static CodePiece CombineVertical(CodePiece top, CodePiece bottom)
 		{
-			// TODO Dont normalize - Add resprective to X-Offset (IS IMPORTANT !!)
-			CodePiece c_t = top.copyNormalized();
-			CodePiece c_b = bottom.copyNormalized();
+			CodePiece c_t = top.copy();
+			CodePiece c_b = bottom.copy();
+
+			c_t.normalizeY();
+			c_b.normalizeY();
 
 			int offset = c_t.Height;
 
-			for (int x = 0; x < c_b.Width; x++)
+			for (int x = c_b.MinX; x < c_b.MaxX; x++)
 			{
-				for (int y = 0; y < c_b.Height; y++)
+				for (int y = c_b.MinY; y < c_b.MaxY; y++)
 				{
 					c_t[x, offset + y] = c_b[x, y];
 				}

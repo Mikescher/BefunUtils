@@ -3,6 +3,11 @@ namespace BefunGen.AST.CodeGen
 {
 	public static class BCHelper
 	{
+		public static BefungeCommand Empty
+		{
+			get { return new BefungeCommand(BefungeCommandType.NOP); }
+		}
+
 		public static BefungeCommand Add
 		{
 			get { return new BefungeCommand(BefungeCommandType.Add); }
@@ -131,6 +136,56 @@ namespace BefunGen.AST.CodeGen
 		public static BefungeCommand Stop
 		{
 			get { return new BefungeCommand(BefungeCommandType.Stop); }
+		}
+
+		public static BefungeCommand Digit_0
+		{
+			get { return dig(0); }
+		}
+
+		public static BefungeCommand Digit_1
+		{
+			get { return dig(1); }
+		}
+
+		public static BefungeCommand Digit_2
+		{
+			get { return dig(2); }
+		}
+
+		public static BefungeCommand Digit_3
+		{
+			get { return dig(3); }
+		}
+
+		public static BefungeCommand Digit_4
+		{
+			get { return dig(4); }
+		}
+
+		public static BefungeCommand Digit_5
+		{
+			get { return dig(5); }
+		}
+
+		public static BefungeCommand Digit_6
+		{
+			get { return dig(6); }
+		}
+
+		public static BefungeCommand Digit_7
+		{
+			get { return dig(7); }
+		}
+
+		public static BefungeCommand Digit_8
+		{
+			get { return dig(8); }
+		}
+
+		public static BefungeCommand Digit_9
+		{
+			get { return dig(9); }
 		}
 
 		public static BefungeCommand chr(int v)

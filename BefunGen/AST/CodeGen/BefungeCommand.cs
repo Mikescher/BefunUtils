@@ -4,6 +4,7 @@ namespace BefunGen.AST.CodeGen
 {
 	public enum BefungeCommandType
 	{
+		NOP,
 		Add,
 		Sub,
 		Mult,
@@ -55,6 +56,9 @@ namespace BefunGen.AST.CodeGen
 		{
 			switch (Type)
 			{
+				case BefungeCommandType.NOP:
+					return ' ';
+
 				case BefungeCommandType.Add:
 					return '+';
 

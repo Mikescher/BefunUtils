@@ -119,7 +119,7 @@ namespace BefunGen.AST
 		public override void linkResultTypes(Method owner)
 		{
 			foreach (Expression e in CallParameter)
-				e.linkResultTypes();
+				e.linkResultTypes(owner);
 
 			if (CallParameter.Count != Target.Parameter.Count)
 				throw new WrongParameterCountException(CallParameter.Count, Target.Parameter.Count, Position);
@@ -267,7 +267,7 @@ namespace BefunGen.AST
 
 		public override void linkResultTypes(Method owner)
 		{
-			Value.linkResultTypes();
+			Value.linkResultTypes(owner);
 
 			BType present = Value.getResultType();
 			BType expected = owner.ResultType;
@@ -309,7 +309,7 @@ namespace BefunGen.AST
 
 		public override void linkResultTypes(Method owner)
 		{
-			Value.linkResultTypes();
+			Value.linkResultTypes(owner);
 
 			if (Value.getResultType() is BType_Array)
 				throw new ImplicitCastException(new BType_Int(Position), Value.getResultType(), Value.Position);
@@ -384,7 +384,7 @@ namespace BefunGen.AST
 
 		public override void linkResultTypes(Method owner)
 		{
-			ValueTarget.linkResultTypes();
+			ValueTarget.linkResultTypes(owner);
 
 			BType present = ValueTarget.getResultType();
 			BType expected = new BType_Char(null);
@@ -503,7 +503,7 @@ namespace BefunGen.AST
 
 		public override void linkResultTypes(Method owner)
 		{
-			Target.linkResultTypes();
+			Target.linkResultTypes(owner);
 
 			BType present = Target.getResultType();
 
@@ -546,7 +546,7 @@ namespace BefunGen.AST
 
 		public override void linkResultTypes(Method owner)
 		{
-			Target.linkResultTypes();
+			Target.linkResultTypes(owner);
 
 			BType present = Target.getResultType();
 
@@ -593,8 +593,8 @@ namespace BefunGen.AST
 
 		public override void linkResultTypes(Method owner)
 		{
-			Target.linkResultTypes();
-			Expr.linkResultTypes();
+			Target.linkResultTypes(owner);
+			Expr.linkResultTypes(owner);
 
 			BType present = Target.getResultType();
 			BType expected = Expr.getResultType();
@@ -661,7 +661,7 @@ namespace BefunGen.AST
 
 		public override void linkResultTypes(Method owner)
 		{
-			Condition.linkResultTypes();
+			Condition.linkResultTypes(owner);
 			Body.linkResultTypes(owner);
 			Else.linkResultTypes(owner);
 
@@ -714,7 +714,7 @@ namespace BefunGen.AST
 
 		public override void linkResultTypes(Method owner)
 		{
-			Condition.linkResultTypes();
+			Condition.linkResultTypes(owner);
 			Body.linkResultTypes(owner);
 
 			BType present = Condition.getResultType();
@@ -766,7 +766,7 @@ namespace BefunGen.AST
 
 		public override void linkResultTypes(Method owner)
 		{
-			Condition.linkResultTypes();
+			Condition.linkResultTypes(owner);
 			Body.linkResultTypes(owner);
 
 			BType present = Condition.getResultType();
