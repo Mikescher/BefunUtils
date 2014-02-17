@@ -89,6 +89,25 @@ namespace BefunGen.AST
 
 			return Left.getResultType();
 		}
+
+		protected CodePiece generateCode_Operands()
+		{
+			CodePiece cp_l = Left.generateCode();
+			CodePiece cp_r = Right.generateCode();
+
+			if (CodeGenOptions.OptimizeDoubleStringmodeToogle)
+			{
+				if (cp_l.lastRowIsSingle() && cp_r.firstRowIsSingle() && cp_l[cp_l.MaxX - 1, 0].Type == BefungeCommandType.Stringmode && cp_r[0, 0].Type == BefungeCommandType.Stringmode)
+				{
+					cp_l.RemoveColumn(cp_l.MaxX - 1);
+					cp_r.RemoveColumn(0);
+				}
+			}
+
+			CodePiece p = CodePiece.CombineHorizontal(cp_l, cp_r); //TODO Optimize: when Left ends with " and right starts with " then trim both " away.
+
+			return p;
+		}
 	}
 
 	public abstract class Expression_BinaryBoolOperation : Expression_Binary
@@ -381,7 +400,7 @@ namespace BefunGen.AST
 
 		public override CodePiece generateCode()
 		{
-			CodePiece p = CodePiece.CombineHorizontal(Left.generateCode(), Right.generateCode());
+			CodePiece p = generateCode_Operands();
 
 			p[p.MaxX, 0] = BCHelper.Mult;
 
@@ -404,7 +423,7 @@ namespace BefunGen.AST
 
 		public override CodePiece generateCode()
 		{
-			CodePiece p = CodePiece.CombineHorizontal(Left.generateCode(), Right.generateCode()); //TODO Optimize: when Left ends with " and right starts with " then trim both " away.
+			CodePiece p = generateCode_Operands();
 
 			p[p.MaxX, 0] = BCHelper.Div;
 
@@ -427,7 +446,7 @@ namespace BefunGen.AST
 
 		public override CodePiece generateCode()
 		{
-			CodePiece p = CodePiece.CombineHorizontal(Left.generateCode(), Right.generateCode());
+			CodePiece p = generateCode_Operands();
 
 			p[p.MaxX, 0] = BCHelper.Modulo;
 
@@ -450,7 +469,7 @@ namespace BefunGen.AST
 
 		public override CodePiece generateCode()
 		{
-			CodePiece p = CodePiece.CombineHorizontal(Left.generateCode(), Right.generateCode());
+			CodePiece p = generateCode_Operands();
 
 			p[p.MaxX, 0] = BCHelper.Add;
 
@@ -473,7 +492,7 @@ namespace BefunGen.AST
 
 		public override CodePiece generateCode()
 		{
-			CodePiece p = CodePiece.CombineHorizontal(Left.generateCode(), Right.generateCode());
+			CodePiece p = generateCode_Operands();
 
 			p[p.MaxX, 0] = BCHelper.Sub;
 

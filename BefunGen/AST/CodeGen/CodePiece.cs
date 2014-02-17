@@ -241,5 +241,51 @@ namespace BefunGen.AST.CodeGen
 
 			return c_t;
 		}
+
+		public bool IsHFlat() // Is Horizontal Flat
+		{
+			return Height == 1;
+		}
+
+		public bool IsVFlat() // Is Vertical Flat
+		{
+			return Width == 1;
+		}
+
+		public void RemoveColumn(int col)
+		{
+			int abs = col - MinX;
+
+			commandArr.RemoveAt(abs);
+
+			MaxX = MaxX - 1;
+		}
+
+		public void RemoveRow(int row)
+		{
+			int abs = row - MinY;
+
+			for (int i = 0; i < Width; i++)
+			{
+				commandArr[i].RemoveAt(abs);
+			}
+
+			MaxY = MaxY - 1;
+		}
+
+		public bool lastRowIsSingle()
+		{
+			return IsRowSingle(Width - 1);
+		}
+
+		public bool firstRowIsSingle()
+		{
+			return IsRowSingle(0);
+		}
+
+		public bool IsRowSingle(int r)
+		{
+			return commandArr[r].Count(p => p.Type != BefungeCommandType.NOP) == 1;
+		}
 	}
 }

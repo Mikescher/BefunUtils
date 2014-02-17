@@ -211,9 +211,9 @@ namespace BefunGen
 		{
 			SourceCodePosition p = new SourceCodePosition();
 			Expression e = (new Expression_Mult(p,
-								new Expression_Literal(p, new Literal_Digit(p, 4)),
+								new Expression_Literal(p, new Literal_Int(p, 40)),
 								new Expression_Add(p,
-									new Expression_Literal(p, new Literal_Int(p, 1337)),
+									new Expression_Literal(p, new Literal_Int(p, 50)),
 									new Expression_Rand(p))));
 			CodePiece pc = e.generateCode();
 			txtDebug.Text = pc.ToString();

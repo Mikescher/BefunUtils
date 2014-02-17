@@ -82,7 +82,7 @@ namespace BefunGen.AST
 			}
 			else
 			{
-				if (CodeGenOptions.NumberLiteralRepresentation == NumberRep.CharKonstant)
+				if (CodeGenOptions.NumberLiteralRepresentation == NumberRep.CharConstant)
 				{
 					p[0, 0] = BCHelper.Stringmode;
 					p[1, 0] = BCHelper.chr(Value);

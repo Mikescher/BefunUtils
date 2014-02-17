@@ -1,4 +1,5 @@
 ﻿
+using System;
 namespace BefunGen.AST.CodeGen
 {
 	public static class BCHelper
@@ -195,7 +196,9 @@ namespace BefunGen.AST.CodeGen
 
 		public static BefungeCommand dig(byte v)
 		{
-			return new BefungeCommand(BefungeCommandType.Other, '0' + v);
+			if (v < 10)
+				return new BefungeCommand(BefungeCommandType.Other, '0' + v);
+			else throw new ArgumentException();
 		}
 	}
 }
