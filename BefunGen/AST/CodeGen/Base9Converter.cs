@@ -8,8 +8,19 @@ namespace BefunGen.AST.CodeGen
 		{
 			CodePiece p = new CodePiece();
 
+			bool isneg;
+			if (isneg = lit < 0)
+			{
+				lit *= -1;
+			}
+
 			string rep = ConvertToBase(lit, 9);
 			int pos = 0;
+
+			if (isneg)
+			{
+				p[pos++, 0] = BCHelper.Digit_0;
+			}
 
 			for (int i = 0; i < rep.Length; i++)
 			{
@@ -25,6 +36,11 @@ namespace BefunGen.AST.CodeGen
 			{
 				p[pos++, 0] = BCHelper.Mult;
 				p[pos++, 0] = BCHelper.Add;
+			}
+
+			if (isneg)
+			{
+				p[pos++, 0] = BCHelper.Sub;
 			}
 
 			return p;

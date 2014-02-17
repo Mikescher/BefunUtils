@@ -104,7 +104,7 @@ namespace BefunGen.AST
 				}
 			}
 
-			CodePiece p = CodePiece.CombineHorizontal(cp_l, cp_r); //TODO Optimize: when Left ends with " and right starts with " then trim both " away.
+			CodePiece p = CodePiece.CombineHorizontal(cp_l, cp_r);
 
 			return p;
 		}

@@ -287,5 +287,30 @@ namespace BefunGen.AST.CodeGen
 		{
 			return commandArr[r].Count(p => p.Type != BefungeCommandType.NOP) == 1;
 		}
+
+		public void AppendRight(BefungeCommand c)
+		{
+			AppendRight(0, c);
+		}
+
+		public void AppendRight(int row, BefungeCommand c)
+		{
+			this[MaxX, row] = c;
+		}
+
+		public void AppendRight(CodePiece right)
+		{
+			right.normalizeX();
+
+			int offset = Width;
+
+			for (int x = right.MinX; x < right.MaxX; x++)
+			{
+				for (int y = right.MinY; y < right.MaxY; y++)
+				{
+					this[offset + x, y] = right[x, y];
+				}
+			}
+		}
 	}
 }

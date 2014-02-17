@@ -47,13 +47,13 @@
 			this.tabPage6 = new System.Windows.Forms.TabPage();
 			this.txtCode = new System.Windows.Forms.TextBox();
 			this.tabPage7 = new System.Windows.Forms.TabPage();
+			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
 			this.txtDebug = new System.Windows.Forms.TextBox();
+			this.btnExecuteDebug = new System.Windows.Forms.Button();
 			this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
 			this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
 			this.btnLoadSYN = new System.Windows.Forms.Button();
 			this.txtSynFile = new System.Windows.Forms.TextBox();
-			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-			this.btnExecuteDebug = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
@@ -66,9 +66,9 @@
 			this.tabPage5.SuspendLayout();
 			this.tabPage6.SuspendLayout();
 			this.tabPage7.SuspendLayout();
+			this.tableLayoutPanel1.SuspendLayout();
 			this.tableLayoutPanel2.SuspendLayout();
 			this.tableLayoutPanel3.SuspendLayout();
-			this.tableLayoutPanel1.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// btnLoad
@@ -300,6 +300,7 @@
 			this.txtCode.Multiline = true;
 			this.txtCode.Name = "txtCode";
 			this.txtCode.ReadOnly = true;
+			this.txtCode.ScrollBars = System.Windows.Forms.ScrollBars.Both;
 			this.txtCode.Size = new System.Drawing.Size(672, 212);
 			this.txtCode.TabIndex = 0;
 			// 
@@ -314,6 +315,21 @@
 			this.tabPage7.Text = "Debug";
 			this.tabPage7.UseVisualStyleBackColor = true;
 			// 
+			// tableLayoutPanel1
+			// 
+			this.tableLayoutPanel1.ColumnCount = 2;
+			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 77.97619F));
+			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 22.02381F));
+			this.tableLayoutPanel1.Controls.Add(this.txtDebug, 0, 0);
+			this.tableLayoutPanel1.Controls.Add(this.btnExecuteDebug, 1, 0);
+			this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 3);
+			this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+			this.tableLayoutPanel1.RowCount = 1;
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+			this.tableLayoutPanel1.Size = new System.Drawing.Size(672, 212);
+			this.tableLayoutPanel1.TabIndex = 1;
+			// 
 			// txtDebug
 			// 
 			this.txtDebug.BackColor = System.Drawing.Color.White;
@@ -323,8 +339,19 @@
 			this.txtDebug.Multiline = true;
 			this.txtDebug.Name = "txtDebug";
 			this.txtDebug.ReadOnly = true;
+			this.txtDebug.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
 			this.txtDebug.Size = new System.Drawing.Size(517, 206);
 			this.txtDebug.TabIndex = 0;
+			// 
+			// btnExecuteDebug
+			// 
+			this.btnExecuteDebug.Location = new System.Drawing.Point(526, 3);
+			this.btnExecuteDebug.Name = "btnExecuteDebug";
+			this.btnExecuteDebug.Size = new System.Drawing.Size(143, 26);
+			this.btnExecuteDebug.TabIndex = 1;
+			this.btnExecuteDebug.Text = "Execute";
+			this.btnExecuteDebug.UseVisualStyleBackColor = true;
+			this.btnExecuteDebug.Click += new System.EventHandler(this.btnExecuteDebug_Click);
 			// 
 			// tableLayoutPanel2
 			// 
@@ -379,31 +406,6 @@
 			this.txtSynFile.Size = new System.Drawing.Size(580, 20);
 			this.txtSynFile.TabIndex = 11;
 			// 
-			// tableLayoutPanel1
-			// 
-			this.tableLayoutPanel1.ColumnCount = 2;
-			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 77.97619F));
-			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 22.02381F));
-			this.tableLayoutPanel1.Controls.Add(this.txtDebug, 0, 0);
-			this.tableLayoutPanel1.Controls.Add(this.btnExecuteDebug, 1, 0);
-			this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 3);
-			this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-			this.tableLayoutPanel1.RowCount = 1;
-			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-			this.tableLayoutPanel1.Size = new System.Drawing.Size(672, 212);
-			this.tableLayoutPanel1.TabIndex = 1;
-			// 
-			// btnExecuteDebug
-			// 
-			this.btnExecuteDebug.Location = new System.Drawing.Point(526, 3);
-			this.btnExecuteDebug.Name = "btnExecuteDebug";
-			this.btnExecuteDebug.Size = new System.Drawing.Size(143, 26);
-			this.btnExecuteDebug.TabIndex = 1;
-			this.btnExecuteDebug.Text = "Execute";
-			this.btnExecuteDebug.UseVisualStyleBackColor = true;
-			this.btnExecuteDebug.Click += new System.EventHandler(this.btnExecuteDebug_Click);
-			// 
 			// frmMain
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -432,11 +434,11 @@
 			this.tabPage6.ResumeLayout(false);
 			this.tabPage6.PerformLayout();
 			this.tabPage7.ResumeLayout(false);
+			this.tableLayoutPanel1.ResumeLayout(false);
+			this.tableLayoutPanel1.PerformLayout();
 			this.tableLayoutPanel2.ResumeLayout(false);
 			this.tableLayoutPanel3.ResumeLayout(false);
 			this.tableLayoutPanel3.PerformLayout();
-			this.tableLayoutPanel1.ResumeLayout(false);
-			this.tableLayoutPanel1.PerformLayout();
 			this.ResumeLayout(false);
 
 		}

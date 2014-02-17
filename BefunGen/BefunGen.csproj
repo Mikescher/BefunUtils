@@ -54,9 +54,11 @@
     <Compile Include="AST\CodeGen\BefungeCommand.cs" />
     <Compile Include="AST\CodeGen\CodeGenOptions.cs" />
     <Compile Include="AST\CodeGen\CodePiece.cs" />
+    <Compile Include="AST\CodeGen\NumberFactorization.cs" />
     <Compile Include="AST\CodeGen\SourceCodePosition.cs" />
     <Compile Include="AST\Exceptions\AccessTemporaryASTObjectException.cs" />
     <Compile Include="AST\Exceptions\ASTException.cs" />
+    <Compile Include="AST\Exceptions\WTFException.cs" />
     <Compile Include="AST\Exceptions\WrongTypeException.cs" />
     <Compile Include="AST\Exceptions\WrongParameterCountException.cs" />
     <Compile Include="AST\Exceptions\NoConditionException.cs" />

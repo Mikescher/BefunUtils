@@ -210,13 +210,30 @@ namespace BefunGen
 		private void btnExecuteDebug_Click(object sender, EventArgs earg)
 		{
 			SourceCodePosition p = new SourceCodePosition();
-			Expression e = (new Expression_Mult(p,
-								new Expression_Literal(p, new Literal_Int(p, 40)),
-								new Expression_Add(p,
-									new Expression_Literal(p, new Literal_Int(p, 50)),
-									new Expression_Rand(p))));
-			CodePiece pc = e.generateCode();
-			txtDebug.Text = pc.ToString();
+
+			Expression e;
+			CodePiece pc;
+
+			e = new Expression_Mult(p,
+					new Expression_Literal(p, new Literal_Int(p, 40)),
+					new Expression_Add(p,
+						new Expression_Literal(p, new Literal_Int(p, -50)),
+						new Expression_Rand(p)));
+			pc = e.generateCode();
+			txtDebug.Text += pc.ToString() + Environment.NewLine;
+
+
+			e = new Expression_Literal(p, new Literal_Int(p, 100));
+			pc = e.generateCode();
+			txtDebug.Text += pc.ToString() + Environment.NewLine;
+
+			e = new Expression_Literal(p, new Literal_Int(p, -100));
+			pc = e.generateCode();
+			txtDebug.Text += pc.ToString() + Environment.NewLine;
+
+			e = new Expression_Literal(p, new Literal_Int(p, 137));
+			pc = e.generateCode();
+			txtDebug.Text += pc.ToString() + Environment.NewLine;
 		}
 	}
 } //Form

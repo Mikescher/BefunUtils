@@ -84,13 +84,28 @@ namespace BefunGen.AST
 			{
 				if (CodeGenOptions.NumberLiteralRepresentation == NumberRep.CharConstant)
 				{
-					p[0, 0] = BCHelper.Stringmode;
-					p[1, 0] = BCHelper.chr(Value);
-					p[2, 0] = BCHelper.Stringmode;
+					if (Value == '"')
+					{
+						p[0, 0] = BCHelper.Stringmode;
+						p[1, 0] = BCHelper.chr(Value + 1);
+						p[2, 0] = BCHelper.Stringmode;
+						p[2, 0] = BCHelper.Digit_1;
+						p[2, 0] = BCHelper.Sub;
+					}
+					else
+					{
+						p[0, 0] = BCHelper.Stringmode;
+						p[1, 0] = BCHelper.chr(Value);
+						p[2, 0] = BCHelper.Stringmode;
+					}
 				}
 				else if (CodeGenOptions.NumberLiteralRepresentation == NumberRep.Base9)
 				{
 					p = Base9Converter.generateCodeForLiteral(Value);
+				}
+				else if (CodeGenOptions.NumberLiteralRepresentation == NumberRep.Factorization)
+				{
+					p = NumberFactorization.generateCodeForLiteral(Value);
 				}
 			}
 
@@ -232,12 +247,40 @@ namespace BefunGen.AST
 			CodePiece p = new CodePiece();
 			int i = 0;
 
-			p[i++, 0] = BCHelper.Stringmode;
-			foreach (int val in Value)
+			if (CodeGenOptions.NumberLiteralRepresentation == NumberRep.CharConstant)
 			{
-				p[i++, 0] = BCHelper.chr(val); //TODO What when charcode == " ? 
+				p[i++, 0] = BCHelper.Stringmode;
+				foreach (int val in Value)
+				{
+					if (val == '"')
+					{
+						p[i++, 0] = BCHelper.chr(val + 1);
+						p[i++, 0] = BCHelper.Stringmode;
+						p[i++, 0] = BCHelper.Digit_1;
+						p[i++, 0] = BCHelper.Sub;
+						p[i++, 0] = BCHelper.Stringmode;
+					}
+					else
+					{
+						p[i++, 0] = BCHelper.chr(val);
+					}
+				}
+				p[i++, 0] = BCHelper.Stringmode;
 			}
-			p[i++, 0] = BCHelper.Stringmode;
+			else if (CodeGenOptions.NumberLiteralRepresentation == NumberRep.Base9)
+			{
+				foreach (int val in Value)
+				{
+					p.AppendRight(Base9Converter.generateCodeForLiteral(val));
+				}
+			}
+			else if (CodeGenOptions.NumberLiteralRepresentation == NumberRep.Factorization)
+			{
+				foreach (int val in Value)
+				{
+					p.AppendRight(NumberFactorization.generateCodeForLiteral(val));
+				}
+			}
 
 			return p;
 		}
