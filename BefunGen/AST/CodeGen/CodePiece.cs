@@ -159,14 +159,14 @@ namespace BefunGen.AST.CodeGen
 			normalizeY();
 		}
 
-		private void normalizeY()
+		public void normalizeY()
 		{
 			int oy = -MinY;
 			MinY += oy;
 			MaxY += oy;
 		}
 
-		private void normalizeX()
+		public void normalizeX()
 		{
 			int ox = -MinX;
 			MinX += ox;
@@ -286,6 +286,31 @@ namespace BefunGen.AST.CodeGen
 		public bool IsRowSingle(int r)
 		{
 			return commandArr[r].Count(p => p.Type != BefungeCommandType.NOP) == 1;
+		}
+
+		public void AppendLeft(BefungeCommand c)
+		{
+			AppendLeft(0, c);
+		}
+
+		public void AppendLeft(int row, BefungeCommand c)
+		{
+			this[MinX - 1, row] = c;
+		}
+
+		public void AppendLeft(CodePiece left)
+		{
+			left.normalizeX();
+
+			int offset = MinX - left.MaxX;
+
+			for (int x = left.MinX; x < left.MaxX; x++)
+			{
+				for (int y = left.MinY; y < left.MaxY; y++)
+				{
+					this[offset + x, y] = left[x, y];
+				}
+			}
 		}
 
 		public void AppendRight(BefungeCommand c)

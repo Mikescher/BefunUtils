@@ -207,33 +207,42 @@ namespace BefunGen
 			}
 		}
 
+		private Expression parseExpression(string expr)
+		{
+			Expression result = null;
+
+			string txt = String.Format("program b var  bool a; begin a = (bool)({0}); end end", expr);
+			BefunGen.AST.Program p = GParser.generateAST(txt);
+
+			result = ((Expression_Cast)((Statement_Assignment)((Statement_StatementList)p.MainStatement.Body).List[0]).Expr).Expr;
+
+			return result;
+		}
+
+		private void debugExpression(string expr)
+		{
+			txtDebug.Text += expr + Environment.NewLine;
+
+			Expression e = parseExpression(expr);
+			CodePiece pc = e.generateCode();
+			txtDebug.Text += pc.ToString() + Environment.NewLine;
+		}
+
 		private void btnExecuteDebug_Click(object sender, EventArgs earg)
 		{
-			SourceCodePosition p = new SourceCodePosition();
+			debugExpression("40*(-50+(int)rand)");
 
-			Expression e;
-			CodePiece pc;
+			debugExpression("100");
 
-			e = new Expression_Mult(p,
-					new Expression_Literal(p, new Literal_Int(p, 40)),
-					new Expression_Add(p,
-						new Expression_Literal(p, new Literal_Int(p, -50)),
-						new Expression_Rand(p)));
-			pc = e.generateCode();
-			txtDebug.Text += pc.ToString() + Environment.NewLine;
+			debugExpression("-100");
 
+			debugExpression("137");
 
-			e = new Expression_Literal(p, new Literal_Int(p, 100));
-			pc = e.generateCode();
-			txtDebug.Text += pc.ToString() + Environment.NewLine;
+			debugExpression("true || false");
 
-			e = new Expression_Literal(p, new Literal_Int(p, -100));
-			pc = e.generateCode();
-			txtDebug.Text += pc.ToString() + Environment.NewLine;
+			debugExpression("true && (false ^ true)");
 
-			e = new Expression_Literal(p, new Literal_Int(p, 137));
-			pc = e.generateCode();
-			txtDebug.Text += pc.ToString() + Environment.NewLine;
+			debugExpression("true || false");
 		}
 	}
 } //Form

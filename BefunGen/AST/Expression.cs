@@ -519,7 +519,42 @@ namespace BefunGen.AST
 
 		public override CodePiece generateCode()
 		{
-			throw new NotImplementedException(); //TODO Implement
+			// >1  v
+			// ^_0 v
+			//  |  >
+			//  >$0^
+
+			CodePiece p = new CodePiece();
+
+			p[0, -2] = BCHelper.PC_Right;
+			p[1, -2] = BCHelper.Digit_1;
+			p[2, -2] = BCHelper.Empty;
+			p[3, -2] = BCHelper.Empty;
+			p[4, -2] = BCHelper.PC_Down;
+
+			p[0, -1] = BCHelper.PC_Up;
+			p[1, -1] = BCHelper.If_Horizontal;
+			p[2, -1] = BCHelper.Digit_0;
+			p[3, -1] = BCHelper.Empty;
+			p[4, -1] = BCHelper.PC_Down;
+
+			p[0, 0] = BCHelper.Empty;
+			p[1, 0] = BCHelper.If_Vertical;
+			p[2, 0] = BCHelper.Empty;
+			p[3, 0] = BCHelper.Empty;
+			p[4, 0] = BCHelper.PC_Right;
+
+			p[0, 1] = BCHelper.Empty;
+			p[1, 1] = BCHelper.PC_Left;
+			p[2, 1] = BCHelper.Stack_Pop;
+			p[3, 1] = BCHelper.Digit_0;
+			p[4, 1] = BCHelper.PC_Up;
+
+			p.AppendLeft(Left.generateCode());
+			p.AppendLeft(Right.generateCode());
+			p.normalizeX();
+
+			return p;
 		}
 	}
 
@@ -538,7 +573,42 @@ namespace BefunGen.AST
 
 		public override CodePiece generateCode()
 		{
-			throw new NotImplementedException(); //TODO Implement
+			//  >$1v
+			//  |  >
+			// v_0 ^
+			// >1  ^
+
+			CodePiece p = new CodePiece();
+
+			p[0, -1] = BCHelper.Empty;
+			p[1, -1] = BCHelper.PC_Right;
+			p[2, -1] = BCHelper.Stack_Pop;
+			p[3, -1] = BCHelper.Digit_1;
+			p[4, -1] = BCHelper.PC_Down;
+
+			p[0, 0] = BCHelper.Empty;
+			p[1, 0] = BCHelper.If_Vertical;
+			p[2, 0] = BCHelper.Empty;
+			p[3, 0] = BCHelper.Empty;
+			p[4, 0] = BCHelper.PC_Right;
+
+			p[0, 1] = BCHelper.PC_Down;
+			p[1, 1] = BCHelper.If_Horizontal;
+			p[2, 1] = BCHelper.Digit_0;
+			p[3, 1] = BCHelper.Empty;
+			p[4, 1] = BCHelper.PC_Up;
+
+			p[0, 2] = BCHelper.PC_Left;
+			p[1, 2] = BCHelper.Digit_1;
+			p[2, 2] = BCHelper.Empty;
+			p[3, 2] = BCHelper.Empty;
+			p[4, 2] = BCHelper.PC_Up;
+
+			p.AppendLeft(Left.generateCode());
+			p.AppendLeft(Right.generateCode());
+			p.normalizeX();
+
+			return p;
 		}
 	}
 
@@ -557,7 +627,49 @@ namespace BefunGen.AST
 
 		public override CodePiece generateCode()
 		{
-			throw new NotImplementedException(); //TODO Implement
+			//  > v 
+			//  v_1v
+			// ##|>>
+			//  ^_0^
+			//  > ^
+
+			CodePiece p = new CodePiece();
+
+			p[0, -2] = BCHelper.Empty;
+			p[1, -2] = BCHelper.PC_Right;
+			p[2, -2] = BCHelper.Empty;
+			p[3, -2] = BCHelper.PC_Down;
+			p[4, -2] = BCHelper.Empty;
+
+			p[0, -1] = BCHelper.Empty;
+			p[1, -1] = BCHelper.PC_Down;
+			p[2, -1] = BCHelper.If_Horizontal;
+			p[3, -1] = BCHelper.Digit_1;
+			p[4, -1] = BCHelper.PC_Down;
+
+			p[0, 0] = BCHelper.PC_Jump;
+			p[1, 0] = BCHelper.PC_Jump;
+			p[2, 0] = BCHelper.If_Vertical;
+			p[3, 0] = BCHelper.PC_Right;
+			p[4, 0] = BCHelper.PC_Right;
+
+			p[0, 1] = BCHelper.Empty;
+			p[1, 1] = BCHelper.PC_Up;
+			p[2, 1] = BCHelper.If_Horizontal;
+			p[3, 1] = BCHelper.Digit_0;
+			p[4, 1] = BCHelper.PC_Up;
+
+			p[0, 2] = BCHelper.Empty;
+			p[1, 2] = BCHelper.PC_Right;
+			p[2, 2] = BCHelper.Empty;
+			p[3, 2] = BCHelper.PC_Up;
+			p[4, 2] = BCHelper.Empty;
+
+			p.AppendLeft(Left.generateCode());
+			p.AppendLeft(Right.generateCode());
+			p.normalizeX();
+
+			return p;
 		}
 	}
 
@@ -743,7 +855,14 @@ namespace BefunGen.AST
 
 		public override CodePiece generateCode()
 		{
-			throw new NotImplementedException(); //TODO Implement
+			CodePiece cp = Expr.generateCode();
+
+			cp.AppendLeft(BCHelper.Digit_0);
+			cp.AppendRight(BCHelper.Sub);
+
+			cp.normalizeX();
+
+			return cp;
 		}
 	}
 
@@ -860,8 +979,8 @@ namespace BefunGen.AST
 
 	public class Expression_Cast : Expression
 	{
-		private BType Type;
-		private Expression Expr;
+		public BType Type;
+		public Expression Expr;
 
 		public Expression_Cast(SourceCodePosition pos, BType t, Expression e)
 			: base(pos)
@@ -898,7 +1017,7 @@ namespace BefunGen.AST
 
 		public override CodePiece generateCode()
 		{
-			throw new NotImplementedException(); //TODO Implement
+			return Expr.generateCode(); //TODO Perhaps Cast bools to real 0|1 bools (perhaps CodeGenOption)
 		}
 	}
 

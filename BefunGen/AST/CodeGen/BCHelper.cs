@@ -198,7 +198,8 @@ namespace BefunGen.AST.CodeGen
 		{
 			if (v < 10)
 				return new BefungeCommand(BefungeCommandType.Other, '0' + v);
-			else throw new ArgumentException();
+			else
+				throw new ArgumentException();
 		}
 	}
 }
