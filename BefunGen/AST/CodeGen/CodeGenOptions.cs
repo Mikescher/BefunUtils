@@ -3,7 +3,7 @@ namespace BefunGen.AST.CodeGen
 {
 	public enum NumberRep
 	{
-		CharConstant,
+		CharConstant, //TODO What when neg
 		Base9,
 		Factorization//TODO Option to intelligent use Best Option
 	}
@@ -23,6 +23,9 @@ namespace BefunGen.AST.CodeGen
 		// Expression Methodcall before codegen convert in AST to multiple statements (call methods->assign to var->use var in expr) (??? perhaps ???)
 
 		//TODO Reusable CodePoints can be "tagged" in the CodePiece class with special -unique- Tags (with Params) to find them later (like method enter, stack back etc)
+
+		//TODO Differentitate between real empty and walked empty cells (for debugging fill realempty with @)
+		//     --> Later better optimizing etc etc
 	}
 
 	//Expressions are Left,0 in ... Right,0 out

@@ -87,6 +87,15 @@ namespace BefunGen.AST
 
 			//TODO IMPLEMENT NOW; MUDDAFUCKAA
 
+			//Parameter block --> flags
+
+			//Entry Point
+
+			//Intialize Parameter
+
+			//Statement Block
+
+
 			return p;
 		}
 	}
