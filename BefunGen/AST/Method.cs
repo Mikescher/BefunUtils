@@ -80,6 +80,15 @@ namespace BefunGen.AST
 		{
 			_M_ID_COUNTER = 1;
 		}
+
+		public CodePiece generateCode()
+		{
+			CodePiece p = new CodePiece();
+
+			//TODO IMPLEMENT NOW; MUDDAFUCKAA
+
+			return p;
+		}
 	}
 
 	public class Method_Header : ASTObject // TEMPORARY -- NOT IN RESULTING AST

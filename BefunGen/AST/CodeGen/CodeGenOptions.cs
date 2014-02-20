@@ -18,5 +18,17 @@ namespace BefunGen.AST.CodeGen
 
 		// Removes 2x STringmodetoogle after each other rfrom Expression (eg "" )
 		public static bool OptimizeDoubleStringmodeToogle = true;
+
+		//TODO (Optional) When in STatementList and have Left->Right Statement test if next STatement is mirrorable (no If_Horiz) - the mirror it and append it directly beneath --> no empty line
+		// Expression Methodcall before codegen convert in AST to multiple statements (call methods->assign to var->use var in expr) (??? perhaps ???)
+
+		//TODO Reusable CodePoints can be "tagged" in the CodePiece class with special -unique- Tags (with Params) to find them later (like method enter, stack back etc)
 	}
+
+	//Expressions are Left,0 in ... Right,0 out
+
+	//Statements are Left,0 in ... Right,0 out
+	//StatementLists order <statements under each other (Y-0-Axis nearly top)
+
+	//Methods enter ate Left,0 in ... They can exit at multiple places
 }

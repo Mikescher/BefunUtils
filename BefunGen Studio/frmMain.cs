@@ -2,6 +2,7 @@
 using BefunGen.AST.CodeGen;
 using System;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -209,14 +210,26 @@ namespace BefunGen
 
 		private Expression parseExpression(string expr)
 		{
-			Expression result = null;
-
 			string txt = String.Format("program b var  bool a; begin a = (bool)({0}); end end", expr);
 			BefunGen.AST.Program p = GParser.generateAST(txt);
 
-			result = ((Expression_Cast)((Statement_Assignment)((Statement_StatementList)p.MainStatement.Body).List[0]).Expr).Expr;
+			return ((Expression_Cast)((Statement_Assignment)((Statement_StatementList)p.MainStatement.Body).List[0]).Expr).Expr;
+		}
 
-			return result;
+		private Statement parseStatement(string stmt)
+		{
+			string txt = String.Format("program b var  bool a; begin {0} end end", stmt);
+			BefunGen.AST.Program p = GParser.generateAST(txt);
+
+			return ((Statement_StatementList)p.MainStatement.Body).List[0];
+		}
+
+		private Method parseMethod(string meth)
+		{
+			string txt = String.Format("program b begin end {0} end", meth);
+			BefunGen.AST.Program p = GParser.generateAST(txt);
+
+			return p.MethodList[1];
 		}
 
 		private void debugExpression(string expr)
@@ -224,6 +237,27 @@ namespace BefunGen
 			txtDebug.Text += expr + Environment.NewLine;
 
 			Expression e = parseExpression(expr);
+			CodePiece pc = e.generateCode();
+			txtDebug.Text += pc.ToString() + Environment.NewLine;
+		}
+
+		//private void debugStatement(string stmt)
+		//{
+		//	txtDebug.Text += stmt + Environment.NewLine;
+
+		//	Statement e = parseStatement(stmt);
+		//	CodePiece pc = e.generateCode();
+		//	txtDebug.Text += pc.ToString() + Environment.NewLine;
+		//}
+
+		private void debugMethod(string meth)
+		{
+			meth = Regex.Replace(meth, @"[\r\n]{1,2}[ \t]+[\r\n]{1,2}", "\r\n");
+			meth = Regex.Replace(meth, @"^[ \t]*[\r\n]{1,2}", "");
+			meth = Regex.Replace(meth, @"[\r\n]{1,2}[ \t]*$", "");
+
+			Method e = parseMethod(meth);
+			txtDebug.Text += "[METHOD] " + e.Identifier + ":" + e.ID + Environment.NewLine;
 			CodePiece pc = e.generateCode();
 			txtDebug.Text += pc.ToString() + Environment.NewLine;
 		}
@@ -243,6 +277,16 @@ namespace BefunGen
 			debugExpression("true && (false ^ true)");
 
 			debugExpression("true || false");
+
+			debugMethod(@"
+int doFiber(int max)
+var
+	int a := 4;
+	bool b;	
+begin
+	return max;
+end
+				");
 		}
 	}
 } //Form
