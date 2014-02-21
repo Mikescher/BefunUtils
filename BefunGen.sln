@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BefunGen Studio", "BefunGen
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BefunGenTest", "BefunGenTest\BefunGenTest.csproj", "{AFE4C79F-1404-4F6E-8F7E-69A99AB9B065}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BefungExec", "BefungExec\BefungExec.csproj", "{9CFFC63F-6F1B-44A8-B330-5367BC23BC0E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,6 +27,10 @@ Global
 		{AFE4C79F-1404-4F6E-8F7E-69A99AB9B065}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AFE4C79F-1404-4F6E-8F7E-69A99AB9B065}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AFE4C79F-1404-4F6E-8F7E-69A99AB9B065}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9CFFC63F-6F1B-44A8-B330-5367BC23BC0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9CFFC63F-6F1B-44A8-B330-5367BC23BC0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9CFFC63F-6F1B-44A8-B330-5367BC23BC0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9CFFC63F-6F1B-44A8-B330-5367BC23BC0E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
