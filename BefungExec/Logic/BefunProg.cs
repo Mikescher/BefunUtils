@@ -8,14 +8,16 @@ namespace BefungExec.Logic
 {
 	public class BefunProg
 	{
-		public static int SLEEP_TIME = 50;
+		public static int SLEEP_TIME = 0;
 		public static double DECAY_SPEED = 0.1;
 		public static bool INIT_PAUSED = true;
 
 		private static int[,] randDelta = { { 1, 0 }, { 0, -1 }, { -1, 0 }, { 0, 1 } };
 
 		public bool running;
+		public bool doSingleStep = false;
 		public bool paused = INIT_PAUSED;
+		public int mode = 0;
 
 		public FrequencyCounter freq = new FrequencyCounter();
 
@@ -37,6 +39,11 @@ namespace BefungExec.Logic
 
 		Random rnd = new Random();
 
+		public const int MODE_RUN = 0;
+		public const int MODE_IN_INT = 1;
+		public const int MODE_IN_CHAR = 2;
+
+
 		public BefunProg(int[,] iras)
 		{
 			raster = iras;
@@ -55,7 +62,7 @@ namespace BefungExec.Logic
 
 			while (running)
 			{
-				if (paused)
+				if ((paused && !doSingleStep) || mode != MODE_RUN)
 				{
 					Thread.Sleep(SLEEP_TIME);
 					decay();
@@ -64,8 +71,13 @@ namespace BefungExec.Logic
 				freq.Inc();
 
 				calc();
-				move();
-				decay();
+				if (mode == MODE_RUN)
+				{
+					move();
+					decay();
+				}
+
+				doSingleStep = false;
 
 				Thread.Sleep(SLEEP_TIME);
 			}
@@ -81,7 +93,10 @@ namespace BefungExec.Logic
 
 		private int peek()
 		{
-			return Stack.Count == 0 ? 0 : Stack.Peek();
+			lock (Stack)
+			{
+				return Stack.Count == 0 ? 0 : Stack.Peek();
+			}
 		}
 
 		private bool popBool()
@@ -92,7 +107,7 @@ namespace BefungExec.Logic
 			}
 		}
 
-		private void push(int a)
+		public void push(int a)
 		{
 			lock (Stack)
 			{
@@ -100,7 +115,7 @@ namespace BefungExec.Logic
 			}
 		}
 
-		private void push(bool a)
+		public void push(bool a)
 		{
 			lock (Stack)
 			{
@@ -114,7 +129,7 @@ namespace BefungExec.Logic
 
 			if (stringmode && curr != '"')
 			{
-				Stack.Push(curr);
+				push(curr);
 			}
 			else
 			{
@@ -178,7 +193,7 @@ namespace BefungExec.Logic
 						delta.Set(randDelta[tmp, 0], randDelta[tmp, 1]);
 						break;
 					case '_':
-						tmp = popBool() ? 0 : 2;
+						tmp = popBool() ? 2 : 0;
 						delta.Set(randDelta[tmp, 0], randDelta[tmp, 1]);
 						break;
 					case '|':
@@ -226,19 +241,22 @@ namespace BefungExec.Logic
 							pop();
 						break;
 					case '&':
-						throw new Exception("Input <INT>");
+						mode = MODE_IN_INT;
+						break;
 					case '~':
-						throw new Exception("Input <CHAR>");
+						mode = MODE_IN_CHAR;
+						break;
 					case '@':
 						delta.Set(0, 0);
 						break;
 					default:
-						throw new Exception("WHAT THE CHAR");
+						// NOP
+						break;
 				}
 			}
 		}
 
-		private void move()
+		public void move()
 		{
 			PC += delta;
 
@@ -260,7 +278,8 @@ namespace BefungExec.Logic
 				}
 			}
 
-			decay_raster[PC.X, PC.Y] = 1.0;
+			if (PC.X >= 0 && PC.Y >= 0)
+				decay_raster[PC.X, PC.Y] = 1.0;
 		}
 	}
 }

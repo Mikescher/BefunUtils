@@ -61,10 +61,10 @@ namespace BefungExec.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 1101p11 &gt;  v
-        ///@@      v  p&lt;&lt; 
-        ///&gt;:.1:g01 p1:&quot;,&quot;v
-        ///^+g:1g10&lt;  &lt; ^ &lt;.
+        ///   Looks up a localized string similar to 2&gt;:3g&quot; &quot;-!v\  g30          &lt;
+        /// |!`&quot;O&quot;:+1_:.:03p&gt;03g+:&quot;O&quot;`|
+        /// @               ^  p3\&quot; &quot;:&lt;
+        ///2 234567890123456789012345678901234567890123456789012345678901234567890123456789.
         /// </summary>
         internal static string demoProg {
             get {

@@ -18,9 +18,14 @@ namespace BefungExec.View
 		private FontRasterSheet font;
 		private QFont DebugFont;
 		private QFont StackFont;
+		private QFont BoxFont;
 		private BefunProg prog;
 
-		List<int> currStack = new List<int>();
+		private List<int> currStack = new List<int>();
+
+		private char? lastInput = null;
+
+		private string currInput = "";
 
 		public MainView(BefunProg model)
 			: base(1280 + 250, 480)
@@ -32,6 +37,7 @@ namespace BefungExec.View
 			UpdateFrame += new EventHandler<FrameEventArgs>(OnUpdate);
 			RenderFrame += new EventHandler<FrameEventArgs>(OnRender);
 			Closed += new EventHandler<EventArgs>(OnClose);
+			KeyPress += new EventHandler<KeyPressEventArgs>(OnKeyPress);
 
 			Run();
 		}
@@ -54,6 +60,10 @@ namespace BefungExec.View
 			StackFont.Options.DropShadowActive = true;
 			StackFont.Options.Colour = Color4.White;
 
+			BoxFont = new QFont(new Font("Arial", 16));
+			BoxFont.Options.DropShadowActive = true;
+			BoxFont.Options.Colour = Color4.Black;
+
 			font = FontRasterSheet.create();
 		}
 
@@ -63,23 +73,63 @@ namespace BefungExec.View
 			QFont.InvalidateViewport();
 		}
 
+		private void OnKeyPress(object o, KeyPressEventArgs arg)
+		{
+			lastInput = arg.KeyChar;
+		}
+
 		private bool lastState_Space = false;
+		private bool lastState_BSpace = false;
+		private bool lastState_Enter = false;
+		private bool lastState_Right = false;
 		private void OnUpdate(object o, FrameEventArgs arg)
 		{
 			if (Keyboard[Key.Escape])
 			{
 				Exit();
 			}
-			else if (Keyboard[Key.Space] && !lastState_Space)
+			else if (Keyboard[Key.Space] && !lastState_Space && prog.mode == BefunProg.MODE_RUN)
 			{
 				prog.paused = !prog.paused;
 			}
-			lastState_Space = Keyboard[Key.Space];
+			else if (Keyboard[Key.BackSpace] && !lastState_BSpace)
+			{
+				if (currInput.Length > 0)
+					currInput = currInput.Substring(0, currInput.Length - 1);
+			}
+			else if (Keyboard[Key.Enter] && !lastState_Enter)
+			{
+				if (prog.mode == BefunProg.MODE_IN_INT && currInput.Length > 0 && currInput != "-")
+				{
+					prog.push(int.Parse(currInput));
+					currInput = "";
+					prog.mode = BefunProg.MODE_RUN;
+					prog.move();
+				}
+				if (prog.mode == BefunProg.MODE_IN_CHAR && currInput.Length == 0)
+				{
+					prog.push(0);
+					currInput = "";
+					prog.mode = BefunProg.MODE_RUN;
+					prog.move();
+				}
+			}
+			else if (Keyboard[Key.Right] && !lastState_Right)
+			{
+				prog.doSingleStep = true;
+			}
 
+			lastState_Space = Keyboard[Key.Space];
+			lastState_BSpace = Keyboard[Key.BackSpace];
+			lastState_BSpace = Keyboard[Key.Enter];
+			lastState_Right = Keyboard[Key.Right];
 		}
 
 		private void OnRender(object o, FrameEventArgs arg)
 		{
+			#region INIT
+
+
 			fps.Inc();
 
 			GL.Clear(ClearBufferMask.ColorBufferBit);
@@ -90,7 +140,9 @@ namespace BefungExec.View
 
 			GL.Color3(1.0, 1.0, 1.0);
 
-			// ################
+			#endregion
+
+			#region SIZE
 
 			font.bind();
 
@@ -125,6 +177,9 @@ namespace BefungExec.View
 				offx = stackwidth;
 			}
 
+			#endregion
+
+			#region PROG
 
 			for (int x = 0; x < prog.Width; x++)
 			{
@@ -135,7 +190,9 @@ namespace BefungExec.View
 				}
 			}
 
-			// ################
+			#endregion
+
+			#region STACK
 
 			currStack.Clear();
 
@@ -144,19 +201,81 @@ namespace BefungExec.View
 				currStack.AddRange(prog.Stack);
 			}
 
-			float fh = 15;
+			float fh = 15 + RenderFont(new Vec2d(10f, 15f), "Stack<" + currStack.Count + ">", -1, StackFont, false) * 1.15f;
 			for (int i = 0; i < currStack.Count; i++)
 			{
-				fh += RenderFont(new Vec2d(10f, fh), "" + currStack[i], -1, StackFont, false) * 1.5f;
+				fh += RenderFont(new Vec2d(10f, fh), "" + currStack[i], -1, StackFont, false) * 1.15f;
 				if (h > 2 * Width)
 					break;
 			}
 
-			// ################
+			#endregion
 
-			RenderFont(new Vec2d(0f, 0f), String.Format("FPS: {0} || SPEED: {1}", fps.Frequency, (int)prog.freq.Frequency), -1, DebugFont, true);
+			#region INPUT
+
+			if (prog.mode != BefunProg.MODE_RUN)
+			{
+				int bw = 512;
+				int bh = 128;
+
+				int box = (Width - bw) / 2;
+				int boy = (Height - bh) / 2;
+
+				if (lastInput != null)
+				{
+					if (prog.mode == BefunProg.MODE_IN_INT && (char.IsDigit(lastInput.Value) || (currInput.Length == 0 && lastInput.Value == '-')))
+					{
+						currInput += lastInput;
+					}
+					if (prog.mode == BefunProg.MODE_IN_CHAR && currInput.Length == 0)
+					{
+						currInput += lastInput;
+
+						prog.push(currInput[0]);
+						currInput = "";
+						prog.mode = BefunProg.MODE_RUN;
+						prog.move();
+					}
+				}
+
+				Rect2d rect = new Rect2d(box, boy, bw, bh);
+
+				GL.Disable(EnableCap.Texture2D);
+				GL.Begin(BeginMode.Quads);
+				GL.Translate(0, 0, -3);
+				GL.Color4(Color.FromArgb(255, 128, 128, 128));
+				GL.Vertex3(rect.tl.X, rect.tl.Y, 0);
+				GL.Vertex3(rect.bl.X, rect.bl.Y, 0);
+				GL.Vertex3(rect.br.X, rect.br.Y, 0);
+				GL.Vertex3(rect.tr.X, rect.tr.Y, 0);
+				GL.Color3(1.0, 1.0, 1.0);
+				GL.Translate(0, 0, 3);
+				GL.End();
+				GL.Enable(EnableCap.Texture2D);
+
+				RenderFont(new Vec2d(box, boy), "Please enter a " + ((prog.mode == BefunProg.MODE_IN_INT) ? "number" : "character"), -1, BoxFont, true);
+
+				RenderFont(new Vec2d(box, boy + 64), currInput, -1, BoxFont, true);
+			}
+			else
+			{
+				currInput = "";
+			}
+			lastInput = null;
+
+			#endregion
+
+			#region DEBUG
+
+			RenderFont(new Vec2d(Width-350, 0f), String.Format("FPS: {0} || SPEED: {1}", fps.Frequency, (int)prog.freq.Frequency), -1, DebugFont, true);
+
+			#endregion
+
+			#region FINISH
 
 			SwapBuffers();
+
+			#endregion
 		}
 
 		public float RenderFont(Vec2d pos, string text, int distance, QFont fnt, bool backg)
