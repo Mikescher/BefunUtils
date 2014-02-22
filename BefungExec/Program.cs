@@ -35,10 +35,19 @@ namespace BefungExec
 					Console.Out.WriteLine(e.ToString());
 				}
 			}
+			else
+			{
+				Console.WriteLine("Please pass a BefungeFile with the parameter '-file'");
+				Console.WriteLine("Using Demo ...");
+			}
 
 			BefunProg.INIT_PAUSED = !cmda.IsSet("no_pause");
 
 			//###########
+
+			Console.WriteLine();
+			Console.WriteLine();
+			Console.WriteLine();
 
 			BefunProg bp = new BefunProg(GetProg(demo));
 			new Thread(new ThreadStart(bp.run)).Start();

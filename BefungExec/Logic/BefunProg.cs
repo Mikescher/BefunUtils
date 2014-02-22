@@ -12,8 +12,6 @@ namespace BefungExec.Logic
 		public static double DECAY_SPEED = 0.1;
 		public static bool INIT_PAUSED = true;
 
-
-
 		private static int[,] randDelta = { { 1, 0 }, { 0, -1 }, { -1, 0 }, { 0, 1 } };
 
 		public bool running;
@@ -33,7 +31,7 @@ namespace BefungExec.Logic
 		private Vec2i delta = new Vec2i(1, 0);
 		private bool stringmode = false;
 
-		private Stack<int> Stack = new Stack<int>();
+		public Stack<int> Stack = new Stack<int>();
 
 		private Vec2i dimension;
 
@@ -75,7 +73,10 @@ namespace BefungExec.Logic
 
 		private int pop()
 		{
-			return Stack.Count == 0 ? 0 : Stack.Pop();
+			lock (Stack)
+			{
+				return Stack.Count == 0 ? 0 : Stack.Pop();
+			}
 		}
 
 		private int peek()
@@ -85,17 +86,26 @@ namespace BefungExec.Logic
 
 		private bool popBool()
 		{
-			return Stack.Count == 0 ? false : (Stack.Pop() != 0);
+			lock (Stack)
+			{
+				return Stack.Count == 0 ? false : (Stack.Pop() != 0);
+			}
 		}
 
 		private void push(int a)
 		{
-			Stack.Push(a);
+			lock (Stack)
+			{
+				Stack.Push(a);
+			}
 		}
 
 		private void push(bool a)
 		{
-			Stack.Push(a ? 1 : 0);
+			lock (Stack)
+			{
+				Stack.Push(a ? 1 : 0);
+			}
 		}
 
 		private void calc()

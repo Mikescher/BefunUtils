@@ -55,6 +55,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="View\StackView.cs" />
     <Compile Include="View\FontRasterSheet.cs" />
     <Compile Include="View\MainView.cs" />
     <Compile Include="View\OpenGL\FrequencyCounter.cs" />

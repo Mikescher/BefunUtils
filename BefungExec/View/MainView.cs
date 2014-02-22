@@ -7,6 +7,7 @@ using OpenTK.Input;
 using QuickFont;
 using SuperBitBros.OpenGL.OGLMath;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 
 namespace BefungExec.View
@@ -16,11 +17,13 @@ namespace BefungExec.View
 		private FrequencyCounter fps = new FrequencyCounter();
 		private FontRasterSheet font;
 		private QFont DebugFont;
+		private QFont StackFont;
 		private BefunProg prog;
 
+		List<int> currStack = new List<int>();
 
 		public MainView(BefunProg model)
-			: base(1280, 480)
+			: base(1280 + 250, 480)
 		{
 			prog = model;
 
@@ -42,9 +45,14 @@ namespace BefungExec.View
 			QFontBuilderConfiguration builderConfig = new QFontBuilderConfiguration(true);
 			builderConfig.ShadowConfig.blurRadius = 1; //reduce blur radius because font is very small
 			builderConfig.TextGenerationRenderHint = TextGenerationRenderHint.ClearTypeGridFit; //best render hint for this font
+
 			DebugFont = new QFont(new Font("Arial", 8));
 			DebugFont.Options.DropShadowActive = true;
 			DebugFont.Options.Colour = Color4.Black;
+
+			StackFont = new QFont(new Font("Arial", 24));
+			StackFont.Options.DropShadowActive = true;
+			StackFont.Options.Colour = Color4.White;
 
 			font = FontRasterSheet.create();
 		}
@@ -91,7 +99,9 @@ namespace BefungExec.View
 			double offx = 0;
 			double offy = 0;
 
-			double w = (Width * 1.0) / prog.Width;
+			int stackwidth = 250;
+
+			double w = ((Width - stackwidth) * 1.0) / prog.Width;
 			double h = (Height * 1.0) / prog.Height;
 
 			if ((w / h) < (8.0 / 12.0))
@@ -100,10 +110,19 @@ namespace BefungExec.View
 				h = (12.0 * w) / (8.0);
 				offy -= h * prog.Height;
 				offy /= 2;
+				offx = stackwidth;
 			}
 			else if ((w / h) > (8.0 / 12.0))
 			{
+				offx = w * prog.Width - stackwidth;
 				w = (8.0 * h) / (12.0);
+				offx -= w * prog.Width - stackwidth;
+				offx /= 2;
+				offx += stackwidth;
+			}
+			else
+			{
+				offx = stackwidth;
 			}
 
 
@@ -118,41 +137,63 @@ namespace BefungExec.View
 
 			// ################
 
-			RenderFont(new Vec2d(0f, 0f), String.Format("FPS: {0} || SPEED: {1}", fps.Frequency, (int)prog.freq.Frequency), -1);
+			currStack.Clear();
+
+			lock (prog.Stack)
+			{
+				currStack.AddRange(prog.Stack);
+			}
+
+			float fh = 15;
+			for (int i = 0; i < currStack.Count; i++)
+			{
+				fh += RenderFont(new Vec2d(10f, fh), "" + currStack[i], -1, StackFont, false) * 1.5f;
+				if (h > 2 * Width)
+					break;
+			}
+
+			// ################
+
+			RenderFont(new Vec2d(0f, 0f), String.Format("FPS: {0} || SPEED: {1}", fps.Frequency, (int)prog.freq.Frequency), -1, DebugFont, true);
 
 			SwapBuffers();
 		}
 
-		public void RenderFont(Vec2d pos, string text, int distance)
+		public float RenderFont(Vec2d pos, string text, int distance, QFont fnt, bool backg)
 		{
-			float w = DebugFont.Measure(text).Width;
-			float h = DebugFont.Measure(text).Height;
+			float w = fnt.Measure(text).Width;
+			float h = fnt.Measure(text).Height;
 
 			Rect2d rect = new Rect2d(pos.X, pos.Y + Height - h, w, h);
 
-			GL.Disable(EnableCap.Texture2D);
-			GL.Begin(BeginMode.Quads);
-			GL.Translate(0, 0, -4);
-			GL.Color4(Color.FromArgb(192, 255, 255, 255));
-			GL.Vertex3(rect.tl.X, rect.tl.Y, 0);
-			GL.Vertex3(rect.bl.X, rect.bl.Y, 0);
-			GL.Vertex3(rect.br.X, rect.br.Y, 0);
-			GL.Vertex3(rect.tr.X, rect.tr.Y, 0);
-			GL.Color3(1.0, 1.0, 1.0);
-			GL.Translate(0, 0, 4);
-			GL.End();
-			GL.Enable(EnableCap.Texture2D);
+			if (backg)
+			{
+				GL.Disable(EnableCap.Texture2D);
+				GL.Begin(BeginMode.Quads);
+				GL.Translate(0, 0, -4);
+				GL.Color4(Color.FromArgb(192, 255, 255, 255));
+				GL.Vertex3(rect.tl.X, rect.tl.Y, 0);
+				GL.Vertex3(rect.bl.X, rect.bl.Y, 0);
+				GL.Vertex3(rect.br.X, rect.br.Y, 0);
+				GL.Vertex3(rect.tr.X, rect.tr.Y, 0);
+				GL.Color3(1.0, 1.0, 1.0);
+				GL.Translate(0, 0, 4);
+				GL.End();
+				GL.Enable(EnableCap.Texture2D);
+			}
 
 			QFont.Begin();
 			GL.PushMatrix();
 
 			GL.Translate(0, 0, distance);
-			DebugFont.Print(text, new Vector2((float)pos.X, (float)pos.Y));
+			fnt.Print(text, new Vector2((float)pos.X, (float)pos.Y));
 
 			GL.PopMatrix();
 			QFont.End();
 
 			GL.Color3(1.0, 1.0, 1.0);
+
+			return h;
 		}
 
 		private void OnClose(object o, EventArgs arg)
