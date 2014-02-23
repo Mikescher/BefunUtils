@@ -88,7 +88,7 @@ namespace BefungExec.Logic
 					move();
 					decay();
 
-					paused = breakpoints[PC.X, PC.Y];
+					paused = paused || breakpoints[PC.X, PC.Y];
 				}
 
 				doSingleStep = false;

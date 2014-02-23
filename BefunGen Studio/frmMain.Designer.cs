@@ -54,6 +54,10 @@
 			this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
 			this.btnLoadSYN = new System.Windows.Forms.Button();
 			this.txtSynFile = new System.Windows.Forms.TextBox();
+			this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+			this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
+			this.btnGen = new System.Windows.Forms.Button();
+			this.btnRun = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
@@ -69,6 +73,11 @@
 			this.tableLayoutPanel1.SuspendLayout();
 			this.tableLayoutPanel2.SuspendLayout();
 			this.tableLayoutPanel3.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
+			this.splitContainer2.Panel1.SuspendLayout();
+			this.splitContainer2.Panel2.SuspendLayout();
+			this.splitContainer2.SuspendLayout();
+			this.tableLayoutPanel4.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// btnLoad
@@ -282,7 +291,7 @@
 			// 
 			// tabPage6
 			// 
-			this.tabPage6.Controls.Add(this.txtCode);
+			this.tabPage6.Controls.Add(this.splitContainer2);
 			this.tabPage6.Location = new System.Drawing.Point(4, 4);
 			this.tabPage6.Name = "tabPage6";
 			this.tabPage6.Padding = new System.Windows.Forms.Padding(3);
@@ -296,12 +305,11 @@
 			this.txtCode.BackColor = System.Drawing.Color.White;
 			this.txtCode.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.txtCode.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.txtCode.Location = new System.Drawing.Point(3, 3);
+			this.txtCode.Location = new System.Drawing.Point(0, 0);
 			this.txtCode.Multiline = true;
 			this.txtCode.Name = "txtCode";
-			this.txtCode.ReadOnly = true;
 			this.txtCode.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-			this.txtCode.Size = new System.Drawing.Size(672, 212);
+			this.txtCode.Size = new System.Drawing.Size(488, 212);
 			this.txtCode.TabIndex = 0;
 			// 
 			// tabPage7
@@ -406,6 +414,61 @@
 			this.txtSynFile.Size = new System.Drawing.Size(580, 20);
 			this.txtSynFile.TabIndex = 11;
 			// 
+			// splitContainer2
+			// 
+			this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.splitContainer2.Location = new System.Drawing.Point(3, 3);
+			this.splitContainer2.Name = "splitContainer2";
+			// 
+			// splitContainer2.Panel1
+			// 
+			this.splitContainer2.Panel1.Controls.Add(this.txtCode);
+			// 
+			// splitContainer2.Panel2
+			// 
+			this.splitContainer2.Panel2.Controls.Add(this.tableLayoutPanel4);
+			this.splitContainer2.Size = new System.Drawing.Size(672, 212);
+			this.splitContainer2.SplitterDistance = 488;
+			this.splitContainer2.TabIndex = 1;
+			// 
+			// tableLayoutPanel4
+			// 
+			this.tableLayoutPanel4.ColumnCount = 1;
+			this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.tableLayoutPanel4.Controls.Add(this.btnGen, 0, 0);
+			this.tableLayoutPanel4.Controls.Add(this.btnRun, 0, 1);
+			this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.tableLayoutPanel4.Location = new System.Drawing.Point(0, 0);
+			this.tableLayoutPanel4.Name = "tableLayoutPanel4";
+			this.tableLayoutPanel4.RowCount = 3;
+			this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32F));
+			this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32F));
+			this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.tableLayoutPanel4.Size = new System.Drawing.Size(180, 212);
+			this.tableLayoutPanel4.TabIndex = 0;
+			// 
+			// btnGen
+			// 
+			this.btnGen.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.btnGen.Location = new System.Drawing.Point(3, 3);
+			this.btnGen.Name = "btnGen";
+			this.btnGen.Size = new System.Drawing.Size(174, 26);
+			this.btnGen.TabIndex = 0;
+			this.btnGen.Text = "Generate";
+			this.btnGen.UseVisualStyleBackColor = true;
+			this.btnGen.Click += new System.EventHandler(this.btnGen_Click);
+			// 
+			// btnRun
+			// 
+			this.btnRun.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.btnRun.Location = new System.Drawing.Point(3, 35);
+			this.btnRun.Name = "btnRun";
+			this.btnRun.Size = new System.Drawing.Size(174, 26);
+			this.btnRun.TabIndex = 1;
+			this.btnRun.Text = "Run";
+			this.btnRun.UseVisualStyleBackColor = true;
+			this.btnRun.Click += new System.EventHandler(this.btnRun_Click);
+			// 
 			// frmMain
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -432,13 +495,18 @@
 			this.tabPage5.ResumeLayout(false);
 			this.tabPage5.PerformLayout();
 			this.tabPage6.ResumeLayout(false);
-			this.tabPage6.PerformLayout();
 			this.tabPage7.ResumeLayout(false);
 			this.tableLayoutPanel1.ResumeLayout(false);
 			this.tableLayoutPanel1.PerformLayout();
 			this.tableLayoutPanel2.ResumeLayout(false);
 			this.tableLayoutPanel3.ResumeLayout(false);
 			this.tableLayoutPanel3.PerformLayout();
+			this.splitContainer2.Panel1.ResumeLayout(false);
+			this.splitContainer2.Panel1.PerformLayout();
+			this.splitContainer2.Panel2.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
+			this.splitContainer2.ResumeLayout(false);
+			this.tableLayoutPanel4.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}
@@ -470,6 +538,10 @@
 		private System.Windows.Forms.TextBox txtDebug;
 		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
 		private System.Windows.Forms.Button btnExecuteDebug;
+		private System.Windows.Forms.SplitContainer splitContainer2;
+		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;
+		private System.Windows.Forms.Button btnGen;
+		private System.Windows.Forms.Button btnRun;
 	}
 }
 

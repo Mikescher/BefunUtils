@@ -55,6 +55,11 @@ namespace BefunGen.AST
 		{
 			return MethodList.Count(p => p.Identifier.ToLower() == ident.ToLower()) == 1 ? MethodList.Single(p => p.Identifier.ToLower() == ident.ToLower()) : null;
 		}
+
+		public CodePiece generateCode()
+		{
+			return new CodePiece(); //TODO Final Implement
+		}
 	}
 
 	public class Program_Footer : ASTObject // TEMPORARY -- NOT IN RESULTING AST

@@ -31,7 +31,7 @@ namespace BefungExec.View
 		private Rect2i zoom = null;
 
 		public MainView(BefunProg model)
-			: base((int)(((model.Width / (model.Height * 1d)) * 480) * (8.0 / 12.0)) + 250, 480)
+			: base(Math.Min((int)(((model.Width / (model.Height * 1d)) * 480) * (8.0 / 12.0)) + 250, 1024), 480)
 		{
 			Title = "-- BefungExec --";
 
@@ -260,7 +260,7 @@ namespace BefungExec.View
 					double b = prog.breakpoints[x, y] ? (1 - prog.decay_raster[x, y]) : (1 - prog.decay_raster[x, y]);
 
 					GL.Color3(r, g, b);
-					
+
 					font.Render(new Rect2d(offx + (x - zoom.bl.X) * w, offy + ((zoom.Height - 1) - (y - zoom.bl.Y)) * h, w, h), -4, prog[x, y]);
 
 				}

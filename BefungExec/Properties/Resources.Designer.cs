@@ -61,17 +61,18 @@ namespace BefungExec.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &quot;omed a s&quot;v                       &gt;v&lt;
-        ///          &quot;                        8
-        ///          i                        4
-        ///                        &gt;       &gt; ^*^         &lt;
-        ///          s    &gt;99+0g1+#^_77+0g#^_188+0p099+0p&gt;  v
-        ///          i    ^        &lt;         &lt;#            &lt;
-        ///          h    &gt;88+0g1+#^_66+0g#^_088+0p01-99+0p^
-        ///          T    ^        &lt;         &lt;#             #&lt;
-        ///          &quot;    &gt;99+0g1-#^_77+0g8-#^_01-88+0p099+0p^
-        ///&gt;         v    ^        &lt;         &lt;#            &lt;2
-        ///|   &gt;#:&gt;#,&lt;    &gt;88+0g1-#^_66+0g8-#^_ [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to &quot;omed a s&quot;v
+        ///          &quot;                       &gt;v&lt;
+        ///          i                        8
+        ///                                   4
+        ///          s             &gt;       &gt; ^*^         &lt;
+        ///          i    &gt;99+0g1+#^_77+0g#^_188+0p099+0p&gt;  v
+        ///          h    ^        &lt;         &lt;#            &lt;
+        ///          T    &gt;88+0g1+#^_66+0g#^_088+0p01-99+0p^
+        ///          &quot;    ^        &lt;         &lt;#             #&lt;
+        ///&gt;         v    &gt;99+0g1-#^_77+0g8-#^_01-88+0p099+0p^
+        ///|   &gt;#:&gt;#,&lt;    ^        &lt;         &lt;#            &lt;2
+        ///               &gt;88+0g1- [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string demoProg {
             get {

@@ -1,6 +1,7 @@
 ﻿using BefunGen.AST;
 using BefunGen.AST.CodeGen;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -287,6 +288,51 @@ begin
 	return max;
 end
 				");
+		}
+
+		private void btnRun_Click(object sender, EventArgs e)
+		{
+			try
+			{
+				string code = txtCode.Text;
+
+				string path = Path.Combine(Application.StartupPath, "code_tmp.b93");
+
+				File.WriteAllText(path, code);
+
+				//-----
+
+				ProcessStartInfo start = new ProcessStartInfo();
+
+				start.Arguments = String.Format("-file=\"{0}\"", path);
+				start.FileName = Path.Combine(Application.StartupPath, "BefungExec.exe");
+
+				Process.Start(start);
+			}
+			catch (Exception ex)
+			{
+				txtCode.Text = ex.ToString();
+			}
+		}
+
+		private void btnGen_Click(object sender, EventArgs e)
+		{
+			BefunGen.AST.Program p = GParser.generateAST(txtSource.Text);
+			if (p == null)
+			{
+				txtCode.Text = GParser.FailMessage;
+			}
+			else
+			{
+				try
+				{
+					txtCode.Text = p.generateCode().ToString();
+				}
+				catch (Exception ex)
+				{
+					txtCode.Text = ex.ToString();
+				}
+			}
 		}
 	}
 } //Form
