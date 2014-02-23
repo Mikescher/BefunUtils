@@ -25,6 +25,7 @@ namespace BefungExec.Logic
 
 		public int[,] raster;
 		public double[,] decay_raster;
+		public bool[,] breakpoints;
 
 		public int Width { get { return raster.GetLength(0); } }
 		public int Height { get { return raster.GetLength(1); } }
@@ -45,7 +46,6 @@ namespace BefungExec.Logic
 		public const int MODE_IN_INT = 1;
 		public const int MODE_IN_CHAR = 2;
 
-
 		public BefunProg(int[,] iras)
 		{
 			if (DECAY_SPEED == 0)
@@ -53,10 +53,14 @@ namespace BefungExec.Logic
 
 			raster = iras;
 			decay_raster = new double[Width, Height];
+			breakpoints = new bool[Width, Height];
 
 			for (int x = 0; x < Width; x++)
 				for (int y = 0; y < Height; y++)
+				{
 					decay_raster[x, y] = 0;
+					breakpoints[x, y] = false;
+				}
 
 			dimension = new Vec2i(Width, Height);
 		}
@@ -70,8 +74,6 @@ namespace BefungExec.Logic
 
 			while (running)
 			{
-
-
 				if ((paused && !doSingleStep) || mode != MODE_RUN)
 				{
 					Thread.Sleep(SLEEP_TIME);
@@ -85,11 +87,11 @@ namespace BefungExec.Logic
 				{
 					move();
 					decay();
+
+					paused = breakpoints[PC.X, PC.Y];
 				}
 
 				doSingleStep = false;
-
-
 
 				if (SLEEP_TIME != 0)
 				{

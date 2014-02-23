@@ -27,6 +27,9 @@ namespace BefungExec.View
 
 		private string currInput = "";
 
+		private Rect2i selection = null;
+		private Rect2i zoom = null;
+
 		public MainView(BefunProg model)
 			: base((int)(((model.Width / (model.Height * 1d)) * 480) * (8.0 / 12.0)) + 250, 480)
 		{
@@ -34,12 +37,17 @@ namespace BefungExec.View
 
 			prog = model;
 
+			zoom = new Rect2i(0, 0, prog.Width, prog.Height);
+
 			Load += new EventHandler<EventArgs>(OnLoad);
 			Resize += new EventHandler<EventArgs>(OnResize);
 			UpdateFrame += new EventHandler<FrameEventArgs>(OnUpdate);
 			RenderFrame += new EventHandler<FrameEventArgs>(OnRender);
 			Closed += new EventHandler<EventArgs>(OnClose);
 			KeyPress += new EventHandler<KeyPressEventArgs>(OnKeyPress);
+			Mouse.ButtonDown += new EventHandler<MouseButtonEventArgs>(OnMouseDown);
+			Mouse.ButtonUp += new EventHandler<MouseButtonEventArgs>(OnMouseUp);
+			Mouse.Move += new EventHandler<MouseMoveEventArgs>(OnMouseMove);
 
 			Run();
 		}
@@ -80,15 +88,23 @@ namespace BefungExec.View
 			lastInput = arg.KeyChar;
 		}
 
+		private bool lastState_Esc = false;
 		private bool lastState_Space = false;
 		private bool lastState_BSpace = false;
 		private bool lastState_Enter = false;
 		private bool lastState_Right = false;
 		private void OnUpdate(object o, FrameEventArgs arg)
 		{
-			if (Keyboard[Key.Escape])
+			if (Keyboard[Key.Escape] && !lastState_Esc)
 			{
-				Exit();
+				if (zoom != null)
+				{
+					zoom = new Rect2i(0, 0, prog.Width, prog.Height);
+				}
+				else
+				{
+					Exit();
+				}
 			}
 			else if (Keyboard[Key.Space] && !lastState_Space && prog.mode == BefunProg.MODE_RUN)
 			{
@@ -125,6 +141,83 @@ namespace BefungExec.View
 			lastState_BSpace = Keyboard[Key.BackSpace];
 			lastState_BSpace = Keyboard[Key.Enter];
 			lastState_Right = Keyboard[Key.Right];
+			lastState_Esc = Keyboard[Key.Escape];
+		}
+
+		private void OnMouseDown(object o, MouseButtonEventArgs arg)
+		{
+			if (!Mouse[MouseButton.Left])
+				return;
+
+			int selx, sely;
+			getPointInProgram(arg.X, arg.Y, out selx, out sely);
+
+			if (selx != -1 && sely != -1)
+			{
+				selection = new Rect2i(selx, sely, 1, 1);
+			}
+		}
+
+		private void getPointInProgram(int px, int py, out int selx, out int sely)
+		{
+			double offx;
+			double offy;
+			double w;
+			double h;
+			calcProgPos(out offx, out offy, out w, out h);
+
+			selx = -1;
+			sely = -1;
+
+			for (int x = 0; x < prog.Width; x++)
+			{
+				for (int y = 0; y < prog.Height; y++)
+				{
+					if (new Rect2d(offx + x * w, offy + y * h, w, h).Includes(new Vec2d(px, py)))
+					{
+						selx = x;
+						sely = y;
+					}
+				}
+			}
+		}
+
+		private void OnMouseUp(object o, MouseButtonEventArgs arg)
+		{
+			if (arg.Button == MouseButton.Left)
+			{
+				if (selection != null)
+				{
+					if (Math.Abs(selection.Width) > 1 && Math.Abs(selection.Height) > 1)
+					{
+						selection.normalize();
+						zoom = selection;
+					}
+					else if (selection.Width == 1 && selection.Height == 1)
+					{
+						prog.breakpoints[selection.bl.X, selection.bl.Y] = !prog.breakpoints[selection.bl.X, selection.bl.Y];
+					}
+				}
+
+				selection = null;
+			}
+		}
+
+		private void OnMouseMove(object o, MouseMoveEventArgs arg)
+		{
+			if (!Mouse[MouseButton.Left])
+				selection = null;
+
+
+			if (selection != null)
+			{
+				selection.normalize();
+
+				int selx, sely;
+				getPointInProgram(arg.X, arg.Y, out selx, out sely);
+
+				selection = new Rect2i(selection.bl, new Vec2i(selx + 1, sely + 1));
+			}
 		}
 
 		private void OnRender(object o, FrameEventArgs arg)
@@ -148,48 +241,53 @@ namespace BefungExec.View
 
 			font.bind();
 
-			int th = prog.Height - 1;
-
-			double offx = 0;
-			double offy = 0;
-
-			int stackwidth = 250;
-
-			double w = ((Width - stackwidth) * 1.0) / prog.Width;
-			double h = (Height * 1.0) / prog.Height;
-
-			if ((w / h) < (8.0 / 12.0))
-			{
-				offy = h * prog.Height;
-				h = (12.0 * w) / (8.0);
-				offy -= h * prog.Height;
-				offy /= 2;
-				offx = stackwidth;
-			}
-			else if ((w / h) > (8.0 / 12.0))
-			{
-				offx = w * prog.Width - stackwidth;
-				w = (8.0 * h) / (12.0);
-				offx -= w * prog.Width - stackwidth;
-				offx /= 2;
-				offx += stackwidth;
-			}
-			else
-			{
-				offx = stackwidth;
-			}
+			double offx;
+			double offy;
+			double w;
+			double h;
+			calcProgPos(out offx, out offy, out w, out h);
 
 			#endregion
 
 			#region PROG
 
-			for (int x = 0; x < prog.Width; x++)
+			for (int x = zoom.bl.X; x < zoom.tr.X; x++)
 			{
-				for (int y = 0; y < prog.Height; y++)
+				for (int y = zoom.bl.Y; y < zoom.tr.Y; y++)
 				{
-					GL.Color3(1, 1 - prog.decay_raster[x, y], 1 - prog.decay_raster[x, y]);
-					font.Render(new Rect2d(offx + x * w, offy + (th - y) * h, w, h), -4, prog[x, y]);
+					double r = prog.breakpoints[x, y] ? prog.decay_raster[x, y] : 1;
+					double g = prog.breakpoints[x, y] ? 0 : (1 - prog.decay_raster[x, y]);
+					double b = prog.breakpoints[x, y] ? (1 - prog.decay_raster[x, y]) : (1 - prog.decay_raster[x, y]);
+
+					GL.Color3(r, g, b);
+					
+					font.Render(new Rect2d(offx + (x - zoom.bl.X) * w, offy + ((zoom.Height - 1) - (y - zoom.bl.Y)) * h, w, h), -4, prog[x, y]);
+
 				}
+			}
+
+			#endregion
+
+			#region SELECTION
+
+			if (selection != null)
+			{
+				Rect2d rect = new Rect2d(offx + (selection.tl.X) * w, offy + (zoom.Height - (selection.tl.Y - 0 * zoom.bl.Y)) * h, selection.Width * w, selection.Height * h);
+
+				GL.Disable(EnableCap.Texture2D);
+
+				GL.Begin(BeginMode.LineLoop);
+				GL.Translate(0, 0, -3);
+				GL.Color4(Color.Black);
+				GL.Vertex3(rect.tl.X, rect.tl.Y, 0);
+				GL.Vertex3(rect.bl.X, rect.bl.Y, 0);
+				GL.Vertex3(rect.br.X, rect.br.Y, 0);
+				GL.Vertex3(rect.tr.X, rect.tr.Y, 0);
+				GL.Color3(1.0, 1.0, 1.0);
+				GL.Translate(0, 0, 3);
+				GL.End();
+
+				GL.Enable(EnableCap.Texture2D);
 			}
 
 			#endregion
@@ -278,6 +376,40 @@ namespace BefungExec.View
 			SwapBuffers();
 
 			#endregion
+		}
+
+		private void calcProgPos(out double offx, out double offy, out double w, out double h)
+		{
+			int th = zoom.Height - 1;
+
+			offx = 0;
+			offy = 0;
+
+			int stackwidth = 250;
+
+			w = ((Width - stackwidth) * 1.0) / zoom.Width;
+			h = (Height * 1.0) / zoom.Height;
+
+			if ((w / h) < (8.0 / 12.0))
+			{
+				offy = h * zoom.Height;
+				h = (12.0 * w) / (8.0);
+				offy -= h * zoom.Height;
+				offy /= 2;
+				offx = stackwidth;
+			}
+			else if ((w / h) > (8.0 / 12.0))
+			{
+				offx = w * zoom.Width - stackwidth;
+				w = (8.0 * h) / (12.0);
+				offx -= w * zoom.Width - stackwidth;
+				offx /= 2;
+				offx += stackwidth;
+			}
+			else
+			{
+				offx = stackwidth;
+			}
 		}
 
 		public float RenderFont(Vec2d pos, string text, int distance, QFont fnt, bool backg)

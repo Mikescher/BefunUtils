@@ -235,5 +235,20 @@
 
             return result;
         }
-    }
+
+		public void normalize()
+		{
+			if (Width < 0)
+			{
+				position.X += Width;
+				Width *= -1;
+			}
+
+			if (Height < 0)
+			{
+				position.Y += Height;
+				Height *= -1;
+			}
+		}
+	}
 }
