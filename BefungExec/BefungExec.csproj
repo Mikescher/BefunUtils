@@ -69,6 +69,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\demoProg.txt" />
     <Content Include="Resources\raster.bmp" />
   </ItemGroup>
   <ItemGroup />

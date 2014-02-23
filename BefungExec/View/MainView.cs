@@ -28,8 +28,10 @@ namespace BefungExec.View
 		private string currInput = "";
 
 		public MainView(BefunProg model)
-			: base(1280 + 250, 480)
+			: base((int)(((model.Width / (model.Height * 1d)) * 480) * (8.0 / 12.0)) + 250, 480)
 		{
+			Title = "-- BefungExec --";
+
 			prog = model;
 
 			Load += new EventHandler<EventArgs>(OnLoad);
@@ -267,7 +269,7 @@ namespace BefungExec.View
 
 			#region DEBUG
 
-			RenderFont(new Vec2d(Width-350, 0f), String.Format("FPS: {0} || SPEED: {1}", fps.Frequency, (int)prog.freq.Frequency), -1, DebugFont, true);
+			RenderFont(new Vec2d(Width - 350, 0f), String.Format("FPS: {0} || SPEED: {1} Hz", (int)fps.Frequency, (int)prog.freq.Frequency), -1, DebugFont, true);
 
 			#endregion
 

@@ -8,8 +8,10 @@ namespace BefungExec.Logic
 {
 	public class BefunProg
 	{
-		public static int SLEEP_TIME = 0;
-		public static double DECAY_SPEED = 0.1;
+		public const double TARGET_DECAY_DURATION = 500;
+
+		public static int SLEEP_TIME = 1;
+		public static double DECAY_SPEED = SLEEP_TIME / TARGET_DECAY_DURATION;
 		public static bool INIT_PAUSED = true;
 
 		private static int[,] randDelta = { { 1, 0 }, { 0, -1 }, { -1, 0 }, { 0, 1 } };
@@ -46,6 +48,9 @@ namespace BefungExec.Logic
 
 		public BefunProg(int[,] iras)
 		{
+			if (DECAY_SPEED == 0)
+				DECAY_SPEED = 0.1;
+
 			raster = iras;
 			decay_raster = new double[Width, Height];
 
@@ -60,8 +65,13 @@ namespace BefungExec.Logic
 		{
 			running = true;
 
+			long start = Environment.TickCount;
+			int sleeptime;
+
 			while (running)
 			{
+
+
 				if ((paused && !doSingleStep) || mode != MODE_RUN)
 				{
 					Thread.Sleep(SLEEP_TIME);
@@ -79,7 +89,15 @@ namespace BefungExec.Logic
 
 				doSingleStep = false;
 
-				Thread.Sleep(SLEEP_TIME);
+
+
+				if (SLEEP_TIME != 0)
+				{
+					sleeptime = (int)Math.Max(0, SLEEP_TIME - (Environment.TickCount - start));
+					start = Environment.TickCount;
+
+					Thread.Sleep(sleeptime);
+				}
 			}
 		}
 

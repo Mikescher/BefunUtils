@@ -61,10 +61,17 @@ namespace BefungExec.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 2&gt;:3g&quot; &quot;-!v\  g30          &lt;
-        /// |!`&quot;O&quot;:+1_:.:03p&gt;03g+:&quot;O&quot;`|
-        /// @               ^  p3\&quot; &quot;:&lt;
-        ///2 234567890123456789012345678901234567890123456789012345678901234567890123456789.
+        ///   Looks up a localized string similar to &quot;omed a s&quot;v                       &gt;v&lt;
+        ///          &quot;                        8
+        ///          i                        4
+        ///                        &gt;       &gt; ^*^         &lt;
+        ///          s    &gt;99+0g1+#^_77+0g#^_188+0p099+0p&gt;  v
+        ///          i    ^        &lt;         &lt;#            &lt;
+        ///          h    &gt;88+0g1+#^_66+0g#^_088+0p01-99+0p^
+        ///          T    ^        &lt;         &lt;#             #&lt;
+        ///          &quot;    &gt;99+0g1-#^_77+0g8-#^_01-88+0p099+0p^
+        ///&gt;         v    ^        &lt;         &lt;#            &lt;2
+        ///|   &gt;#:&gt;#,&lt;    &gt;88+0g1-#^_66+0g8-#^_ [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string demoProg {
             get {

@@ -19,7 +19,10 @@ namespace BefungExec
 			CommandLineArguments cmda = new CommandLineArguments(args);
 
 			if (cmda.IsSet("speed") && cmda.IsInt("speed"))
+			{
 				BefunProg.SLEEP_TIME = int.Parse(cmda["speed"]);
+				BefunProg.DECAY_SPEED = BefunProg.SLEEP_TIME / BefunProg.TARGET_DECAY_DURATION;
+			}
 
 			if (cmda.IsSet("decay") && cmda.IsInt("decay"))
 				BefunProg.DECAY_SPEED = int.Parse(cmda["decay"]);
@@ -28,7 +31,8 @@ namespace BefungExec
 			{
 				try
 				{
-					code = File.ReadAllText(cmda["file"]);
+					string fn = cmda["file"].Trim('"');
+					code = File.ReadAllText(fn);
 				}
 				catch (Exception e)
 				{
@@ -38,8 +42,14 @@ namespace BefungExec
 			else
 			{
 				Console.WriteLine("Please pass a BefungeFile with the parameter '-file'");
+
 				Console.WriteLine("Using Demo ...");
 			}
+
+			Console.WriteLine();
+			Console.WriteLine("Actual arguments:");
+			Array.ForEach(args, p => Console.WriteLine(p));
+			Console.WriteLine();
 
 			BefunProg.INIT_PAUSED = !cmda.IsSet("no_pause");
 
@@ -49,7 +59,7 @@ namespace BefungExec
 			Console.WriteLine();
 			Console.WriteLine();
 
-			BefunProg bp = new BefunProg(GetProg(demo));
+			BefunProg bp = new BefunProg(GetProg(code));
 			new Thread(new ThreadStart(bp.run)).Start();
 
 			MainView mv = new MainView(bp);
