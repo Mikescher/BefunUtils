@@ -36,20 +36,35 @@ namespace BefunGen.AST.CodeGen
 
 	public class BefungeCommand
 	{
-		public BefungeCommandType Type { get; private set; }
+		public readonly BefungeCommandType Type;
 
-		public int Param { get; private set; }
+		public readonly int Param;
 
-		public BefungeCommand(BefungeCommandType t)
-			: this(t, 0)
+		public readonly string Tag;
+
+		public BefungeCommand(BefungeCommandType _t)
+			: this(_t, 0)
 		{
 			//--
 		}
 
-		public BefungeCommand(BefungeCommandType t, int p)
+		public BefungeCommand(BefungeCommandType _t, string _p)
+			: this(_t, 0, _p)
 		{
-			Type = t;
-			Param = p;
+			//--
+		}
+
+		public BefungeCommand(BefungeCommandType _t, int _p)
+			: this(_t, _p, null)
+		{
+			//--
+		}
+
+		public BefungeCommand(BefungeCommandType _t, int _p, string _g)
+		{
+			Type  = _t;
+			Param = _p;
+			Tag   = _g;
 		}
 
 		public char getCommandCode()

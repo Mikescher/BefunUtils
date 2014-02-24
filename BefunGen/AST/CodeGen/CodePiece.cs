@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BefunGen.AST.Exceptions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,11 +8,11 @@ namespace BefunGen.AST.CodeGen
 {
 	public class CodePiece
 	{
-		public int MinX { get; private set; } // Minimal
+		public int MinX { get; private set; } // Minimal ::> Inclusive
 
 		public int MinY { get; private set; }
 
-		public int MaxX { get; private set; } // Maximal + 1
+		public int MaxX { get; private set; } // Maximal + 1 ::> Exclusive
 
 		public int MaxY { get; private set; }
 
@@ -111,23 +112,45 @@ namespace BefunGen.AST.CodeGen
 			return false;
 		}
 
-		public void set(int x, int y, BefungeCommand value)
+		private void set(int x, int y, BefungeCommand value)
 		{
 			if (!IsIncluded(x, y))
 				expand(x, y);
 
 			if (commandArr[x - MinX][y - MinY].Type != BefungeCommandType.NOP)
-				throw new Exception("[DBG] WARNING: Modification of CodePiece : " + x + "|" + y);
+				throw new InvalidCodeManipulationException("Modification of CodePiece : " + x + "|" + y);
+
+			if (hasTag(value.Tag))
+				throw new InvalidCodeManipulationException(string.Format("Duplicate Tag in CodePiece : [{0},{1}] = '{2}' = [{3},{4}])",x, y, value.Tag, findTag(value.Tag).Item2, findTag(value.Tag).Item3));
 
 			commandArr[x - MinX][y - MinY] = value;
 		}
 
-		public BefungeCommand get(int x, int y)
+		private BefungeCommand get(int x, int y)
 		{
 			if (IsIncluded(x, y))
 				return commandArr[x - MinX][y - MinY];
 			else
 				return null;
+		}
+
+		public Tuple<BefungeCommand, int, int> findTag(string tag)
+		{
+			for (int x = MinX; x < MaxX; x++)
+			{
+				for (int y = MinY; y < MaxY; y++)
+				{
+					if (this[x, y].Tag == tag)
+						return Tuple.Create(this[x, y], x, y);
+				}
+			}
+
+			return null;
+		}
+
+		public bool hasTag(string tag)
+		{
+			return tag != null && findTag(tag) != null;
 		}
 
 		public override string ToString()
