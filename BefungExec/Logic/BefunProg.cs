@@ -8,23 +8,17 @@ namespace BefungExec.Logic
 {
 	public class BefunProg
 	{
-		public const double TARGET_DECAY_DURATION = 500;
-
-		public static int SLEEP_TIME = 1;
-		public static double DECAY_SPEED = SLEEP_TIME / TARGET_DECAY_DURATION;
-		public static bool INIT_PAUSED = true;
-
 		private static int[,] randDelta = { { 1, 0 }, { 0, -1 }, { -1, 0 }, { 0, 1 } };
 
 		public bool running;
 		public bool doSingleStep = false;
-		public bool paused = INIT_PAUSED;
+		public bool paused;
 		public int mode = 0;
 
 		public FrequencyCounter freq = new FrequencyCounter();
 
 		public int[,] raster;
-		public double[,] decay_raster;
+		public long[,] decay_raster;
 		public bool[,] breakpoints;
 
 		public int Width { get { return raster.GetLength(0); } }
@@ -48,11 +42,8 @@ namespace BefungExec.Logic
 
 		public BefunProg(int[,] iras)
 		{
-			if (DECAY_SPEED == 0)
-				DECAY_SPEED = 0.1;
-
 			raster = iras;
-			decay_raster = new double[Width, Height];
+			decay_raster = new long[Width, Height];
 			breakpoints = new bool[Width, Height];
 
 			for (int x = 0; x < Width; x++)
@@ -63,6 +54,8 @@ namespace BefungExec.Logic
 				}
 
 			dimension = new Vec2i(Width, Height);
+
+			paused = RunOptions.INIT_PAUSED;
 		}
 
 		public void run()
@@ -76,7 +69,7 @@ namespace BefungExec.Logic
 			{
 				if ((paused && !doSingleStep) || mode != MODE_RUN)
 				{
-					Thread.Sleep(SLEEP_TIME);
+					Thread.Sleep(RunOptions.SLEEP_TIME);
 					decay();
 					continue;
 				}
@@ -93,9 +86,9 @@ namespace BefungExec.Logic
 
 				doSingleStep = false;
 
-				if (SLEEP_TIME != 0)
+				if (RunOptions.SLEEP_TIME != 0)
 				{
-					sleeptime = (int)Math.Max(0, SLEEP_TIME - (Environment.TickCount - start));
+					sleeptime = (int)Math.Max(0, RunOptions.SLEEP_TIME - (Environment.TickCount - start));
 					start = Environment.TickCount;
 
 					Thread.Sleep(sleeptime);
@@ -287,19 +280,23 @@ namespace BefungExec.Logic
 
 		private void decay()
 		{
-			for (int x = 0; x < Width; x++)
+			if (RunOptions.DECAY_TIME == 0)
 			{
-				for (int y = 0; y < Height; y++)
+				for (int x = 0; x < Width; x++)
 				{
-					if (decay_raster[x, y] > 0)
+					for (int y = 0; y < Height; y++)
 					{
-						decay_raster[x, y] -= (decay_raster[x, y] > DECAY_SPEED) ? DECAY_SPEED : decay_raster[x, y];
+						decay_raster[x, y] = (PC.X == x && PC.Y == y) ? 1.0 : 0.0;
 					}
 				}
 			}
+			else
+			{
+				long now = Environment.TickCount;
 
-			if (PC.X >= 0 && PC.Y >= 0)
-				decay_raster[PC.X, PC.Y] = 1.0;
+				if (PC.X >= 0 && PC.Y >= 0)
+					decay_raster[PC.X, PC.Y] = Environment.TickCount;
+			}
 		}
 	}
 }

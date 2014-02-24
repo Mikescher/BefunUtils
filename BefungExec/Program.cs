@@ -1,5 +1,6 @@
 ﻿using BefungExec.Logic;
 using BefungExec.View;
+using SuperBitBros.OpenGL.OGLMath;
 using System;
 using System.IO;
 using System.Linq;
@@ -16,19 +17,66 @@ namespace BefungExec
 		{
 			string code = demo;
 
+			parseParams(args, ref code);
+			
+			Console.WriteLine();
+			Console.WriteLine();
+			Console.WriteLine();
+			Console.WriteLine();
+			Console.WriteLine();
+
+			Console.WriteLine("########## OUTPUT ##########");
+
+			//###########
+
+			Console.WriteLine();
+			Console.WriteLine();
+			Console.WriteLine();
+
+			BefunProg bp = new BefunProg(GetProg(code));
+			new Thread(new ThreadStart(bp.run)).Start();
+
+			MainView mv = new MainView(bp);
+		}
+
+		private static CommandLineArguments parseParams(string[] args, ref string code)
+		{
 			CommandLineArguments cmda = new CommandLineArguments(args);
 
-			if (cmda.IsSet("speed") && cmda.IsInt("speed"))
+			RunOptions.INIT_PAUSED = !cmda.IsSet("no_pause");
+
+			//##############
+
+			if (cmda.IsInt("speed"))
 			{
-				BefunProg.SLEEP_TIME = int.Parse(cmda["speed"]);
-				BefunProg.DECAY_SPEED = BefunProg.SLEEP_TIME / BefunProg.TARGET_DECAY_DURATION;
+				RunOptions.SLEEP_TIME = int.Parse(cmda["speed"]);
 			}
 
-			if (cmda.IsSet("decay") && cmda.IsInt("decay"))
-				BefunProg.DECAY_SPEED = int.Parse(cmda["decay"]);
+			//##############
+
+			if (cmda.IsInt("decay"))
+				RunOptions.DECAY_TIME = int.Parse(cmda["decay"]);
+
+			//##############
+
+			if (cmda.IsSet("zoom"))
+			{
+				int tmp;
+				string[] zooms = cmda["zoom"].Split(','); // zoom=X1,Y1,X2,Y2
+				if (zooms.Length == 4 && zooms.All(p => int.TryParse(p, out tmp)))
+				{
+					RunOptions.INIT_ZOOM = new Rect2i(
+						int.Parse(zooms[0]), 
+						int.Parse(zooms[1]), 
+						int.Parse(zooms[2]) - int.Parse(zooms[0]),
+						int.Parse(zooms[3]) - int.Parse(zooms[1]));
+				}
+			}
+
+			//##############
 
 			if (cmda.IsSet("file"))
-			{
+			 {
 				try
 				{
 					string fn = cmda["file"].Trim('"');
@@ -49,20 +97,7 @@ namespace BefungExec
 			Console.WriteLine();
 			Console.WriteLine("Actual arguments:");
 			Array.ForEach(args, p => Console.WriteLine(p));
-			Console.WriteLine();
-
-			BefunProg.INIT_PAUSED = !cmda.IsSet("no_pause");
-
-			//###########
-
-			Console.WriteLine();
-			Console.WriteLine();
-			Console.WriteLine();
-
-			BefunProg bp = new BefunProg(GetProg(code));
-			new Thread(new ThreadStart(bp.run)).Start();
-
-			MainView mv = new MainView(bp);
+			return cmda;
 		}
 
 		private static int GetProgWidth(string pg)

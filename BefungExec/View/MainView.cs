@@ -37,7 +37,9 @@ namespace BefungExec.View
 
 			prog = model;
 
-			zoom = new Rect2i(0, 0, prog.Width, prog.Height);
+			zoom = RunOptions.INIT_ZOOM;
+			if (zoom == null || zoom.bl.X < 0 || zoom.bl.Y < 0 || zoom.tr.X > prog.Width ||zoom.tr.Y > prog.Height) 
+				zoom = new Rect2i(0, 0, prog.Width, prog.Height);
 
 			Load += new EventHandler<EventArgs>(OnLoad);
 			Resize += new EventHandler<EventArgs>(OnResize);
@@ -251,13 +253,19 @@ namespace BefungExec.View
 
 			#region PROG
 
+			long now = Environment.TickCount;
+
+
 			for (int x = zoom.bl.X; x < zoom.tr.X; x++)
 			{
 				for (int y = zoom.bl.Y; y < zoom.tr.Y; y++)
 				{
-					double r = prog.breakpoints[x, y] ? prog.decay_raster[x, y] : 1;
-					double g = prog.breakpoints[x, y] ? 0 : (1 - prog.decay_raster[x, y]);
-					double b = prog.breakpoints[x, y] ? (1 - prog.decay_raster[x, y]) : (1 - prog.decay_raster[x, y]);
+					double decay_perc = (RunOptions.DECAY_TIME != 0) ? (1 - (now - prog.decay_raster[x, y] * 1d) / RunOptions.DECAY_TIME) : (prog.decay_raster[x, y]);
+					decay_perc = Math.Min(1, decay_perc);
+
+					double r = prog.breakpoints[x, y] ? decay_perc : 1;
+					double g = prog.breakpoints[x, y] ? 0 : (1 - decay_perc);
+					double b = prog.breakpoints[x, y] ? (1 - decay_perc) : (1 - decay_perc);
 
 					GL.Color3(r, g, b);
 
