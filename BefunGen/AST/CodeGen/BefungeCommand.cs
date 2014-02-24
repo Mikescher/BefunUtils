@@ -5,6 +5,7 @@ namespace BefunGen.AST.CodeGen
 	public enum BefungeCommandType
 	{
 		NOP,
+		Walkway, // Like NOP - But PC can appear here
 		Add,
 		Sub,
 		Mult,
@@ -40,7 +41,7 @@ namespace BefunGen.AST.CodeGen
 
 		public readonly int Param;
 
-		public readonly string Tag;
+		public readonly object Tag;
 
 		public BefungeCommand(BefungeCommandType _t)
 			: this(_t, 0)
@@ -48,7 +49,7 @@ namespace BefunGen.AST.CodeGen
 			//--
 		}
 
-		public BefungeCommand(BefungeCommandType _t, string _p)
+		public BefungeCommand(BefungeCommandType _t, object _p)
 			: this(_t, 0, _p)
 		{
 			//--
@@ -60,7 +61,7 @@ namespace BefunGen.AST.CodeGen
 			//--
 		}
 
-		public BefungeCommand(BefungeCommandType _t, int _p, string _g)
+		public BefungeCommand(BefungeCommandType _t, int _p, object _g)
 		{
 			Type  = _t;
 			Param = _p;
@@ -72,6 +73,9 @@ namespace BefunGen.AST.CodeGen
 			switch (Type)
 			{
 				case BefungeCommandType.NOP:
+					return CodeGenOptions.SetNOPCellsToExit ? '@' : ' ';
+
+				case BefungeCommandType.Walkway:
 					return ' ';
 
 				case BefungeCommandType.Add:

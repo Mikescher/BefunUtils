@@ -54,7 +54,7 @@ namespace BefunGen.AST.CodeGen
 
 				while (MaxX < newMaxX)
 				{
-					commandArr.Add(Enumerable.Repeat(BCHelper.Empty, Height).ToList());
+					commandArr.Add(Enumerable.Repeat(BCHelper.Unused, Height).ToList());
 
 					MaxX++;
 				}
@@ -67,7 +67,7 @@ namespace BefunGen.AST.CodeGen
 
 				while (MinX > newMinX)
 				{
-					commandArr.Insert(0, Enumerable.Repeat(BCHelper.Empty, Height).ToList());
+					commandArr.Insert(0, Enumerable.Repeat(BCHelper.Unused, Height).ToList());
 
 					MinX--;
 				}
@@ -86,7 +86,7 @@ namespace BefunGen.AST.CodeGen
 				{
 					for (int xw = 0; xw < Width; xw++)
 					{
-						commandArr[xw].Add(BCHelper.Empty);
+						commandArr[xw].Add(BCHelper.Unused);
 					}
 
 					MaxY++;
@@ -102,7 +102,7 @@ namespace BefunGen.AST.CodeGen
 				{
 					for (int xw = 0; xw < Width; xw++)
 					{
-						commandArr[xw].Insert(0, BCHelper.Empty);
+						commandArr[xw].Insert(0, BCHelper.Unused);
 					}
 
 					MinY--;
@@ -121,7 +121,7 @@ namespace BefunGen.AST.CodeGen
 				throw new InvalidCodeManipulationException("Modification of CodePiece : " + x + "|" + y);
 
 			if (hasTag(value.Tag))
-				throw new InvalidCodeManipulationException(string.Format("Duplicate Tag in CodePiece : [{0},{1}] = '{2}' = [{3},{4}])",x, y, value.Tag, findTag(value.Tag).Item2, findTag(value.Tag).Item3));
+				throw new InvalidCodeManipulationException(string.Format("Duplicate Tag in CodePiece : [{0},{1}] = '{2}' = [{3},{4}])",x, y, value.Tag.ToString(), findTag(value.Tag).Item2, findTag(value.Tag).Item3));
 
 			commandArr[x - MinX][y - MinY] = value;
 		}
@@ -134,7 +134,7 @@ namespace BefunGen.AST.CodeGen
 				return null;
 		}
 
-		public Tuple<BefungeCommand, int, int> findTag(string tag)
+		public Tuple<BefungeCommand, int, int> findTag(object tag)
 		{
 			for (int x = MinX; x < MaxX; x++)
 			{
@@ -148,7 +148,7 @@ namespace BefunGen.AST.CodeGen
 			return null;
 		}
 
-		public bool hasTag(string tag)
+		public bool hasTag(object tag)
 		{
 			return tag != null && findTag(tag) != null;
 		}

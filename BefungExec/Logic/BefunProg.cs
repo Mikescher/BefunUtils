@@ -286,7 +286,7 @@ namespace BefungExec.Logic
 				{
 					for (int y = 0; y < Height; y++)
 					{
-						decay_raster[x, y] = (PC.X == x && PC.Y == y) ? 1.0 : 0.0;
+						decay_raster[x, y] = (PC.X == x && PC.Y == y) ? 1 : 0;
 					}
 				}
 			}

@@ -528,23 +528,23 @@ namespace BefunGen.AST
 
 			p[0, -2] = BCHelper.PC_Right;
 			p[1, -2] = BCHelper.Digit_1;
-			p[2, -2] = BCHelper.Empty;
-			p[3, -2] = BCHelper.Empty;
+			p[2, -2] = BCHelper.Walkway;
+			p[3, -2] = BCHelper.Walkway;
 			p[4, -2] = BCHelper.PC_Down;
 
 			p[0, -1] = BCHelper.PC_Up;
 			p[1, -1] = BCHelper.If_Horizontal;
 			p[2, -1] = BCHelper.Digit_0;
-			p[3, -1] = BCHelper.Empty;
+			p[3, -1] = BCHelper.Walkway;
 			p[4, -1] = BCHelper.PC_Down;
 
-			p[0, 0] = BCHelper.Empty;
+			p[0, 0] = BCHelper.Walkway;
 			p[1, 0] = BCHelper.If_Vertical;
-			p[2, 0] = BCHelper.Empty;
-			p[3, 0] = BCHelper.Empty;
+			p[2, 0] = BCHelper.Unused;
+			p[3, 0] = BCHelper.Unused;
 			p[4, 0] = BCHelper.PC_Right;
 
-			p[0, 1] = BCHelper.Empty;
+			p[0, 1] = BCHelper.Unused;
 			p[1, 1] = BCHelper.PC_Left;
 			p[2, 1] = BCHelper.Stack_Pop;
 			p[3, 1] = BCHelper.Digit_0;
@@ -580,28 +580,28 @@ namespace BefunGen.AST
 
 			CodePiece p = new CodePiece();
 
-			p[0, -1] = BCHelper.Empty;
+			p[0, -1] = BCHelper.Unused;
 			p[1, -1] = BCHelper.PC_Right;
 			p[2, -1] = BCHelper.Stack_Pop;
 			p[3, -1] = BCHelper.Digit_1;
 			p[4, -1] = BCHelper.PC_Down;
 
-			p[0, 0] = BCHelper.Empty;
+			p[0, 0] = BCHelper.Walkway;
 			p[1, 0] = BCHelper.If_Vertical;
-			p[2, 0] = BCHelper.Empty;
-			p[3, 0] = BCHelper.Empty;
+			p[2, 0] = BCHelper.Unused;
+			p[3, 0] = BCHelper.Unused;
 			p[4, 0] = BCHelper.PC_Right;
 
 			p[0, 1] = BCHelper.PC_Down;
 			p[1, 1] = BCHelper.If_Horizontal;
 			p[2, 1] = BCHelper.Digit_0;
-			p[3, 1] = BCHelper.Empty;
+			p[3, 1] = BCHelper.Walkway;
 			p[4, 1] = BCHelper.PC_Up;
 
 			p[0, 2] = BCHelper.PC_Left;
 			p[1, 2] = BCHelper.Digit_1;
-			p[2, 2] = BCHelper.Empty;
-			p[3, 2] = BCHelper.Empty;
+			p[2, 2] = BCHelper.Walkway;
+			p[3, 2] = BCHelper.Walkway;
 			p[4, 2] = BCHelper.PC_Up;
 
 			p.AppendLeft(Right.generateCode());
@@ -635,13 +635,13 @@ namespace BefunGen.AST
 
 			CodePiece p = new CodePiece();
 
-			p[0, -2] = BCHelper.Empty;
+			p[0, -2] = BCHelper.Unused;
 			p[1, -2] = BCHelper.PC_Right;
-			p[2, -2] = BCHelper.Empty;
+			p[2, -2] = BCHelper.Walkway;
 			p[3, -2] = BCHelper.PC_Down;
-			p[4, -2] = BCHelper.Empty;
+			p[4, -2] = BCHelper.Unused;
 
-			p[0, -1] = BCHelper.Empty;
+			p[0, -1] = BCHelper.Unused;
 			p[1, -1] = BCHelper.PC_Down;
 			p[2, -1] = BCHelper.If_Horizontal;
 			p[3, -1] = BCHelper.Digit_1;
@@ -653,17 +653,17 @@ namespace BefunGen.AST
 			p[3, 0] = BCHelper.PC_Right;
 			p[4, 0] = BCHelper.PC_Right;
 
-			p[0, 1] = BCHelper.Empty;
+			p[0, 1] = BCHelper.Unused;
 			p[1, 1] = BCHelper.PC_Up;
 			p[2, 1] = BCHelper.If_Horizontal;
 			p[3, 1] = BCHelper.Digit_0;
 			p[4, 1] = BCHelper.PC_Up;
 
-			p[0, 2] = BCHelper.Empty;
+			p[0, 2] = BCHelper.Unused;
 			p[1, 2] = BCHelper.PC_Right;
-			p[2, 2] = BCHelper.Empty;
+			p[2, 2] = BCHelper.Walkway;
 			p[3, 2] = BCHelper.PC_Up;
-			p[4, 2] = BCHelper.Empty;
+			p[4, 2] = BCHelper.Unused;
 
 			p.AppendLeft(Right.generateCode());
 			p.AppendLeft(Left.generateCode());
@@ -698,17 +698,17 @@ namespace BefunGen.AST
 
 			CodePiece p = new CodePiece();
 
-			p[0, -1] = BCHelper.Empty;
+			p[0, -1] = BCHelper.Unused;
 			p[1, -1] = BCHelper.PC_Right;
 			p[2, -1] = BCHelper.Digit_0;
 			p[3, -1] = BCHelper.PC_Down;
 
 			p[0, 0] = BCHelper.Sub;
 			p[1, 0] = BCHelper.If_Vertical;
-			p[2, 0] = BCHelper.Empty;
+			p[2, 0] = BCHelper.Unused;
 			p[3, 0] = BCHelper.PC_Right;
 
-			p[0, 1] = BCHelper.Empty;
+			p[0, 1] = BCHelper.Unused;
 			p[1, 1] = BCHelper.PC_Right;
 			p[2, 1] = BCHelper.Digit_1;
 			p[3, 1] = BCHelper.PC_Up;
@@ -742,17 +742,17 @@ namespace BefunGen.AST
 
 			CodePiece p = new CodePiece();
 
-			p[0, -1] = BCHelper.Empty;
+			p[0, -1] = BCHelper.Unused;
 			p[1, -1] = BCHelper.PC_Right;
 			p[2, -1] = BCHelper.Digit_1;
 			p[3, -1] = BCHelper.PC_Down;
 
 			p[0, 0] = BCHelper.Sub;
 			p[1, 0] = BCHelper.If_Vertical;
-			p[2, 0] = BCHelper.Empty;
+			p[2, 0] = BCHelper.Unused;
 			p[3, 0] = BCHelper.PC_Right;
 
-			p[0, 1] = BCHelper.Empty;
+			p[0, 1] = BCHelper.Unused;
 			p[1, 1] = BCHelper.PC_Right;
 			p[2, 1] = BCHelper.Digit_0;
 			p[3, 1] = BCHelper.PC_Up;
@@ -846,9 +846,9 @@ namespace BefunGen.AST
 			p[6, 0] = BCHelper.Digit_1;
 			p[7, 0] = BCHelper.PC_Left;
 
-			p[0, 1] = BCHelper.Empty;
-			p[1, 1] = BCHelper.Empty;
-			p[2, 1] = BCHelper.Empty;
+			p[0, 1] = BCHelper.Unused;
+			p[1, 1] = BCHelper.Unused;
+			p[2, 1] = BCHelper.Unused;
 			p[3, 1] = BCHelper.PC_Left;
 			p[4, 1] = BCHelper.Digit_0;
 			p[5, 1] = BCHelper.Stack_Swap;
@@ -890,9 +890,9 @@ namespace BefunGen.AST
 			p[6, 0] = BCHelper.Digit_1;
 			p[7, 0] = BCHelper.PC_Left;
 
-			p[0, 1] = BCHelper.Empty;
-			p[1, 1] = BCHelper.Empty;
-			p[2, 1] = BCHelper.Empty;
+			p[0, 1] = BCHelper.Unused;
+			p[1, 1] = BCHelper.Unused;
+			p[2, 1] = BCHelper.Unused;
 			p[3, 1] = BCHelper.PC_Left;
 			p[4, 1] = BCHelper.Digit_0;
 			p[5, 1] = BCHelper.Stack_Swap;
@@ -1068,12 +1068,12 @@ namespace BefunGen.AST
 
 			CodePiece p = new CodePiece();
 
-			p[0, -1] = BCHelper.Empty;
+			p[0, -1] = BCHelper.Unused;
 			p[1, -1] = BCHelper.PC_Right;
 			p[2, -1] = BCHelper.PC_Right;
 			p[3, -1] = BCHelper.Digit_1;
 			p[4, -1] = BCHelper.PC_Down;
-			p[5, -1] = BCHelper.Empty;
+			p[5, -1] = BCHelper.Unused;
 
 			p[0, 0] = BCHelper.PC_Jump;
 			p[1, 0] = BCHelper.PC_Up;
@@ -1082,10 +1082,10 @@ namespace BefunGen.AST
 			p[4, 0] = BCHelper.PC_Right;
 			p[5, 0] = BCHelper.PC_Right;
 
-			p[0, 1] = BCHelper.Empty;
-			p[1, 1] = BCHelper.Empty;
+			p[0, 1] = BCHelper.Unused;
+			p[1, 1] = BCHelper.Unused;
 			p[2, 1] = BCHelper.PC_Right;
-			p[3, 1] = BCHelper.Empty;
+			p[3, 1] = BCHelper.Walkway;
 			p[4, 1] = BCHelper.Digit_0;
 			p[5, 1] = BCHelper.PC_Up;
 
