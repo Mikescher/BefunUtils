@@ -130,8 +130,8 @@ namespace BefunGen.AST.CodeGen
 		{
 			if (IsIncluded(x, y))
 				return commandArr[x - MinX][y - MinY];
-			else
-				return null;
+			else 
+				return BCHelper.Unused;
 		}
 
 		public Tuple<BefungeCommand, int, int> findTag(object tag)
@@ -231,15 +231,7 @@ namespace BefunGen.AST.CodeGen
 			c_l.normalizeX();
 			c_r.normalizeX();
 
-			int offset = c_l.Width;
-
-			for (int x = c_r.MinX; x < c_r.MaxX; x++)
-			{
-				for (int y = c_r.MinY; y < c_r.MaxY; y++)
-				{
-					c_l[offset + x, y] = c_r[x, y];
-				}
-			}
+			c_l.AppendRight(c_r);
 
 			return c_l;
 		}
@@ -318,10 +310,29 @@ namespace BefunGen.AST.CodeGen
 
 		public void AppendLeft(int row, BefungeCommand c)
 		{
-			this[MinX - 1, row] = c;
+			CodePiece p = new CodePiece();
+			p[0, row] = c;
+
+			AppendLeft(p);
 		}
 
 		public void AppendLeft(CodePiece left)
+		{
+			left = left.copy();
+
+			CodePiece compress_conn;
+			if (CodeGenOptions.CompressHorizontalCombining && (compress_conn = doCompressHorizontally(left, this)) != null)
+			{
+				this.RemoveColumn(this.MinX);
+				left.RemoveColumn(left.MaxX - 1);
+
+				this.AppendLeftDirect(compress_conn);
+			}
+
+			AppendLeftDirect(left);
+		}
+
+		private void AppendLeftDirect(CodePiece left)
 		{
 			left.normalizeX();
 
@@ -343,14 +354,33 @@ namespace BefunGen.AST.CodeGen
 
 		public void AppendRight(int row, BefungeCommand c)
 		{
-			this[MaxX, row] = c;
+			CodePiece p = new CodePiece();
+			p[0, row] = c;
+
+			AppendRight(p);
 		}
 
 		public void AppendRight(CodePiece right)
 		{
+			right = right.copy();
+
+			CodePiece compress_conn;
+			if (CodeGenOptions.CompressHorizontalCombining && (compress_conn = doCompressHorizontally(this, right)) != null)
+			{
+				this.RemoveColumn(this.MaxX - 1);
+				right.RemoveColumn(right.MinX);
+
+				this.AppendRightDirect(compress_conn);
+			}
+
+			AppendRightDirect(right);
+		}
+
+		private void AppendRightDirect(CodePiece right)
+		{
 			right.normalizeX();
 
-			int offset = Width;
+			int offset = MaxX;
 
 			for (int x = right.MinX; x < right.MaxX; x++)
 			{
@@ -359,6 +389,53 @@ namespace BefunGen.AST.CodeGen
 					this[offset + x, y] = right[x, y];
 				}
 			}
+		}
+
+		public CodePiece doCompressHorizontally(CodePiece l, CodePiece r)
+		{
+			if (l.Width == 0 || r.Width == 0)
+				return null;
+
+			CodePiece connect = new CodePiece();
+
+			int x_l = l.MaxX - 1;
+			int x_r = r.MinX;
+
+			for (int y = Math.Min(l.MinY, r.MinY); y < Math.Max(l.MaxY, r.MaxY); y++)
+			{
+				object Tag = null;
+
+				if (l[x_l, y].Tag != null && r[x_r, y].Tag != null)
+				{
+					return null; // Can't compress - two tags would need to be merged
+				}
+
+				Tag = l[x_l, y].Tag ?? r[x_r, y].Tag;
+
+				if (l[x_l, y].Type == BefungeCommandType.NOP && r[x_r, y].Type == BefungeCommandType.NOP)
+				{
+					connect[0, y] = new BefungeCommand(BefungeCommandType.NOP, Tag);
+				}
+				else if (l[x_l, y].Type != BefungeCommandType.NOP && r[x_r, y].Type != BefungeCommandType.NOP) 
+				{
+					return null; // Can't compress - two commands are colliding
+					// Wouldn't even work when they are the same (eg stringmode_toogle ord stack-manipulation can't be merged)
+				}
+				else if (l[x_l, y].Type != BefungeCommandType.NOP)
+				{
+					connect[0, y] = new BefungeCommand(l[x_l, y].Type, l[x_l, y].Param, Tag);
+				}
+				else if (r[x_r, y].Type != BefungeCommandType.NOP)
+				{
+					connect[0, y] = new BefungeCommand(r[x_r, y].Type, r[x_r, y].Param, Tag);
+				}
+				else
+				{
+					throw new WTFException();
+				}
+			}
+
+			return connect;
 		}
 	}
 }

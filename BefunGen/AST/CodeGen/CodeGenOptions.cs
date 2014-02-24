@@ -17,10 +17,13 @@ namespace BefunGen.AST.CodeGen
 		public static bool AutoDigitizeNumberLiterals = true;
 
 		// Removes 2x STringmodetoogle after each other rfrom Expression (eg "" )
-		public static bool OptimizeDoubleStringmodeToogle = true;
+		public static bool StripDoubleStringmodeToogle = true;
 
 		// Every NOP-Command is displayed as an Exit-Command
 		public static bool SetNOPCellsToExit = true;
+
+		// When combining two CodePieces Horizontally try to combine the two connecting columns to a signle one
+		public static bool CompressHorizontalCombining = true;
 
 		//TODO (Optional) When in STatementList and have Left->Right Statement test if next STatement is mirrorable (no If_Horiz) - the mirror it and append it directly beneath --> no empty line
 		// Expression Methodcall before codegen convert in AST to multiple statements (call methods->assign to var->use var in expr) (??? perhaps ???)

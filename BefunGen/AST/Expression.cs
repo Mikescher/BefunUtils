@@ -95,7 +95,7 @@ namespace BefunGen.AST
 			CodePiece cp_l = Left.generateCode();
 			CodePiece cp_r = Right.generateCode();
 
-			if (CodeGenOptions.OptimizeDoubleStringmodeToogle)
+			if (CodeGenOptions.StripDoubleStringmodeToogle)
 			{
 				if (cp_l.lastRowIsSingle() && cp_r.firstRowIsSingle() && cp_l[cp_l.MaxX - 1, 0].Type == BefungeCommandType.Stringmode && cp_r[0, 0].Type == BefungeCommandType.Stringmode)
 				{
