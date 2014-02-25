@@ -65,9 +65,9 @@ namespace BefunGen.AST.CodeGen
 
 		public BefungeCommand(BefungeCommandType _t, int _p, object _g)
 		{
-			Type  = _t;
+			Type = _t;
 			Param = _p;
-			Tag   = _g;
+			Tag = _g;
 
 			if (Tag != null && Type == BefungeCommandType.NOP)
 			{
@@ -255,6 +255,46 @@ namespace BefunGen.AST.CodeGen
 				case BefungeCommandType.PC_Up:
 				case BefungeCommandType.PC_Down:
 				case BefungeCommandType.If_Vertical:
+					return false;
+				default:
+					throw new InvalidBefungeCommandTypeException(new SourceCodePosition());
+			}
+		}
+
+		public bool IsCompressable()
+		{
+			switch (Type)
+			{
+				case BefungeCommandType.NOP:
+				case BefungeCommandType.Walkway:
+				case BefungeCommandType.PC_Up:
+				case BefungeCommandType.PC_Down:
+				case BefungeCommandType.PC_Right:
+				case BefungeCommandType.PC_Left:
+				case BefungeCommandType.Stop:
+					return true;
+				case BefungeCommandType.Add:
+				case BefungeCommandType.Sub:
+				case BefungeCommandType.Mult:
+				case BefungeCommandType.Div:
+				case BefungeCommandType.Modulo:
+				case BefungeCommandType.Not:
+				case BefungeCommandType.GreaterThan:
+				case BefungeCommandType.PC_Random:
+				case BefungeCommandType.Stringmode:
+				case BefungeCommandType.Stack_Dup:
+				case BefungeCommandType.Stack_Swap:
+				case BefungeCommandType.Stack_Pop:
+				case BefungeCommandType.Out_Int:
+				case BefungeCommandType.Out_ASCII:
+				case BefungeCommandType.PC_Jump:
+				case BefungeCommandType.If_Vertical:
+				case BefungeCommandType.Reflect_Set:
+				case BefungeCommandType.Reflect_Get:
+				case BefungeCommandType.In_Int:
+				case BefungeCommandType.In_ASCII:
+				case BefungeCommandType.Other:
+				case BefungeCommandType.If_Horizontal:
 					return false;
 				default:
 					throw new InvalidBefungeCommandTypeException(new SourceCodePosition());

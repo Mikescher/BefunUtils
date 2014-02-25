@@ -151,19 +151,55 @@ namespace BefunGen.AST
 		{
 			CodePiece p = new CodePiece();
 
+			List<Tuple<CodePiece, CodePiece>> varDecls = new List<Tuple<CodePiece, CodePiece>>();
+
 			for (int i = 0; i < Variables.Count; i++)
 			{
 				VarDeclaration var = Variables[i];
 
-				CodePiece p_init = var.generateCode(parent, mo_x, mo_y, false);
+				CodePiece p_init_lr = var.generateCode(parent, mo_x, mo_y, false);
+				CodePiece p_init_rl = var.generateCode(parent, mo_x, mo_y, true);
 
-				p_init.AppendLeft(BCHelper.PC_Right);
-				p_init.AppendRight(BCHelper.PC_Down);
+				varDecls.Add(Tuple.Create(p_init_lr, p_init_rl));
+			}
 
-				p_init[p_init.MinX, 1] = BCHelper.PC_Down;
-				p_init[p_init.MaxX - 1, 1] = BCHelper.PC_Left;
+			if (varDecls.Count % 2 != 0)
+				varDecls.Add(Tuple.Create(new CodePiece(), new CodePiece()));
 
-				p.AppendBottom(p_init);
+			Console.WriteLine();
+			varDecls = varDecls.OrderByDescending(t => t.Item2.Width).ToList();
+
+
+			for (int i = 0; i < varDecls.Count; i += 2)
+			{
+				CodePiece cp_a = varDecls[i].Item1;
+				CodePiece cp_b = varDecls[i + 1].Item2;
+
+				cp_a.normalizeX();
+				cp_b.normalizeX();
+
+				int mw = Math.Max(cp_a.MaxX, cp_b.MaxX);
+
+				cp_a.AppendLeft(BCHelper.PC_Right);
+				cp_b.AppendLeft(BCHelper.PC_Down);
+
+				cp_a.Fill(cp_a.MaxX, 0, mw, 1, BCHelper.Walkway);
+				cp_b.Fill(cp_b.MaxX, 0, mw, 1, BCHelper.Walkway);
+
+				cp_a[mw, 0] = BCHelper.PC_Down;
+				cp_b[mw, 0] = BCHelper.PC_Left;
+
+				for (int y = cp_a.MinY; y < cp_a.MaxY; y++)
+					if (y != 0) cp_a[cp_a.MaxX - 1, y] = BCHelper.Walkway;
+
+				for (int y = cp_b.MinY; y < cp_b.MaxY; y++)
+					if (y != 0) cp_b[cp_b.MaxX - 1, y] = BCHelper.Walkway;
+
+				cp_a.normalizeX();
+				cp_b.normalizeX();
+
+				p.AppendBottom(cp_a);
+				p.AppendBottom(cp_b);
 			}
 
 			p.normalizeX();

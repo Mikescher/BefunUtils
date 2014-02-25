@@ -145,24 +145,25 @@ namespace BefunGen.AST
 				CodePiece op = new CodePiece();
 
 				op.AppendLeft(BCHelper.PC_Left);
-				op.AppendLeft(NumberCodeHelper.generateCode(varX));
+				op.AppendLeft(NumberCodeHelper.generateCode(varX, reverse));
 				op.AppendLeft(BCHelper.Add);
-				op.AppendLeft(NumberCodeHelper.generateCode(varY));
+				op.AppendLeft(NumberCodeHelper.generateCode(varY, reverse));
 				op.AppendLeft(BCHelper.Reflect_Set);
 				op.AppendLeft(BCHelper.Stack_Dup);
 				op.AppendLeft(BCHelper.Not);
 				op.AppendLeft(BCHelper.PC_Jump);
 				op.AppendLeft(BCHelper.PC_Up);
 
-				op[0, -1] = BCHelper.PC_Down;
-				op[op.MinX, -1] = BCHelper.PC_Left;
+				op[-1, -1] = BCHelper.PC_Down;
+				op.Fill(op.MinX + 1, -1, -1, 0, BCHelper.Walkway);
+				op[op.MinX, -1] = BCHelper.PC_Right;
 
 				op.AppendLeft(BCHelper.If_Horizontal);
 				op.AppendLeft(BCHelper.Stack_Pop);
 
 				// ################################
 
-				p.AppendRight(op);
+				p.AppendLeft(op);
 			}
 			else
 			{
@@ -176,21 +177,22 @@ namespace BefunGen.AST
 
 				// ################################
 
-				// v      <
-				// >X+Yp:#^_$
+				// >X+Yp:#v_$
+				// ^      <
 				CodePiece op = new CodePiece();
 
 				op.AppendRight(BCHelper.PC_Right);
-				op.AppendRight(NumberCodeHelper.generateCode(varX));
+				op.AppendRight(NumberCodeHelper.generateCode(varX, reverse));
 				op.AppendRight(BCHelper.Add);
-				op.AppendRight(NumberCodeHelper.generateCode(varY));
+				op.AppendRight(NumberCodeHelper.generateCode(varY, reverse));
 				op.AppendRight(BCHelper.Reflect_Set);
 				op.AppendRight(BCHelper.Stack_Dup);
 				op.AppendRight(BCHelper.PC_Jump);
-				op.AppendRight(BCHelper.PC_Up);
+				op.AppendRight(BCHelper.PC_Down);
 
-				op[0, -1] = BCHelper.PC_Down;
-				op[op.MaxX - 1, -1] = BCHelper.PC_Left;
+				op[0, 1] = BCHelper.PC_Up;
+				op.Fill(1, 1, op.MaxX - 1, 2, BCHelper.Walkway);
+				op[op.MaxX - 1, 1] = BCHelper.PC_Left;
 
 				op.AppendRight(BCHelper.If_Horizontal);
 				op.AppendRight(BCHelper.Stack_Pop);

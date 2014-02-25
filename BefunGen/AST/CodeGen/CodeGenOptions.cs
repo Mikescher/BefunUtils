@@ -20,10 +20,11 @@ namespace BefunGen.AST.CodeGen
 		public static bool StripDoubleStringmodeToogle = true;
 
 		// Every NOP-Command is displayed as an Exit-Command
-		public static bool SetNOPCellsToExit = false;
+		public static bool SetNOPCellsToExit = true;
 
-		// When combining two CodePieces Horizontally try to combine the two connecting columns to a signle one
+		// When combining two CodePieces try to combine the two connecting columns/rows to a signle one
 		public static bool CompressHorizontalCombining = true;
+		public static bool CompressVerticalCombining = true;
 
 		// The aimed width of variable declarations - this is only estimated, long arrays can extend the width
 		public static int DefaultVarDeclarationWidth = 16;

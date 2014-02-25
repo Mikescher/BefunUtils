@@ -34,7 +34,7 @@ CharLiteral            = '' ( {Char Ch} | '\'{Printable} )''
 Identifier             = {UnderscoreLetter}{AlphaNumeric}*
 
 DigitLiteral           = '#'{Digit}
-DecLiteral             = [0123456789]{Digit}*
+DecLiteral             = -?[0123456789]{Digit}*
 HexLiteral             = 0x{Hex Digit}+
 
 !#######################

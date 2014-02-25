@@ -130,7 +130,7 @@ namespace BefunGen.AST.CodeGen
 				throw new InvalidCodeManipulationException("Modification of CodePiece : " + x + "|" + y);
 
 			if (hasTag(value.Tag))
-				throw new InvalidCodeManipulationException(string.Format("Duplicate Tag in CodePiece : [{0},{1}] = '{2}' = [{3},{4}])",x, y, value.Tag.ToString(), findTag(value.Tag).Item2, findTag(value.Tag).Item3));
+				throw new InvalidCodeManipulationException(string.Format("Duplicate Tag in CodePiece : [{0},{1}] = '{2}' = [{3},{4}])", x, y, value.Tag.ToString(), findTag(value.Tag).Item2, findTag(value.Tag).Item3));
 
 			commandArr[x - MinX][y - MinY] = value;
 		}
@@ -139,7 +139,7 @@ namespace BefunGen.AST.CodeGen
 		{
 			if (IsIncluded(x, y))
 				return commandArr[x - MinX][y - MinY];
-			else 
+			else
 				return BCHelper.Unused;
 		}
 
@@ -278,8 +278,10 @@ namespace BefunGen.AST.CodeGen
 		// x1, y1 included -- x2, y2 excluded
 		public void Fill(int x1, int y1, int x2, int y2, BefungeCommand c, object topleft_tag = null)
 		{
-			if (x1 > x2) MathExt.Swap(ref x1, ref x2);
-			if (y1 > y2) MathExt.Swap(ref y1, ref y2);
+			if (x1 > x2)
+				MathExt.Swap(ref x1, ref x2);
+			if (y1 > y2)
+				MathExt.Swap(ref y1, ref y2);
 
 			for (int x = x1; x < x2; x++)
 				for (int y = y1; y < y2; y++)
@@ -412,7 +414,24 @@ namespace BefunGen.AST.CodeGen
 			AppendBottom(p);
 		}
 
-		public void AppendBottom(CodePiece bot) //TODO Compress
+
+		public void AppendBottom(CodePiece bot)
+		{
+			bot = bot.copy();
+
+			CodePiece compress_conn;
+			if (CodeGenOptions.CompressVerticalCombining && (compress_conn = doCompressVertically(this, bot)) != null)
+			{
+				this.RemoveRow(this.MaxY - 1);
+				bot.RemoveRow(bot.MinY);
+
+				this.AppendBottomDirect(compress_conn);
+			}
+
+			AppendBottomDirect(bot);
+		}
+
+		private void AppendBottomDirect(CodePiece bot)
 		{
 			bot.normalizeY();
 
@@ -441,6 +460,22 @@ namespace BefunGen.AST.CodeGen
 		}
 
 		public void AppendTop(CodePiece top)
+		{
+			top = top.copy();
+
+			CodePiece compress_conn;
+			if (CodeGenOptions.CompressVerticalCombining && (compress_conn = doCompressVertically(top, this)) != null)
+			{
+				this.RemoveRow(this.MinY);
+				top.RemoveRow(top.MaxY - 1);
+
+				this.AppendTopDirect(compress_conn);
+			}
+
+			AppendTopDirect(top);
+		}
+
+		private void AppendTopDirect(CodePiece top)
 		{
 			top.normalizeY();
 
@@ -513,10 +548,16 @@ namespace BefunGen.AST.CodeGen
 				{
 					connect[0, y] = new BefungeCommand(BefungeCommandType.NOP, Tag);
 				}
-				else if (l[x_l, y].Type != BefungeCommandType.NOP && r[x_r, y].Type != BefungeCommandType.NOP) 
+				else if (l[x_l, y].Type != BefungeCommandType.NOP && r[x_r, y].Type != BefungeCommandType.NOP)
 				{
-					return null; // Can't compress - two commands are colliding
-					// Wouldn't even work when they are the same (eg stringmode_toogle ord stack-manipulation can't be merged)
+					if (l[x_l, y].Type == r[x_r, y].Type && l[x_l, y].Param == r[x_r, y].Param && l[x_l, y].IsCompressable())
+					{
+						connect[0, y] = new BefungeCommand(l[x_l, y].Type, l[x_l, y].Param, Tag);
+					}
+					else
+					{
+						return null; // Can't compress - two commands are colliding
+					}
 				}
 				else if (l[x_l, y].Type != BefungeCommandType.NOP)
 				{
@@ -525,6 +566,59 @@ namespace BefunGen.AST.CodeGen
 				else if (r[x_r, y].Type != BefungeCommandType.NOP)
 				{
 					connect[0, y] = new BefungeCommand(r[x_r, y].Type, r[x_r, y].Param, Tag);
+				}
+				else
+				{
+					throw new WTFException();
+				}
+			}
+
+			return connect;
+		}
+
+		public static CodePiece doCompressVertically(CodePiece t, CodePiece b)
+		{
+			if (t.Width == 0 || b.Width == 0)
+				return null;
+
+			CodePiece connect = new CodePiece();
+
+			int y_t = t.MaxY - 1;
+			int y_b = b.MinY;
+
+			for (int x = Math.Min(t.MinX, b.MinX); x < Math.Max(t.MaxX, b.MaxX); x++)
+			{
+				object Tag = null;
+
+				if (t[x, y_t].Tag != null && b[x, y_b].Tag != null)
+				{
+					return null; // Can't compress - two tags would need to be merged
+				}
+
+				Tag = t[x, y_t].Tag ?? b[x, y_b].Tag;
+
+				if (t[x, y_t].Type == BefungeCommandType.NOP && b[x, y_b].Type == BefungeCommandType.NOP)
+				{
+					connect[x, 0] = new BefungeCommand(BefungeCommandType.NOP, Tag);
+				}
+				else if (t[x, y_t].Type != BefungeCommandType.NOP && b[x, y_b].Type != BefungeCommandType.NOP)
+				{
+					if (t[x, y_t].Type == b[x, y_b].Type && t[x, y_t].Param == b[x, y_b].Param && t[x, y_t].IsCompressable())
+					{
+						connect[x, 0] = new BefungeCommand(t[x, y_t].Type, t[x, y_t].Param, Tag);
+					}
+					else
+					{
+						return null; // Can't compress - two commands are colliding
+					}
+				}
+				else if (t[x, y_t].Type != BefungeCommandType.NOP)
+				{
+					connect[x, 0] = new BefungeCommand(t[x, y_t].Type, t[x, y_t].Param, Tag);
+				}
+				else if (b[x, y_b].Type != BefungeCommandType.NOP)
+				{
+					connect[x, 0] = new BefungeCommand(b[x, y_b].Type, b[x, y_b].Param, Tag);
 				}
 				else
 				{
@@ -572,7 +666,7 @@ namespace BefunGen.AST.CodeGen
 				{
 					if (!p[x, y].IsXDeltaIndependent())
 						throw new CodePieceReverseException(p);
-					
+
 					this[-x, y] = p[x, y];
 				}
 			}
