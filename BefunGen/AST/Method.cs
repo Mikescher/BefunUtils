@@ -1,5 +1,6 @@
 ﻿using BefunGen.AST.CodeGen;
 using BefunGen.AST.Exceptions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -85,16 +86,64 @@ namespace BefunGen.AST
 		{
 			CodePiece p = new CodePiece();
 
-			//TODO IMPLEMENT NOW; MUDDAFUCKAA
+			p.AppendBottom(generateCode_Variables());
 
 			//Parameter block --> flags
 
 			//Entry Point
 
+			//Intialize Varaiables
+
 			//Intialize Parameter
 
 			//Statement Block
 
+
+			return p;
+		}
+
+		private CodePiece generateCode_Variables()
+		{
+			CodePiece p = new CodePiece();
+
+			int paramX = 0;
+			int paramY = 0;
+
+			int max_arr = Variables.Where(t => t is VarDeclaration_Array).Select(t => t as VarDeclaration_Array).Max(t => t.Size);
+
+			int maxwidth = Math.Max(max_arr, CodeGenOptions.DefaultVarDeclarationWidth);
+
+			for (int i = 0; i < Variables.Count; i++)
+			{
+				VarDeclaration var = Variables[i];
+
+				CodePiece lit = new CodePiece();
+
+				if (paramX >= maxwidth)
+				{	// Next Line
+					paramX = 0;
+					paramY++;
+				}
+
+				if (paramX > 0 && var is VarDeclaration_Array && (paramX + (var as VarDeclaration_Array).Size) > maxwidth)
+				{	// Next Line
+					paramX = 0;
+					paramY++;
+				}
+
+				if (var is VarDeclaration_Value)
+				{
+					lit[0, 0] = CodeGenOptions.DefaultVarDeclarationSymbol.copyWithTag(var);
+				}
+				else
+				{
+					int sz = (var as VarDeclaration_Array).Size;
+					lit.Fill(0, 0, sz, 1, CodeGenOptions.DefaultVarDeclarationSymbol, var);
+				}
+
+				p.SetAt(paramX, paramY, lit);
+				paramX += lit.Width;
+			}
 
 			return p;
 		}

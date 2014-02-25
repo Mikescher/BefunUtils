@@ -280,12 +280,19 @@ namespace BefunGen
 			debugExpression("true || false");
 
 			debugMethod(@"
-int doFiber(int max)
+int doFiber(/*int max*/)
 var
 	int a := 4;
 	bool b;	
+	bool c;
+	bool d;
+	char[5] i;
+	char[5] h;
+	char[5] g;
+	char[25] e;
+	char[5] f;
 begin
-	return max;
+	return a;
 end
 				");
 		}

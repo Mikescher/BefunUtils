@@ -87,6 +87,7 @@
     <Compile Include="AST\TextFungeParser.cs" />
     <Compile Include="AST\Type.cs" />
     <Compile Include="AST\VarDeclaration.cs" />
+    <Compile Include="MathExtensions\MathExt.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>

@@ -1,4 +1,5 @@
 ﻿using BefunGen.AST.Exceptions;
+using BefunGen.MathExtensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +9,8 @@ namespace BefunGen.AST.CodeGen
 {
 	public class CodePiece
 	{
+		#region Properties
+
 		public int MinX { get; private set; } // Minimal ::> Inclusive
 
 		public int MinY { get; private set; }
@@ -24,6 +27,9 @@ namespace BefunGen.AST.CodeGen
 
 		public BefungeCommand this[int x, int y] { get { return get(x, y); } set { set(x, y, value); } }
 
+		#endregion
+
+		#region Konstruktor
 		public CodePiece()
 		{
 			MinX = 0;
@@ -32,6 +38,9 @@ namespace BefunGen.AST.CodeGen
 			MaxX = 0;
 			MaxY = 0;
 		}
+		#endregion
+
+		#region Internal
 
 		private bool IsIncluded(int x, int y)
 		{
@@ -134,6 +143,30 @@ namespace BefunGen.AST.CodeGen
 				return BCHelper.Unused;
 		}
 
+		public override string ToString()
+		{
+			StringBuilder builder = new StringBuilder();
+			builder.AppendLine(string.Format("{0}: [{1} - {2}, {3} - {4}] ({5}, {6})", this.GetType().Name, MinX, MaxX, MinY, MaxY, Width, Height));
+
+			builder.AppendLine("{");
+			for (int y = MinY; y < MaxY; y++)
+			{
+				for (int x = MinX; x < MaxX; x++)
+				{
+					BefungeCommand bc = this[x, y];
+					builder.Append(bc.getCommandCode());
+				}
+				builder.AppendLine();
+			}
+			builder.AppendLine("}");
+
+			return builder.ToString();
+		}
+
+		#endregion
+
+		#region Tags
+
 		public Tuple<BefungeCommand, int, int> findTag(object tag)
 		{
 			for (int x = MinX; x < MaxX; x++)
@@ -153,28 +186,9 @@ namespace BefunGen.AST.CodeGen
 			return tag != null && findTag(tag) != null;
 		}
 
-		public override string ToString()
-		{
-			StringBuilder builder = new StringBuilder();
-			builder.AppendLine(string.Format("{0}: [{1} - {2}, {3} - {4}] ({5}, {6})", this.GetType().Name, MinX, MaxX, MinY, MaxY, Width, Height));
+		#endregion
 
-			builder.AppendLine("{");
-			for (int y = MinY; y < MaxY; y++)
-			{
-				for (int x = MinX; x < MaxX; x++)
-				{
-					BefungeCommand bc = this[x, y];
-					if (bc == null)
-						builder.Append("X");
-					else
-						builder.Append(bc.getCommandCode());
-				}
-				builder.AppendLine();
-			}
-			builder.AppendLine("}");
-
-			return builder.ToString();
-		}
+		#region Normalize
 
 		public void normalize()
 		{
@@ -195,6 +209,10 @@ namespace BefunGen.AST.CodeGen
 			MinX += ox;
 			MaxX += ox;
 		}
+
+		#endregion
+
+		#region Copy
 
 		public CodePiece copy()
 		{
@@ -223,6 +241,10 @@ namespace BefunGen.AST.CodeGen
 			return result;
 		}
 
+		#endregion
+
+		#region Setter
+
 		public static CodePiece CombineHorizontal(CodePiece left, CodePiece right)
 		{
 			CodePiece c_l = left.copy();
@@ -237,7 +259,7 @@ namespace BefunGen.AST.CodeGen
 		}
 
 		public static CodePiece CombineVertical(CodePiece top, CodePiece bottom)
-		{
+		{ // TODO App-Bot
 			CodePiece c_t = top.copy();
 			CodePiece c_b = bottom.copy();
 
@@ -255,16 +277,6 @@ namespace BefunGen.AST.CodeGen
 			}
 
 			return c_t;
-		}
-
-		public bool IsHFlat() // Is Horizontal Flat
-		{
-			return Height == 1;
-		}
-
-		public bool IsVFlat() // Is Vertical Flat
-		{
-			return Width == 1;
 		}
 
 		public void RemoveColumn(int col)
@@ -288,19 +300,84 @@ namespace BefunGen.AST.CodeGen
 			MaxY = MaxY - 1;
 		}
 
-		public bool lastRowIsSingle()
+		// x1, y1 included -- x2, y2 excluded
+		public void Fill(int x1, int y1, int x2, int y2, BefungeCommand c, object topleft_tag = null)
 		{
-			return IsRowSingle(Width - 1);
+			if (x1 > x2) MathExt.Swap(ref x1, ref x2);
+			if (y1 > y2) MathExt.Swap(ref y1, ref y2);
+
+			for (int x = x1; x < x2; x++)
+				for (int y = y1; y < y2; y++)
+				{
+					if (x == x1 && y == y1 && topleft_tag != null)
+					{
+						this[x, y] = c.copyWithTag(topleft_tag);
+					}
+					else
+					{
+						this[x, y] = c;
+					}
+				}
+
 		}
 
-		public bool firstRowIsSingle()
+		public void SetAt(int paramX, int paramY, CodePiece lit)
 		{
-			return IsRowSingle(0);
+			for (int x = lit.MinX; x < lit.MaxX; x++)
+			{
+				for (int y = lit.MinY; y < lit.MaxY; y++)
+				{
+					this[x + paramX, y + paramY] = lit[x, y];
+				}
+			}
 		}
 
-		public bool IsRowSingle(int r)
+		#endregion
+
+		#region Append
+
+		public void AppendRight(BefungeCommand c)
 		{
-			return commandArr[r].Count(p => p.Type != BefungeCommandType.NOP) == 1;
+			AppendRight(0, c);
+		}
+
+		public void AppendRight(int row, BefungeCommand c)
+		{
+			CodePiece p = new CodePiece();
+			p[0, row] = c;
+
+			AppendRight(p);
+		}
+
+		public void AppendRight(CodePiece right)
+		{
+			right = right.copy();
+
+			CodePiece compress_conn;
+			if (CodeGenOptions.CompressHorizontalCombining && (compress_conn = doCompressHorizontally(this, right)) != null)
+			{
+				this.RemoveColumn(this.MaxX - 1);
+				right.RemoveColumn(right.MinX);
+
+				this.AppendRightDirect(compress_conn);
+			}
+
+			AppendRightDirect(right);
+		}
+
+		private void AppendRightDirect(CodePiece right)
+		{
+			right.normalizeX();
+
+			int offset = MaxX;
+
+			for (int x = right.MinX; x < right.MaxX; x++)
+			{
+				for (int y = right.MinY; y < right.MaxY; y++)
+				{
+					this[offset + x, y] = right[x, y];
+				}
+			}
 		}
 
 		public void AppendLeft(BefungeCommand c)
@@ -347,49 +424,94 @@ namespace BefunGen.AST.CodeGen
 			}
 		}
 
-		public void AppendRight(BefungeCommand c)
+		public void AppendBottom(BefungeCommand c)
 		{
-			AppendRight(0, c);
+			AppendBottom(0, c);
 		}
 
-		public void AppendRight(int row, BefungeCommand c)
+		public void AppendBottom(int col, BefungeCommand c)
 		{
 			CodePiece p = new CodePiece();
-			p[0, row] = c;
+			p[col, 0] = c;
 
-			AppendRight(p);
+			AppendBottom(p);
 		}
 
-		public void AppendRight(CodePiece right)
+		public void AppendBottom(CodePiece bot)
 		{
-			right = right.copy();
+			bot.normalizeY();
 
-			CodePiece compress_conn;
-			if (CodeGenOptions.CompressHorizontalCombining && (compress_conn = doCompressHorizontally(this, right)) != null)
+			int offset = MaxY;
+
+			for (int x = bot.MinX; x < bot.MaxX; x++)
 			{
-				this.RemoveColumn(this.MaxX - 1);
-				right.RemoveColumn(right.MinX);
-
-				this.AppendRightDirect(compress_conn);
-			}
-
-			AppendRightDirect(right);
-		}
-
-		private void AppendRightDirect(CodePiece right)
-		{
-			right.normalizeX();
-
-			int offset = MaxX;
-
-			for (int x = right.MinX; x < right.MaxX; x++)
-			{
-				for (int y = right.MinY; y < right.MaxY; y++)
+				for (int y = bot.MinY; y < bot.MaxY; y++)
 				{
-					this[offset + x, y] = right[x, y];
+					this[x, offset + y] = bot[x, y];
 				}
 			}
 		}
+
+		public void AppendTop(BefungeCommand c)
+		{
+			AppendTop(0, c);
+		}
+
+		public void AppendTop(int col, BefungeCommand c)
+		{
+			CodePiece p = new CodePiece();
+			p[col, 0] = c;
+
+			AppendTop(p);
+		}
+
+		public void AppendTop(CodePiece top)
+		{
+			top.normalizeY();
+
+			int offset = MinY - top.MaxY;
+
+			for (int x = top.MinX; x < top.MaxX; x++)
+			{
+				for (int y = top.MinY; y < top.MaxY; y++)
+				{
+					this[x, offset + y] = top[x, y];
+				}
+			}
+		}
+
+		#endregion
+
+		#region Characteristics
+
+		public bool IsHFlat() // Is Horizontal Flat
+		{
+			return Height == 1;
+		}
+
+		public bool IsVFlat() // Is Vertical Flat
+		{
+			return Width == 1;
+		}
+
+		public bool lastRowIsSingle()
+		{
+			return IsRowSingle(Width - 1);
+		}
+
+		public bool firstRowIsSingle()
+		{
+			return IsRowSingle(0);
+		}
+
+		public bool IsRowSingle(int r)
+		{
+			return commandArr[r].Count(p => p.Type != BefungeCommandType.NOP) == 1;
+		}
+
+		#endregion
+
+		#region Optimizing
 
 		public CodePiece doCompressHorizontally(CodePiece l, CodePiece r)
 		{
@@ -437,5 +559,7 @@ namespace BefunGen.AST.CodeGen
 
 			return connect;
 		}
+
+		#endregion
 	}
 }

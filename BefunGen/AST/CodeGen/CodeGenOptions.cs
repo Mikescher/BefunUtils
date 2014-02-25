@@ -25,6 +25,12 @@ namespace BefunGen.AST.CodeGen
 		// When combining two CodePieces Horizontally try to combine the two connecting columns to a signle one
 		public static bool CompressHorizontalCombining = true;
 
+		// The aimed width of variable declarations - this is only estimated, long arrays can extend the width
+		public static int DefaultVarDeclarationWidth = 16;
+
+		// The Value of reserved for variable fields before initialization 
+		public static BefungeCommand DefaultVarDeclarationSymbol = BCHelper.Stack_Pop;
+
 		//TODO (Optional) When in STatementList and have Left->Right Statement test if next STatement is mirrorable (no If_Horiz) - the mirror it and append it directly beneath --> no empty line
 		// Expression Methodcall before codegen convert in AST to multiple statements (call methods->assign to var->use var in expr) (??? perhaps ???)
 

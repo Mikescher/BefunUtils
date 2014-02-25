@@ -36,6 +36,7 @@ namespace BefunGen.AST.CodeGen
 		Other
 	}
 
+	// Immutable Object
 	public class BefungeCommand
 	{
 		public readonly BefungeCommandType Type;
@@ -168,6 +169,11 @@ namespace BefunGen.AST.CodeGen
 				default:
 					throw new InvalidBefungeCommandTypeException(new SourceCodePosition());
 			}
+		}
+
+		public BefungeCommand copyWithTag(object _g)
+		{
+			return new BefungeCommand(Type, Param, _g);
 		}
 	}
 }

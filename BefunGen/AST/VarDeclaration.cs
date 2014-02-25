@@ -64,6 +64,8 @@ namespace BefunGen.AST
 	{
 		public BType_Value InternalType { get { return (Type as BType_Array).InternalType; } }
 
+		public int Size { get { return (Type as BType_Array).Size; } }
+
 		public VarDeclaration_Array(SourceCodePosition pos, BType_Array t, string id)
 			: base(pos, t, id, null)
 		{
