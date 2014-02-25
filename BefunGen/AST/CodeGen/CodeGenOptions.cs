@@ -20,7 +20,7 @@ namespace BefunGen.AST.CodeGen
 		public static bool StripDoubleStringmodeToogle = true;
 
 		// Every NOP-Command is displayed as an Exit-Command
-		public static bool SetNOPCellsToExit = true;
+		public static bool SetNOPCellsToExit = false;
 
 		// When combining two CodePieces Horizontally try to combine the two connecting columns to a signle one
 		public static bool CompressHorizontalCombining = true;

@@ -82,22 +82,19 @@ namespace BefunGen.AST
 			_M_ID_COUNTER = 1;
 		}
 
-		public CodePiece generateCode()
+		public CodePiece generateCode(int meth_offset_x, int meth_offset_y)
 		{
 			CodePiece p = new CodePiece();
 
 			p.AppendBottom(generateCode_Variables());
 
-			//Parameter block --> flags
+			//<<-- Entry Point
 
-			//Entry Point
+			p.AppendBottom(generateCode_VariableIntialization(p, meth_offset_x, meth_offset_y));
 
-			//Intialize Varaiables
+			//<<-- Intialize Parameter
 
-			//Intialize Parameter
-
-			//Statement Block
-
+			//<<-- Statement Block
 
 			return p;
 		}
@@ -109,7 +106,9 @@ namespace BefunGen.AST
 			int paramX = 0;
 			int paramY = 0;
 
-			int max_arr = Variables.Where(t => t is VarDeclaration_Array).Select(t => t as VarDeclaration_Array).Max(t => t.Size);
+			int max_arr = 0;
+			if (Variables.Count(t => t is VarDeclaration_Array) > 0)
+				max_arr = Variables.Where(t => t is VarDeclaration_Array).Select(t => t as VarDeclaration_Array).Max(t => t.Size);
 
 			int maxwidth = Math.Max(max_arr, CodeGenOptions.DefaultVarDeclarationWidth);
 
@@ -144,6 +143,30 @@ namespace BefunGen.AST
 				p.SetAt(paramX, paramY, lit);
 				paramX += lit.Width;
 			}
+
+			return p;
+		}
+
+		private CodePiece generateCode_VariableIntialization(CodePiece parent, int mo_x, int mo_y)
+		{
+			CodePiece p = new CodePiece();
+
+			for (int i = 0; i < Variables.Count; i++)
+			{
+				VarDeclaration var = Variables[i];
+
+				CodePiece p_init = var.generateCode(parent, mo_x, mo_y, false);
+
+				p_init.AppendLeft(BCHelper.PC_Right);
+				p_init.AppendRight(BCHelper.PC_Down);
+
+				p_init[p_init.MinX, 1] = BCHelper.PC_Down;
+				p_init[p_init.MaxX - 1, 1] = BCHelper.PC_Left;
+
+				p.AppendBottom(p_init);
+			}
+
+			p.normalizeX();
 
 			return p;
 		}

@@ -43,6 +43,9 @@ namespace BefunGen.AST
 		{
 			_V_ID_COUNTER = 1;
 		}
+
+		// Code for Variable Initialization
+		public abstract CodePiece generateCode(CodePiece parent, int mo_x, int mo_y, bool reverse);
 	}
 
 	#region Children
@@ -57,6 +60,33 @@ namespace BefunGen.AST
 		public VarDeclaration_Value(SourceCodePosition pos, BType_Value t, string id, Literal_Value v)
 			: base(pos, t, id, v)
 		{
+		}
+
+		public override CodePiece generateCode(CodePiece parent, int mo_x, int mo_y, bool reverse)
+		{
+			CodePiece p = new CodePiece();
+
+			int varX = (mo_x + parent.findTag(this).Item2 - parent.MinX);
+			int varY = (mo_y + parent.findTag(this).Item3 - parent.MinY);
+
+			if (reverse)
+			{
+				p.AppendLeft((Initial as Literal_Value).generateCode(reverse));
+				p.AppendLeft(NumberCodeHelper.generateCode(varX, reverse));
+				p.AppendLeft(NumberCodeHelper.generateCode(varY, reverse));
+				p.AppendLeft(BCHelper.Reflect_Set);
+			}
+			else
+			{
+				p.AppendRight((Initial as Literal_Value).generateCode(reverse));
+				p.AppendRight(NumberCodeHelper.generateCode(varX, reverse));
+				p.AppendRight(NumberCodeHelper.generateCode(varY, reverse));
+				p.AppendRight(BCHelper.Reflect_Set);
+			}
+
+			p.normalizeX();
+
+			return p;
 		}
 	}
 
@@ -84,6 +114,95 @@ namespace BefunGen.AST
 			{
 				((Literal_Array)Initial).AppendDefaultValues(t.Size - LiteralSize);
 			}
+		}
+
+		public override CodePiece generateCode(CodePiece parent, int mo_x, int mo_y, bool reverse)
+		{
+			CodePiece p = new CodePiece();
+
+			Literal_Array value = Initial as Literal_Array;
+
+			if (!parent.hasTag(this))
+				throw new InternalCodeGenException();
+
+			int varX = (mo_x + parent.findTag(this).Item2 - parent.MinX) - 1;
+			int varY = (mo_y + parent.findTag(this).Item3 - parent.MinY);
+
+			if (reverse)
+			{
+				p.AppendLeft(BCHelper.Digit_0);
+
+				for (int i = 0; i < Size; i++)
+				{
+					p.AppendLeft(value.generateCode(i, true));
+					p.AppendLeft(NumberCodeHelper.generateCode(i + 1, true));
+				}
+
+				// ################################
+
+				//   >       v
+				// $_^#!:pY+X<
+				CodePiece op = new CodePiece();
+
+				op.AppendLeft(BCHelper.PC_Left);
+				op.AppendLeft(NumberCodeHelper.generateCode(varX));
+				op.AppendLeft(BCHelper.Add);
+				op.AppendLeft(NumberCodeHelper.generateCode(varY));
+				op.AppendLeft(BCHelper.Reflect_Set);
+				op.AppendLeft(BCHelper.Stack_Dup);
+				op.AppendLeft(BCHelper.Not);
+				op.AppendLeft(BCHelper.PC_Jump);
+				op.AppendLeft(BCHelper.PC_Up);
+
+				op[0, -1] = BCHelper.PC_Down;
+				op[op.MinX, -1] = BCHelper.PC_Left;
+
+				op.AppendLeft(BCHelper.If_Horizontal);
+				op.AppendLeft(BCHelper.Stack_Pop);
+
+				// ################################
+
+				p.AppendRight(op);
+			}
+			else
+			{
+				p.AppendRight(BCHelper.Digit_0);
+
+				for (int i = 0; i < Size; i++)
+				{
+					p.AppendRight(value.generateCode(i));
+					p.AppendRight(NumberCodeHelper.generateCode(i + 1));
+				}
+
+				// ################################
+
+				// v      <
+				// >X+Yp:#^_$
+				CodePiece op = new CodePiece();
+
+				op.AppendRight(BCHelper.PC_Right);
+				op.AppendRight(NumberCodeHelper.generateCode(varX));
+				op.AppendRight(BCHelper.Add);
+				op.AppendRight(NumberCodeHelper.generateCode(varY));
+				op.AppendRight(BCHelper.Reflect_Set);
+				op.AppendRight(BCHelper.Stack_Dup);
+				op.AppendRight(BCHelper.PC_Jump);
+				op.AppendRight(BCHelper.PC_Up);
+
+				op[0, -1] = BCHelper.PC_Down;
+				op[op.MaxX - 1, -1] = BCHelper.PC_Left;
+
+				op.AppendRight(BCHelper.If_Horizontal);
+				op.AppendRight(BCHelper.Stack_Pop);
+
+				// ################################
+
+				p.AppendRight(op);
+			}
+
+
+
+			return p;
 		}
 	}
 

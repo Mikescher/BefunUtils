@@ -175,5 +175,90 @@ namespace BefunGen.AST.CodeGen
 		{
 			return new BefungeCommand(Type, Param, _g);
 		}
+
+		public bool IsDeltaIndependent()
+		{
+			return IsXDeltaIndependent() && IsYDeltaIndependent();
+		}
+
+		public bool IsXDeltaIndependent()
+		{
+			switch (Type)
+			{
+				case BefungeCommandType.NOP:
+				case BefungeCommandType.Walkway:
+				case BefungeCommandType.Add:
+				case BefungeCommandType.Sub:
+				case BefungeCommandType.Mult:
+				case BefungeCommandType.Div:
+				case BefungeCommandType.Modulo:
+				case BefungeCommandType.Not:
+				case BefungeCommandType.GreaterThan:
+				case BefungeCommandType.PC_Random:
+				case BefungeCommandType.Stringmode:
+				case BefungeCommandType.Stack_Dup:
+				case BefungeCommandType.Stack_Swap:
+				case BefungeCommandType.Stack_Pop:
+				case BefungeCommandType.Out_Int:
+				case BefungeCommandType.Out_ASCII:
+				case BefungeCommandType.PC_Jump:
+				case BefungeCommandType.PC_Up:
+				case BefungeCommandType.PC_Down:
+				case BefungeCommandType.If_Vertical:
+				case BefungeCommandType.Reflect_Set:
+				case BefungeCommandType.Reflect_Get:
+				case BefungeCommandType.In_Int:
+				case BefungeCommandType.In_ASCII:
+				case BefungeCommandType.Stop:
+				case BefungeCommandType.Other:
+					return true;
+				case BefungeCommandType.PC_Right:
+				case BefungeCommandType.PC_Left:
+				case BefungeCommandType.If_Horizontal:
+					return false;
+				default:
+					throw new InvalidBefungeCommandTypeException(new SourceCodePosition());
+			}
+		}
+
+		public bool IsYDeltaIndependent()
+		{
+			switch (Type)
+			{
+				case BefungeCommandType.NOP:
+				case BefungeCommandType.Walkway:
+				case BefungeCommandType.Add:
+				case BefungeCommandType.Sub:
+				case BefungeCommandType.Mult:
+				case BefungeCommandType.Div:
+				case BefungeCommandType.Modulo:
+				case BefungeCommandType.Not:
+				case BefungeCommandType.GreaterThan:
+				case BefungeCommandType.PC_Random:
+				case BefungeCommandType.Stringmode:
+				case BefungeCommandType.Stack_Dup:
+				case BefungeCommandType.Stack_Swap:
+				case BefungeCommandType.Stack_Pop:
+				case BefungeCommandType.Out_Int:
+				case BefungeCommandType.Out_ASCII:
+				case BefungeCommandType.PC_Jump:
+				case BefungeCommandType.PC_Left:
+				case BefungeCommandType.PC_Right:
+				case BefungeCommandType.If_Horizontal:
+				case BefungeCommandType.Reflect_Set:
+				case BefungeCommandType.Reflect_Get:
+				case BefungeCommandType.In_Int:
+				case BefungeCommandType.In_ASCII:
+				case BefungeCommandType.Stop:
+				case BefungeCommandType.Other:
+					return true;
+				case BefungeCommandType.PC_Up:
+				case BefungeCommandType.PC_Down:
+				case BefungeCommandType.If_Vertical:
+					return false;
+				default:
+					throw new InvalidBefungeCommandTypeException(new SourceCodePosition());
+			}
+		}
 	}
 }

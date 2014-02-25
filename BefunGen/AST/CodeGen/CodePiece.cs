@@ -243,7 +243,7 @@ namespace BefunGen.AST.CodeGen
 
 		#endregion
 
-		#region Setter
+		#region Combine
 
 		public static CodePiece CombineHorizontal(CodePiece left, CodePiece right)
 		{
@@ -259,46 +259,21 @@ namespace BefunGen.AST.CodeGen
 		}
 
 		public static CodePiece CombineVertical(CodePiece top, CodePiece bottom)
-		{ // TODO App-Bot
+		{
 			CodePiece c_t = top.copy();
 			CodePiece c_b = bottom.copy();
 
 			c_t.normalizeY();
 			c_b.normalizeY();
 
-			int offset = c_t.Height;
-
-			for (int x = c_b.MinX; x < c_b.MaxX; x++)
-			{
-				for (int y = c_b.MinY; y < c_b.MaxY; y++)
-				{
-					c_t[x, offset + y] = c_b[x, y];
-				}
-			}
+			c_t.AppendBottom(c_b);
 
 			return c_t;
 		}
 
-		public void RemoveColumn(int col)
-		{
-			int abs = col - MinX;
+		#endregion
 
-			commandArr.RemoveAt(abs);
-
-			MaxX = MaxX - 1;
-		}
-
-		public void RemoveRow(int row)
-		{
-			int abs = row - MinY;
-
-			for (int i = 0; i < Width; i++)
-			{
-				commandArr[i].RemoveAt(abs);
-			}
-
-			MaxY = MaxY - 1;
-		}
+		#region Setter
 
 		// x1, y1 included -- x2, y2 excluded
 		public void Fill(int x1, int y1, int x2, int y2, BefungeCommand c, object topleft_tag = null)
@@ -437,7 +412,7 @@ namespace BefunGen.AST.CodeGen
 			AppendBottom(p);
 		}
 
-		public void AppendBottom(CodePiece bot)
+		public void AppendBottom(CodePiece bot) //TODO Compress
 		{
 			bot.normalizeY();
 
@@ -513,7 +488,7 @@ namespace BefunGen.AST.CodeGen
 
 		#region Optimizing
 
-		public CodePiece doCompressHorizontally(CodePiece l, CodePiece r)
+		public static CodePiece doCompressHorizontally(CodePiece l, CodePiece r)
 		{
 			if (l.Width == 0 || r.Width == 0)
 				return null;
@@ -558,6 +533,62 @@ namespace BefunGen.AST.CodeGen
 			}
 
 			return connect;
+		}
+
+		#endregion
+
+		#region Modify
+
+		public void RemoveColumn(int col)
+		{
+			int abs = col - MinX;
+
+			commandArr.RemoveAt(abs);
+
+			MaxX = MaxX - 1;
+		}
+
+		public void RemoveRow(int row)
+		{
+			int abs = row - MinY;
+
+			for (int i = 0; i < Width; i++)
+			{
+				commandArr[i].RemoveAt(abs);
+			}
+
+			MaxY = MaxY - 1;
+		}
+
+		public void reverseX()
+		{
+			CodePiece p = this.copy();
+
+			this.Clear();
+
+			for (int x = p.MinX; x < p.MaxX; x++)
+			{
+				for (int y = p.MinY; y < p.MaxY; y++)
+				{
+					if (!p[x, y].IsXDeltaIndependent())
+						throw new CodePieceReverseException(p);
+					
+					this[-x, y] = p[x, y];
+				}
+			}
+
+			this.normalizeX();
+		}
+
+		public void Clear()
+		{
+			commandArr.Clear();
+
+			MinX = 0;
+			MinY = 0;
+
+			MaxX = 0;
+			MaxY = 0;
 		}
 
 		#endregion

@@ -14,7 +14,7 @@ namespace BefunGen.AST
 
 		public abstract BType getBType();
 
-		public abstract CodePiece generateCode();
+		public abstract CodePiece generateCode(bool reverse = false);
 	}
 
 	#region Parents
@@ -46,6 +46,8 @@ namespace BefunGen.AST
 			for (int i = 0; i < cnt; i++)
 				AppendDefaultValue();
 		}
+
+		public abstract CodePiece generateCode(int pos, bool reversed = false);
 	}
 
 	#endregion Parents
@@ -72,44 +74,9 @@ namespace BefunGen.AST
 			return new BType_Int(new SourceCodePosition());
 		}
 
-		public override CodePiece generateCode()
+		public override CodePiece generateCode(bool reversed = false)
 		{
-			CodePiece p = new CodePiece();
-
-			if (CodeGenOptions.AutoDigitizeNumberLiterals && Value >= 0 && Value <= 9)
-			{
-				p[0, 0] = BCHelper.chr(Value);
-			}
-			else
-			{
-				if (CodeGenOptions.NumberLiteralRepresentation == NumberRep.CharConstant)
-				{
-					if (Value == '"')
-					{
-						p[0, 0] = BCHelper.Stringmode;
-						p[1, 0] = BCHelper.chr(Value + 1);
-						p[2, 0] = BCHelper.Stringmode;
-						p[2, 0] = BCHelper.Digit_1;
-						p[2, 0] = BCHelper.Sub;
-					}
-					else
-					{
-						p[0, 0] = BCHelper.Stringmode;
-						p[1, 0] = BCHelper.chr(Value);
-						p[2, 0] = BCHelper.Stringmode;
-					}
-				}
-				else if (CodeGenOptions.NumberLiteralRepresentation == NumberRep.Base9)
-				{
-					p = Base9Converter.generateCodeForLiteral(Value);
-				}
-				else if (CodeGenOptions.NumberLiteralRepresentation == NumberRep.Factorization)
-				{
-					p = NumberFactorization.generateCodeForLiteral(Value);
-				}
-			}
-
-			return p;
+			return NumberCodeHelper.generateCode(Value, reversed);
 		}
 	}
 
@@ -133,22 +100,9 @@ namespace BefunGen.AST
 			return new BType_Char(new SourceCodePosition());
 		}
 
-		public override CodePiece generateCode()
+		public override CodePiece generateCode(bool reverse = false)
 		{
-			CodePiece p = new CodePiece();
-
-			if (Value >= 0 && Value <= 9)
-			{
-				p[0, 0] = BCHelper.chr(Value);
-			}
-			else
-			{
-				p[0, 0] = BCHelper.Stringmode;
-				p[1, 0] = BCHelper.chr(Value);
-				p[2, 0] = BCHelper.Stringmode;
-			}
-
-			return p;
+			return NumberCodeHelper.generateCode_Stringmode(Value, reverse);
 		}
 	}
 
@@ -172,11 +126,9 @@ namespace BefunGen.AST
 			return new BType_Bool(new SourceCodePosition());
 		}
 
-		public override CodePiece generateCode()
+		public override CodePiece generateCode(bool reverse = false)
 		{
-			CodePiece p = new CodePiece();
-			p[0, 0] = BCHelper.dig(Value ? (byte)1 : (byte)0);
-			return p;
+			return NumberCodeHelper.generateCode(Value);
 		}
 	}
 
@@ -200,11 +152,9 @@ namespace BefunGen.AST
 			return new BType_Digit(new SourceCodePosition());
 		}
 
-		public override CodePiece generateCode()
+		public override CodePiece generateCode(bool reverse = false)
 		{
-			CodePiece p = new CodePiece();
-			p[0, 0] = BCHelper.dig(Value);
-			return p;
+			return NumberCodeHelper.generateCode_Digit(Value);
 		}
 	}
 
@@ -242,47 +192,26 @@ namespace BefunGen.AST
 			Value.Add(0);
 		}
 
-		public override CodePiece generateCode()
+		public override CodePiece generateCode(bool reverse = false)
 		{
 			CodePiece p = new CodePiece();
-			int i = 0;
 
-			if (CodeGenOptions.NumberLiteralRepresentation == NumberRep.CharConstant)
+			foreach (int val in Value)
 			{
-				p[i++, 0] = BCHelper.Stringmode;
-				foreach (int val in Value)
-				{
-					if (val == '"')
-					{
-						p[i++, 0] = BCHelper.chr(val + 1);
-						p[i++, 0] = BCHelper.Stringmode;
-						p[i++, 0] = BCHelper.Digit_1;
-						p[i++, 0] = BCHelper.Sub;
-						p[i++, 0] = BCHelper.Stringmode;
-					}
-					else
-					{
-						p[i++, 0] = BCHelper.chr(val);
-					}
-				}
-				p[i++, 0] = BCHelper.Stringmode;
+				if (reverse)
+					p.AppendRight(NumberCodeHelper.generateCode(val, reverse));
+				else
+					p.AppendLeft(NumberCodeHelper.generateCode(val, reverse));
 			}
-			else if (CodeGenOptions.NumberLiteralRepresentation == NumberRep.Base9)
-			{
-				foreach (int val in Value)
-				{
-					p.AppendRight(Base9Converter.generateCodeForLiteral(val));
-				}
-			}
-			else if (CodeGenOptions.NumberLiteralRepresentation == NumberRep.Factorization)
-			{
-				foreach (int val in Value)
-				{
-					p.AppendRight(NumberFactorization.generateCodeForLiteral(val));
-				}
-			}
+
+			p.normalize();
 
 			return p;
+		}
+
+		public override CodePiece generateCode(int pos, bool reversed = false)
+		{
+			return NumberCodeHelper.generateCode(Value[pos], reversed);
 		}
 	}
 
@@ -322,19 +251,38 @@ namespace BefunGen.AST
 			Value.Add('0');
 		}
 
-		public override CodePiece generateCode()
+		public override CodePiece generateCode(bool reverse = false)
 		{
 			CodePiece p = new CodePiece();
 			int i = 0;
 
-			p[i++, 0] = BCHelper.Stringmode;
-			foreach (char val in Value)
+			if (reverse)
 			{
-				p[i++, 0] = BCHelper.chr(val);
+				p[i--, 0] = BCHelper.Stringmode;
+				foreach (char val in Value)
+				{
+					p[i--, 0] = BCHelper.chr(val);
+				}
+				p[i--, 0] = BCHelper.Stringmode;
 			}
-			p[i++, 0] = BCHelper.Stringmode;
+			else
+			{
+				p[i++, 0] = BCHelper.Stringmode;
+				foreach (char val in Value)
+				{
+					p[i++, 0] = BCHelper.chr(val);
+				}
+				p[i++, 0] = BCHelper.Stringmode;
+			}
+
+			p.normalize();
 
 			return p;
+		}
+
+		public override CodePiece generateCode(int pos, bool reversed = false)
+		{
+			return NumberCodeHelper.generateCode_Stringmode(Value[pos], reversed);
 		}
 	}
 
@@ -368,17 +316,34 @@ namespace BefunGen.AST
 			Value.Add(false);
 		}
 
-		public override CodePiece generateCode()
+		public override CodePiece generateCode(bool reverse = false)
 		{
 			CodePiece p = new CodePiece();
 			int i = 0;
 
-			foreach (bool val in Value)
+			if (reverse)
 			{
-				p[i++, 0] = BCHelper.dig(val ? (byte)1 : (byte)0);
+				foreach (bool val in Value)
+				{
+					p[i--, 0] = BCHelper.dig(val ? (byte)1 : (byte)0);
+				}
+			}
+			else
+			{
+				foreach (bool val in Value)
+				{
+					p[i++, 0] = BCHelper.dig(val ? (byte)1 : (byte)0);
+				}
 			}
 
+			p.normalize();
+
 			return p;
+		}
+
+		public override CodePiece generateCode(int pos, bool reversed = false)
+		{
+			return NumberCodeHelper.generateCode(Value[pos]);
 		}
 	}
 
@@ -412,17 +377,34 @@ namespace BefunGen.AST
 			Value.Add(0);
 		}
 
-		public override CodePiece generateCode()
+		public override CodePiece generateCode(bool reverse = false)
 		{
 			CodePiece p = new CodePiece();
 			int i = 0;
 
-			foreach (byte val in Value)
+			if (reverse)
 			{
-				p[i++, 0] = BCHelper.dig(val);
+				foreach (byte val in Value)
+				{
+					p[i--, 0] = BCHelper.dig(val);
+				}
+			}
+			else
+			{
+				foreach (byte val in Value)
+				{
+					p[i++, 0] = BCHelper.dig(val);
+				}
 			}
 
+			p.normalize();
+
 			return p;
+		}
+
+		public override CodePiece generateCode(int pos, bool reversed = false)
+		{
+			return NumberCodeHelper.generateCode_Digit(Value[pos]);
 		}
 	}
 

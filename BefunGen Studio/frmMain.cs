@@ -259,40 +259,37 @@ namespace BefunGen
 
 			Method e = parseMethod(meth);
 			txtDebug.Text += "[METHOD] " + e.Identifier + ":" + e.ID + Environment.NewLine;
-			CodePiece pc = e.generateCode();
+			CodePiece pc = e.generateCode(0, 0);
 			txtDebug.Text += pc.ToString() + Environment.NewLine;
 		}
 
 		private void btnExecuteDebug_Click(object sender, EventArgs earg)
 		{
-			debugExpression("40*(-50+(int)rand)");
+			//debugExpression("40*(-50+(int)rand)");
 
-			debugExpression("100");
+			//debugExpression("100");
 
-			debugExpression("-100");
+			//debugExpression("-100");
 
-			debugExpression("137");
+			//debugExpression("137");
 
-			debugExpression("true || false");
+			//debugExpression("true || false");
 
-			debugExpression("true && (false ^ true)");
+			//debugExpression("true && (false ^ true)");
 
-			debugExpression("true || false");
+			//debugExpression("true || false");
 
 			debugMethod(@"
 int doFiber(/*int max*/)
 var
 	int a := 4;
 	bool b;	
+	char cc := 'o';
+	int[4] e;
 	bool c;
-	bool d;
-	char[5] i;
-	char[5] h;
-	char[5] g;
-	char[25] e;
-	char[5] f;
+	bool d := 10;
 begin
-	return a;
+	return 0;
 end
 				");
 		}
