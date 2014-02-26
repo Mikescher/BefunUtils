@@ -48,3 +48,143 @@ namespace BefunGen.AST.CodeGen
 
 	//Methods enter ate Left,0 in ... They can exit at multiple places
 }
+
+
+/* PLAN FOR METHOD FINDING
+
+2 Lanes Left : For Jump In and Jump Back
+1 Lane Right from Code for Jump out (goes up -> and then left down)
+
+On Finding Stack:[Target, Params, BackJump]
+On Found   Stack:[Params, BackJump]
+On Run     Stack:[???, BackJump]
+On Leave   Stack:[Result, BackJump] --> then swap [BackJump, Result]
+(Every Method becomes return 0; appended)
+(Even normal return; return Value 0)
+
+#################
+
+[!] BackJump Locations MUST have Y-DIstance from >= 3
+(Method In Jump also - but this should be always given (EVALUATE !!!, perhaps force MethodSize >= 3))
+
+##### CODE ######
+
+1
+-
+:
+!
+#
+>
+|
+
+####################
+
+v:-1<
+>#v_>
+  > v
+  
+  
+#####################
+  
+v_v#   <<<<<<< // 0-> Right Lane || 1 -> Left Lane
+|#|
+|#|
+|#|
+L: BackJump (5x3 Jmpr)
+R: InJump   (1x7 Jmpr)
+
+
+##################### 
+
+Alternative: flooding stack with all needed vals: (i think preferable)
+
+$_v#!:-1<\1
+  >0\   ^
+  
+==> Stack:[5] becomes Stack:[1,0,0,0,0]
+
+==> kein 1-:! mehr 
+nurnoch:
+
+#
+>@
+|
+
+
+################## EXAMPLE #############
+
+v
+#
+>3v
+?1v4
+>2v
+v <
+> :."=",                   v
+
+v          $_v#!:-1<\1     <
+             >0\   ^
+
+v
+v
+
+#
+>    "1",@
+|
+
+#
+>    "2",@
+|
+
+#
+>    "3",@
+|
+
+#
+>    "4",@
+|
+
+#
+>    "5",@
+|
+
+
+*/
+
+/*
+
+// Encode dynamically Base-9 number
+
+v      ########## >>#$>#<  @
+>  9:* ## 5471 ## 0>\:9`|
+       ##########  ^+*9\<
+               
+#### Digits in Base-9 ####
+   
+8Bit  = ~  3 B9
+32Bit = ~ 10 B9
+64Bit = ~ 20 B9
+
+
+##########################
+Generate Random Nmbr
+##########################
+
+v              ,,+55+49  <
+v      >>v               .
+v      21v      >>#$>#<  ^
+> 59>#v?^>\1-:#v_>\:4`|
+      3>0^       ^+*4\<
+    ^          <
+      >  ^
+
+########### RPOGRAM IDEAS #######
+
+Find way through Labyrinth thats written on display (recursive / Bruteforce)
+Maze Generation
+Solve Sudoku Thats inputted on Display (recursive Bruteforce)
+Generate Sudoku on Display
+Quicksort input
+Befunge Interpreter
+Generate  Math Question and check answers
+	  
+*/

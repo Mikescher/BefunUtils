@@ -193,11 +193,11 @@ namespace BefungExec.View
 					if (Math.Abs(selection.Width) > 1 && Math.Abs(selection.Height) > 1)
 					{
 						selection.normalize();
-						zoom = selection;
+						zoom = selection;       //TODO Re-Zoom fails: does not work when already zoomed - not offsetted
 					}
 					else if (selection.Width == 1 && selection.Height == 1)
 					{
-						prog.breakpoints[selection.bl.X, selection.bl.Y] = !prog.breakpoints[selection.bl.X, selection.bl.Y];
+						prog.breakpoints[selection.bl.X, selection.bl.Y] = !prog.breakpoints[selection.bl.X, selection.bl.Y]; //TODO Breakopints fail when zoomed pos is not offsetted
 					}
 				}
 
