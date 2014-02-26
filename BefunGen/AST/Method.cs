@@ -86,11 +86,11 @@ namespace BefunGen.AST
 		{
 			CodePiece p = new CodePiece();
 
-			p.AppendBottom(generateCode_Variables());
+			p.AppendBottom(generateCode_Variables(meth_offset_x, meth_offset_y));
 
 			//<<-- Entry Point
 
-			p.AppendBottom(generateCode_VariableIntialization(p, meth_offset_x, meth_offset_y));
+			p.AppendBottom(generateCode_VariableIntialization());
 
 			//<<-- Intialize Parameter
 
@@ -99,7 +99,7 @@ namespace BefunGen.AST
 			return p;
 		}
 
-		private CodePiece generateCode_Variables()
+		private CodePiece generateCode_Variables(int mo_x, int mo_y)
 		{
 			CodePiece p = new CodePiece();
 
@@ -140,6 +140,9 @@ namespace BefunGen.AST
 					lit.Fill(0, 0, sz, 1, CodeGenOptions.DefaultVarDeclarationSymbol, var);
 				}
 
+				var.CodePositionX = mo_x + paramX;
+				var.CodePositionY = mo_y + paramY;
+
 				p.SetAt(paramX, paramY, lit);
 				paramX += lit.Width;
 			}
@@ -147,7 +150,7 @@ namespace BefunGen.AST
 			return p;
 		}
 
-		private CodePiece generateCode_VariableIntialization(CodePiece parent, int mo_x, int mo_y)
+		private CodePiece generateCode_VariableIntialization()
 		{
 			CodePiece p = new CodePiece();
 
@@ -157,8 +160,8 @@ namespace BefunGen.AST
 			{
 				VarDeclaration var = Variables[i];
 
-				CodePiece p_init_lr = var.generateCode(parent, mo_x, mo_y, false);
-				CodePiece p_init_rl = var.generateCode(parent, mo_x, mo_y, true);
+				CodePiece p_init_lr = var.generateCode(false);
+				CodePiece p_init_rl = var.generateCode(true);
 
 				varDecls.Add(Tuple.Create(p_init_lr, p_init_rl));
 			}
@@ -190,10 +193,12 @@ namespace BefunGen.AST
 				cp_b[mw, 0] = BCHelper.PC_Left;
 
 				for (int y = cp_a.MinY; y < cp_a.MaxY; y++)
-					if (y != 0) cp_a[cp_a.MaxX - 1, y] = BCHelper.Walkway;
+					if (y != 0)
+						cp_a[cp_a.MaxX - 1, y] = BCHelper.Walkway;
 
 				for (int y = cp_b.MinY; y < cp_b.MaxY; y++)
-					if (y != 0) cp_b[cp_b.MaxX - 1, y] = BCHelper.Walkway;
+					if (y != 0)
+						cp_b[cp_b.MaxX - 1, y] = BCHelper.Walkway;
 
 				cp_a.normalizeX();
 				cp_b.normalizeX();

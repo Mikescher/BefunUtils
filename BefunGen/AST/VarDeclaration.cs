@@ -12,6 +12,34 @@ namespace BefunGen.AST
 		public readonly Literal Initial;
 		public readonly int ID;
 
+		public int _CodePositionX = -1;
+		public int CodePositionX
+		{
+			get
+			{
+				if (_CodePositionX < 0)
+					throw new InternalCodeGenException();
+				else
+					return _CodePositionX;
+			}
+
+			set { _CodePositionX = value; }
+		}
+
+		public int _CodePositionY = -1;
+		public int CodePositionY
+		{
+			get
+			{
+				if (_CodePositionY < 0)
+					throw new InternalCodeGenException();
+				else
+					return _CodePositionY;
+			}
+
+			set { _CodePositionY = value; }
+		}
+
 		public VarDeclaration(SourceCodePosition pos, BType t, string ident, Literal init)
 			: base(pos)
 		{
@@ -45,7 +73,7 @@ namespace BefunGen.AST
 		}
 
 		// Code for Variable Initialization
-		public abstract CodePiece generateCode(CodePiece parent, int mo_x, int mo_y, bool reverse);
+		public abstract CodePiece generateCode(bool reverse);
 	}
 
 	#region Children
@@ -62,12 +90,12 @@ namespace BefunGen.AST
 		{
 		}
 
-		public override CodePiece generateCode(CodePiece parent, int mo_x, int mo_y, bool reverse)
+		public override CodePiece generateCode(bool reverse)
 		{
 			CodePiece p = new CodePiece();
 
-			int varX = (mo_x + parent.findTag(this).Item2 - parent.MinX);
-			int varY = (mo_y + parent.findTag(this).Item3 - parent.MinY);
+			int varX = (CodePositionX);
+			int varY = (CodePositionY);
 
 			if (reverse)
 			{
@@ -116,17 +144,14 @@ namespace BefunGen.AST
 			}
 		}
 
-		public override CodePiece generateCode(CodePiece parent, int mo_x, int mo_y, bool reverse)
+		public override CodePiece generateCode(bool reverse)
 		{
 			CodePiece p = new CodePiece();
 
 			Literal_Array value = Initial as Literal_Array;
 
-			if (!parent.hasTag(this))
-				throw new InternalCodeGenException();
-
-			int varX = (mo_x + parent.findTag(this).Item2 - parent.MinX) - 1;
-			int varY = (mo_y + parent.findTag(this).Item3 - parent.MinY);
+			int varX = (CodePositionX) - 1;
+			int varY = (CodePositionY);
 
 			if (reverse)
 			{
