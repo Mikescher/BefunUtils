@@ -243,14 +243,14 @@ namespace BefunGen
 			txtDebug.Text += pc.ToString() + Environment.NewLine;
 		}
 
-		//private void debugStatement(string stmt)
-		//{
-		//	txtDebug.Text += stmt + Environment.NewLine;
+		private void debugStatement(string stmt)
+		{
+			txtDebug.Text += stmt + Environment.NewLine;
 
-		//	Statement e = parseStatement(stmt);
-		//	CodePiece pc = e.generateCode();
-		//	txtDebug.Text += pc.ToString() + Environment.NewLine;
-		//}
+			Statement e = parseStatement(stmt);
+			CodePiece pc = e.generateCode(false);
+			txtDebug.Text += pc.ToString() + Environment.NewLine;
+		}
 
 		private void debugMethod(string meth)
 		{
@@ -278,22 +278,24 @@ namespace BefunGen
 
 			//debugExpression("true || false");
 
-			debugMethod(@"
-int doFiber(int max)
-var
-	int a := 4;
-	bool b;	
-	char cc := 'o';
-	int[4] e := {40, 48, 60, -20};
-	bool c;
-	bool d := 10;
-	int[8] h;
-begin
-	return 0;
-end
-				");
+//			debugMethod(@"
+//int doFiber(int max)
+//var
+//	int a := 4;
+//	bool b;	
+//	char cc := 'o';
+//	int[4] e := {40, 48, 60, -20};
+//	bool c;
+//	bool d := 10;
+//	int[8] h;
+//begin
+//	return 0;
+//end
+//				");
 
 			//debugExpression("true || false");
+
+			debugStatement("out \"blub:fasel\";");
 		}
 
 		private void btnRun_Click(object sender, EventArgs e)

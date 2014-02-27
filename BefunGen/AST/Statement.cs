@@ -1,5 +1,6 @@
 ﻿using BefunGen.AST.CodeGen;
 using BefunGen.AST.Exceptions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -19,7 +20,7 @@ namespace BefunGen.AST
 
 		public abstract Statement_Label findLabelByIdentifier(string ident);
 
-		//public abstract CodePiece generateCode(bool reverse);
+		public abstract CodePiece generateCode(bool reverse);
 	}
 
 	#region Other
@@ -73,6 +74,11 @@ namespace BefunGen.AST
 			}
 
 			return result;
+		}
+
+		public override CodePiece generateCode(bool reverse)
+		{
+			throw new NotImplementedException(); //TODO Implement
 		}
 	}
 
@@ -145,6 +151,11 @@ namespace BefunGen.AST
 		{
 			return null;
 		}
+
+		public override CodePiece generateCode(bool reverse)
+		{
+			throw new NotImplementedException(); //TODO Implement
+		}
 	}
 
 	#endregion
@@ -195,6 +206,11 @@ namespace BefunGen.AST
 		{
 			return ident.ToLower() == Identifier.ToLower() ? this : null;
 		}
+
+		public override CodePiece generateCode(bool reverse)
+		{
+			throw new NotImplementedException(); //TODO Implement
+		}
 	}
 
 	public class Statement_Goto : Statement
@@ -233,6 +249,11 @@ namespace BefunGen.AST
 		public override Statement_Label findLabelByIdentifier(string ident)
 		{
 			return null;
+		}
+
+		public override CodePiece generateCode(bool reverse)
+		{
+			throw new NotImplementedException(); //TODO Implement
 		}
 	}
 
@@ -287,6 +308,11 @@ namespace BefunGen.AST
 		{
 			return null;
 		}
+
+		public override CodePiece generateCode(bool reverse)
+		{
+			throw new NotImplementedException(); //TODO Implement
+		}
 	}
 
 	public class Statement_Out : Statement
@@ -329,26 +355,26 @@ namespace BefunGen.AST
 			return null;
 		}
 
-		//public override CodePiece generateCode(bool reverse)
-		//{
-		//	CodePiece p = Value.generateCode(reverse);
+		public override CodePiece generateCode(bool reversed)
+		{
+			CodePiece p = Value.generateCode(reversed);
 
-		//	BefungeCommand cmd_out;
+			BefungeCommand cmd_out;
 
-		//	if (Value.getResultType() is BType_Char)
-		//		cmd_out = BCHelper.Out_ASCII;
-		//	else
-		//		cmd_out = BCHelper.Out_Int;
+			if (Value.getResultType() is BType_Char)
+				cmd_out = BCHelper.Out_ASCII;
+			else
+				cmd_out = BCHelper.Out_Int;
 
-		//	if (reverse)
-		//		p.AppendLeft(cmd_out);
-		//	else
-		//		p.AppendRight(cmd_out);
+			if (reversed)
+				p.AppendLeft(cmd_out);
+			else
+				p.AppendRight(cmd_out);
 
-		//	p.normalizeX();
+			p.normalizeX();
 
-		//	return p;
-		//}
+			return p;
+		}
 	}
 
 	public class Statement_Out_CharArrLiteral : Statement
@@ -384,6 +410,59 @@ namespace BefunGen.AST
 		public override Statement_Label findLabelByIdentifier(string ident)
 		{
 			return null;
+		}
+
+		public override CodePiece generateCode(bool reversed)
+		{
+			if (reversed)
+			{
+				// $_ #! #: #,<"???"0
+				CodePiece p = new CodePiece();
+
+				p.AppendLeft(BCHelper.Digit_0);
+
+				p.AppendLeft(Value.generateCode(!reversed)); // <NOT reversed> so string is in reversed order on stack
+
+				p.AppendLeft(BCHelper.PC_Left);
+				p.AppendLeft(BCHelper.Out_ASCII);
+				p.AppendLeft(BCHelper.PC_Jump);
+				p.AppendLeft(BCHelper.Walkway);
+				p.AppendLeft(BCHelper.Stack_Dup);
+				p.AppendLeft(BCHelper.PC_Jump);
+				p.AppendLeft(BCHelper.Walkway);
+				p.AppendLeft(BCHelper.Not);
+				p.AppendLeft(BCHelper.PC_Jump);
+				p.AppendLeft(BCHelper.Walkway);
+				p.AppendLeft(BCHelper.If_Horizontal);
+				p.AppendLeft(BCHelper.Stack_Pop);
+
+				p.normalizeX();
+
+				return p;
+			}
+			else
+			{
+				// 0"???">,# :# _$
+				CodePiece p = new CodePiece();
+
+				p.AppendRight(BCHelper.Digit_0);
+
+				p.AppendRight(Value.generateCode(!reversed)); // <NOT reversed> so string is in reversed order on stack
+
+				p.AppendRight(BCHelper.PC_Right);
+				p.AppendRight(BCHelper.Out_ASCII);
+				p.AppendRight(BCHelper.PC_Jump);
+				p.AppendRight(BCHelper.Walkway);
+				p.AppendRight(BCHelper.Stack_Dup);
+				p.AppendRight(BCHelper.PC_Jump);
+				p.AppendRight(BCHelper.Walkway);
+				p.AppendRight(BCHelper.If_Horizontal);
+				p.AppendRight(BCHelper.Stack_Pop);
+
+				p.normalizeX();
+
+				return p;
+			}
 		}
 	}
 
@@ -429,6 +508,11 @@ namespace BefunGen.AST
 		{
 			return null;
 		}
+
+		public override CodePiece generateCode(bool reverse)
+		{
+			throw new NotImplementedException(); //TODO Implement
+		}
 	}
 
 	public class Statement_Quit : Statement
@@ -462,6 +546,11 @@ namespace BefunGen.AST
 		{
 			return null;
 		}
+
+		public override CodePiece generateCode(bool reverse)
+		{
+			throw new NotImplementedException(); //TODO Implement
+		}
 	}
 
 	public class Statement_NOP : Statement // NO OPERATION
@@ -494,6 +583,11 @@ namespace BefunGen.AST
 		public override Statement_Label findLabelByIdentifier(string ident)
 		{
 			return null;
+		}
+
+		public override CodePiece generateCode(bool reverse)
+		{
+			throw new NotImplementedException(); //TODO Implement
 		}
 	}
 
@@ -542,6 +636,11 @@ namespace BefunGen.AST
 		{
 			return null;
 		}
+
+		public override CodePiece generateCode(bool reverse)
+		{
+			throw new NotImplementedException(); //TODO Implement
+		}
 	}
 
 	public class Statement_Dec : Statement
@@ -584,6 +683,11 @@ namespace BefunGen.AST
 		public override Statement_Label findLabelByIdentifier(string ident)
 		{
 			return null;
+		}
+
+		public override CodePiece generateCode(bool reverse)
+		{
+			throw new NotImplementedException(); //TODO Implement
 		}
 	}
 
@@ -636,6 +740,11 @@ namespace BefunGen.AST
 		public override Statement_Label findLabelByIdentifier(string ident)
 		{
 			return null;
+		}
+
+		public override CodePiece generateCode(bool reverse)
+		{
+			throw new NotImplementedException(); //TODO Implement
 		}
 	}
 
@@ -706,6 +815,11 @@ namespace BefunGen.AST
 		{
 			return null;
 		}
+
+		public override CodePiece generateCode(bool reverse)
+		{
+			throw new NotImplementedException(); //TODO Implement
+		}
 	}
 
 	public class Statement_While : Statement
@@ -758,6 +872,11 @@ namespace BefunGen.AST
 		{
 			return null;
 		}
+
+		public override CodePiece generateCode(bool reverse)
+		{
+			throw new NotImplementedException(); //TODO Implement
+		}
 	}
 
 	public class Statement_RepeatUntil : Statement
@@ -809,6 +928,11 @@ namespace BefunGen.AST
 		public override Statement_Label findLabelByIdentifier(string ident)
 		{
 			return null;
+		}
+
+		public override CodePiece generateCode(bool reverse)
+		{
+			throw new NotImplementedException(); //TODO Implement
 		}
 	}
 
