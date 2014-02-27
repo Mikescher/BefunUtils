@@ -86,13 +86,16 @@ namespace BefunGen.AST
 		{
 			CodePiece p = new CodePiece();
 
+			// Generate Space for Variables
 			p.AppendBottom(generateCode_Variables(meth_offset_x, meth_offset_y));
 
 			//<<-- Entry Point
 
+			// Generate Initialization of Variables
 			p.AppendBottom(generateCode_VariableIntialization());
 
-			//<<-- Intialize Parameter
+			// Generate Initialization of Parameters
+			p.AppendBottom(generateCode_ParameterIntialization());
 
 			//<<-- Statement Block
 
@@ -160,6 +163,9 @@ namespace BefunGen.AST
 			{
 				VarDeclaration var = Variables[i];
 
+				if (Parameter.Contains(var))
+					continue;
+
 				CodePiece p_init_lr = var.generateCode(false);
 				CodePiece p_init_rl = var.generateCode(true);
 
@@ -169,7 +175,6 @@ namespace BefunGen.AST
 			if (varDecls.Count % 2 != 0)
 				varDecls.Add(Tuple.Create(new CodePiece(), new CodePiece()));
 
-			Console.WriteLine();
 			varDecls = varDecls.OrderByDescending(t => t.Item2.Width).ToList();
 
 
@@ -177,6 +182,64 @@ namespace BefunGen.AST
 			{
 				CodePiece cp_a = varDecls[i].Item1;
 				CodePiece cp_b = varDecls[i + 1].Item2;
+
+				cp_a.normalizeX();
+				cp_b.normalizeX();
+
+				int mw = Math.Max(cp_a.MaxX, cp_b.MaxX);
+
+				cp_a.AppendLeft(BCHelper.PC_Right);
+				cp_b.AppendLeft(BCHelper.PC_Down);
+
+				cp_a.Fill(cp_a.MaxX, 0, mw, 1, BCHelper.Walkway);
+				cp_b.Fill(cp_b.MaxX, 0, mw, 1, BCHelper.Walkway);
+
+				cp_a[mw, 0] = BCHelper.PC_Down;
+				cp_b[mw, 0] = BCHelper.PC_Left;
+
+				for (int y = cp_a.MinY; y < cp_a.MaxY; y++)
+					if (y != 0)
+						cp_a[cp_a.MaxX - 1, y] = BCHelper.Walkway;
+
+				for (int y = cp_b.MinY; y < cp_b.MaxY; y++)
+					if (y != 0)
+						cp_b[cp_b.MaxX - 1, y] = BCHelper.Walkway;
+
+				cp_a.normalizeX();
+				cp_b.normalizeX();
+
+				p.AppendBottom(cp_a);
+				p.AppendBottom(cp_b);
+			}
+
+			p.normalizeX();
+
+			return p;
+		}
+
+		private CodePiece generateCode_ParameterIntialization()
+		{
+			CodePiece p = new CodePiece();
+
+			List<Tuple<CodePiece, CodePiece>> paramDecls = new List<Tuple<CodePiece, CodePiece>>();
+
+			for (int i = Parameter.Count-1; i >= 0; i--)
+			{
+				VarDeclaration var = Parameter[i];
+
+				CodePiece p_init_lr = var.generateCode_Parameter(false);
+				CodePiece p_init_rl = var.generateCode_Parameter(true);
+
+				paramDecls.Add(Tuple.Create(p_init_lr, p_init_rl));
+			}
+
+			if (paramDecls.Count % 2 != 0)
+				paramDecls.Add(Tuple.Create(new CodePiece(), new CodePiece()));
+
+			for (int i = 0; i < paramDecls.Count; i += 2)
+			{
+				CodePiece cp_a = paramDecls[i].Item1;
+				CodePiece cp_b = paramDecls[i + 1].Item2;
 
 				cp_a.normalizeX();
 				cp_b.normalizeX();

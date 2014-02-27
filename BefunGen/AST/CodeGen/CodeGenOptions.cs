@@ -30,7 +30,7 @@ namespace BefunGen.AST.CodeGen
 		public static int DefaultVarDeclarationWidth = 16;
 
 		// The Value of reserved for variable fields before initialization 
-		public static BefungeCommand DefaultVarDeclarationSymbol = BCHelper.Stack_Pop;
+		public static BefungeCommand DefaultVarDeclarationSymbol = BCHelper.chr('V');
 
 		//TODO (Optional) When in STatementList and have Left->Right Statement test if next STatement is mirrorable (no If_Horiz) - the mirror it and append it directly beneath --> no empty line
 		// Expression Methodcall before codegen convert in AST to multiple statements (call methods->assign to var->use var in expr) (??? perhaps ???)
@@ -61,6 +61,11 @@ On Run     Stack:[???, BackJump]
 On Leave   Stack:[Result, BackJump] --> then swap [BackJump, Result]
 (Every Method becomes return 0; appended)
 (Even normal return; return Value 0)
+
+--> Extern Pipe and Method Intern pipe - first navigate to method on extern, then to re-enter pos on intern
+--> Push ALL Vars on stack on eavign and re enter them on re-entering
+
+For now no Inline Method Calls ... (only procedures - no functions) 
 
 #################
 

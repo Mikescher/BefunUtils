@@ -279,21 +279,21 @@ namespace BefunGen
 			//debugExpression("true || false");
 
 			debugMethod(@"
-int doFiber(/*int max*/)
-var
-	int a := 4;
-	bool b;	
-	char cc := 'o';
-	int[4] e := {40, 48, 60, -20};
-	bool c;
-	bool d := 10;
-	int[8] h;
+int doFiber(int max)
+//var
+//	int a := 4;
+//	bool b;	
+//	char cc := 'o';
+//	int[4] e := {40, 48, 60, -20};
+//	bool c;
+//	bool d := 10;
+//	int[8] h;
 begin
 	return 0;
 end
 				");
 
-			debugExpression("true || false");
+			//debugExpression("true || false");
 		}
 
 		private void btnRun_Click(object sender, EventArgs e)

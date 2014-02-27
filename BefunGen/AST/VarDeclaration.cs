@@ -74,6 +74,7 @@ namespace BefunGen.AST
 
 		// Code for Variable Initialization
 		public abstract CodePiece generateCode(bool reverse);
+		public abstract CodePiece generateCode_Parameter(bool reverse);
 	}
 
 	#region Children
@@ -94,8 +95,8 @@ namespace BefunGen.AST
 		{
 			CodePiece p = new CodePiece();
 
-			int varX = (CodePositionX);
-			int varY = (CodePositionY);
+			int varX = CodePositionX;
+			int varY = CodePositionY;
 
 			if (reverse)
 			{
@@ -107,6 +108,31 @@ namespace BefunGen.AST
 			else
 			{
 				p.AppendRight((Initial as Literal_Value).generateCode(reverse));
+				p.AppendRight(NumberCodeHelper.generateCode(varX, reverse));
+				p.AppendRight(NumberCodeHelper.generateCode(varY, reverse));
+				p.AppendRight(BCHelper.Reflect_Set);
+			}
+
+			p.normalizeX();
+
+			return p;
+		}
+
+		public override CodePiece generateCode_Parameter(bool reverse)
+		{
+			CodePiece p = new CodePiece();
+
+			int varX = CodePositionX;
+			int varY = CodePositionY;
+
+			if (reverse)
+			{
+				p.AppendLeft(NumberCodeHelper.generateCode(varX, reverse));
+				p.AppendLeft(NumberCodeHelper.generateCode(varY, reverse));
+				p.AppendLeft(BCHelper.Reflect_Set);
+			}
+			else
+			{
 				p.AppendRight(NumberCodeHelper.generateCode(varX, reverse));
 				p.AppendRight(NumberCodeHelper.generateCode(varY, reverse));
 				p.AppendRight(BCHelper.Reflect_Set);
@@ -150,8 +176,8 @@ namespace BefunGen.AST
 
 			Literal_Array value = Initial as Literal_Array;
 
-			int varX = (CodePositionX) - 1;
-			int varY = (CodePositionY);
+			int varX = CodePositionX - 1;
+			int varY = CodePositionY;
 
 			if (reverse)
 			{
@@ -227,7 +253,33 @@ namespace BefunGen.AST
 				p.AppendRight(op);
 			}
 
+			return p;
+		}
 
+		public override CodePiece generateCode_Parameter(bool reverse)
+		{
+			CodePiece p = new CodePiece();
+
+			int varX = CodePositionX;
+			int varY = CodePositionY;
+
+			for (int pos = 0; pos < Size; pos++)
+			{
+				if (reverse)
+				{
+					p.AppendLeft(NumberCodeHelper.generateCode(varX+pos, reverse));
+					p.AppendLeft(NumberCodeHelper.generateCode(varY, reverse));
+					p.AppendLeft(BCHelper.Reflect_Set);
+				}
+				else
+				{
+					p.AppendRight(NumberCodeHelper.generateCode(varX+pos, reverse));
+					p.AppendRight(NumberCodeHelper.generateCode(varY, reverse));
+					p.AppendRight(BCHelper.Reflect_Set);
+				}
+			}
+
+			p.normalizeX();
 
 			return p;
 		}
