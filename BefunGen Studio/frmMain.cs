@@ -295,7 +295,7 @@ namespace BefunGen
 
 			//debugExpression("true || false");
 
-			debugStatement("out \"blub:fasel\";");
+			debugStatement("out (char)48;");
 		}
 
 		private void btnRun_Click(object sender, EventArgs e)

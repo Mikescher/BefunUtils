@@ -5,7 +5,8 @@ namespace BefunGen.AST.CodeGen
 	{
 		CharConstant, //TODO What when neg
 		Base9,
-		Factorization//TODO Option to intelligent use Best Option
+		Factorization
+		//TODO Option to intelligent use Best Option
 	}
 
 	public class CodeGenOptions

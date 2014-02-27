@@ -549,7 +549,11 @@ namespace BefunGen.AST
 
 		public override CodePiece generateCode(bool reverse)
 		{
-			throw new NotImplementedException(); //TODO Implement
+			CodePiece p = new CodePiece();
+
+			p[0, 0] = BCHelper.Stop;
+
+			return p;
 		}
 	}
 
@@ -587,7 +591,7 @@ namespace BefunGen.AST
 
 		public override CodePiece generateCode(bool reverse)
 		{
-			throw new NotImplementedException(); //TODO Implement
+			return new CodePiece(); // easy as that ¯\_(ツ)_/¯
 		}
 	}
 
