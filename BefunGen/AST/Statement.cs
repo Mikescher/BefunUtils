@@ -872,7 +872,28 @@ namespace BefunGen.AST
 
 		public override CodePiece generateCode(bool reversed)
 		{
-			throw new NotImplementedException(); //TODO Implement
+			CodePiece p = new CodePiece();
+
+			if (reversed)
+			{
+				p.AppendLeft(Expr.generateCode(reversed));
+				p.AppendLeft(Target.generateCode(reversed));
+
+				p.AppendLeft(BCHelper.Reflect_Set);
+
+				p.normalizeX();
+			}
+			else
+			{
+				p.AppendRight(Expr.generateCode(reversed));
+				p.AppendRight(Target.generateCode(reversed));
+
+				p.AppendRight(BCHelper.Reflect_Set);
+
+				p.normalizeX();
+			}
+
+			return p;
 		}
 	}
 
