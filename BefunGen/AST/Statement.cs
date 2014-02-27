@@ -187,7 +187,7 @@ namespace BefunGen.AST
 
 				p.normalizeX();
 
-				CodePiece last = cp_stmts[cp_stmts.Count - 1].Normal;
+				CodePiece last = cp_stmts[cp_stmts.Count - 1].Normal; // << //TODO FAILS - MAKE BETTER
 				last.AppendLeft(BCHelper.PC_Right);
 				last.normalizeX();
 				last.Fill(last.MaxX, 0, p.MaxX, 1, BCHelper.Walkway);
@@ -463,7 +463,7 @@ namespace BefunGen.AST
 		{
 			Value.linkResultTypes(owner);
 
-			if (Value.getResultType() is BType_Array)
+			if (Value.getResultType() is BType_Array) //TODO Output Char Array !
 				throw new ImplicitCastException(new BType_Int(Position), Value.getResultType(), Value.Position);
 			if (Value.getResultType() is BType_Bool)
 				throw new ImplicitCastException(new BType_Int(Position), Value.getResultType(), Value.Position);
@@ -1074,7 +1074,41 @@ namespace BefunGen.AST
 
 		public override CodePiece generateCode(bool reversed)
 		{
-			throw new NotImplementedException(); //TODO Implement
+			CodePiece cp_body = Body.generateCode(!reversed);
+			cp_body.normalizeX();
+
+			CodePiece cp_cond = Condition.generateCode(reversed);
+			cp_cond.normalizeX();
+
+			if (reversed)
+			{
+				return null;
+			}
+			else
+			{
+				// > CONDITION #v_
+				// ^  STATEMENT <
+				CodePiece p = new CodePiece();
+
+				int top = cp_body.MinY - cp_cond.MaxY;
+				int right = Math.Max(cp_body.Width, cp_cond.Width + 1) + 1;
+
+				p[-1, 0] = BCHelper.PC_Up;
+				p[-1, top] = BCHelper.PC_Right;
+
+				p.SetAt(0, top, cp_cond);
+
+				p[right - 1, top] = BCHelper.PC_Jump;
+				p[right, top] = BCHelper.If_Horizontal;
+				p[right, 0] = BCHelper.PC_Left;
+
+				p.SetAt(0, 0, cp_body);
+
+				p.normalizeX();
+				p.AddYOffset(-top);
+
+				return p;
+			}
 		}
 	}
 

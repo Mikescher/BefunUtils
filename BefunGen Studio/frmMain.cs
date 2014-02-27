@@ -293,42 +293,60 @@ namespace BefunGen
 //end
 //				");
 
+//			debugMethod(@"
+//int doIt()
+//var
+//	char cr;
+//	char lf;
+//	int i := 48;
+//begin
+//	cr = (char)13;
+//	lf = (char)10;	
+//
+//	out (char)i;
+//	out cr;
+//	out lf;
+//	i++;
+//	out (char)i;
+//	out cr;
+//	out lf;
+//	i++;
+//	out (char)i;
+//	out cr;
+//	out lf;
+//	i++;
+//	out (char)i;
+//	out cr;
+//	out lf;
+//	i++;
+//	out (char)i;
+//	out cr;
+//	out lf;
+//	i++;
+//    out (char)(48+(int)RAND);
+//	out " + '"' + @"Hello" + '"' + @";
+//	out " + '"' + @" ... " + '"' + @";
+//	out " + '"' + @" World" + '"' + @";
+//	out (char)(48+(int)RAND);
+//	QUIT;
+//end
+//				");
+
+//			debugMethod(@"
+//int doIt()
+//begin
+//	while (true) do
+//	begin
+//		out (char)50;
+//	end
+//end
+//				");
+
 			debugMethod(@"
 int doIt()
-var
-	char cr;
-	char lf;
-	int i := 48;
 begin
-	cr = (char)13;
-	lf = (char)10;	
-
-	out (char)i;
-	out cr;
-	out lf;
-	i++;
-	out (char)i;
-	out cr;
-	out lf;
-	i++;
-	out (char)i;
-	out cr;
-	out lf;
-	i++;
-	out (char)i;
-	out cr;
-	out lf;
-	i++;
-	out (char)i;
-	out cr;
-	out lf;
-	i++;
-    out (char)(48+(int)RAND);
-	out " + '"' + @"Hello" + '"' + @";
-	out " + '"' + @" ... " + '"' + @";
-	out " + '"' + @" World" + '"' + @";
-	out (char)(48+(int)RAND);
-	QUIT;
+	out (char) 54;
+	out (char) 55;
 end
 				");
 

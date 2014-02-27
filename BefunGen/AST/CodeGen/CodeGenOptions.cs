@@ -69,6 +69,8 @@ On Leave   Stack:[Result, BackJump] --> then swap [BackJump, Result]
 
 For now no Inline Method Calls ... (only procedures - no functions) 
 
+For Inline Method Calls: Mark Expression entry and exit Points with Tags - then after generating whole Expression move in and out of it from above - building walkways ... (would need to be done in Statement)
+
 #################
 
 [!] BackJump Locations MUST have Y-DIstance from >= 3
