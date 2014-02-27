@@ -91,12 +91,12 @@ namespace BefunGen.AST
 			return Left.getResultType();
 		}
 
-		protected CodePiece generateCode_Operands(bool reverse, BefungeCommand cmd)
+		protected CodePiece generateCode_Operands(bool reversed, BefungeCommand cmd)
 		{
-			CodePiece cp_l = Left.generateCode(reverse);
-			CodePiece cp_r = Right.generateCode(reverse);
+			CodePiece cp_l = Left.generateCode(reversed);
+			CodePiece cp_r = Right.generateCode(reversed);
 
-			if (reverse)
+			if (reversed)
 			{
 				MathExt.Swap(ref cp_l, ref cp_r); // In Reverse Mode l & r are reversed and then they are reversed added
 			}
@@ -112,7 +112,7 @@ namespace BefunGen.AST
 
 			CodePiece p = CodePiece.CombineHorizontal(cp_l, cp_r);
 
-			if (reverse)
+			if (reversed)
 			{
 				p.AppendLeft(cmd);
 			}
@@ -299,9 +299,25 @@ namespace BefunGen.AST
 			return Target.Type;
 		}
 
-		public override CodePiece generateCode(bool reverse)
+		// This puts X and Y of the var are on the stack
+		public override CodePiece generateCode(bool reversed)
 		{
-			throw new NotImplementedException(); //TODO Implement
+			CodePiece p = new CodePiece();
+
+			if (reversed)
+			{
+				p.AppendLeft(NumberCodeHelper.generateCode(Target.CodePositionX, reversed));
+				p.AppendLeft(NumberCodeHelper.generateCode(Target.CodePositionY, reversed));
+			}
+			else
+			{
+				p.AppendRight(NumberCodeHelper.generateCode(Target.CodePositionX, reversed));
+				p.AppendRight(NumberCodeHelper.generateCode(Target.CodePositionY, reversed));
+			}
+
+			p.normalizeX();
+
+			return p;
 		}
 	}
 
@@ -359,9 +375,31 @@ namespace BefunGen.AST
 			return Target.InternalType;
 		}
 
-		public override CodePiece generateCode(bool reverse)
+		// This puts X and Y of the var are on the stack
+		public override CodePiece generateCode(bool reversed)
 		{
-			throw new NotImplementedException(); //TODO Implement
+			CodePiece p = new CodePiece();
+
+			if (reversed)
+			{
+				p.AppendLeft(Index.generateCode(reversed));
+
+				p.AppendLeft(NumberCodeHelper.generateCode(Target.CodePositionX, reversed));
+				p.AppendLeft(BCHelper.Add);
+				p.AppendLeft(NumberCodeHelper.generateCode(Target.CodePositionY, reversed));
+			}
+			else
+			{
+				p.AppendRight(Index.generateCode(reversed));
+
+				p.AppendRight(NumberCodeHelper.generateCode(Target.CodePositionX, reversed));
+				p.AppendRight(BCHelper.Add);
+				p.AppendRight(NumberCodeHelper.generateCode(Target.CodePositionY, reversed));
+			}
+
+			p.normalizeX();
+
+			return p;
 		}
 	}
 
@@ -415,9 +453,9 @@ namespace BefunGen.AST
 			return string.Format("({0} * {1})", Left.getDebugString(), Right.getDebugString());
 		}
 
-		public override CodePiece generateCode(bool reverse)
+		public override CodePiece generateCode(bool reversed)
 		{
-			CodePiece p = generateCode_Operands(reverse, BCHelper.Mult);
+			CodePiece p = generateCode_Operands(reversed, BCHelper.Mult);
 
 			return p;
 		}
@@ -436,9 +474,9 @@ namespace BefunGen.AST
 			return string.Format("({0} / {1})", Left.getDebugString(), Right.getDebugString());
 		}
 
-		public override CodePiece generateCode(bool reverse)
+		public override CodePiece generateCode(bool reversed)
 		{
-			CodePiece p = generateCode_Operands(reverse, BCHelper.Div);
+			CodePiece p = generateCode_Operands(reversed, BCHelper.Div);
 
 			return p;
 		}
@@ -457,9 +495,9 @@ namespace BefunGen.AST
 			return string.Format("({0} % {1})", Left.getDebugString(), Right.getDebugString());
 		}
 
-		public override CodePiece generateCode(bool reverse)
+		public override CodePiece generateCode(bool reversed)
 		{
-			CodePiece p = generateCode_Operands(reverse, BCHelper.Modulo);
+			CodePiece p = generateCode_Operands(reversed, BCHelper.Modulo);
 
 			return p;
 		}
@@ -478,9 +516,9 @@ namespace BefunGen.AST
 			return string.Format("({0} + {1})", Left.getDebugString(), Right.getDebugString());
 		}
 
-		public override CodePiece generateCode(bool reverse)
+		public override CodePiece generateCode(bool reversed)
 		{
-			CodePiece p = generateCode_Operands(reverse, BCHelper.Add);
+			CodePiece p = generateCode_Operands(reversed, BCHelper.Add);
 
 			return p;
 		}
@@ -499,9 +537,9 @@ namespace BefunGen.AST
 			return string.Format("({0} - {1})", Left.getDebugString(), Right.getDebugString());
 		}
 
-		public override CodePiece generateCode(bool reverse)
+		public override CodePiece generateCode(bool reversed)
 		{
-			CodePiece p = generateCode_Operands(reverse, BCHelper.Sub);
+			CodePiece p = generateCode_Operands(reversed, BCHelper.Sub);
 
 			return p;
 		}

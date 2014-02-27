@@ -20,7 +20,7 @@ namespace BefunGen.AST
 
 		public abstract Statement_Label findLabelByIdentifier(string ident);
 
-		public abstract CodePiece generateCode(bool reverse);
+		public abstract CodePiece generateCode(bool reversed);
 	}
 
 	#region Other
@@ -93,7 +93,7 @@ namespace BefunGen.AST
 				cp_stmts.Add(new TwoDirectionCodePiece());
 
 
-			if (reversed)
+			if (reversed) //TODO Reverse StatementList untested :(
 			{
 				CodePiece first = cp_stmts[0].Reversed;
 				first.AppendRight(BCHelper.PC_Left);
@@ -276,7 +276,7 @@ namespace BefunGen.AST
 			return null;
 		}
 
-		public override CodePiece generateCode(bool reverse)
+		public override CodePiece generateCode(bool reversed)
 		{
 			throw new NotImplementedException(); //TODO Implement
 		}
@@ -331,7 +331,7 @@ namespace BefunGen.AST
 			return ident.ToLower() == Identifier.ToLower() ? this : null;
 		}
 
-		public override CodePiece generateCode(bool reverse)
+		public override CodePiece generateCode(bool reversed)
 		{
 			throw new NotImplementedException(); //TODO Implement
 		}
@@ -375,7 +375,7 @@ namespace BefunGen.AST
 			return null;
 		}
 
-		public override CodePiece generateCode(bool reverse)
+		public override CodePiece generateCode(bool reversed)
 		{
 			throw new NotImplementedException(); //TODO Implement
 		}
@@ -433,7 +433,7 @@ namespace BefunGen.AST
 			return null;
 		}
 
-		public override CodePiece generateCode(bool reverse)
+		public override CodePiece generateCode(bool reversed)
 		{
 			throw new NotImplementedException(); //TODO Implement
 		}
@@ -633,7 +633,7 @@ namespace BefunGen.AST
 			return null;
 		}
 
-		public override CodePiece generateCode(bool reverse)
+		public override CodePiece generateCode(bool reversed)
 		{
 			throw new NotImplementedException(); //TODO Implement
 		}
@@ -671,7 +671,7 @@ namespace BefunGen.AST
 			return null;
 		}
 
-		public override CodePiece generateCode(bool reverse)
+		public override CodePiece generateCode(bool reversed)
 		{
 			CodePiece p = new CodePiece();
 
@@ -713,7 +713,7 @@ namespace BefunGen.AST
 			return null;
 		}
 
-		public override CodePiece generateCode(bool reverse)
+		public override CodePiece generateCode(bool reversed)
 		{
 			return new CodePiece(); // easy as that ¯\_(ツ)_/¯
 		}
@@ -765,7 +765,7 @@ namespace BefunGen.AST
 			return null;
 		}
 
-		public override CodePiece generateCode(bool reverse)
+		public override CodePiece generateCode(bool reversed)
 		{
 			throw new NotImplementedException(); //TODO Implement
 		}
@@ -813,7 +813,7 @@ namespace BefunGen.AST
 			return null;
 		}
 
-		public override CodePiece generateCode(bool reverse)
+		public override CodePiece generateCode(bool reversed)
 		{
 			throw new NotImplementedException(); //TODO Implement
 		}
@@ -870,7 +870,7 @@ namespace BefunGen.AST
 			return null;
 		}
 
-		public override CodePiece generateCode(bool reverse)
+		public override CodePiece generateCode(bool reversed)
 		{
 			throw new NotImplementedException(); //TODO Implement
 		}
@@ -944,7 +944,7 @@ namespace BefunGen.AST
 			return null;
 		}
 
-		public override CodePiece generateCode(bool reverse)
+		public override CodePiece generateCode(bool reversed)
 		{
 			throw new NotImplementedException(); //TODO Implement
 		}
@@ -1001,7 +1001,7 @@ namespace BefunGen.AST
 			return null;
 		}
 
-		public override CodePiece generateCode(bool reverse)
+		public override CodePiece generateCode(bool reversed)
 		{
 			throw new NotImplementedException(); //TODO Implement
 		}
@@ -1058,7 +1058,7 @@ namespace BefunGen.AST
 			return null;
 		}
 
-		public override CodePiece generateCode(bool reverse)
+		public override CodePiece generateCode(bool reversed)
 		{
 			throw new NotImplementedException(); //TODO Implement
 		}

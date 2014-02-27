@@ -14,7 +14,7 @@ namespace BefunGen.AST
 
 		public abstract BType getBType();
 
-		public abstract CodePiece generateCode(bool reverse);
+		public abstract CodePiece generateCode(bool reversed);
 	}
 
 	#region Parents
@@ -100,9 +100,9 @@ namespace BefunGen.AST
 			return new BType_Char(new SourceCodePosition());
 		}
 
-		public override CodePiece generateCode(bool reverse)
+		public override CodePiece generateCode(bool reversed)
 		{
-			return NumberCodeHelper.generateCode_Stringmode(Value, reverse);
+			return NumberCodeHelper.generateCode_Stringmode(Value, reversed);
 		}
 	}
 
@@ -126,7 +126,7 @@ namespace BefunGen.AST
 			return new BType_Bool(new SourceCodePosition());
 		}
 
-		public override CodePiece generateCode(bool reverse)
+		public override CodePiece generateCode(bool reversed)
 		{
 			return NumberCodeHelper.generateCode(Value);
 		}
@@ -152,7 +152,7 @@ namespace BefunGen.AST
 			return new BType_Digit(new SourceCodePosition());
 		}
 
-		public override CodePiece generateCode(bool reverse)
+		public override CodePiece generateCode(bool reversed)
 		{
 			return NumberCodeHelper.generateCode_Digit(Value);
 		}
@@ -192,16 +192,16 @@ namespace BefunGen.AST
 			Value.Add(0);
 		}
 
-		public override CodePiece generateCode(bool reverse)
+		public override CodePiece generateCode(bool reversed)
 		{
 			CodePiece p = new CodePiece();
 
 			foreach (int val in Value)
 			{
-				if (reverse)
-					p.AppendRight(NumberCodeHelper.generateCode(val, reverse));
+				if (reversed)
+					p.AppendRight(NumberCodeHelper.generateCode(val, reversed));
 				else
-					p.AppendLeft(NumberCodeHelper.generateCode(val, reverse));
+					p.AppendLeft(NumberCodeHelper.generateCode(val, reversed));
 			}
 
 			p.normalize();
@@ -251,12 +251,12 @@ namespace BefunGen.AST
 			Value.Add('0');
 		}
 
-		public override CodePiece generateCode(bool reverse)
+		public override CodePiece generateCode(bool reversed)
 		{
 			CodePiece p = new CodePiece();
 			int i = 0;
 
-			if (reverse)
+			if (reversed)
 			{
 				p[i--, 0] = BCHelper.Stringmode;
 				foreach (char val in Value)
@@ -316,12 +316,12 @@ namespace BefunGen.AST
 			Value.Add(false);
 		}
 
-		public override CodePiece generateCode(bool reverse)
+		public override CodePiece generateCode(bool reversed)
 		{
 			CodePiece p = new CodePiece();
 			int i = 0;
 
-			if (reverse)
+			if (reversed)
 			{
 				foreach (bool val in Value)
 				{
@@ -377,12 +377,12 @@ namespace BefunGen.AST
 			Value.Add(0);
 		}
 
-		public override CodePiece generateCode(bool reverse)
+		public override CodePiece generateCode(bool reversed)
 		{
 			CodePiece p = new CodePiece();
 			int i = 0;
 
-			if (reverse)
+			if (reversed)
 			{
 				foreach (byte val in Value)
 				{

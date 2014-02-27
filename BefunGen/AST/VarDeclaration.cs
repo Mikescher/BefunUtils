@@ -12,7 +12,7 @@ namespace BefunGen.AST
 		public readonly Literal Initial;
 		public readonly int ID;
 
-		public int _CodePositionX = -1;
+		private int _CodePositionX = -1;
 		public int CodePositionX
 		{
 			get
@@ -26,7 +26,7 @@ namespace BefunGen.AST
 			set { _CodePositionX = value; }
 		}
 
-		public int _CodePositionY = -1;
+		private int _CodePositionY = -1;
 		public int CodePositionY
 		{
 			get
@@ -73,8 +73,8 @@ namespace BefunGen.AST
 		}
 
 		// Code for Variable Initialization
-		public abstract CodePiece generateCode(bool reverse);
-		public abstract CodePiece generateCode_Parameter(bool reverse);
+		public abstract CodePiece generateCode(bool reversed);
+		public abstract CodePiece generateCode_Parameter(bool reversed);
 	}
 
 	#region Children
@@ -91,25 +91,25 @@ namespace BefunGen.AST
 		{
 		}
 
-		public override CodePiece generateCode(bool reverse)
+		public override CodePiece generateCode(bool reversed)
 		{
 			CodePiece p = new CodePiece();
 
 			int varX = CodePositionX;
 			int varY = CodePositionY;
 
-			if (reverse)
+			if (reversed)
 			{
-				p.AppendLeft((Initial as Literal_Value).generateCode(reverse));
-				p.AppendLeft(NumberCodeHelper.generateCode(varX, reverse));
-				p.AppendLeft(NumberCodeHelper.generateCode(varY, reverse));
+				p.AppendLeft((Initial as Literal_Value).generateCode(reversed));
+				p.AppendLeft(NumberCodeHelper.generateCode(varX, reversed));
+				p.AppendLeft(NumberCodeHelper.generateCode(varY, reversed));
 				p.AppendLeft(BCHelper.Reflect_Set);
 			}
 			else
 			{
-				p.AppendRight((Initial as Literal_Value).generateCode(reverse));
-				p.AppendRight(NumberCodeHelper.generateCode(varX, reverse));
-				p.AppendRight(NumberCodeHelper.generateCode(varY, reverse));
+				p.AppendRight((Initial as Literal_Value).generateCode(reversed));
+				p.AppendRight(NumberCodeHelper.generateCode(varX, reversed));
+				p.AppendRight(NumberCodeHelper.generateCode(varY, reversed));
 				p.AppendRight(BCHelper.Reflect_Set);
 			}
 
@@ -118,23 +118,23 @@ namespace BefunGen.AST
 			return p;
 		}
 
-		public override CodePiece generateCode_Parameter(bool reverse)
+		public override CodePiece generateCode_Parameter(bool reversed)
 		{
 			CodePiece p = new CodePiece();
 
 			int varX = CodePositionX;
 			int varY = CodePositionY;
 
-			if (reverse)
+			if (reversed)
 			{
-				p.AppendLeft(NumberCodeHelper.generateCode(varX, reverse));
-				p.AppendLeft(NumberCodeHelper.generateCode(varY, reverse));
+				p.AppendLeft(NumberCodeHelper.generateCode(varX, reversed));
+				p.AppendLeft(NumberCodeHelper.generateCode(varY, reversed));
 				p.AppendLeft(BCHelper.Reflect_Set);
 			}
 			else
 			{
-				p.AppendRight(NumberCodeHelper.generateCode(varX, reverse));
-				p.AppendRight(NumberCodeHelper.generateCode(varY, reverse));
+				p.AppendRight(NumberCodeHelper.generateCode(varX, reversed));
+				p.AppendRight(NumberCodeHelper.generateCode(varY, reversed));
 				p.AppendRight(BCHelper.Reflect_Set);
 			}
 
@@ -170,7 +170,7 @@ namespace BefunGen.AST
 			}
 		}
 
-		public override CodePiece generateCode(bool reverse)
+		public override CodePiece generateCode(bool reversed)
 		{
 			CodePiece p = new CodePiece();
 
@@ -179,14 +179,14 @@ namespace BefunGen.AST
 			int varX = CodePositionX - 1;
 			int varY = CodePositionY;
 
-			if (reverse)
+			if (reversed)
 			{
 				p.AppendLeft(BCHelper.Digit_0);
 
 				for (int i = 0; i < Size; i++)
 				{
-					p.AppendLeft(value.generateCode(i, reverse));
-					p.AppendLeft(NumberCodeHelper.generateCode(i + 1, reverse));
+					p.AppendLeft(value.generateCode(i, reversed));
+					p.AppendLeft(NumberCodeHelper.generateCode(i + 1, reversed));
 				}
 
 				// ################################
@@ -196,9 +196,9 @@ namespace BefunGen.AST
 				CodePiece op = new CodePiece();
 
 				op.AppendLeft(BCHelper.PC_Left);
-				op.AppendLeft(NumberCodeHelper.generateCode(varX, reverse));
+				op.AppendLeft(NumberCodeHelper.generateCode(varX, reversed));
 				op.AppendLeft(BCHelper.Add);
-				op.AppendLeft(NumberCodeHelper.generateCode(varY, reverse));
+				op.AppendLeft(NumberCodeHelper.generateCode(varY, reversed));
 				op.AppendLeft(BCHelper.Reflect_Set);
 				op.AppendLeft(BCHelper.Stack_Dup);
 				op.AppendLeft(BCHelper.Not);
@@ -222,8 +222,8 @@ namespace BefunGen.AST
 
 				for (int i = 0; i < Size; i++)
 				{
-					p.AppendRight(value.generateCode(i, reverse));
-					p.AppendRight(NumberCodeHelper.generateCode(i + 1, reverse));
+					p.AppendRight(value.generateCode(i, reversed));
+					p.AppendRight(NumberCodeHelper.generateCode(i + 1, reversed));
 				}
 
 				// ################################
@@ -233,9 +233,9 @@ namespace BefunGen.AST
 				CodePiece op = new CodePiece();
 
 				op.AppendRight(BCHelper.PC_Right);
-				op.AppendRight(NumberCodeHelper.generateCode(varX, reverse));
+				op.AppendRight(NumberCodeHelper.generateCode(varX, reversed));
 				op.AppendRight(BCHelper.Add);
-				op.AppendRight(NumberCodeHelper.generateCode(varY, reverse));
+				op.AppendRight(NumberCodeHelper.generateCode(varY, reversed));
 				op.AppendRight(BCHelper.Reflect_Set);
 				op.AppendRight(BCHelper.Stack_Dup);
 				op.AppendRight(BCHelper.PC_Jump);
@@ -256,7 +256,7 @@ namespace BefunGen.AST
 			return p;
 		}
 
-		public override CodePiece generateCode_Parameter(bool reverse)
+		public override CodePiece generateCode_Parameter(bool reversed)
 		{
 			CodePiece p = new CodePiece();
 
@@ -265,16 +265,16 @@ namespace BefunGen.AST
 
 			for (int pos = 0; pos < Size; pos++)
 			{
-				if (reverse)
+				if (reversed)
 				{
-					p.AppendLeft(NumberCodeHelper.generateCode(varX+pos, reverse));
-					p.AppendLeft(NumberCodeHelper.generateCode(varY, reverse));
+					p.AppendLeft(NumberCodeHelper.generateCode(varX+pos, reversed));
+					p.AppendLeft(NumberCodeHelper.generateCode(varY, reversed));
 					p.AppendLeft(BCHelper.Reflect_Set);
 				}
 				else
 				{
-					p.AppendRight(NumberCodeHelper.generateCode(varX+pos, reverse));
-					p.AppendRight(NumberCodeHelper.generateCode(varY, reverse));
+					p.AppendRight(NumberCodeHelper.generateCode(varX+pos, reversed));
+					p.AppendRight(NumberCodeHelper.generateCode(varY, reversed));
 					p.AppendRight(BCHelper.Reflect_Set);
 				}
 			}
