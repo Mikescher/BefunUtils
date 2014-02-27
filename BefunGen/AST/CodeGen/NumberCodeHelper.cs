@@ -8,7 +8,7 @@ namespace BefunGen.AST.CodeGen
 {
 	public class NumberCodeHelper
 	{
-		public static CodePiece generateCode(int Value, bool reversed = false)
+		public static CodePiece generateCode(int Value, bool reversed)
 		{
 			CodePiece p;
 
@@ -25,12 +25,12 @@ namespace BefunGen.AST.CodeGen
 				else if (CodeGenOptions.NumberLiteralRepresentation == NumberRep.Base9)
 				{
 					p = Base9Converter.generateCodeForLiteral(Value);
-					if (reversed) p.reverseX();
+					if (reversed) p.reverseX(false);
 				}
 				else if (CodeGenOptions.NumberLiteralRepresentation == NumberRep.Factorization)
 				{
 					p = NumberFactorization.generateCodeForLiteral(Value);
-					if (reversed) p.reverseX();
+					if (reversed) p.reverseX(false);
 				}
 				else
 				{
@@ -48,7 +48,7 @@ namespace BefunGen.AST.CodeGen
 			return p;
 		}
 
-		public static CodePiece generateCode_Stringmode(int Value, bool reversed = false)
+		public static CodePiece generateCode_Stringmode(int Value, bool reversed)
 		{
 			CodePiece p = new CodePiece();
 
@@ -64,7 +64,7 @@ namespace BefunGen.AST.CodeGen
 				p[2, 0] = BCHelper.Digit_1;
 				p[2, 0] = BCHelper.Sub;
 
-				if (reversed) p.reverseX();
+				if (reversed) p.reverseX(false);
 			}
 			else
 			{

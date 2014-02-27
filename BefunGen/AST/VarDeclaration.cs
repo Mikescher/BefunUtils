@@ -185,8 +185,8 @@ namespace BefunGen.AST
 
 				for (int i = 0; i < Size; i++)
 				{
-					p.AppendLeft(value.generateCode(i, true));
-					p.AppendLeft(NumberCodeHelper.generateCode(i + 1, true));
+					p.AppendLeft(value.generateCode(i, reverse));
+					p.AppendLeft(NumberCodeHelper.generateCode(i + 1, reverse));
 				}
 
 				// ################################
@@ -222,8 +222,8 @@ namespace BefunGen.AST
 
 				for (int i = 0; i < Size; i++)
 				{
-					p.AppendRight(value.generateCode(i));
-					p.AppendRight(NumberCodeHelper.generateCode(i + 1));
+					p.AppendRight(value.generateCode(i, reverse));
+					p.AppendRight(NumberCodeHelper.generateCode(i + 1, reverse));
 				}
 
 				// ################################

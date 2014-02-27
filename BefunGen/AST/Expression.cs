@@ -1,5 +1,6 @@
 ﻿using BefunGen.AST.CodeGen;
 using BefunGen.AST.Exceptions;
+using BefunGen.MathExtensions;
 using System;
 namespace BefunGen.AST
 {
@@ -17,7 +18,7 @@ namespace BefunGen.AST
 
 		public abstract BType getResultType();
 
-		public abstract CodePiece generateCode();
+		public abstract CodePiece generateCode(bool reversed);
 	}
 
 	#region Parents
@@ -90,10 +91,15 @@ namespace BefunGen.AST
 			return Left.getResultType();
 		}
 
-		protected CodePiece generateCode_Operands()
+		protected CodePiece generateCode_Operands(bool reverse, BefungeCommand cmd)
 		{
-			CodePiece cp_l = Left.generateCode();
-			CodePiece cp_r = Right.generateCode();
+			CodePiece cp_l = Left.generateCode(reverse);
+			CodePiece cp_r = Right.generateCode(reverse);
+
+			if (reverse)
+			{
+				MathExt.Swap(ref cp_l, ref cp_r); // In Reverse Mode l & r are reversed and then they are reversed added
+			}
 
 			if (CodeGenOptions.StripDoubleStringmodeToogle)
 			{
@@ -105,6 +111,17 @@ namespace BefunGen.AST
 			}
 
 			CodePiece p = CodePiece.CombineHorizontal(cp_l, cp_r);
+
+			if (reverse)
+			{
+				p.AppendLeft(cmd);
+			}
+			else
+			{
+				p.AppendRight(cmd);
+			}
+
+			p.normalizeX();
 
 			return p;
 		}
@@ -282,7 +299,7 @@ namespace BefunGen.AST
 			return Target.Type;
 		}
 
-		public override CodePiece generateCode()
+		public override CodePiece generateCode(bool reverse)
 		{
 			throw new NotImplementedException(); //TODO Implement
 		}
@@ -342,7 +359,7 @@ namespace BefunGen.AST
 			return Target.InternalType;
 		}
 
-		public override CodePiece generateCode()
+		public override CodePiece generateCode(bool reverse)
 		{
 			throw new NotImplementedException(); //TODO Implement
 		}
@@ -375,7 +392,7 @@ namespace BefunGen.AST
 			return new BType_Void(Position);
 		}
 
-		public override CodePiece generateCode()
+		public override CodePiece generateCode(bool reversed)
 		{
 			throw new InvalidASTStateException(Position);
 		}
@@ -398,11 +415,9 @@ namespace BefunGen.AST
 			return string.Format("({0} * {1})", Left.getDebugString(), Right.getDebugString());
 		}
 
-		public override CodePiece generateCode()
+		public override CodePiece generateCode(bool reverse)
 		{
-			CodePiece p = generateCode_Operands();
-
-			p[p.MaxX, 0] = BCHelper.Mult;
+			CodePiece p = generateCode_Operands(reverse, BCHelper.Mult);
 
 			return p;
 		}
@@ -421,11 +436,9 @@ namespace BefunGen.AST
 			return string.Format("({0} / {1})", Left.getDebugString(), Right.getDebugString());
 		}
 
-		public override CodePiece generateCode()
+		public override CodePiece generateCode(bool reverse)
 		{
-			CodePiece p = generateCode_Operands();
-
-			p[p.MaxX, 0] = BCHelper.Div;
+			CodePiece p = generateCode_Operands(reverse, BCHelper.Div);
 
 			return p;
 		}
@@ -444,11 +457,9 @@ namespace BefunGen.AST
 			return string.Format("({0} % {1})", Left.getDebugString(), Right.getDebugString());
 		}
 
-		public override CodePiece generateCode()
+		public override CodePiece generateCode(bool reverse)
 		{
-			CodePiece p = generateCode_Operands();
-
-			p[p.MaxX, 0] = BCHelper.Modulo;
+			CodePiece p = generateCode_Operands(reverse, BCHelper.Modulo);
 
 			return p;
 		}
@@ -467,11 +478,9 @@ namespace BefunGen.AST
 			return string.Format("({0} + {1})", Left.getDebugString(), Right.getDebugString());
 		}
 
-		public override CodePiece generateCode()
+		public override CodePiece generateCode(bool reverse)
 		{
-			CodePiece p = generateCode_Operands();
-
-			p[p.MaxX, 0] = BCHelper.Add;
+			CodePiece p = generateCode_Operands(reverse, BCHelper.Add);
 
 			return p;
 		}
@@ -490,11 +499,9 @@ namespace BefunGen.AST
 			return string.Format("({0} - {1})", Left.getDebugString(), Right.getDebugString());
 		}
 
-		public override CodePiece generateCode()
+		public override CodePiece generateCode(bool reverse)
 		{
-			CodePiece p = generateCode_Operands();
-
-			p[p.MaxX, 0] = BCHelper.Sub;
+			CodePiece p = generateCode_Operands(reverse, BCHelper.Sub);
 
 			return p;
 		}
@@ -517,44 +524,86 @@ namespace BefunGen.AST
 			return string.Format("({0} AND {1})", Left.getDebugString(), Right.getDebugString());
 		}
 
-		public override CodePiece generateCode()
+		public override CodePiece generateCode(bool reversed)
 		{
-			// >1  v
-			// ^_0 v
-			//  |  >
-			//  >$0^
+			if (reversed)
+			{
+				// v  0<
+				// v 1_^
+				// <  | 
+				// ^0$< 
+				CodePiece p = new CodePiece();
 
-			CodePiece p = new CodePiece();
+				p[0, -2] = BCHelper.PC_Down;
+				p[1, -2] = BCHelper.Walkway;
+				p[2, -2] = BCHelper.Walkway;
+				p[3, -2] = BCHelper.Digit_0;
+				p[4, -2] = BCHelper.PC_Left;
 
-			p[0, -2] = BCHelper.PC_Right;
-			p[1, -2] = BCHelper.Digit_1;
-			p[2, -2] = BCHelper.Walkway;
-			p[3, -2] = BCHelper.Walkway;
-			p[4, -2] = BCHelper.PC_Down;
+				p[0, -1] = BCHelper.PC_Down;
+				p[1, -1] = BCHelper.Walkway;
+				p[2, -1] = BCHelper.Digit_1;
+				p[3, -1] = BCHelper.If_Horizontal;
+				p[4, -1] = BCHelper.PC_Up;
 
-			p[0, -1] = BCHelper.PC_Up;
-			p[1, -1] = BCHelper.If_Horizontal;
-			p[2, -1] = BCHelper.Digit_0;
-			p[3, -1] = BCHelper.Walkway;
-			p[4, -1] = BCHelper.PC_Down;
+				p[0, 0] = BCHelper.PC_Left;
+				p[1, 0] = BCHelper.Unused;
+				p[2, 0] = BCHelper.Unused;
+				p[3, 0] = BCHelper.If_Vertical;
+				p[4, 0] = BCHelper.Walkway;
 
-			p[0, 0] = BCHelper.Walkway;
-			p[1, 0] = BCHelper.If_Vertical;
-			p[2, 0] = BCHelper.Unused;
-			p[3, 0] = BCHelper.Unused;
-			p[4, 0] = BCHelper.PC_Right;
+				p[0, 1] = BCHelper.PC_Up;
+				p[1, 1] = BCHelper.Digit_0;
+				p[2, 1] = BCHelper.Stack_Pop;
+				p[3, 1] = BCHelper.PC_Left;
+				p[4, 1] = BCHelper.Unused;
 
-			p[0, 1] = BCHelper.Unused;
-			p[1, 1] = BCHelper.PC_Left;
-			p[2, 1] = BCHelper.Stack_Pop;
-			p[3, 1] = BCHelper.Digit_0;
-			p[4, 1] = BCHelper.PC_Up;
+				p.AppendRight(Right.generateCode(reversed));
+				p.AppendRight(Left.generateCode(reversed));
 
-			p.AppendLeft(Right.generateCode());
-			p.AppendLeft(Left.generateCode());
-			p.normalizeX();
+				p.normalizeX();
 
-			return p;
+				return p;
+			}
+			else
+			{
+				// >1  v
+				// ^_0 v
+				//  |  >
+				//  >$0^
+				CodePiece p = new CodePiece();
+
+				p[0, -2] = BCHelper.PC_Right;
+				p[1, -2] = BCHelper.Digit_1;
+				p[2, -2] = BCHelper.Walkway;
+				p[3, -2] = BCHelper.Walkway;
+				p[4, -2] = BCHelper.PC_Down;
+
+				p[0, -1] = BCHelper.PC_Up;
+				p[1, -1] = BCHelper.If_Horizontal;
+				p[2, -1] = BCHelper.Digit_0;
+				p[3, -1] = BCHelper.Walkway;
+				p[4, -1] = BCHelper.PC_Down;
+
+				p[0, 0] = BCHelper.Walkway;
+				p[1, 0] = BCHelper.If_Vertical;
+				p[2, 0] = BCHelper.Unused;
+				p[3, 0] = BCHelper.Unused;
+				p[4, 0] = BCHelper.PC_Right;
+
+				p[0, 1] = BCHelper.Unused;
+				p[1, 1] = BCHelper.PC_Left;
+				p[2, 1] = BCHelper.Stack_Pop;
+				p[3, 1] = BCHelper.Digit_0;
+				p[4, 1] = BCHelper.PC_Up;
+
+				p.AppendLeft(Right.generateCode(reversed));
+				p.AppendLeft(Left.generateCode(reversed));
+
+				p.normalizeX();
+
+				return p;
+			}
 		}
 	}
 
@@ -571,44 +620,85 @@ namespace BefunGen.AST
 			return string.Format("({0} OR {1})", Left.getDebugString(), Right.getDebugString());
 		}
 
-		public override CodePiece generateCode()
+		public override CodePiece generateCode(bool reversed)
 		{
-			//  >$1v
-			//  |  >
-			// v_0 ^
-			// >1  ^
+			if (reversed)
+			{
+				// v1$<
+				// <  |
+				// ^ 1_v
+				// ^  0<
+				CodePiece p = new CodePiece();
 
-			CodePiece p = new CodePiece();
+				p[0, -1] = BCHelper.PC_Down;
+				p[1, -1] = BCHelper.Digit_1;
+				p[2, -1] = BCHelper.Stack_Pop;
+				p[3, -1] = BCHelper.PC_Left;
+				p[4, -1] = BCHelper.Unused;
 
-			p[0, -1] = BCHelper.Unused;
-			p[1, -1] = BCHelper.PC_Right;
-			p[2, -1] = BCHelper.Stack_Pop;
-			p[3, -1] = BCHelper.Digit_1;
-			p[4, -1] = BCHelper.PC_Down;
+				p[0, 0] = BCHelper.PC_Left;
+				p[1, 0] = BCHelper.Unused;
+				p[2, 0] = BCHelper.Unused;
+				p[3, 0] = BCHelper.If_Vertical;
+				p[4, 0] = BCHelper.Walkway;
 
-			p[0, 0] = BCHelper.Walkway;
-			p[1, 0] = BCHelper.If_Vertical;
-			p[2, 0] = BCHelper.Unused;
-			p[3, 0] = BCHelper.Unused;
-			p[4, 0] = BCHelper.PC_Right;
+				p[0, 1] = BCHelper.PC_Up;
+				p[1, 1] = BCHelper.Walkway;
+				p[2, 1] = BCHelper.Digit_1;
+				p[3, 1] = BCHelper.If_Horizontal;
+				p[4, 1] = BCHelper.PC_Down;
 
-			p[0, 1] = BCHelper.PC_Down;
-			p[1, 1] = BCHelper.If_Horizontal;
-			p[2, 1] = BCHelper.Digit_0;
-			p[3, 1] = BCHelper.Walkway;
-			p[4, 1] = BCHelper.PC_Up;
+				p[0, 2] = BCHelper.PC_Up;
+				p[1, 2] = BCHelper.Walkway;
+				p[2, 2] = BCHelper.Walkway;
+				p[3, 2] = BCHelper.Digit_0;
+				p[4, 2] = BCHelper.PC_Left;
 
-			p[0, 2] = BCHelper.PC_Left;
-			p[1, 2] = BCHelper.Digit_1;
-			p[2, 2] = BCHelper.Walkway;
-			p[3, 2] = BCHelper.Walkway;
-			p[4, 2] = BCHelper.PC_Up;
+				p.AppendRight(Right.generateCode(reversed));
+				p.AppendRight(Left.generateCode(reversed));
+				p.normalizeX();
 
-			p.AppendLeft(Right.generateCode());
-			p.AppendLeft(Left.generateCode());
-			p.normalizeX();
+				return p;
 
-			return p;
+			}
+			else
+			{
+				//  >$1v
+				//  |  >
+				// v_0 ^
+				// >1  ^
+				CodePiece p = new CodePiece();
+
+				p[0, -1] = BCHelper.Unused;
+				p[1, -1] = BCHelper.PC_Right;
+				p[2, -1] = BCHelper.Stack_Pop;
+				p[3, -1] = BCHelper.Digit_1;
+				p[4, -1] = BCHelper.PC_Down;
+
+				p[0, 0] = BCHelper.Walkway;
+				p[1, 0] = BCHelper.If_Vertical;
+				p[2, 0] = BCHelper.Unused;
+				p[3, 0] = BCHelper.Unused;
+				p[4, 0] = BCHelper.PC_Right;
+
+				p[0, 1] = BCHelper.PC_Down;
+				p[1, 1] = BCHelper.If_Horizontal;
+				p[2, 1] = BCHelper.Digit_0;
+				p[3, 1] = BCHelper.Walkway;
+				p[4, 1] = BCHelper.PC_Up;
+
+				p[0, 2] = BCHelper.PC_Left;
+				p[1, 2] = BCHelper.Digit_1;
+				p[2, 2] = BCHelper.Walkway;
+				p[3, 2] = BCHelper.Walkway;
+				p[4, 2] = BCHelper.PC_Up;
+
+				p.AppendLeft(Right.generateCode(reversed));
+				p.AppendLeft(Left.generateCode(reversed));
+				p.normalizeX();
+
+				return p;
+			}
 		}
 	}
 
@@ -625,51 +715,98 @@ namespace BefunGen.AST
 			return string.Format("({0} XOR {1})", Left.getDebugString(), Right.getDebugString());
 		}
 
-		public override CodePiece generateCode()
+		public override CodePiece generateCode(bool reversed)
 		{
-			//  > v 
-			//  v_1v
-			// ##|>>
-			//  ^_0^
-			//  > ^
+			if (reversed)
+			{
+				// v < 
+				//v0_v 
+				//<<|##
+				//^1_^ 
+				// ^ < 
+				CodePiece p = new CodePiece();
 
-			CodePiece p = new CodePiece();
+				p[0, -2] = BCHelper.Unused;
+				p[1, -2] = BCHelper.PC_Down;
+				p[2, -2] = BCHelper.Walkway;
+				p[3, -2] = BCHelper.PC_Left;
+				p[4, -2] = BCHelper.Unused;
 
-			p[0, -2] = BCHelper.Unused;
-			p[1, -2] = BCHelper.PC_Right;
-			p[2, -2] = BCHelper.Walkway;
-			p[3, -2] = BCHelper.PC_Down;
-			p[4, -2] = BCHelper.Unused;
+				p[0, -1] = BCHelper.PC_Down;
+				p[1, -1] = BCHelper.Digit_0;
+				p[2, -1] = BCHelper.If_Horizontal;
+				p[3, -1] = BCHelper.PC_Down;
+				p[4, -1] = BCHelper.Unused;
 
-			p[0, -1] = BCHelper.Unused;
-			p[1, -1] = BCHelper.PC_Down;
-			p[2, -1] = BCHelper.If_Horizontal;
-			p[3, -1] = BCHelper.Digit_1;
-			p[4, -1] = BCHelper.PC_Down;
+				p[0, 0] = BCHelper.PC_Left;
+				p[1, 0] = BCHelper.PC_Left;
+				p[2, 0] = BCHelper.If_Vertical;
+				p[3, 0] = BCHelper.PC_Jump;
+				p[4, 0] = BCHelper.PC_Jump;
 
-			p[0, 0] = BCHelper.PC_Jump;
-			p[1, 0] = BCHelper.PC_Jump;
-			p[2, 0] = BCHelper.If_Vertical;
-			p[3, 0] = BCHelper.PC_Right;
-			p[4, 0] = BCHelper.PC_Right;
+				p[0, 1] = BCHelper.PC_Up;
+				p[1, 1] = BCHelper.Digit_1;
+				p[2, 1] = BCHelper.If_Horizontal;
+				p[3, 1] = BCHelper.PC_Up;
+				p[4, 1] = BCHelper.Unused;
 
-			p[0, 1] = BCHelper.Unused;
-			p[1, 1] = BCHelper.PC_Up;
-			p[2, 1] = BCHelper.If_Horizontal;
-			p[3, 1] = BCHelper.Digit_0;
-			p[4, 1] = BCHelper.PC_Up;
+				p[0, 2] = BCHelper.Unused;
+				p[1, 2] = BCHelper.PC_Up;
+				p[2, 2] = BCHelper.Walkway;
+				p[3, 2] = BCHelper.PC_Left;
+				p[4, 2] = BCHelper.Unused;
 
-			p[0, 2] = BCHelper.Unused;
-			p[1, 2] = BCHelper.PC_Right;
-			p[2, 2] = BCHelper.Walkway;
-			p[3, 2] = BCHelper.PC_Up;
-			p[4, 2] = BCHelper.Unused;
+				p.AppendRight(Right.generateCode(reversed));
+				p.AppendRight(Left.generateCode(reversed));
+				p.normalizeX();
 
-			p.AppendLeft(Right.generateCode());
-			p.AppendLeft(Left.generateCode());
-			p.normalizeX();
+				return p;
+			}
+			else
+			{
+				//  > v 
+				//  v_1v
+				// ##|>>
+				//  ^_0^
+				//  > ^
+				CodePiece p = new CodePiece();
 
-			return p;
+				p[0, -2] = BCHelper.Unused;
+				p[1, -2] = BCHelper.PC_Right;
+				p[2, -2] = BCHelper.Walkway;
+				p[3, -2] = BCHelper.PC_Down;
+				p[4, -2] = BCHelper.Unused;
+
+				p[0, -1] = BCHelper.Unused;
+				p[1, -1] = BCHelper.PC_Down;
+				p[2, -1] = BCHelper.If_Horizontal;
+				p[3, -1] = BCHelper.Digit_1;
+				p[4, -1] = BCHelper.PC_Down;
+
+				p[0, 0] = BCHelper.PC_Jump;
+				p[1, 0] = BCHelper.PC_Jump;
+				p[2, 0] = BCHelper.If_Vertical;
+				p[3, 0] = BCHelper.PC_Right;
+				p[4, 0] = BCHelper.PC_Right;
+
+				p[0, 1] = BCHelper.Unused;
+				p[1, 1] = BCHelper.PC_Up;
+				p[2, 1] = BCHelper.If_Horizontal;
+				p[3, 1] = BCHelper.Digit_0;
+				p[4, 1] = BCHelper.PC_Up;
+
+				p[0, 2] = BCHelper.Unused;
+				p[1, 2] = BCHelper.PC_Right;
+				p[2, 2] = BCHelper.Walkway;
+				p[3, 2] = BCHelper.PC_Up;
+				p[4, 2] = BCHelper.Unused;
+
+				p.AppendLeft(Right.generateCode(reversed));
+				p.AppendLeft(Left.generateCode(reversed));
+				p.normalizeX();
+
+				return p;
+			}
 		}
 	}
 
@@ -690,12 +827,11 @@ namespace BefunGen.AST
 			return string.Format("({0} == {1})", Left.getDebugString(), Right.getDebugString());
 		}
 
-		public override CodePiece generateCode()
+		public override CodePiece generateCode(bool reversed)
 		{
 			//  >0v
 			// -| >
 			//  >1^
-
 			CodePiece p = new CodePiece();
 
 			p[0, -1] = BCHelper.Unused;
@@ -713,8 +849,22 @@ namespace BefunGen.AST
 			p[2, 1] = BCHelper.Digit_1;
 			p[3, 1] = BCHelper.PC_Up;
 
-			p.AppendLeft(Right.generateCode());
-			p.AppendLeft(Left.generateCode());
+			if (reversed)
+			{
+				p.reverseX(true);
+			}
+
+			if (reversed)
+			{
+				p.AppendRight(Right.generateCode(reversed));
+				p.AppendRight(Left.generateCode(reversed));
+			}
+			else
+			{
+				p.AppendLeft(Right.generateCode(reversed));
+				p.AppendLeft(Left.generateCode(reversed));
+			}
+
 			p.normalizeX();
 
 			return p;
@@ -734,12 +884,11 @@ namespace BefunGen.AST
 			return string.Format("({0} != {1})", Left.getDebugString(), Right.getDebugString());
 		}
 
-		public override CodePiece generateCode()
+		public override CodePiece generateCode(bool reversed)
 		{
 			//  >1v
 			// -| >
 			//  >0^
-
 			CodePiece p = new CodePiece();
 
 			p[0, -1] = BCHelper.Unused;
@@ -757,8 +906,22 @@ namespace BefunGen.AST
 			p[2, 1] = BCHelper.Digit_0;
 			p[3, 1] = BCHelper.PC_Up;
 
-			p.AppendLeft(Right.generateCode());
-			p.AppendLeft(Left.generateCode());
+			if (reversed)
+			{
+				p.reverseX(true);
+			}
+
+			if (reversed)
+			{
+				p.AppendRight(Right.generateCode(reversed));
+				p.AppendRight(Left.generateCode(reversed));
+			}
+			else
+			{
+				p.AppendLeft(Right.generateCode(reversed));
+				p.AppendLeft(Left.generateCode(reversed));
+			}
+
 			p.normalizeX();
 
 			return p;
@@ -778,13 +941,28 @@ namespace BefunGen.AST
 			return string.Format("({0} > {1})", Left.getDebugString(), Right.getDebugString());
 		}
 
-		public override CodePiece generateCode()
+		public override CodePiece generateCode(bool reversed)
 		{
-			//First Right than LEFT -->  RIGHT < LEFT
-			CodePiece p = Right.generateCode();
-			p.AppendRight(Left.generateCode());
+			CodePiece p;
 
-			p.AppendRight(BCHelper.GreaterThan);
+			if (reversed)
+			{
+				//First Right than LEFT -->  RIGHT < LEFT
+				p = Right.generateCode(reversed);
+				p.AppendLeft(Left.generateCode(reversed));
+
+				p.AppendLeft(BCHelper.GreaterThan);
+			}
+			else
+			{
+				//First Right than LEFT -->  RIGHT < LEFT
+				p = Right.generateCode(reversed);
+				p.AppendRight(Left.generateCode(reversed));
+
+				p.AppendRight(BCHelper.GreaterThan);
+			}
+
+			p.normalizeX();
 
 			return p;
 		}
@@ -803,13 +981,28 @@ namespace BefunGen.AST
 			return string.Format("({0} < {1})", Left.getDebugString(), Right.getDebugString());
 		}
 
-		public override CodePiece generateCode()
+		public override CodePiece generateCode(bool reversed)
 		{
-			//First Left than Right -->  LEFT < RIGHT
-			CodePiece p = Left.generateCode();
-			p.AppendRight(Right.generateCode());
+			CodePiece p;
 
-			p.AppendRight(BCHelper.GreaterThan);
+			if (reversed)
+			{
+				//First Left than Right -->  LEFT < RIGHT
+				p = Left.generateCode(reversed);
+				p.AppendLeft(Right.generateCode(reversed));
+
+				p.AppendLeft(BCHelper.GreaterThan);
+			}
+			else
+			{
+				//First Left than Right -->  LEFT < RIGHT
+				p = Left.generateCode(reversed);
+				p.AppendRight(Right.generateCode(reversed));
+
+				p.AppendRight(BCHelper.GreaterThan);
+			}
+
+			p.normalizeX();
 
 			return p;
 		}
@@ -828,34 +1021,78 @@ namespace BefunGen.AST
 			return string.Format("({0} >= {1})", Left.getDebugString(), Right.getDebugString());
 		}
 
-		public override CodePiece generateCode()
+		public override CodePiece generateCode(bool reversed)
 		{
-			// -:#v_$1>
-			//    >0\`^
+			if (reversed)
+			{
+				// <1$_v#!:-
+				// ^`\0<
 
-			//First Left than Right -->  LEFT < RIGHT
-			CodePiece p = Right.generateCode();
-			p.AppendRight(Left.generateCode());
+				//First Right than Left -->  RIGHT <= LEFT
+				CodePiece ep = Right.generateCode(reversed);
+				ep.AppendLeft(Left.generateCode(reversed));
 
-			p[0, 0] = BCHelper.Sub;
-			p[1, 0] = BCHelper.Stack_Dup;
-			p[2, 0] = BCHelper.PC_Jump;
-			p[3, 0] = BCHelper.PC_Down;
-			p[4, 0] = BCHelper.If_Horizontal;
-			p[5, 0] = BCHelper.Stack_Pop;
-			p[6, 0] = BCHelper.Digit_1;
-			p[7, 0] = BCHelper.PC_Left;
+				CodePiece p = new CodePiece();
+				p[0, 0] = BCHelper.PC_Left;
+				p[1, 0] = BCHelper.Digit_1;
+				p[2, 0] = BCHelper.Stack_Pop;
+				p[3, 0] = BCHelper.If_Horizontal;
+				p[4, 0] = BCHelper.PC_Down;
+				p[5, 0] = BCHelper.PC_Jump;
+				p[6, 0] = BCHelper.Not;
+				p[7, 0] = BCHelper.Stack_Dup;
+				p[8, 0] = BCHelper.Sub;
 
-			p[0, 1] = BCHelper.Unused;
-			p[1, 1] = BCHelper.Unused;
-			p[2, 1] = BCHelper.Unused;
-			p[3, 1] = BCHelper.PC_Left;
-			p[4, 1] = BCHelper.Digit_0;
-			p[5, 1] = BCHelper.Stack_Swap;
-			p[6, 1] = BCHelper.GreaterThan;
-			p[7, 1] = BCHelper.PC_Up;
+				p[0, 1] = BCHelper.PC_Up;
+				p[1, 1] = BCHelper.GreaterThan;
+				p[2, 1] = BCHelper.Stack_Swap;
+				p[3, 1] = BCHelper.Digit_0;
+				p[4, 1] = BCHelper.PC_Left;
+				p[5, 1] = BCHelper.Unused;
+				p[6, 1] = BCHelper.Unused;
+				p[7, 1] = BCHelper.Unused;
+				p[8, 1] = BCHelper.Unused;
 
-			return p;
+				ep.AppendLeft(p);
+
+				p.normalizeX();
+
+				return ep;
+			}
+			else
+			{
+				// -:#v_$1>
+				//    >0\`^
+
+				//First Right than Left -->  RIGHT <= LEFT
+				CodePiece ep = Right.generateCode(reversed);
+				ep.AppendRight(Left.generateCode(reversed));
+
+				CodePiece p = new CodePiece();
+				p[0, 0] = BCHelper.Sub;
+				p[1, 0] = BCHelper.Stack_Dup;
+				p[2, 0] = BCHelper.PC_Jump;
+				p[3, 0] = BCHelper.PC_Down;
+				p[4, 0] = BCHelper.If_Horizontal;
+				p[5, 0] = BCHelper.Stack_Pop;
+				p[6, 0] = BCHelper.Digit_1;
+				p[7, 0] = BCHelper.PC_Right;
+
+				p[0, 1] = BCHelper.Unused;
+				p[1, 1] = BCHelper.Unused;
+				p[2, 1] = BCHelper.Unused;
+				p[3, 1] = BCHelper.PC_Right;
+				p[4, 1] = BCHelper.Digit_0;
+				p[5, 1] = BCHelper.Stack_Swap;
+				p[6, 1] = BCHelper.GreaterThan;
+				p[7, 1] = BCHelper.PC_Up;
+
+				ep.AppendRight(p);
+
+				p.normalizeX();
+
+				return ep;
+			}
 		}
 	}
 
@@ -872,34 +1109,78 @@ namespace BefunGen.AST
 			return string.Format("({0} <= {1})", Left.getDebugString(), Right.getDebugString());
 		}
 
-		public override CodePiece generateCode()
+		public override CodePiece generateCode(bool reversed)
 		{
-			// -:#v_$1>
-			//    >0\`^
+			if (reversed)
+			{
+				// <1$_v#!:-
+				// ^`\0<
 
-			//First Left than Right -->  LEFT < RIGHT
-			CodePiece p = Left.generateCode();
-			p.AppendRight(Right.generateCode());
+				//First Left than Right -->  LEFT <= RIGHT
+				CodePiece ep = Left.generateCode(reversed);
+				ep.AppendLeft(Right.generateCode(reversed));
 
-			p[0, 0] = BCHelper.Sub;
-			p[1, 0] = BCHelper.Stack_Dup;
-			p[2, 0] = BCHelper.PC_Jump;
-			p[3, 0] = BCHelper.PC_Down;
-			p[4, 0] = BCHelper.If_Horizontal;
-			p[5, 0] = BCHelper.Stack_Pop;
-			p[6, 0] = BCHelper.Digit_1;
-			p[7, 0] = BCHelper.PC_Left;
+				CodePiece p = new CodePiece();
+				p[0, 0] = BCHelper.PC_Left;
+				p[1, 0] = BCHelper.Digit_1;
+				p[2, 0] = BCHelper.Stack_Pop;
+				p[3, 0] = BCHelper.If_Horizontal;
+				p[4, 0] = BCHelper.PC_Down;
+				p[5, 0] = BCHelper.PC_Jump;
+				p[6, 0] = BCHelper.Not;
+				p[7, 0] = BCHelper.Stack_Dup;
+				p[8, 0] = BCHelper.Sub;
 
-			p[0, 1] = BCHelper.Unused;
-			p[1, 1] = BCHelper.Unused;
-			p[2, 1] = BCHelper.Unused;
-			p[3, 1] = BCHelper.PC_Left;
-			p[4, 1] = BCHelper.Digit_0;
-			p[5, 1] = BCHelper.Stack_Swap;
-			p[6, 1] = BCHelper.GreaterThan;
-			p[7, 1] = BCHelper.PC_Up;
+				p[0, 1] = BCHelper.PC_Up;
+				p[1, 1] = BCHelper.GreaterThan;
+				p[2, 1] = BCHelper.Stack_Swap;
+				p[3, 1] = BCHelper.Digit_0;
+				p[4, 1] = BCHelper.PC_Left;
+				p[5, 1] = BCHelper.Unused;
+				p[6, 1] = BCHelper.Unused;
+				p[7, 1] = BCHelper.Unused;
+				p[8, 1] = BCHelper.Unused;
 
-			return p;
+				ep.AppendLeft(p);
+
+				p.normalizeX();
+
+				return ep;
+			}
+			else
+			{
+				// -:#v_$1>
+				//    >0\`^
+
+				//First Left than Right -->  LEFT <= RIGHT
+				CodePiece ep = Left.generateCode(reversed);
+				ep.AppendRight(Right.generateCode(reversed));
+
+				CodePiece p = new CodePiece();
+				p[0, 0] = BCHelper.Sub;
+				p[1, 0] = BCHelper.Stack_Dup;
+				p[2, 0] = BCHelper.PC_Jump;
+				p[3, 0] = BCHelper.PC_Down;
+				p[4, 0] = BCHelper.If_Horizontal;
+				p[5, 0] = BCHelper.Stack_Pop;
+				p[6, 0] = BCHelper.Digit_1;
+				p[7, 0] = BCHelper.PC_Right;
+
+				p[0, 1] = BCHelper.Unused;
+				p[1, 1] = BCHelper.Unused;
+				p[2, 1] = BCHelper.Unused;
+				p[3, 1] = BCHelper.PC_Right;
+				p[4, 1] = BCHelper.Digit_0;
+				p[5, 1] = BCHelper.Stack_Swap;
+				p[6, 1] = BCHelper.GreaterThan;
+				p[7, 1] = BCHelper.PC_Up;
+
+				ep.AppendRight(p);
+
+				p.normalizeX();
+
+				return ep;
+			}
 		}
 	}
 
@@ -933,11 +1214,20 @@ namespace BefunGen.AST
 			return new BType_Bool(Position);
 		}
 
-		public override CodePiece generateCode()
+		public override CodePiece generateCode(bool reversed)
 		{
-			CodePiece p = Expr.generateCode();
+			CodePiece p = Expr.generateCode(reversed);
 
-			p.AppendRight(BCHelper.Not); // Preeeaty easy ¯\_(ツ)_/¯
+			if (reversed)
+			{
+				p.AppendLeft(BCHelper.Not);
+			}
+			else
+			{
+				p.AppendRight(BCHelper.Not);
+			}
+
+			p.normalizeX();
 
 			return p;
 		}
@@ -969,16 +1259,24 @@ namespace BefunGen.AST
 			return new BType_Int(Position);
 		}
 
-		public override CodePiece generateCode()
+		public override CodePiece generateCode(bool reversed)
 		{
-			CodePiece cp = Expr.generateCode();
+			CodePiece p = Expr.generateCode(reversed);
 
-			cp.AppendLeft(BCHelper.Digit_0);
-			cp.AppendRight(BCHelper.Sub);
+			if (reversed)
+			{
+				p.AppendRight(BCHelper.Digit_0);
+				p.AppendLeft(BCHelper.Sub);
+			}
+			else
+			{
+				p.AppendLeft(BCHelper.Digit_0);
+				p.AppendRight(BCHelper.Sub);
+			}
 
-			cp.normalizeX();
+			p.normalizeX();
 
-			return cp;
+			return p;
 		}
 	}
 
@@ -1021,9 +1319,9 @@ namespace BefunGen.AST
 			return Value.getBType();
 		}
 
-		public override CodePiece generateCode()
+		public override CodePiece generateCode(bool reversed)
 		{
-			return Value.generateCode();
+			return Value.generateCode(reversed);
 		}
 	}
 
@@ -1060,7 +1358,7 @@ namespace BefunGen.AST
 			return new BType_Bool(Position);
 		}
 
-		public override CodePiece generateCode()
+		public override CodePiece generateCode(bool reversed)
 		{
 			//  >>1v
 			// #^?0>>
@@ -1088,6 +1386,11 @@ namespace BefunGen.AST
 			p[3, 1] = BCHelper.Walkway;
 			p[4, 1] = BCHelper.Digit_0;
 			p[5, 1] = BCHelper.PC_Up;
+
+			if (reversed)
+			{
+				p.reverseX(true);
+			}
 
 			return p;
 		}
@@ -1131,9 +1434,9 @@ namespace BefunGen.AST
 			return Type;
 		}
 
-		public override CodePiece generateCode()
+		public override CodePiece generateCode(bool reversed)
 		{
-			return Expr.generateCode(); //TODO Perhaps Cast bools to real 0|1 bools (perhaps CodeGenOption)
+			return Expr.generateCode(reversed); //TODO Perhaps Cast bools to real 0|1 bools (perhaps CodeGenOption)
 		}
 	}
 
@@ -1172,7 +1475,7 @@ namespace BefunGen.AST
 			return Method.Target.ResultType;
 		}
 
-		public override CodePiece generateCode()
+		public override CodePiece generateCode(bool reversed)
 		{
 			throw new NotImplementedException(); //TODO Implement
 		}

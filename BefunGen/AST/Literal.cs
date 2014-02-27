@@ -14,7 +14,7 @@ namespace BefunGen.AST
 
 		public abstract BType getBType();
 
-		public abstract CodePiece generateCode(bool reverse = false);
+		public abstract CodePiece generateCode(bool reverse);
 	}
 
 	#region Parents
@@ -47,7 +47,7 @@ namespace BefunGen.AST
 				AppendDefaultValue();
 		}
 
-		public abstract CodePiece generateCode(int pos, bool reversed = false);
+		public abstract CodePiece generateCode(int pos, bool reversed);
 	}
 
 	#endregion Parents
@@ -74,7 +74,7 @@ namespace BefunGen.AST
 			return new BType_Int(new SourceCodePosition());
 		}
 
-		public override CodePiece generateCode(bool reversed = false)
+		public override CodePiece generateCode(bool reversed)
 		{
 			return NumberCodeHelper.generateCode(Value, reversed);
 		}
@@ -100,7 +100,7 @@ namespace BefunGen.AST
 			return new BType_Char(new SourceCodePosition());
 		}
 
-		public override CodePiece generateCode(bool reverse = false)
+		public override CodePiece generateCode(bool reverse)
 		{
 			return NumberCodeHelper.generateCode_Stringmode(Value, reverse);
 		}
@@ -126,7 +126,7 @@ namespace BefunGen.AST
 			return new BType_Bool(new SourceCodePosition());
 		}
 
-		public override CodePiece generateCode(bool reverse = false)
+		public override CodePiece generateCode(bool reverse)
 		{
 			return NumberCodeHelper.generateCode(Value);
 		}
@@ -152,7 +152,7 @@ namespace BefunGen.AST
 			return new BType_Digit(new SourceCodePosition());
 		}
 
-		public override CodePiece generateCode(bool reverse = false)
+		public override CodePiece generateCode(bool reverse)
 		{
 			return NumberCodeHelper.generateCode_Digit(Value);
 		}
@@ -192,7 +192,7 @@ namespace BefunGen.AST
 			Value.Add(0);
 		}
 
-		public override CodePiece generateCode(bool reverse = false)
+		public override CodePiece generateCode(bool reverse)
 		{
 			CodePiece p = new CodePiece();
 
@@ -209,7 +209,7 @@ namespace BefunGen.AST
 			return p;
 		}
 
-		public override CodePiece generateCode(int pos, bool reversed = false)
+		public override CodePiece generateCode(int pos, bool reversed)
 		{
 			return NumberCodeHelper.generateCode(Value[pos], reversed);
 		}
@@ -251,7 +251,7 @@ namespace BefunGen.AST
 			Value.Add('0');
 		}
 
-		public override CodePiece generateCode(bool reverse = false)
+		public override CodePiece generateCode(bool reverse)
 		{
 			CodePiece p = new CodePiece();
 			int i = 0;
@@ -280,7 +280,7 @@ namespace BefunGen.AST
 			return p;
 		}
 
-		public override CodePiece generateCode(int pos, bool reversed = false)
+		public override CodePiece generateCode(int pos, bool reversed)
 		{
 			return NumberCodeHelper.generateCode_Stringmode(Value[pos], reversed);
 		}
@@ -316,7 +316,7 @@ namespace BefunGen.AST
 			Value.Add(false);
 		}
 
-		public override CodePiece generateCode(bool reverse = false)
+		public override CodePiece generateCode(bool reverse)
 		{
 			CodePiece p = new CodePiece();
 			int i = 0;
@@ -341,7 +341,7 @@ namespace BefunGen.AST
 			return p;
 		}
 
-		public override CodePiece generateCode(int pos, bool reversed = false)
+		public override CodePiece generateCode(int pos, bool reversed)
 		{
 			return NumberCodeHelper.generateCode(Value[pos]);
 		}
@@ -377,7 +377,7 @@ namespace BefunGen.AST
 			Value.Add(0);
 		}
 
-		public override CodePiece generateCode(bool reverse = false)
+		public override CodePiece generateCode(bool reverse)
 		{
 			CodePiece p = new CodePiece();
 			int i = 0;
@@ -402,7 +402,7 @@ namespace BefunGen.AST
 			return p;
 		}
 
-		public override CodePiece generateCode(int pos, bool reversed = false)
+		public override CodePiece generateCode(int pos, bool reversed)
 		{
 			return NumberCodeHelper.generateCode_Digit(Value[pos]);
 		}

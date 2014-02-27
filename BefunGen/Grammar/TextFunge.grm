@@ -3,7 +3,7 @@
 "Version"               = '2.0'
 "About"                 = 'Language to define Benuge-93 programs procedural'
 
-"Case Sensitive"        = False
+"Case Sensitive"       
 "Start Symbol"          = <Program>
 
 !###############################################################################

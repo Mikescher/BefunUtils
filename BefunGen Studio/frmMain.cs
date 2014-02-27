@@ -239,7 +239,7 @@ namespace BefunGen
 			txtDebug.Text += expr + Environment.NewLine;
 
 			Expression e = parseExpression(expr);
-			CodePiece pc = e.generateCode();
+			CodePiece pc = e.generateCode(false);
 			txtDebug.Text += pc.ToString() + Environment.NewLine;
 		}
 
@@ -280,14 +280,14 @@ namespace BefunGen
 
 			debugMethod(@"
 int doFiber(int max)
-//var
-//	int a := 4;
-//	bool b;	
-//	char cc := 'o';
-//	int[4] e := {40, 48, 60, -20};
-//	bool c;
-//	bool d := 10;
-//	int[8] h;
+var
+	int a := 4;
+	bool b;	
+	char cc := 'o';
+	int[4] e := {40, 48, 60, -20};
+	bool c;
+	bool d := 10;
+	int[8] h;
 begin
 	return 0;
 end

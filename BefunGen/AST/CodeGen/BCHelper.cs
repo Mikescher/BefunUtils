@@ -1,4 +1,5 @@
 ﻿
+using BefunGen.AST.Exceptions;
 using System;
 namespace BefunGen.AST.CodeGen
 {
@@ -219,7 +220,7 @@ namespace BefunGen.AST.CodeGen
 
 		public static BefungeCommand Unused_tagged(object tag)
 		{
-			return new BefungeCommand(BefungeCommandType.NOP, tag);
+			throw new InternalCodeGenException(); // There is nothing like an tagged unused ...
 		}
 
 		public static BefungeCommand Walkway_tagged(object tag)

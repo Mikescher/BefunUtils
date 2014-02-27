@@ -18,6 +18,8 @@ namespace BefunGen.AST
 		public abstract void linkMethods(Program owner);
 
 		public abstract Statement_Label findLabelByIdentifier(string ident);
+
+		//public abstract CodePiece generateCode(bool reverse);
 	}
 
 	#region Other
@@ -313,6 +315,8 @@ namespace BefunGen.AST
 
 			if (Value.getResultType() is BType_Array)
 				throw new ImplicitCastException(new BType_Int(Position), Value.getResultType(), Value.Position);
+			if (Value.getResultType() is BType_Bool)
+				throw new ImplicitCastException(new BType_Int(Position), Value.getResultType(), Value.Position);
 		}
 
 		public override void linkMethods(Program owner)
@@ -324,6 +328,27 @@ namespace BefunGen.AST
 		{
 			return null;
 		}
+
+		//public override CodePiece generateCode(bool reverse)
+		//{
+		//	CodePiece p = Value.generateCode(reverse);
+
+		//	BefungeCommand cmd_out;
+
+		//	if (Value.getResultType() is BType_Char)
+		//		cmd_out = BCHelper.Out_ASCII;
+		//	else
+		//		cmd_out = BCHelper.Out_Int;
+
+		//	if (reverse)
+		//		p.AppendLeft(cmd_out);
+		//	else
+		//		p.AppendRight(cmd_out);
+
+		//	p.normalizeX();
+
+		//	return p;
+		//}
 	}
 
 	public class Statement_Out_CharArrLiteral : Statement

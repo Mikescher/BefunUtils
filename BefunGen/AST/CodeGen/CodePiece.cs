@@ -654,7 +654,7 @@ namespace BefunGen.AST.CodeGen
 			MaxY = MaxY - 1;
 		}
 
-		public void reverseX()
+		public void reverseX(bool nonpedantic)
 		{
 			CodePiece p = this.copy();
 
@@ -665,9 +665,24 @@ namespace BefunGen.AST.CodeGen
 				for (int y = p.MinY; y < p.MaxY; y++)
 				{
 					if (!p[x, y].IsXDeltaIndependent())
-						throw new CodePieceReverseException(p);
-
-					this[-x, y] = p[x, y];
+					{
+						if (nonpedantic && p[x, y].Type == BefungeCommandType.PC_Left)
+						{
+							this[-x, y] = BCHelper.PC_Right;
+						}
+						else if (nonpedantic && p[x, y].Type == BefungeCommandType.PC_Left)
+						{
+							this[-x, y] = BCHelper.PC_Left;
+						}
+						else
+						{
+							throw new CodePieceReverseException(p);
+						}
+					}
+					else
+					{
+						this[-x, y] = p[x, y];
+					}
 				}
 			}
 
