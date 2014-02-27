@@ -80,7 +80,7 @@ namespace BefunGen.AST.CodeGen
 			switch (Type)
 			{
 				case BefungeCommandType.NOP:
-					return CodeGenOptions.SetNOPCellsToExit ? '@' : ' ';
+					return CodeGenOptions.SetNOPCellsToCustom ? CodeGenOptions.CustomNOPSymbol : ' ';
 
 				case BefungeCommandType.Walkway:
 					return ' ';

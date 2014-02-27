@@ -76,9 +76,133 @@ namespace BefunGen.AST
 			return result;
 		}
 
-		public override CodePiece generateCode(bool reverse)
+		public override CodePiece generateCode(bool reversed)
 		{
-			throw new NotImplementedException(); //TODO Implement
+			CodePiece p = new CodePiece();
+
+			List<TwoDirectionCodePiece> cp_stmts = new List<TwoDirectionCodePiece>();
+
+			for (int i = 0; i < List.Count; i++)
+			{
+				Statement stmt = List[i];
+
+				cp_stmts.Add(new TwoDirectionCodePiece(stmt.generateCode(false), stmt.generateCode(true)));
+			}
+
+			if (cp_stmts.Count % 2 == 0)
+				cp_stmts.Add(new TwoDirectionCodePiece());
+
+
+			if (reversed)
+			{
+				CodePiece first = cp_stmts[0].Reversed;
+				first.AppendRight(BCHelper.PC_Left);
+				first.AppendLeft(BCHelper.PC_Down);
+				first.normalizeX();
+
+				p.AppendBottom(first);
+				p.AddYOffset(first.MinY); 
+
+				for (int i = 1; i < cp_stmts.Count; i += 2)
+				{
+					CodePiece cp_a = cp_stmts[i].Normal;
+					CodePiece cp_b = cp_stmts[i + 1].Reversed;
+
+					cp_a.normalizeX();
+					cp_b.normalizeX();
+
+					int mw = Math.Max(cp_a.MaxX, cp_b.MaxX);
+
+					cp_a.AppendLeft(BCHelper.PC_Right);
+					cp_b.AppendLeft(BCHelper.PC_Down);
+
+					cp_a.Fill(cp_a.MaxX, 0, mw, 1, BCHelper.Walkway);
+					cp_b.Fill(cp_b.MaxX, 0, mw, 1, BCHelper.Walkway);
+
+					cp_a[mw, 0] = BCHelper.PC_Down;
+					cp_b[mw, 0] = BCHelper.PC_Left;
+
+					for (int y = cp_a.MinY; y < cp_a.MaxY; y++)
+						if (y != 0)
+							cp_a[cp_a.MaxX - 1, y] = BCHelper.Walkway;
+
+					for (int y = cp_b.MinY; y < cp_b.MaxY; y++)
+						if (y != 0)
+							cp_b[cp_b.MaxX - 1, y] = BCHelper.Walkway;
+
+					cp_a.normalizeX();
+					cp_b.normalizeX();
+
+					p.AppendBottom(cp_a);
+					p.AppendBottom(cp_b);
+				}
+
+				p[-1, p.MaxY - 1] = BCHelper.PC_Up;
+				p[-1, 0] = BCHelper.PC_Left;
+
+				p.normalizeX();
+
+				p.Fill(0, 1, 1, p.MaxY - 1, BCHelper.Walkway);
+			}
+			else
+			{
+				for (int i = 0; i < cp_stmts.Count-2; i += 2)
+				{
+					CodePiece cp_a = cp_stmts[i].Normal;
+					CodePiece cp_b = cp_stmts[i + 1].Reversed;
+
+					cp_a.normalizeX();
+					cp_b.normalizeX();
+
+					int mw = Math.Max(cp_a.MaxX, cp_b.MaxX);
+
+					cp_a.AppendLeft(BCHelper.PC_Right);
+					cp_b.AppendLeft(BCHelper.PC_Down);
+
+					cp_a.Fill(cp_a.MaxX, 0, mw, 1, BCHelper.Walkway);
+					cp_b.Fill(cp_b.MaxX, 0, mw, 1, BCHelper.Walkway);
+
+					cp_a[mw, 0] = BCHelper.PC_Down;
+					cp_b[mw, 0] = BCHelper.PC_Left;
+
+					for (int y = cp_a.MinY; y < cp_a.MaxY; y++)
+						if (y != 0)
+							cp_a[cp_a.MaxX - 1, y] = BCHelper.Walkway;
+
+					for (int y = cp_b.MinY; y < cp_b.MaxY; y++)
+						if (y != 0)
+							cp_b[cp_b.MaxX - 1, y] = BCHelper.Walkway;
+
+					cp_a.normalizeX();
+					cp_b.normalizeX();
+
+					p.AppendBottom(cp_a);
+					p.AppendBottom(cp_b);
+
+					if (i == 0) 
+					{ 
+						p.AddYOffset(cp_a.MinY); 
+					}
+				}
+
+				p.normalizeX();
+
+				CodePiece last = cp_stmts[cp_stmts.Count - 1].Normal;
+				last.AppendLeft(BCHelper.PC_Right);
+				last.normalizeX();
+				last.Fill(last.MaxX, 0, p.MaxX, 1, BCHelper.Walkway);
+				last[p.MaxX, 0] = BCHelper.PC_Up;
+
+				p.AppendBottom(last);
+
+				p[p.MaxX - 1, 0] = BCHelper.PC_Right;
+
+				p.Fill(p.MaxX - 1, 1, p.MaxX, p.MaxY - last.Height, BCHelper.Walkway);
+
+				p.normalizeX();
+			}
+
+			return p;
 		}
 	}
 

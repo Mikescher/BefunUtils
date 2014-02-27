@@ -97,7 +97,7 @@ namespace BefunGen.AST
 			// Generate Initialization of Parameters
 			p.AppendBottom(generateCode_ParameterIntialization());
 
-			//<<-- Statement Block
+			p.AppendBottom(generateCode_Body());
 
 			return p;
 		}
@@ -157,7 +157,7 @@ namespace BefunGen.AST
 		{
 			CodePiece p = new CodePiece();
 
-			List<Tuple<CodePiece, CodePiece>> varDecls = new List<Tuple<CodePiece, CodePiece>>();
+			List<TwoDirectionCodePiece> varDecls = new List<TwoDirectionCodePiece>();
 
 			for (int i = 0; i < Variables.Count; i++)
 			{
@@ -166,22 +166,19 @@ namespace BefunGen.AST
 				if (Parameter.Contains(var))
 					continue;
 
-				CodePiece p_init_lr = var.generateCode(false);
-				CodePiece p_init_rl = var.generateCode(true);
-
-				varDecls.Add(Tuple.Create(p_init_lr, p_init_rl));
+				varDecls.Add(new TwoDirectionCodePiece(var.generateCode(false), var.generateCode(true)));
 			}
 
 			if (varDecls.Count % 2 != 0)
-				varDecls.Add(Tuple.Create(new CodePiece(), new CodePiece()));
+				varDecls.Add(new TwoDirectionCodePiece());
 
-			varDecls = varDecls.OrderByDescending(t => t.Item2.Width).ToList();
+			varDecls = varDecls.OrderByDescending(t => t.MaxWidth).ToList();
 
 
 			for (int i = 0; i < varDecls.Count; i += 2)
 			{
-				CodePiece cp_a = varDecls[i].Item1;
-				CodePiece cp_b = varDecls[i + 1].Item2;
+				CodePiece cp_a = varDecls[i].Normal;
+				CodePiece cp_b = varDecls[i + 1].Reversed;
 
 				cp_a.normalizeX();
 				cp_b.normalizeX();
@@ -221,7 +218,7 @@ namespace BefunGen.AST
 		{
 			CodePiece p = new CodePiece();
 
-			List<Tuple<CodePiece, CodePiece>> paramDecls = new List<Tuple<CodePiece, CodePiece>>();
+			List<TwoDirectionCodePiece> paramDecls = new List<TwoDirectionCodePiece>();
 
 			for (int i = Parameter.Count-1; i >= 0; i--)
 			{
@@ -230,16 +227,16 @@ namespace BefunGen.AST
 				CodePiece p_init_lr = var.generateCode_Parameter(false);
 				CodePiece p_init_rl = var.generateCode_Parameter(true);
 
-				paramDecls.Add(Tuple.Create(p_init_lr, p_init_rl));
+				paramDecls.Add(new TwoDirectionCodePiece(var.generateCode(false), var.generateCode(true)));
 			}
 
 			if (paramDecls.Count % 2 != 0)
-				paramDecls.Add(Tuple.Create(new CodePiece(), new CodePiece()));
+				paramDecls.Add(new TwoDirectionCodePiece());
 
 			for (int i = 0; i < paramDecls.Count; i += 2)
 			{
-				CodePiece cp_a = paramDecls[i].Item1;
-				CodePiece cp_b = paramDecls[i + 1].Item2;
+				CodePiece cp_a = paramDecls[i].Normal;
+				CodePiece cp_b = paramDecls[i + 1].Reversed;
 
 				cp_a.normalizeX();
 				cp_b.normalizeX();
@@ -271,6 +268,21 @@ namespace BefunGen.AST
 			}
 
 			p.normalizeX();
+
+			return p;
+		}
+
+		private CodePiece generateCode_Body()
+		{
+			CodePiece p = Body.generateCode(false);
+
+			p.normalizeX();
+
+			p[-1, 0] = BCHelper.PC_Right;
+
+			p.normalizeX();
+
+			p.Fill(0, p.MinY, 1, 0, BCHelper.Walkway);
 
 			return p;
 		}

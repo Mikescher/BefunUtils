@@ -278,10 +278,10 @@ namespace BefunGen.AST.CodeGen
 		// x1, y1 included -- x2, y2 excluded
 		public void Fill(int x1, int y1, int x2, int y2, BefungeCommand c, object topleft_tag = null)
 		{
-			if (x1 > x2)
-				MathExt.Swap(ref x1, ref x2);
-			if (y1 > y2)
-				MathExt.Swap(ref y1, ref y2);
+			if (x1 >= x2)
+				return;
+			if (y1 >= y2)
+				return;
 
 			for (int x = x1; x < x2; x++)
 				for (int y = y1; y < y2; y++)
@@ -670,7 +670,7 @@ namespace BefunGen.AST.CodeGen
 						{
 							this[-x, y] = BCHelper.PC_Right;
 						}
-						else if (nonpedantic && p[x, y].Type == BefungeCommandType.PC_Left)
+						else if (nonpedantic && p[x, y].Type == BefungeCommandType.PC_Right)
 						{
 							this[-x, y] = BCHelper.PC_Left;
 						}
@@ -698,6 +698,25 @@ namespace BefunGen.AST.CodeGen
 
 			MaxX = 0;
 			MaxY = 0;
+		}
+
+		public void AddXOffset(int ox)
+		{
+			AddOffset(ox, 0);
+		}
+
+		public void AddYOffset(int oy)
+		{
+			AddOffset(0, oy);
+		}
+
+		public void AddOffset(int ox, int oy)
+		{
+			MinY += oy;
+			MaxY += oy;
+
+			MinX += ox;
+			MinY += ox;
 		}
 
 		#endregion

@@ -293,9 +293,23 @@ namespace BefunGen
 //end
 //				");
 
+			debugMethod(@"
+int doIt()
+var
+	int i := 48;
+begin
+    out (char)(48+(int)RAND);
+	out " + '"' + @"Hello" + '"' + @";
+	out " + '"' + @" ... " + '"' + @";
+	out " + '"' + @" World" + '"' + @";
+	out (char)(48+(int)RAND);
+	QUIT;
+end
+				");
+
 			//debugExpression("true || false");
 
-			debugStatement("out (char)48;");
+			//debugStatement("out \"blub:fasel\";");
 		}
 
 		private void btnRun_Click(object sender, EventArgs e)
