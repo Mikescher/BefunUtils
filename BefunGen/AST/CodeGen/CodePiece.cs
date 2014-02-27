@@ -716,7 +716,7 @@ namespace BefunGen.AST.CodeGen
 			MaxY += oy;
 
 			MinX += ox;
-			MinY += ox;
+			MaxX += ox;
 		}
 
 		#endregion

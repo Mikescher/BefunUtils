@@ -220,7 +220,7 @@ namespace BefunGen.AST
 
 			List<TwoDirectionCodePiece> paramDecls = new List<TwoDirectionCodePiece>();
 
-			for (int i = Parameter.Count-1; i >= 0; i--)
+			for (int i = Parameter.Count - 1; i >= 0; i--)
 			{
 				VarDeclaration var = Parameter[i];
 

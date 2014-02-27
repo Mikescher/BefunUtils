@@ -22,7 +22,7 @@ namespace BefunGen.AST.CodeGen
 
 		// Every NOP-Command is displayed as an Exit-Command
 		public static bool SetNOPCellsToCustom = true;
-		public static char CustomNOPSymbol = '\u00F8';
+		public static char CustomNOPSymbol = '@'; //'\u00F8';
 
 		// When combining two CodePieces try to combine the two connecting columns/rows to a signle one
 		public static bool CompressHorizontalCombining = true;
@@ -131,7 +131,7 @@ v <
 > :."=",                   v
 
 v          $_v#!:-1<\1     <
-             >0\   ^
+			 >0\   ^
 
 v
 v
@@ -165,8 +165,8 @@ v
 
 v      ########## >>#$>#<  @
 >  9:* ## 5471 ## 0>\:9`|
-       ##########  ^+*9\<
-               
+	   ##########  ^+*9\<
+			   
 #### Digits in Base-9 ####
    
 8Bit  = ~  3 B9
@@ -182,9 +182,9 @@ v              ,,+55+49  <
 v      >>v               .
 v      21v      >>#$>#<  ^
 > 59>#v?^>\1-:#v_>\:4`|
-      3>0^       ^+*4\<
-    ^          <
-      >  ^
+	  3>0^       ^+*4\<
+	^          <
+	  >  ^
 
 ########### RPOGRAM IDEAS #######
 

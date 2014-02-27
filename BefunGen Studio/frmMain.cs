@@ -265,94 +265,106 @@ namespace BefunGen
 		}
 
 		private void btnExecuteDebug_Click(object sender, EventArgs earg)
-		{
-			//debugExpression("40*(-50+(int)rand)");
+		{ // TODO Add a lot of testcases (just check 4 exceptions when generating) ... just copy all these into test-project
+			debugExpression("40*(-50+(int)rand)");
 
-			//debugExpression("100");
+			debugExpression("100");
 
-			//debugExpression("-100");
+			debugExpression("-100");
 
-			//debugExpression("137");
+			debugExpression("137");
 
-			//debugExpression("true && (false ^ true)");
+			debugExpression("true && (false ^ true)");
 
-			//debugExpression("true || false");
-
-//			debugMethod(@"
-//int doFiber(int max)
-//var
-//	int a := 4;
-//	bool b;	
-//	char cc := 'o';
-//	int[4] e := {40, 48, 60, -20};
-//	bool c;
-//	bool d := 10;
-//	int[8] h;
-//begin
-//	return 0;
-//end
-//				");
-
-//			debugMethod(@"
-//int doIt()
-//var
-//	char cr;
-//	char lf;
-//	int i := 48;
-//begin
-//	cr = (char)13;
-//	lf = (char)10;	
-//
-//	out (char)i;
-//	out cr;
-//	out lf;
-//	i++;
-//	out (char)i;
-//	out cr;
-//	out lf;
-//	i++;
-//	out (char)i;
-//	out cr;
-//	out lf;
-//	i++;
-//	out (char)i;
-//	out cr;
-//	out lf;
-//	i++;
-//	out (char)i;
-//	out cr;
-//	out lf;
-//	i++;
-//    out (char)(48+(int)RAND);
-//	out " + '"' + @"Hello" + '"' + @";
-//	out " + '"' + @" ... " + '"' + @";
-//	out " + '"' + @" World" + '"' + @";
-//	out (char)(48+(int)RAND);
-//	QUIT;
-//end
-//				");
-
-//			debugMethod(@"
-//int doIt()
-//begin
-//	while (true) do
-//	begin
-//		out (char)50;
-//	end
-//end
-//				");
+			debugExpression("true || false");
 
 			debugMethod(@"
-int doIt()
+			int doFiber(int max)
+			var
+				int a := 4;
+				bool b;	
+				char cc := 'o';
+				int[4] e := {40, 48, 60, -20};
+				bool c;
+				bool d := 10;
+				int[8] h;
+			begin
+				
+			end
+							");
+
+			debugMethod(@"
+			int doIt()
+			var
+				char cr;
+				char lf;
+				int i := 48;
+			begin
+				cr = (char)13;
+				lf = (char)10;	
+			
+				out (char)i;
+				out cr;
+				out lf;
+				i++;
+				out (char)i;
+				out cr;
+				out lf;
+				i++;
+				out (char)i;
+				out cr;
+				out lf;
+				i++;
+				out (char)i;
+				out cr;
+				out lf;
+				i++;
+				out (char)i;
+				out cr;
+				out lf;
+				i++;
+			    out (char)(48+(int)RAND);
+				out " + '"' + @"Hello" + '"' + @";
+				out " + '"' + @" ... " + '"' + @";
+				out " + '"' + @" World" + '"' + @";
+				out (char)(48+(int)RAND);
+				QUIT;
+			end
+							");
+
+			debugMethod(@"
+			int doIt()
+			begin
+				out (char)(48+(int)RAND);
+				out (char)(48+(int)RAND);
+				out (char)(48+(int)RAND);
+				out (char)(48+(int)RAND);
+				QUIT;
+			end
+						");
+
+			debugStatement(@"
+while (true) do
 begin
-	out (char) 54;
-	out (char) 55;
+	out (char)(48+(int)RAND);
+	begin
+		out (char)(50+(int)RAND);
+		out (char)(50+(int)RAND);
+	end
 end
-				");
+			");
 
-			//debugExpression("true || false");
+			debugMethod(@"
+			int doIt()
+			begin
+				out (char) 54;
+				out (char) 55;
+			end
+							");
 
-			//debugStatement("out \"blub:fasel\";");
+			debugExpression("true || false");
+
+			debugStatement("out \"blub:fasel\";");
 		}
 
 		private void btnRun_Click(object sender, EventArgs e)
