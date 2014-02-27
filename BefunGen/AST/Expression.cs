@@ -258,8 +258,12 @@ namespace BefunGen.AST
 			//NOP
 		}
 
-		// Puts X and Y 2-times on the stack: [X, Y, X, Y]
-		public abstract CodePiece generateCodeDouble(bool reversed);
+		// Puts X and Y on the stack: [X, Y]
+		public abstract CodePiece generateCodeSingle(bool reversed);
+		// Puts X and Y 1 1/2 -times on the stack: [X, X, Y]
+		public abstract CodePiece generateCodeDoubleX(bool reversed);
+		// Puts Y on the stack: [Y]
+		public abstract CodePiece generateCodeSingleY(bool reversed);
 	}
 
 	#endregion
@@ -302,8 +306,30 @@ namespace BefunGen.AST
 			return Target.Type;
 		}
 
-		// This puts X and Y of the var are on the stack
 		public override CodePiece generateCode(bool reversed)
+		{
+			CodePiece p = new CodePiece();
+
+			if (reversed)
+			{
+				p.AppendLeft(NumberCodeHelper.generateCode(Target.CodePositionX, reversed));
+				p.AppendLeft(NumberCodeHelper.generateCode(Target.CodePositionY, reversed));
+				p.AppendLeft(BCHelper.Reflect_Get);
+			}
+			else
+			{
+				p.AppendRight(NumberCodeHelper.generateCode(Target.CodePositionX, reversed));
+				p.AppendRight(NumberCodeHelper.generateCode(Target.CodePositionY, reversed));
+				p.AppendRight(BCHelper.Reflect_Get);
+			}
+
+			p.normalizeX();
+
+			return p;
+		}
+
+		// Puts X and Y on the stack: [X, Y]
+		public override CodePiece generateCodeSingle(bool reversed)
 		{
 			CodePiece p = new CodePiece();
 
@@ -323,10 +349,33 @@ namespace BefunGen.AST
 			return p;
 		}
 
-		// Puts X and Y 2-times on the stack: [X, Y, X, Y]
-		public override CodePiece generateCodeDouble(bool reversed)
+		// Puts X and Y 1 1/2 -times on the stack: [X, X, Y]
+		public override CodePiece generateCodeDoubleX(bool reversed)
 		{
-			return CodePiece.CombineHorizontal(generateCode(reversed), generateCode(reversed));
+			CodePiece p = new CodePiece();
+
+			if (reversed)
+			{
+				p.AppendLeft(NumberCodeHelper.generateCode(Target.CodePositionX, reversed));
+				p.AppendLeft(BCHelper.Stack_Dup);
+				p.AppendLeft(NumberCodeHelper.generateCode(Target.CodePositionY, reversed));
+			}
+			else
+			{
+				p.AppendRight(NumberCodeHelper.generateCode(Target.CodePositionX, reversed));
+				p.AppendRight(BCHelper.Stack_Dup);
+				p.AppendRight(NumberCodeHelper.generateCode(Target.CodePositionY, reversed));
+			}
+
+			p.normalizeX();
+
+			return p;
+		}
+
+		/// Puts Y on the stack: [Y]
+		public override CodePiece generateCodeSingleY(bool reversed)
+		{
+			return NumberCodeHelper.generateCode(Target.CodePositionY, reversed);
 		}
 	}
 
@@ -384,7 +433,6 @@ namespace BefunGen.AST
 			return Target.InternalType;
 		}
 
-		// This puts X and Y of the var are on the stack
 		public override CodePiece generateCode(bool reversed)
 		{
 			CodePiece p = new CodePiece();
@@ -396,6 +444,8 @@ namespace BefunGen.AST
 				p.AppendLeft(NumberCodeHelper.generateCode(Target.CodePositionX, reversed));
 				p.AppendLeft(BCHelper.Add);
 				p.AppendLeft(NumberCodeHelper.generateCode(Target.CodePositionY, reversed));
+
+				p.AppendLeft(BCHelper.Reflect_Get);
 			}
 			else
 			{
@@ -404,6 +454,8 @@ namespace BefunGen.AST
 				p.AppendRight(NumberCodeHelper.generateCode(Target.CodePositionX, reversed));
 				p.AppendRight(BCHelper.Add);
 				p.AppendRight(NumberCodeHelper.generateCode(Target.CodePositionY, reversed));
+
+				p.AppendRight(BCHelper.Reflect_Get);
 			}
 
 			p.normalizeX();
@@ -411,8 +463,39 @@ namespace BefunGen.AST
 			return p;
 		}
 
-		// Puts X and Y 2-times on the stack: [X, Y, X, Y]
-		public override CodePiece generateCodeDouble(bool reversed)
+		// This puts X and Y of the var on the stack
+		public override CodePiece generateCodeSingle(bool reversed)
+		{
+			CodePiece p = new CodePiece();
+
+			if (reversed)
+			{
+				p.AppendLeft(Index.generateCode(reversed));
+
+				p.AppendLeft(NumberCodeHelper.generateCode(Target.CodePositionX, reversed));
+				p.AppendLeft(BCHelper.Add);
+				p.AppendLeft(NumberCodeHelper.generateCode(Target.CodePositionY, reversed));
+
+				p.AppendLeft(BCHelper.Reflect_Get);
+			}
+			else
+			{
+				p.AppendRight(Index.generateCode(reversed));
+
+				p.AppendRight(NumberCodeHelper.generateCode(Target.CodePositionX, reversed));
+				p.AppendRight(BCHelper.Add);
+				p.AppendRight(NumberCodeHelper.generateCode(Target.CodePositionY, reversed));
+
+				p.AppendRight(BCHelper.Reflect_Get);
+			}
+
+			p.normalizeX();
+
+			return p;
+		}
+
+		// Puts X and Y 1 1/2 -times on the stack: [X, X, Y]
+		public override CodePiece generateCodeDoubleX(bool reversed)
 		{
 			CodePiece p = new CodePiece();
 
@@ -425,9 +508,6 @@ namespace BefunGen.AST
 				p.AppendLeft(BCHelper.Stack_Dup);
 
 				p.AppendLeft(NumberCodeHelper.generateCode(Target.CodePositionY, reversed));
-				p.AppendLeft(BCHelper.Stack_Swap);
-
-				p.AppendLeft(NumberCodeHelper.generateCode(Target.CodePositionY, reversed));
 			}
 			else
 			{
@@ -438,14 +518,17 @@ namespace BefunGen.AST
 				p.AppendRight(BCHelper.Stack_Dup);
 				
 				p.AppendRight(NumberCodeHelper.generateCode(Target.CodePositionY, reversed));
-				p.AppendRight(BCHelper.Stack_Swap);
-
-				p.AppendRight(NumberCodeHelper.generateCode(Target.CodePositionY, reversed));
 			}
 
 			p.normalizeX();
 
 			return p;
+		}
+
+		/// Puts Y on the stack: [Y]
+		public override CodePiece generateCodeSingleY(bool reversed)
+		{
+			return NumberCodeHelper.generateCode(Target.CodePositionY, reversed);
 		}
 	}
 
@@ -481,7 +564,17 @@ namespace BefunGen.AST
 			throw new InvalidASTStateException(Position);
 		}
 
-		public override CodePiece generateCodeDouble(bool reversed)
+		public override CodePiece generateCodeSingle(bool reversed)
+		{
+			throw new InvalidASTStateException(Position);
+		}
+
+		public override CodePiece generateCodeDoubleX(bool reversed)
+		{
+			throw new InvalidASTStateException(Position);
+		}
+
+		public override CodePiece generateCodeSingleY(bool reversed)
 		{
 			throw new InvalidASTStateException(Position);
 		}

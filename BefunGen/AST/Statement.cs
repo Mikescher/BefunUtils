@@ -771,18 +771,22 @@ namespace BefunGen.AST
 
 			if (reversed)
 			{
-				p.AppendLeft(Target.generateCodeDouble(reversed));
+				p.AppendLeft(Target.generateCodeDoubleX(reversed));
 				p.AppendLeft(BCHelper.Reflect_Get);
 				p.AppendLeft(BCHelper.Digit_1);
 				p.AppendLeft(BCHelper.Add);
+				p.AppendLeft(BCHelper.Stack_Swap);
+				p.AppendLeft(Target.generateCodeSingleY(reversed));
 				p.AppendLeft(BCHelper.Reflect_Set);
 			}
 			else
 			{
-				p.AppendRight(Target.generateCodeDouble(reversed));
+				p.AppendRight(Target.generateCodeDoubleX(reversed));
 				p.AppendRight(BCHelper.Reflect_Get);
 				p.AppendRight(BCHelper.Digit_1);
 				p.AppendRight(BCHelper.Add);
+				p.AppendRight(BCHelper.Stack_Swap);
+				p.AppendRight(Target.generateCodeSingleY(reversed));
 				p.AppendRight(BCHelper.Reflect_Set);
 			}
 
@@ -840,18 +844,22 @@ namespace BefunGen.AST
 
 			if (reversed)
 			{
-				p.AppendLeft(Target.generateCodeDouble(reversed));
+				p.AppendLeft(Target.generateCodeDoubleX(reversed));
 				p.AppendLeft(BCHelper.Reflect_Get);
 				p.AppendLeft(BCHelper.Digit_1);
 				p.AppendLeft(BCHelper.Sub);
+				p.AppendLeft(BCHelper.Stack_Swap);
+				p.AppendLeft(Target.generateCodeSingleY(reversed));
 				p.AppendLeft(BCHelper.Reflect_Set);
 			}
 			else
 			{
-				p.AppendRight(Target.generateCodeDouble(reversed));
+				p.AppendRight(Target.generateCodeDoubleX(reversed));
 				p.AppendRight(BCHelper.Reflect_Get);
 				p.AppendRight(BCHelper.Digit_1);
 				p.AppendRight(BCHelper.Sub);
+				p.AppendRight(BCHelper.Stack_Swap);
+				p.AppendRight(Target.generateCodeSingleY(reversed));
 				p.AppendRight(BCHelper.Reflect_Set);
 			}
 
@@ -919,7 +927,7 @@ namespace BefunGen.AST
 			if (reversed)
 			{
 				p.AppendLeft(Expr.generateCode(reversed));
-				p.AppendLeft(Target.generateCode(reversed));
+				p.AppendLeft(Target.generateCodeSingle(reversed));
 
 				p.AppendLeft(BCHelper.Reflect_Set);
 
@@ -928,7 +936,7 @@ namespace BefunGen.AST
 			else
 			{
 				p.AppendRight(Expr.generateCode(reversed));
-				p.AppendRight(Target.generateCode(reversed));
+				p.AppendRight(Target.generateCodeSingle(reversed));
 
 				p.AppendRight(BCHelper.Reflect_Set);
 
