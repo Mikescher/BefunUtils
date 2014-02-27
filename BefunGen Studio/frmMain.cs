@@ -298,6 +298,7 @@ int doIt()
 var
 	int i := 48;
 begin
+	i = 60;
     out (char)(48+(int)RAND);
 	out " + '"' + @"Hello" + '"' + @";
 	out " + '"' + @" ... " + '"' + @";

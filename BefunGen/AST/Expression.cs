@@ -257,6 +257,9 @@ namespace BefunGen.AST
 		{
 			//NOP
 		}
+
+		// Puts X and Y 2-times on the stack: [X, Y, X, Y]
+		public abstract CodePiece generateCodeDouble(bool reversed);
 	}
 
 	#endregion
@@ -318,6 +321,12 @@ namespace BefunGen.AST
 			p.normalizeX();
 
 			return p;
+		}
+
+		// Puts X and Y 2-times on the stack: [X, Y, X, Y]
+		public override CodePiece generateCodeDouble(bool reversed)
+		{
+			return CodePiece.CombineHorizontal(generateCode(reversed), generateCode(reversed));
 		}
 	}
 
@@ -401,6 +410,43 @@ namespace BefunGen.AST
 
 			return p;
 		}
+
+		// Puts X and Y 2-times on the stack: [X, Y, X, Y]
+		public override CodePiece generateCodeDouble(bool reversed)
+		{
+			CodePiece p = new CodePiece();
+
+			if (reversed)
+			{
+				p.AppendLeft(Index.generateCode(reversed));
+
+				p.AppendLeft(NumberCodeHelper.generateCode(Target.CodePositionX, reversed));
+				p.AppendLeft(BCHelper.Add);
+				p.AppendLeft(BCHelper.Stack_Dup);
+
+				p.AppendLeft(NumberCodeHelper.generateCode(Target.CodePositionY, reversed));
+				p.AppendLeft(BCHelper.Stack_Swap);
+
+				p.AppendLeft(NumberCodeHelper.generateCode(Target.CodePositionY, reversed));
+			}
+			else
+			{
+				p.AppendRight(Index.generateCode(reversed));
+				
+				p.AppendRight(NumberCodeHelper.generateCode(Target.CodePositionX, reversed));
+				p.AppendRight(BCHelper.Add);
+				p.AppendRight(BCHelper.Stack_Dup);
+				
+				p.AppendRight(NumberCodeHelper.generateCode(Target.CodePositionY, reversed));
+				p.AppendRight(BCHelper.Stack_Swap);
+
+				p.AppendRight(NumberCodeHelper.generateCode(Target.CodePositionY, reversed));
+			}
+
+			p.normalizeX();
+
+			return p;
+		}
 	}
 
 	public class Expression_VoidValuePointer : Expression_ValuePointer
@@ -431,6 +477,11 @@ namespace BefunGen.AST
 		}
 
 		public override CodePiece generateCode(bool reversed)
+		{
+			throw new InvalidASTStateException(Position);
+		}
+
+		public override CodePiece generateCodeDouble(bool reversed)
 		{
 			throw new InvalidASTStateException(Position);
 		}

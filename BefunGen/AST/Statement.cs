@@ -767,7 +767,28 @@ namespace BefunGen.AST
 
 		public override CodePiece generateCode(bool reversed)
 		{
-			throw new NotImplementedException(); //TODO Implement
+			CodePiece p = new CodePiece();
+
+			if (reversed)
+			{
+				p.AppendLeft(Target.generateCodeDouble(reversed));
+				p.AppendLeft(BCHelper.Reflect_Get);
+				p.AppendLeft(BCHelper.Digit_1);
+				p.AppendLeft(BCHelper.Add);
+				p.AppendLeft(BCHelper.Reflect_Set);
+			}
+			else
+			{
+				p.AppendRight(Target.generateCodeDouble(reversed));
+				p.AppendRight(BCHelper.Reflect_Get);
+				p.AppendRight(BCHelper.Digit_1);
+				p.AppendRight(BCHelper.Add);
+				p.AppendRight(BCHelper.Reflect_Set);
+			}
+
+			p.normalizeX();
+
+			return p;
 		}
 	}
 
@@ -815,7 +836,28 @@ namespace BefunGen.AST
 
 		public override CodePiece generateCode(bool reversed)
 		{
-			throw new NotImplementedException(); //TODO Implement
+			CodePiece p = new CodePiece();
+
+			if (reversed)
+			{
+				p.AppendLeft(Target.generateCodeDouble(reversed));
+				p.AppendLeft(BCHelper.Reflect_Get);
+				p.AppendLeft(BCHelper.Digit_1);
+				p.AppendLeft(BCHelper.Sub);
+				p.AppendLeft(BCHelper.Reflect_Set);
+			}
+			else
+			{
+				p.AppendRight(Target.generateCodeDouble(reversed));
+				p.AppendRight(BCHelper.Reflect_Get);
+				p.AppendRight(BCHelper.Digit_1);
+				p.AppendRight(BCHelper.Sub);
+				p.AppendRight(BCHelper.Reflect_Set);
+			}
+
+			p.normalizeX();
+
+			return p;
 		}
 	}
 
