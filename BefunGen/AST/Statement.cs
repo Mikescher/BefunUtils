@@ -1102,7 +1102,50 @@ namespace BefunGen.AST
 
 			if (reversed)
 			{
-				return null;
+				// _v#! CONDITION <
+				//  >  STATEMENT  ^
+				CodePiece p = new CodePiece();
+
+				int top = cp_body.MinY - cp_cond.MaxY;
+				int right = Math.Max(cp_body.Width, cp_cond.Width + 2);
+
+
+				// Bottom-Left '>'
+				p[-1, 0] = BCHelper.PC_Right;
+
+				// Top-Left '_v#!'
+				p[-2, top] = BCHelper.If_Horizontal;
+				p[-1, top] = BCHelper.PC_Down;
+				p[0, top] = BCHelper.PC_Jump;
+				p[1, top] = BCHelper.Not;
+
+				// Top-Right '<'
+				p[right, top] = BCHelper.PC_Left;
+
+				// Bottom Right '^'
+				p[right, 0] = BCHelper.PC_Up;
+
+
+				// Fill Walkway between condition and Left
+				p.Fill(cp_cond.Width + 2, top, right, top + 1, BCHelper.Walkway);
+				// Fill Walkway between body and '<'
+				p.Fill(cp_body.Width, 0, right, 1, BCHelper.Walkway);
+
+				// Walkway Leftside Up
+				p.Fill(-1, top + 1, 0, 0, BCHelper.Walkway);
+				// Walkway righside down
+				p.Fill(right, top + 1, right + 1, 0, BCHelper.Walkway);
+
+
+				// Insert Condition
+				p.SetAt(2, top, cp_cond);
+				// Insert Body
+				p.SetAt(0, 0, cp_body);
+
+				p.normalizeX();
+				p.AddYOffset(-top); // Set Offset relative to condition (and to insert/exit Points)
+
+				return p;
 			}
 			else
 			{
@@ -1114,9 +1157,9 @@ namespace BefunGen.AST
 				int right = Math.Max(cp_body.Width, cp_cond.Width + 1);
 
 
-				// Top-Left '>'
-				p[-1, 0] = BCHelper.PC_Up;
 				// Bottom-Left '^'
+				p[-1, 0] = BCHelper.PC_Up;
+				// Top-Left '>'
 				p[-1, top] = BCHelper.PC_Right;
 
 				// Tester Top-Right '#v_'
@@ -1205,6 +1248,29 @@ namespace BefunGen.AST
 
 		public override CodePiece generateCode(bool reversed)
 		{
+			CodePiece cp_body = Body.generateCode(!reversed);
+			cp_body.normalizeX();
+
+			CodePiece cp_cond = Condition.generateCode(reversed);
+			cp_cond.normalizeX();
+
+			if (reversed)
+			{
+				// _v# STATEMENT  <
+				//  >  CONDITION  ^
+				CodePiece p = new CodePiece();
+				//TODO Implement
+			}
+			else
+			{
+				// > STATEMENT !#v_
+				// ^  CONDITION  <
+				CodePiece p = new CodePiece();
+				//TODO Implement
+			}
+
+
+
 			throw new NotImplementedException(); //TODO Implement
 		}
 	}

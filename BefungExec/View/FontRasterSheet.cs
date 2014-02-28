@@ -19,9 +19,9 @@ namespace BefungExec.View.OpenGL
 
 		public Rect2d GetCharCoords(int c)
 		{
-			if (!(c >= 32 && 126 >= c))
+			if (!(c >= 0 && 126 >= c))
 			{
-				c = 0;
+				c = 159;
 			}
 
 			return GetCoordinates(c);

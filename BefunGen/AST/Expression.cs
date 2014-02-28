@@ -475,8 +475,6 @@ namespace BefunGen.AST
 				p.AppendLeft(NumberCodeHelper.generateCode(Target.CodePositionX, reversed));
 				p.AppendLeft(BCHelper.Add);
 				p.AppendLeft(NumberCodeHelper.generateCode(Target.CodePositionY, reversed));
-
-				p.AppendLeft(BCHelper.Reflect_Get);
 			}
 			else
 			{
@@ -485,8 +483,6 @@ namespace BefunGen.AST
 				p.AppendRight(NumberCodeHelper.generateCode(Target.CodePositionX, reversed));
 				p.AppendRight(BCHelper.Add);
 				p.AppendRight(NumberCodeHelper.generateCode(Target.CodePositionY, reversed));
-
-				p.AppendRight(BCHelper.Reflect_Get);
 			}
 
 			p.normalizeX();
@@ -512,11 +508,11 @@ namespace BefunGen.AST
 			else
 			{
 				p.AppendRight(Index.generateCode(reversed));
-				
+
 				p.AppendRight(NumberCodeHelper.generateCode(Target.CodePositionX, reversed));
 				p.AppendRight(BCHelper.Add);
 				p.AppendRight(BCHelper.Stack_Dup);
-				
+
 				p.AppendRight(NumberCodeHelper.generateCode(Target.CodePositionY, reversed));
 			}
 
@@ -1129,17 +1125,17 @@ namespace BefunGen.AST
 
 			if (reversed)
 			{
-				//First Right than LEFT -->  RIGHT < LEFT
-				p = Right.generateCode(reversed);
-				p.AppendLeft(Left.generateCode(reversed));
+				//First Left than Right -->  RIGHT < LEFT
+				p = Left.generateCode(reversed);
+				p.AppendLeft(Right.generateCode(reversed));
 
 				p.AppendLeft(BCHelper.GreaterThan);
 			}
 			else
 			{
-				//First Right than LEFT -->  RIGHT < LEFT
-				p = Right.generateCode(reversed);
-				p.AppendRight(Left.generateCode(reversed));
+				//First Left than Right -->  RIGHT < LEFT
+				p = Left.generateCode(reversed);
+				p.AppendRight(Right.generateCode(reversed));
 
 				p.AppendRight(BCHelper.GreaterThan);
 			}
@@ -1169,17 +1165,17 @@ namespace BefunGen.AST
 
 			if (reversed)
 			{
-				//First Left than Right -->  LEFT < RIGHT
-				p = Left.generateCode(reversed);
-				p.AppendLeft(Right.generateCode(reversed));
+				//First Right than Left -->  LEFT < RIGHT
+				p = Right.generateCode(reversed);
+				p.AppendLeft(Left.generateCode(reversed));
 
 				p.AppendLeft(BCHelper.GreaterThan);
 			}
 			else
 			{
-				//First Left than Right -->  LEFT < RIGHT
-				p = Left.generateCode(reversed);
-				p.AppendRight(Right.generateCode(reversed));
+				//First Right than Left -->  LEFT < RIGHT
+				p = Right.generateCode(reversed);
+				p.AppendRight(Left.generateCode(reversed));
 
 				p.AppendRight(BCHelper.GreaterThan);
 			}
