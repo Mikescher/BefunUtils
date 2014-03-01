@@ -274,8 +274,8 @@ namespace BefunGen
 			begin
 				lb[0] = (char)13;
 				lb[1] = (char)10;
-				out '>';
-				while (i <= 128) do
+				//out '>';
+				REPEAT
 				begin
 					out i;
 					out " + '"' + " = " + '"' + @";
@@ -283,7 +283,8 @@ namespace BefunGen
 					out lb[0];
 					out lb[1];
 					i++;
-				end
+				end 
+				UNTIL (i == 3)
 				
 				QUIT;
 			end

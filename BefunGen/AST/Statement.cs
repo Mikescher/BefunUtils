@@ -76,7 +76,7 @@ namespace BefunGen.AST
 			return result;
 		}
 
-		public override CodePiece generateCode(bool reversed)
+		public override CodePiece generateCode(bool reversed) // TODO vllt so machen wie auch while/repUntil Stmt's (?) -> mimt SetAt
 		{
 			List<TwoDirectionCodePiece> cp_stmts = new List<TwoDirectionCodePiece>();
 
@@ -84,6 +84,7 @@ namespace BefunGen.AST
 			{
 				Statement stmt = List[i];
 
+				//TODO Doing this two times makes the parse O(2^n) instead of O(n) --> what do ? (you could just dont do it - would change nothing .. just the sorting would be sometimes a little bit off)
 				cp_stmts.Add(new TwoDirectionCodePiece(stmt.generateCode(false), stmt.generateCode(true)));
 			}
 
@@ -1109,28 +1110,22 @@ namespace BefunGen.AST
 				int top = cp_body.MinY - cp_cond.MaxY;
 				int right = Math.Max(cp_body.Width, cp_cond.Width + 2);
 
-
 				// Bottom-Left '>'
 				p[-1, 0] = BCHelper.PC_Right;
-
 				// Top-Left '_v#!'
 				p[-2, top] = BCHelper.If_Horizontal;
 				p[-1, top] = BCHelper.PC_Down;
 				p[0, top] = BCHelper.PC_Jump;
 				p[1, top] = BCHelper.Not;
-
 				// Top-Right '<'
 				p[right, top] = BCHelper.PC_Left;
-
 				// Bottom Right '^'
 				p[right, 0] = BCHelper.PC_Up;
-
 
 				// Fill Walkway between condition and Left
 				p.Fill(cp_cond.Width + 2, top, right, top + 1, BCHelper.Walkway);
 				// Fill Walkway between body and '<'
 				p.Fill(cp_body.Width, 0, right, 1, BCHelper.Walkway);
-
 				// Walkway Leftside Up
 				p.Fill(-1, top + 1, 0, 0, BCHelper.Walkway);
 				// Walkway righside down
@@ -1156,31 +1151,25 @@ namespace BefunGen.AST
 				int top = cp_body.MinY - cp_cond.MaxY;
 				int right = Math.Max(cp_body.Width, cp_cond.Width + 1);
 
-
 				// Bottom-Left '^'
 				p[-1, 0] = BCHelper.PC_Up;
 				// Top-Left '>'
 				p[-1, top] = BCHelper.PC_Right;
-
 				// Tester Top-Right '#v_'
 				p[right - 1, top] = BCHelper.PC_Jump;
 				p[right, top] = BCHelper.PC_Down;
 				p[right + 1, top] = BCHelper.If_Horizontal;
-
 				// Bottom Right '<'
 				p[right, 0] = BCHelper.PC_Left;
-
 
 				// Fill Walkway between condition and Tester
 				p.Fill(cp_cond.Width, top, right - 1, top + 1, BCHelper.Walkway);
 				// Fill Walkway between body and '<'
 				p.Fill(cp_body.Width, 0, right, 1, BCHelper.Walkway);
-
 				// Walkway Leftside Up
 				p.Fill(-1, top + 1, 0, 0, BCHelper.Walkway);
 				// Walkway righside down
 				p.Fill(right, top + 1, right + 1, 0, BCHelper.Walkway);
-
 
 				// Insert Condition
 				p.SetAt(0, top, cp_cond);
@@ -1248,30 +1237,113 @@ namespace BefunGen.AST
 
 		public override CodePiece generateCode(bool reversed)
 		{
-			CodePiece cp_body = Body.generateCode(!reversed);
+			CodePiece cp_body = Body.generateCode(reversed);
 			cp_body.normalizeX();
 
-			CodePiece cp_cond = Condition.generateCode(reversed);
+			CodePiece cp_cond = Condition.generateCode(!reversed);
 			cp_cond.normalizeX();
 
 			if (reversed)
 			{
-				// _v# STATEMENT  <
-				//  >  CONDITION  ^
+				// <v  STATEMENT  <
+				// ^             _^
+				//  >  CONDITION ^
 				CodePiece p = new CodePiece();
-				//TODO Implement
+
+				int mid = cp_body.MaxY;
+				int bottom = (mid + 1) - cp_cond.MinY;
+				int right = Math.Max(cp_body.Width, cp_cond.Width + 1);
+
+				// Top-Left '<v'
+				p[-2, 0] = BCHelper.PC_Left;
+				p[-1, 0] = BCHelper.PC_Down;
+				// Top-Right '<'
+				p[right, 0] = BCHelper.PC_Left;
+				// Mid-Left '^'
+				p[-2, mid] = BCHelper.PC_Up;
+				// Mid-Right '_^'
+				p[right, mid] = BCHelper.PC_Up;
+				p[right - 1, mid] = BCHelper.If_Horizontal;
+				//Bottom-Left '>'
+				p[-1, bottom] = BCHelper.PC_Right;
+				//Bottom-Right '^'
+				p[right - 1, bottom] = BCHelper.PC_Up;
+
+				// Walkway top (Statement to '<')
+				p.Fill(cp_body.Width, 0, right, 1, BCHelper.Walkway);
+				// Walkway bottom (Condition to '^')
+				p.Fill(cp_cond.Width, bottom, right - 1, bottom + 1, BCHelper.Walkway);
+				// Walkway left-lower ('<' to '^')
+				p.Fill(-2, 1, -1, mid, BCHelper.Walkway);
+				// Walkway left-full ('v' to '>')
+				p.Fill(-1, 1, 0, bottom, BCHelper.Walkway);
+				// Walkway right-lower ('^' to '_')
+				p.Fill(right, 1, right + 1, mid, BCHelper.Walkway);
+				// Walkway right-upper ('^' to '<')
+				p.Fill(right - 1, mid + 1, right, bottom, BCHelper.Walkway);
+				// Walkway middle ('^' to '_^')
+				p.Fill(0, mid, right - 1, mid + 1, BCHelper.Walkway);
+
+				// Insert Statement
+				p.SetAt(0, 0, cp_body);
+				// Inser Condition
+				p.SetAt(0, bottom, cp_cond);
+
+				p.normalizeX();
+
+				return p;
 			}
 			else
 			{
-				// > STATEMENT !#v_
-				// ^  CONDITION  <
+				// >  STATEMENT  v>
+				// ^_             ^
+				//  ^! CONDITION <
 				CodePiece p = new CodePiece();
-				//TODO Implement
+
+				int mid = cp_body.MaxY;
+				int bottom = (mid + 1) - cp_cond.MinY;
+				int right = Math.Max(cp_body.Width, cp_cond.Width + 2);
+
+				// Top-Left '>'
+				p[-1, 0] = BCHelper.PC_Right;
+				// Top-Right 'v>'
+				p[right, 0] = BCHelper.PC_Down;
+				p[right + 1, 0] = BCHelper.PC_Right;
+				// Mid-Left '^_'
+				p[0, mid] = BCHelper.If_Horizontal;
+				p[-1, mid] = BCHelper.PC_Up;
+				// Mid-Right '^'
+				p[right + 1, mid] = BCHelper.PC_Up;
+				//Bottom-Left '^!'
+				p[0, bottom] = BCHelper.PC_Up;
+				p[1, bottom] = BCHelper.Not;
+				//Bottom-Right '<'
+				p[right, bottom] = BCHelper.PC_Left;
+
+				// Walkway top (Statement to 'v')
+				p.Fill(cp_body.Width, 0, right, 1, BCHelper.Walkway);
+				// Walkway bottom (Condition to '<')
+				p.Fill(cp_cond.Width + 2, bottom, right, bottom + 1, BCHelper.Walkway);
+				// Walkway left-lower ('>' to '^')
+				p.Fill(-1, 1, 0, mid, BCHelper.Walkway);
+				// Walkway left-upper ('_' to '^')
+				p.Fill(0, mid + 1, 1, bottom, BCHelper.Walkway);
+				// Walkway right-lower ('>' to '^')
+				p.Fill(right + 1, 1, right + 2, mid, BCHelper.Walkway);
+				// Walkway right-full ('v' to '<')
+				p.Fill(right, 1, right + 1, bottom, BCHelper.Walkway);
+				// Walkway middle ('^_' to '^')
+				p.Fill(1, mid, right, mid + 1, BCHelper.Walkway);
+
+				// Insert Statement
+				p.SetAt(0, 0, cp_body);
+				// Inser Condition
+				p.SetAt(2, bottom, cp_cond);
+
+				p.normalizeX();
+
+				return p;
 			}
-
-
-
-			throw new NotImplementedException(); //TODO Implement
 		}
 	}
 
