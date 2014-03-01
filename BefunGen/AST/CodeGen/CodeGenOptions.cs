@@ -22,7 +22,7 @@ namespace BefunGen.AST.CodeGen
 
 		// Every NOP-Command is displayed as an Exit-Command
 		public static bool SetNOPCellsToCustom = true;
-		public static char CustomNOPSymbol = '@'; //'\u00F8';
+		public static char CustomNOPSymbol = (char)164;//'@'; //'\u00F8';
 
 		// When combining two CodePieces try to combine the two connecting columns/rows to a signle one
 		public static bool CompressHorizontalCombining = true;

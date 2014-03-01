@@ -9,6 +9,7 @@ using SuperBitBros.OpenGL.OGLMath;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Threading;
 
 namespace BefungExec.View
 {
@@ -19,6 +20,8 @@ namespace BefungExec.View
 		private QFont DebugFont;
 		private QFont StackFont;
 		private QFont BoxFont;
+		private IdleKeyBoard kb = new IdleKeyBoard();
+
 		private BefunProg prog;
 
 		private List<int> currStack = new List<int>();
@@ -30,10 +33,14 @@ namespace BefungExec.View
 		private Rect2i selection = null;
 		private Rect2i zoom = null;
 
-		public MainView(BefunProg model)
+		private string init_code;
+
+		public MainView(BefunProg model, string code)
 			: base(Math.Min((int)(((model.Width / (model.Height * 1d)) * 480) * (8.0 / 12.0)) + 250, 1024), 480)
 		{
 			Title = "-- BefungExec --";
+
+			init_code = code;
 
 			prog = model;
 
@@ -90,14 +97,11 @@ namespace BefungExec.View
 			lastInput = arg.KeyChar;
 		}
 
-		private bool lastState_Esc = false;
-		private bool lastState_Space = false;
-		private bool lastState_BSpace = false;
-		private bool lastState_Enter = false;
-		private bool lastState_Right = false;
 		private void OnUpdate(object o, FrameEventArgs arg)
 		{
-			if (Keyboard[Key.Escape] && !lastState_Esc)
+			kb.update(Keyboard);
+
+			if (kb[Key.Escape])
 			{
 				if (zoom != null)
 				{
@@ -108,16 +112,19 @@ namespace BefungExec.View
 					Exit();
 				}
 			}
-			else if (Keyboard[Key.Space] && !lastState_Space && prog.mode == BefunProg.MODE_RUN)
+
+			if (kb[Key.Space] && prog.mode == BefunProg.MODE_RUN)
 			{
 				prog.paused = !prog.paused;
 			}
-			else if (Keyboard[Key.BackSpace] && !lastState_BSpace)
+
+			if (kb[Key.BackSpace])
 			{
 				if (currInput.Length > 0)
 					currInput = currInput.Substring(0, currInput.Length - 1);
 			}
-			else if (Keyboard[Key.Enter] && !lastState_Enter)
+
+			if (kb[Key.Enter])
 			{
 				if (prog.mode == BefunProg.MODE_IN_INT && currInput.Length > 0 && currInput != "-")
 				{
@@ -126,24 +133,52 @@ namespace BefungExec.View
 					prog.mode = BefunProg.MODE_RUN;
 					prog.move();
 				}
-				if (prog.mode == BefunProg.MODE_IN_CHAR && currInput.Length == 0)
-				{
-					prog.push(0);
-					currInput = "";
-					prog.mode = BefunProg.MODE_RUN;
-					prog.move();
-				}
 			}
-			else if (Keyboard[Key.Right] && !lastState_Right)
+
+			if (kb[Key.Right])
 			{
 				prog.doSingleStep = true;
 			}
 
-			lastState_Space = Keyboard[Key.Space];
-			lastState_BSpace = Keyboard[Key.BackSpace];
-			lastState_BSpace = Keyboard[Key.Enter];
-			lastState_Right = Keyboard[Key.Right];
-			lastState_Esc = Keyboard[Key.Escape];
+			if (kb[Key.Number1])
+			{
+				prog.curr_lvl_sleeptime = RunOptions.LOW_SLEEP_TIME;
+			}
+
+			if (kb[Key.Number2])
+			{
+				prog.curr_lvl_sleeptime = RunOptions.SLEEP_TIME;
+			}
+
+			if (kb[Key.Number3])
+			{
+				prog.curr_lvl_sleeptime = RunOptions.TOP_SLEEP_TIME;
+			}
+
+			if (kb[Key.R])
+			{
+				reset();
+			}
+		}
+
+		private void reset()
+		{
+			prog.reset_freeze_request = true;
+
+			while (!prog.reset_freeze_answer)
+				Thread.Sleep(0);
+
+			prog.full_reset(init_code);
+
+			Console.WriteLine();
+			Console.WriteLine();
+
+			Console.WriteLine("########## OUTPUT ##########");
+
+			Console.WriteLine();
+			Console.WriteLine();
+
+			prog.reset_freeze_request = false;
 		}
 
 		private void OnMouseDown(object o, MouseButtonEventArgs arg)

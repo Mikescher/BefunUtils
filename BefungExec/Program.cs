@@ -15,9 +15,23 @@ namespace BefungExec
 
 		static void Main(string[] args)
 		{
-			string code = demo;
+			string code;
 
-			parseParams(args, ref code);
+			parseParams(args, out code);
+
+			Console.WriteLine();
+			Console.WriteLine();
+
+			Console.WriteLine("########## KEYS ##########");
+			Console.WriteLine();
+			Console.WriteLine("Space:   Pause | Resume");
+			Console.WriteLine("Right:   Step Forward");
+			Console.WriteLine("Mouse:   Zoom in | Breakpoint");
+			Console.WriteLine("Esc:     Zoom out | Exit");
+			Console.WriteLine("R:       Reset");
+			Console.WriteLine("1:       Debug speed");
+			Console.WriteLine("2:       Normal speed");
+			Console.WriteLine("3:       High speed");
 
 			Console.WriteLine();
 			Console.WriteLine();
@@ -36,12 +50,31 @@ namespace BefungExec
 			BefunProg bp = new BefunProg(GetProg(code));
 			new Thread(new ThreadStart(bp.run)).Start();
 
-			MainView mv = new MainView(bp);
+			MainView mv = new MainView(bp, code);
 		}
 
-		private static CommandLineArguments parseParams(string[] args, ref string code)
+		private static CommandLineArguments parseParams(string[] args, out string code)
 		{
 			CommandLineArguments cmda = new CommandLineArguments(args);
+
+			if (cmda.isEmpty())
+			{
+				Console.WriteLine("########## Parameter ##########");
+				Console.WriteLine();
+				Console.WriteLine("pause | no_pause           : Start Interpreter paused");
+				Console.WriteLine("highlight | no_highlight   : Enable Syntax-Highlighting");
+				Console.WriteLine("skipnop | no_skipnop       : Skip NOP's");
+				Console.WriteLine("debug | no_debug           : Activates additional debug-messages");
+				Console.WriteLine("topspeed=?                 : Set the speed (ms) for speed-3");
+				Console.WriteLine("speed=?                    : Set the speed (ms) for speed-2");
+				Console.WriteLine("lowspeed=?                 : Set the speed (ms) for speed-1");
+				Console.WriteLine("decay=?                    : Time (ms) for the decay effect");
+				Console.WriteLine("zoom=?,?,?,?               : Initial zoom position (x1, y1, x2, y2)");
+				Console.WriteLine("file=?                     : The file to execute");
+				Console.WriteLine();
+			}
+
+			//############################
 
 			if (cmda.IsSet("no_pause"))
 				RunOptions.INIT_PAUSED = false;
@@ -57,9 +90,33 @@ namespace BefungExec
 
 			//##############
 
+			if (cmda.IsSet("no_skipnop") || cmda.IsSet("executenop"))
+				RunOptions.SKIP_NOP = false;
+			if (cmda.IsSet("skipnop"))
+				RunOptions.SKIP_NOP = true;
+
+			//##############
+
+			if (cmda.IsSet("no_debug") || cmda.IsSet("no_debugrun"))
+				RunOptions.DEBUGRUN = false;
+			if (cmda.IsSet("debug") || cmda.IsSet("debugrun"))
+				RunOptions.DEBUGRUN = true;
+
+			//##############
+
+			if (cmda.IsInt("topspeed"))
+			{
+				RunOptions.TOP_SLEEP_TIME = int.Parse(cmda["topspeed"]);
+			}
+
 			if (cmda.IsInt("speed"))
 			{
 				RunOptions.SLEEP_TIME = int.Parse(cmda["speed"]);
+			}
+
+			if (cmda.IsInt("lowspeed"))
+			{
+				RunOptions.LOW_SLEEP_TIME = int.Parse(cmda["lowspeed"]);
 			}
 
 			//##############
@@ -95,18 +152,25 @@ namespace BefungExec
 				catch (Exception e)
 				{
 					Console.Out.WriteLine(e.ToString());
+					code = "";
 				}
 			}
 			else
 			{
+				Console.WriteLine("########## FILE NOT FOUND ##########");
+
 				Console.WriteLine("Please pass a BefungeFile with the parameter '-file'");
 
 				Console.WriteLine("Using Demo ...");
+
+				code = demo;
+				//RunOptions.DEBUGRUN = false; // Please do not debug demo :/
 			}
 
 			Console.WriteLine();
 			Console.WriteLine("Actual arguments:");
 			Array.ForEach(args, p => Console.WriteLine(p));
+			Console.WriteLine();
 			return cmda;
 		}
 
@@ -120,7 +184,7 @@ namespace BefungExec
 			return Regex.Split(pg, @"\r\n").Length;
 		}
 
-		private static int[,] GetProg(string pg)
+		public static int[,] GetProg(string pg)
 		{
 			int w, h;
 

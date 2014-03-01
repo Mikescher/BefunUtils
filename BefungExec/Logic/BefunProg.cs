@@ -27,8 +27,8 @@ namespace BefungExec.Logic
 		public int this[int x, int y] { get { return raster[x, y]; } }
 
 		public Vec2i PC = new Vec2i(0, 0);
-		private Vec2i delta = new Vec2i(1, 0);
-		private bool stringmode = false;
+		public Vec2i delta = new Vec2i(1, 0);
+		public bool stringmode = false;
 
 		public Stack<int> Stack = new Stack<int>();
 
@@ -39,6 +39,13 @@ namespace BefungExec.Logic
 		public const int MODE_RUN = 0;
 		public const int MODE_IN_INT = 1;
 		public const int MODE_IN_CHAR = 2;
+
+		public int curr_lvl_sleeptime;
+
+		public bool reset_freeze_request = false;
+		public bool reset_freeze_answer = false;
+
+		public string err = null;
 
 		public BefunProg(int[,] iras)
 		{
@@ -56,10 +63,14 @@ namespace BefungExec.Logic
 			dimension = new Vec2i(Width, Height);
 
 			paused = RunOptions.INIT_PAUSED;
+
+			curr_lvl_sleeptime = RunOptions.SLEEP_TIME;
 		}
 
 		public void run()
 		{
+			int skipcount;
+
 			running = true;
 
 			long start = Environment.TickCount;
@@ -69,30 +80,83 @@ namespace BefungExec.Logic
 			{
 				if ((paused && !doSingleStep) || mode != MODE_RUN)
 				{
-					Thread.Sleep(RunOptions.SLEEP_TIME);
+					Thread.Sleep(curr_lvl_sleeptime);
 					decay();
+
+					testForFreeze();
+
+					start = Environment.TickCount;
 					continue;
 				}
 				freq.Inc();
 
-				calc();
 				if (mode == MODE_RUN)
 				{
-					move();
-					decay();
+					calc();
+					debug();
 
-					paused = paused || breakpoints[PC.X, PC.Y];
+					if (mode == MODE_RUN && (!paused || doSingleStep))
+					{
+						skipcount = 0;
+						do
+						{
+							move();
+							decay();
+							conditionalbreak();
+							debug();
+
+							skipcount++;
+							if (skipcount > Width * 2)
+							{
+								err = "Program entered infinite NOP-Loop";
+								debug();
+								break; // Even when no debug - no infinite loop in this thread
+							}
+						}
+						while (RunOptions.SKIP_NOP && raster[PC.X, PC.Y] == ' ' && !stringmode && (!paused || doSingleStep));
+
+
+					}
 				}
 
 				doSingleStep = false;
 
-				if (RunOptions.SLEEP_TIME != 0)
+				sleeptime = (int)Math.Max(0, curr_lvl_sleeptime - (Environment.TickCount - start));
+				if (curr_lvl_sleeptime != 0)
 				{
-					sleeptime = (int)Math.Max(0, RunOptions.SLEEP_TIME - (Environment.TickCount - start));
-					start = Environment.TickCount;
-
 					Thread.Sleep(sleeptime);
 				}
+
+				testForFreeze();
+
+				start = Environment.TickCount;
+			}
+		}
+
+		private void testForFreeze()
+		{
+			while (reset_freeze_request)
+			{
+				reset_freeze_answer = true;
+				Thread.Sleep(0);
+			}
+			reset_freeze_answer = false;
+		}
+
+		private void conditionalbreak()
+		{
+			paused = paused || breakpoints[PC.X, PC.Y];
+		}
+
+		private void debug()
+		{
+			if (err != null && RunOptions.DEBUGRUN)
+			{
+				Console.WriteLine();
+				Console.WriteLine("Debug Break: " + err);
+
+				paused = true;
+				err = null;
 			}
 		}
 
@@ -100,7 +164,13 @@ namespace BefungExec.Logic
 		{
 			lock (Stack)
 			{
-				return Stack.Count == 0 ? 0 : Stack.Pop();
+				if (Stack.Count == 0)
+				{
+					err = "Trying to pop an empty stack";
+					return 0;
+				}
+				else
+					return Stack.Pop();
 			}
 		}
 
@@ -108,7 +178,13 @@ namespace BefungExec.Logic
 		{
 			lock (Stack)
 			{
-				return Stack.Count == 0 ? 0 : Stack.Peek();
+				if (Stack.Count == 0)
+				{
+					err = "Trying to pop an empty stack"; // Yes, pop, not peek - no peek OP in Befunge
+					return 0;
+				}
+				else
+					return Stack.Peek();
 			}
 		}
 
@@ -116,7 +192,13 @@ namespace BefungExec.Logic
 		{
 			lock (Stack)
 			{
-				return Stack.Count == 0 ? false : (Stack.Pop() != 0);
+				if (Stack.Count == 0)
+				{
+					err = "Trying to pop an empty stack"; // Yes, pop, not peek - no peek OP in Befunge
+					return false;
+				}
+				else
+					return (Stack.Pop() != 0);
 			}
 		}
 
@@ -263,6 +345,7 @@ namespace BefungExec.Logic
 						delta.Set(0, 0);
 						break;
 					default:
+						err = String.Format("Unknown Operation at {0}|{1}: {2}({3})", PC.X, PC.Y, curr, (char)curr);
 						// NOP
 						break;
 				}
@@ -273,9 +356,15 @@ namespace BefungExec.Logic
 		{
 			PC += delta;
 
+			int bx = PC.X;
+			int by = PC.Y;
+
 			PC += dimension;
 
 			PC %= dimension;
+
+			if (bx != PC.X || by != PC.Y)
+				err = "PC wrapped around ledge" + bx + " " + by + " " + PC.X + " " + PC.Y;
 		}
 
 		private void decay()
@@ -297,6 +386,26 @@ namespace BefungExec.Logic
 				if (PC.X >= 0 && PC.Y >= 0)
 					decay_raster[PC.X, PC.Y] = Environment.TickCount;
 			}
+		}
+
+		public void full_reset(string code)
+		{
+			raster = Program.GetProg(code);
+			PC = new Vec2i(0, 0);
+			paused = true;
+			doSingleStep = false;
+
+			for (int x = 0; x < Width; x++)
+				for (int y = 0; y < Height; y++)
+				{
+					decay_raster[x, y] = 0;
+				}
+			Stack.Clear();
+			stringmode = false;
+			delta = new Vec2i(1, 0);
+			mode = MODE_RUN;
+			running = true;
+			dimension = new Vec2i(Width, Height);
 		}
 	}
 }

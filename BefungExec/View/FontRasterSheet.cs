@@ -42,7 +42,10 @@ namespace BefungExec.View.OpenGL
 		{
 			if (!(c >= 0 && 126 >= c))
 			{
-				c = 159;
+				if (c == 164)
+					c = 158;
+				else
+					c = 159;
 			}
 
 			return GetCoordinates(c);

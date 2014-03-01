@@ -97,5 +97,10 @@ namespace BefungExec
 			int a;
 			return IsSet(p) && int.TryParse(Parameters[p], out a);
 		}
+
+		public bool isEmpty()
+		{
+			return Parameters.Count == 0;
+		}
 	}
 }
