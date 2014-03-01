@@ -18,7 +18,7 @@ namespace BefungExec
 			string code = demo;
 
 			parseParams(args, ref code);
-			
+
 			Console.WriteLine();
 			Console.WriteLine();
 			Console.WriteLine();
@@ -43,7 +43,17 @@ namespace BefungExec
 		{
 			CommandLineArguments cmda = new CommandLineArguments(args);
 
-			RunOptions.INIT_PAUSED = !cmda.IsSet("no_pause");
+			if (cmda.IsSet("no_pause"))
+				RunOptions.INIT_PAUSED = false;
+			if (cmda.IsSet("pause"))
+				RunOptions.INIT_PAUSED = true;
+
+			//##############
+
+			if (cmda.IsSet("highlight"))
+				RunOptions.SYNTAX_HIGHLIGHTING = true;
+			if (cmda.IsSet("no_highlight"))
+				RunOptions.SYNTAX_HIGHLIGHTING = false;
 
 			//##############
 
@@ -66,8 +76,8 @@ namespace BefungExec
 				if (zooms.Length == 4 && zooms.All(p => int.TryParse(p, out tmp)))
 				{
 					RunOptions.INIT_ZOOM = new Rect2i(
-						int.Parse(zooms[0]), 
-						int.Parse(zooms[1]), 
+						int.Parse(zooms[0]),
+						int.Parse(zooms[1]),
 						int.Parse(zooms[2]) - int.Parse(zooms[0]),
 						int.Parse(zooms[3]) - int.Parse(zooms[1]));
 				}
@@ -76,7 +86,7 @@ namespace BefungExec
 			//##############
 
 			if (cmda.IsSet("file"))
-			 {
+			{
 				try
 				{
 					string fn = cmda["file"].Trim('"');

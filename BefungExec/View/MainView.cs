@@ -38,7 +38,7 @@ namespace BefungExec.View
 			prog = model;
 
 			zoom = RunOptions.INIT_ZOOM;
-			if (zoom == null || zoom.bl.X < 0 || zoom.bl.Y < 0 || zoom.tr.X > prog.Width ||zoom.tr.Y > prog.Height) 
+			if (zoom == null || zoom.bl.X < 0 || zoom.bl.Y < 0 || zoom.tr.X > prog.Width || zoom.tr.Y > prog.Height)
 				zoom = new Rect2i(0, 0, prog.Width, prog.Height);
 
 			Load += new EventHandler<EventArgs>(OnLoad);
@@ -375,7 +375,7 @@ namespace BefungExec.View
 
 			#region DEBUG
 
-			RenderFont(new Vec2d(Width - 350, 0f), String.Format("FPS: {0} || SPEED: {1} Hz", (int)fps.Frequency, (int)prog.freq.Frequency), -1, DebugFont, true);
+			RenderFont(new Vec2d(Width - 350, 0f), String.Format("FPS: {0} || SPEED: {1}", (int)fps.Frequency, getFreqFormatted()), -1, DebugFont, true);
 
 			#endregion
 
@@ -384,6 +384,32 @@ namespace BefungExec.View
 			SwapBuffers();
 
 			#endregion
+		}
+
+		private String getFreqFormatted()
+		{
+			string pref = "";
+			double freq = prog.freq.Frequency;
+
+			if (freq > 1000)
+			{
+				freq /= 1000;
+				pref = "k";
+
+				if (freq > 1000)
+				{
+					freq /= 1000;
+					pref = "M";
+
+					if (freq > 1000)
+					{
+						freq /= 1000;
+						pref = "G";
+					}
+				}
+			}
+
+			return String.Format(@"{0:0.00} {1}Hz", freq, pref);
 		}
 
 		private void calcProgPos(out double offx, out double offy, out double w, out double h)

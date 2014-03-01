@@ -1,6 +1,8 @@
-﻿using BefungExec.Properties;
+﻿using BefungExec.Logic;
+using BefungExec.Properties;
 using OpenTK.Graphics.OpenGL;
 using SuperBitBros.OpenGL.OGLMath;
+using System.Drawing;
 
 namespace BefungExec.View.OpenGL
 {
@@ -14,7 +16,26 @@ namespace BefungExec.View.OpenGL
 
 		public static FontRasterSheet create()
 		{
-			return new FontRasterSheet(LoadResourceIntoUID(Resources.raster), 80, 2);
+			Bitmap b = Resources.raster;
+
+			if (!RunOptions.SYNTAX_HIGHLIGHTING)
+			{
+				b = b.Clone(new Rectangle(0, 0, b.Width, b.Height), System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+
+				for (int x = 0; x < b.Width; x++)
+				{
+					for (int y = 0; y < b.Height; y++)
+					{
+						Color c = b.GetPixel(x, y);
+						if (c.R + c.G + c.B != (255 * 3))
+						{
+							b.SetPixel(x, y, Color.Black);
+						}
+					}
+				}
+			}
+
+			return new FontRasterSheet(LoadResourceIntoUID(b), 80, 2);
 		}
 
 		public Rect2d GetCharCoords(int c)
