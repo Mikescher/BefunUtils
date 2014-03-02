@@ -159,6 +159,17 @@ namespace BefungExec.View
 			{
 				reset();
 			}
+
+			if (kb[Key.C])
+			{
+				for (int x = 0; x < prog.Width; x++)
+				{
+					for (int y = 0; y < prog.Height; y++)
+					{
+						prog.breakpoints[x, y] = false;
+					}
+				}
+			}
 		}
 
 		private void reset()

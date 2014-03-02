@@ -28,6 +28,7 @@ namespace BefungExec
 			Console.WriteLine("Right:   Step Forward");
 			Console.WriteLine("Mouse:   Zoom in | Breakpoint");
 			Console.WriteLine("Esc:     Zoom out | Exit");
+			Console.WriteLine("C:       Remove all breakpoints");
 			Console.WriteLine("R:       Reset");
 			Console.WriteLine("1:       Debug speed");
 			Console.WriteLine("2:       Normal speed");
