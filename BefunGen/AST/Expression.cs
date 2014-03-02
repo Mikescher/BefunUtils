@@ -4,7 +4,7 @@ using BefunGen.MathExtensions;
 using System;
 namespace BefunGen.AST
 {
-	public abstract class Expression : ASTObject
+	public abstract class Expression : ASTObject //TODO perhaps increment / decrement expression (prefix && suffix)
 	{
 		public Expression(SourceCodePosition pos)
 			: base(pos)
@@ -770,7 +770,7 @@ namespace BefunGen.AST
 				p[4, 0] = BCHelper.PC_Right;
 
 				p[0, 1] = BCHelper.Unused;
-				p[1, 1] = BCHelper.PC_Left;
+				p[1, 1] = BCHelper.PC_Right;
 				p[2, 1] = BCHelper.Stack_Pop;
 				p[3, 1] = BCHelper.Digit_0;
 				p[4, 1] = BCHelper.PC_Up;
