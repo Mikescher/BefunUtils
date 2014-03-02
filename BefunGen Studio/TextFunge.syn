@@ -27,11 +27,14 @@
 					do 
 					repeat 
 					until 
-					else 
+					else
+					elsif
 					goto 
 					rand 
 					true 
 					false
+					close
+					quit
 				</Patterns>
 			</PatternGroup>
 			

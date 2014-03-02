@@ -3,7 +3,7 @@
 "Version"               = '2.0'
 "About"                 = 'Language to define Benuge-93 programs procedural'
 
-"Case Sensitive"       
+"Case Sensitive"        = False
 "Start Symbol"          = <Program>
 
 !###############################################################################
@@ -34,7 +34,7 @@ CharLiteral            = '' ( {Char Ch} | '\'{Printable} )''
 Identifier             = {UnderscoreLetter}{AlphaNumeric}*
 
 DigitLiteral           = '#'{Digit}
-DecLiteral             = -?[0123456789]{Digit}*
+DecLiteral             = '-'?[0123456789]{Digit}*
 HexLiteral             = 0x{Hex Digit}+
 
 !#######################
@@ -125,12 +125,15 @@ HexLiteral             = 0x{Hex Digit}+
 !#################
 
 
-<Stmt_If>              ::= 'if' '(' <Expression> ')' 'then' <Statement> 'end'
-                       |   'if' '(' <Expression> ')' 'then' <Statement> 'else' <Statement> 'end'
+<Stmt_If>              ::= 'if' '(' <Expression> ')' 'then' <StatementList> <Stmt_ElseIfList> 'end'
+                        
+<Stmt_ElseIfList>      ::= 'elsif' '(' <Expression> ')' 'then' <StatementList> <Stmt_ElseIfList>
+                       |   'else' <StatementList>
+                       |
 
-<Stmt_While>           ::= 'while' '(' <Expression> ')' 'do' <Statement>
+<Stmt_While>           ::= 'while' '(' <Expression> ')' 'do' <StatementList> 'end'
 
-<Stmt_Repeat>          ::= 'repeat' <Statement> 'until' '(' <Expression> ')'
+<Stmt_Repeat>          ::= 'repeat' <StatementList> 'until' '(' <Expression> ')'
 
 <Stmt_Goto>            ::= 'goto' Identifier
 

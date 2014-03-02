@@ -186,7 +186,6 @@ namespace BefunGenTest
 
 			debugStatement(@"
 			while (true) do
-			begin
 				out (char)(48+(int)RAND);
 				begin
 					out (char)(50+(int)RAND);
@@ -220,7 +219,6 @@ namespace BefunGenTest
 				lb[1] = (char)10;
 
 				while (i <= 66) do
-				begin
 					out i;
 					out '' = '';
 					out (char)i;
@@ -243,7 +241,6 @@ namespace BefunGenTest
 				lb[1] = (char)10;
 				out '>';
 				while (i <= 128) do
-				begin
 					out i;
 					out '' = '';
 					out (char)i;
@@ -316,7 +313,6 @@ namespace BefunGenTest
 				lb[1] = (char)10;
 
 				WHILE (i < 100) DO
-				BEGIN
 					IF (i % 3 == 0) THEN
 						out ''Fizz'';
 					END
@@ -338,7 +334,6 @@ namespace BefunGenTest
 				i = 1;
 				
 				WHILE (i < 100) DO
-				BEGIN
 					IF (i % 3 == 0) THEN
 						out ''Fizz'';
 					END
@@ -369,26 +364,16 @@ namespace BefunGenTest
 				i = 1;				
 
 				WHILE (i < 100) DO
-				BEGIN
 					IF (i % 3 == 0 && i % 5 == 0) THEN
 						out ''FizzBuzz'';
+					ELSIF (i % 3 == 0) THEN
+						out ''Fizz'';
+					ELSIF (i % 5 == 0) THEN
+						out ''Buzz'';
 					ELSE
-					BEGIN
-						IF (i % 3 == 0) THEN
-							out ''Fizz'';
-						ELSE 
-						BEGIN
-							IF (i % 5 == 0) THEN
-								out ''Buzz'';
-							ELSE
-							BEGIN
-								out i;
-							END
-							END
-						END
-						END
+						out i;
 					END
-					END
+
 					OUT lb[0];
 					OUT lb[1];
 
@@ -403,26 +388,16 @@ namespace BefunGenTest
 				i = 1;
 
 				WHILE (i < 100) DO
-				BEGIN
 					IF (i % 3 == 0 && i % 5 == 0) THEN
 						out ''FizzBuzz'';
+					ELSIF (i % 3 == 0) THEN
+						out ''Fizz'';
+					ELSIF (i % 5 == 0) THEN
+						out ''Buzz'';
 					ELSE
-					BEGIN
-						IF (i % 3 == 0) THEN
-							out ''Fizz'';
-						ELSE 
-						BEGIN
-							IF (i % 5 == 0) THEN
-								out ''Buzz'';
-							ELSE
-							BEGIN
-								out i;
-							END
-							END
-						END
-						END
+						out i;
 					END
-					END
+
 					OUT lb[0];
 					OUT lb[1];
 

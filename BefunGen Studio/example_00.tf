@@ -15,7 +15,6 @@ program example
 		name = getInputStr();
 		
 		while (i < 32) do
-		begin
 			out name[i];
 			i++;
 		end
@@ -39,15 +38,13 @@ program example
 		int curr := 1;
 		int tmp;
 	begin
-
 		repeat
-		begin
 			out curr;
 			
 			tmp = curr + last;
 			last = curr;
 			curr = tmp;
-		end until (last > max)
+		until (last > max)
 	end
 
 	int euclid(int a, int b) 
@@ -75,11 +72,33 @@ program example
 	begin
 		
 		while(current < 32 && current >= 0 ) do
-		begin
 			in input[current];
 			current++;
 		end
 
 		return input;
+	end
+	
+	void fizzbuzz()
+	var
+		int i := 0;
+	begin
+		i = 1;				
+
+		while (i < 100) do
+			if (i % 3 == 0 && i % 5 == 0) then
+				out "FizzBuzz";
+			elsif (i % 3 == 0) then
+				out "Fizz";
+			elsif (i % 5 == 0) then
+				out "Buzz";
+			else
+				out i;
+			end
+
+			out "\r\n";
+
+			i++;
+		end
 	end
 end

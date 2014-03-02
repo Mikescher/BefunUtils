@@ -149,7 +149,7 @@ namespace BefunGen.AST
 
 				case ProductionIndex.Statement_Begin_End:
 					// <Statement> ::= begin <StatementList> end
-					result = new Statement_StatementList(p, ((List_Statements)r.get_Data(1)).List);
+					result = getStmtListAsStatement(p, r, 1);
 					break;
 
 				case ProductionIndex.Statement:
@@ -258,23 +258,33 @@ namespace BefunGen.AST
 					break;
 
 				case ProductionIndex.Stmt_if_If_Lparen_Rparen_Then_End:
-					// <Stmt_If> ::= if '(' <Expression> ')' then <Statement> end
-					result = new Statement_If(p, (Expression)r.get_Data(2), (Statement)r.get_Data(5));
+					// <Stmt_If> ::= if '(' <Expression> ')' then <StatementList> <Stmt_ElseIfList> end
+					result = new Statement_If(p, (Expression)r.get_Data(2), getStmtListAsStatement(p, r, 5), (Statement)r.get_Data(6));
 					break;
 
-				case ProductionIndex.Stmt_if_If_Lparen_Rparen_Then_Else_End:
-					// <Stmt_If> ::= if '(' <Expression> ')' then <Statement> else <Statement> end
-					result = new Statement_If(p, (Expression)r.get_Data(2), (Statement)r.get_Data(5), (Statement)r.get_Data(7));
+				case ProductionIndex.Stmt_elseiflist_Elsif_Lparen_Rparen_Then:
+					// <Stmt_ElseIfList> ::= elsif '(' <Expression> ')' then <StatementList> <Stmt_ElseIfList>
+					result = new Statement_If(p, (Expression)r.get_Data(2), getStmtListAsStatement(p, r, 5), (Statement)r.get_Data(6));
 					break;
 
-				case ProductionIndex.Stmt_while_While_Lparen_Rparen_Do:
-					// <Stmt_While> ::= while '(' <Expression> ')' do <Statement>
-					result = new Statement_While(p, (Expression)r.get_Data(2), (Statement)r.get_Data(5));
+				case ProductionIndex.Stmt_elseiflist_Else:
+					// <Stmt_ElseIfList> ::= else <StatementList>
+					result = getStmtListAsStatement(p, r, 1);
+					break;
+
+				case ProductionIndex.Stmt_elseiflist:
+					// <Stmt_ElseIfList> ::=
+					result = new Statement_NOP(p);
+					break;
+
+				case ProductionIndex.Stmt_while_While_Lparen_Rparen_Do_End:
+					// <Stmt_While> ::= while '(' <<Expression>> ')' do <StatementList> end
+					result = new Statement_While(p, (Expression)r.get_Data(2), getStmtListAsStatement(p, r, 5));
 					break;
 
 				case ProductionIndex.Stmt_repeat_Repeat_Until_Lparen_Rparen:
-					// <Stmt_Repeat> ::= repeat <Statement> until '(' <Expression> ')'
-					result = new Statement_RepeatUntil(p, (Expression)r.get_Data(4), (Statement)r.get_Data(1));
+					// <Stmt_Repeat> ::= repeat <StatementList> until '(' <Expression> ')'
+					result = new Statement_RepeatUntil(p, (Expression)r.get_Data(4), getStmtListAsStatement(p, r, 1));
 					break;
 
 				case ProductionIndex.Stmt_goto_Goto_Identifier:
@@ -817,6 +827,11 @@ namespace BefunGen.AST
 		{
 			string s = getStrData(r);
 			return s.Substring(1, s.Length - 2);
+		}
+
+		private static Statement_StatementList getStmtListAsStatement(SourceCodePosition p, GOLD.Reduction r, int pos)
+		{
+			return new Statement_StatementList(p, ((List_Statements)r.get_Data(pos)).List);
 		}
 	}
 }
