@@ -101,7 +101,7 @@ namespace BefunGenTest
 		}
 
 		[TestMethod]
-		public void codeGenTest()
+		public void codeGenTest_Expr()
 		{
 			debugExpression("40*(-50+(int)rand)");
 
@@ -114,7 +114,11 @@ namespace BefunGenTest
 			debugExpression("true && (false ^ true)");
 
 			debugExpression("true || false");
+		}
 
+		[TestMethod]
+		public void codeGenTest_Methods()
+		{
 			debugMethod(@"
 			int doFiber(int max)
 			var
@@ -206,10 +210,6 @@ namespace BefunGenTest
 			end
 			");
 
-			debugExpression("true || false");
-
-			debugStatement("out ''blub:fasel'';");
-
 			debugMethod(@"
 			void calc()
 			var
@@ -251,6 +251,104 @@ namespace BefunGenTest
 					out lb[1];
 					i++;
 				end
+				
+				QUIT;
+			end
+			");
+		}
+
+		[TestMethod]
+		public void codeGenTest_Statements()
+		{
+			debugStatement("out ''blub:fasel'';");
+
+			debugStatement("out (char)50;");
+
+			debugStatement("QUIT;");
+
+			debugStatement("STOP;");
+
+			debugStatement("QUIT;");
+		}
+
+		[TestMethod]
+		public void codeGenTest_FizzBuzz()
+		{
+			debugMethod(@"
+			void calc()
+			var
+				int i := 1;
+				char[2] lb;
+			BEGIN
+				lb[0] = (char)13;
+				lb[1] = (char)10;
+
+				WHILE (i < 100) DO
+				BEGIN
+					IF (i % 3 == 0) THEN
+						out ''Fizz'';
+					END
+					IF (i % 5 == 0) THEN
+						out ''Buzz'';
+					END
+					IF (i % 3 != 0 && i % 5 != 0) THEN
+						out i;
+					END
+					OUT lb[0];
+					OUT lb[1];
+
+					i++;
+				END
+
+				OUT ''Let's FizzBuzz''; // Reverse It
+				OUT lb[0];
+				OUT lb[1];
+				i = 1;
+				
+				WHILE (i < 100) DO
+				BEGIN
+					IF (i % 3 == 0) THEN
+						out ''Fizz'';
+					END
+					IF (i % 5 == 0) THEN
+						out ''Buzz'';
+					END
+					IF (i % 3 != 0 && i % 5 != 0) THEN
+						out i;
+					END
+					OUT lb[0];
+					OUT lb[1];
+
+					i++;
+				END
+
+				QUIT;
+			END
+			");
+
+			debugMethod(@"
+			void calc()
+			var
+				int i := 0;
+				char[2] lb;
+			begin
+				lb[0] = (char)13;
+				lb[1] = (char)10;
+				
+				WHILE (i < 100) DO
+				BEGIN
+					IF (i % 3 == 0 && i % 5 == 0) THEN
+						out 'FizzBuzz';
+					ELSE IF (i % 3 == 0) THEN
+						out 'Fizz';
+					END ELSE IF (i % 5 == 0) THEN
+						out 'Buzz';
+					ELSE
+						out i;
+					END
+					OUT lb[0];
+					OUT lb[1];
+				END
 				
 				QUIT;
 			end

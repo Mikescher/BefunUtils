@@ -1,5 +1,6 @@
 ﻿using BefunGen.AST.CodeGen;
 using BefunGen.AST.Exceptions;
+using BefunGen.MathExtensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -138,6 +139,11 @@ namespace BefunGen.AST
 				last.normalizeX();
 				last.AddXOffset(-last.MaxX + 1);
 
+				if (cp_stmts.Count == 1)
+				{
+					p.AddYOffset(last.MinY);
+				}
+
 				int left = Math.Min(p.MinX - 1, last.MinX - 1);
 
 				last[1, 0] = BCHelper.PC_Left;
@@ -200,6 +206,11 @@ namespace BefunGen.AST
 
 				CodePiece last = cp_stmts[cp_stmts.Count - 1].Normal;
 				last.normalizeX();
+
+				if (cp_stmts.Count == 1)
+				{
+					p.AddYOffset(last.MinY);
+				}
 
 				int right = Math.Max(p.MaxX, last.MaxX);
 
@@ -972,7 +983,7 @@ namespace BefunGen.AST
 
 	#region Constructs
 
-	public class Statement_If : Statement
+	public class Statement_If : Statement //TODO ELSE-FI Syntax (But no new ASt-Object - it will generate Ifs with ELses in it ..,)
 	{
 		public Expression Condition;
 		public Statement Body;
@@ -1159,16 +1170,143 @@ namespace BefunGen.AST
 
 		public CodePiece generateCode_IfElse(bool reversed)
 		{
-			// > CONDITION v>
-			// 
-			// v           <
-			// 
-			// #
-			// >   IF       ^
-			// |
-			// 
-			// >   ELSE     ^
-			throw new NotImplementedException(); //TODO Implement
+			CodePiece cp_cond = Condition.generateCode(reversed);
+			cp_cond.normalizeX();
+
+			CodePiece cp_if = Body.generateCode(reversed);
+			cp_if.normalizeX();
+
+			CodePiece cp_else = Else.generateCode(reversed);
+			cp_else.normalizeX();
+
+			if (reversed)
+			{
+				// <v  CONDITION
+				// 
+				//  >          v
+				// 
+				//             #
+				// ^     IF    <
+				//             |
+				// 
+				// ^    ELSE   <
+				CodePiece p = new CodePiece();
+
+				int right = MathExt.Max(cp_cond.Width, cp_if.Width, cp_else.Width) - 1;
+				int mid = cp_cond.MaxY;
+				int yif = mid + MathExt.Max(-cp_if.MinY + 1, 2);
+				int yelse = yif + MathExt.Max(cp_if.MaxY + -cp_else.MinY, 2);
+
+				// Top-Left '<v'
+				p[-2, 0] = BCHelper.PC_Left;
+				p[-1, 0] = BCHelper.PC_Down;
+				// Mid-Left '>'
+				p[-1, mid] = BCHelper.PC_Right;
+				// Mid-Right 'v'
+				p[right, mid] = BCHelper.PC_Down;
+				// yif-Left '^'
+				p[-2, yif] = BCHelper.PC_Up;
+				// yif-Right '#' '<' '|'
+				p[right, yif - 1] = BCHelper.PC_Jump;
+				p[right, yif] = BCHelper.PC_Left;
+				p[right, yif + 1] = BCHelper.If_Vertical;
+				// yelse-Left '^'
+				p[-2, yelse] = BCHelper.PC_Up;
+				// yelse-Right '<'
+				p[right, yelse] = BCHelper.PC_Left;
+
+				// Walkway Top (Condition -> end)
+				p.FillRowWW(0, cp_cond.Width, right + 1);
+				// Walkway Mid ('>' -> 'v')
+				p.FillRowWW(mid, 0, right);
+				// Walkway yif (If -> '<')
+				p.FillRowWW(yif, cp_if.Width - 1, right);
+				// Walkway yelse (Else -> '<')
+				p.FillRowWW(yelse, cp_else.Width - 1, right);
+				// Walkway Left-Upper_1 ('<' -> '^')
+				p.FillColWW(-2, 1, yif);
+				// Walkway Left-Upper_2 ('v' -> '>')
+				p.FillColWW(-1, 1, mid);
+				// Walkway Left-Lower ('^' -> '^')
+				p.FillColWW(-2, yif + 1, yelse);
+				// Walkway Right-Upper ('v' -> '<')
+				p.FillColWW(right, mid + 1, yif - 1);
+				// Walkway Right-Lower ('<' -> '<')
+				p.FillColWW(right, yif + 2, yelse);
+
+				// Insert Condition
+				p.SetAt(0, 0, cp_cond);
+				// Insert If
+				p.SetAt(-1, yif, cp_if);
+				// Insert Else
+				p.SetAt(-1, yelse, cp_else);
+
+				return p;
+			}
+			else
+			{
+				// CONDITION   v>
+				// 
+				// v           <
+				// 
+				// #
+				// >     IF     ^
+				// |
+				// 
+				// >    ELSE    ^
+				CodePiece p = new CodePiece();
+
+				int right = MathExt.Max(cp_cond.Width, cp_if.Width, cp_else.Width) - 1;
+				int mid = cp_cond.MaxY;
+				int yif = mid + MathExt.Max(-cp_if.MinY + 1, 2);
+				int yelse = yif + MathExt.Max(cp_if.MaxY + -cp_else.MinY, 2);
+
+				// Top-Right 'v>'
+				p[right, 0] = BCHelper.PC_Down;
+				p[right + 1, 0] = BCHelper.PC_Right;
+				// Mid-Left 'v'
+				p[-1, mid] = BCHelper.PC_Down;
+				// Mid-Right '<'
+				p[right, mid] = BCHelper.PC_Left;
+				// yif-Left '#' '>' '|'
+				p[-1, yif - 1] = BCHelper.PC_Jump;
+				p[-1, yif] = BCHelper.PC_Right;
+				p[-1, yif + 1] = BCHelper.If_Vertical;
+				// yif-Right '^'
+				p[right + 1, yif] = BCHelper.PC_Up;
+				// yelse-Left '>'
+				p[-1, yelse] = BCHelper.PC_Right;
+				// yelse-Right '^'
+				p[right + 1, yelse] = BCHelper.PC_Up;
+
+				// Walkway Top (Condition -> 'v>')
+				p.FillRowWW(0, cp_cond.Width - 1, right);
+				// Walkway Mid ('v' -> '>')
+				p.FillRowWW(mid, 0, right);
+				// Walkway yif (If -> '^')
+				p.FillRowWW(yif, cp_if.Width, right + 1);
+				// Walkway yelse (Else -> '^')
+				p.FillRowWW(yelse, cp_else.Width, right + 1);
+				// Walkway Left-Upper ('v' -> '#')
+				p.FillColWW(-1, mid + 1, yif - 1);
+				// Walkway Left-Lower ('|' -> '>')
+				p.FillColWW(-1, yif + 2, yelse);
+				// Walkway Right-Upper_1 ('v' -> '<')
+				p.FillColWW(right, 1, mid);
+				// Walkway Right-Upper_2 ('>' -> '^')
+				p.FillColWW(right + 1, 1, yif);
+				// Walkway Right-Lower ('^' -> '^')
+				p.FillColWW(right + 1, yif + 1, yelse);
+
+				// Insert Condition
+				p.SetAt(-1, 0, cp_cond);
+				// Insert If
+				p.SetAt(0, yif, cp_if);
+				// Insert Else
+				p.SetAt(0, yelse, cp_else);
+
+				return p;
+			}
 		}
 	}
 

@@ -275,22 +275,33 @@ namespace BefunGen
 			debugMethod(@"
 			void calc()
 			var
-				int i := 1;
+				int i := 0;
 				char[2] lb;
-			BEGIN
+			begin
 				lb[0] = (char)13;
 				lb[1] = (char)10;
+				i = 1;				
 
 				WHILE (i < 100) DO
 				BEGIN
-					IF (i % 3 == 0) THEN
-						out ''Fizz'';
+					IF (i % 3 == 0 && i % 5 == 0) THEN
+						out ''FizzBuzz'';
+					ELSE
+					BEGIN
+						IF (i % 3 == 0) THEN
+							out ''Fizz'';
+						ELSE 
+						BEGIN
+							IF (i % 5 == 0) THEN
+								out ''Buzz'';
+							ELSE
+							BEGIN
+								out i;
+							END
+							END
+						END
+						END
 					END
-					IF (i % 5 == 0) THEN
-						out ''Buzz'';
-					END
-					IF (i % 3 != 0 && i % 5 != 0) THEN
-						out i;
 					END
 					OUT lb[0];
 					OUT lb[1];
@@ -298,21 +309,33 @@ namespace BefunGen
 					i++;
 				END
 
-				OUT ''Let's FizzBuzz''; // Reverse It
-				OUT lb[0];
-				OUT lb[1];
+				lb[0] = (char)13;
+				lb[1] = (char)10;
+				out ''>> FizzBuzz <<''; //Reverse
+				lb[0] = (char)13;
+				lb[1] = (char)10;
 				i = 1;
-				
+
 				WHILE (i < 100) DO
 				BEGIN
-					IF (i % 3 == 0) THEN
-						out ''Fizz'';
+					IF (i % 3 == 0 && i % 5 == 0) THEN
+						out ''FizzBuzz'';
+					ELSE
+					BEGIN
+						IF (i % 3 == 0) THEN
+							out ''Fizz'';
+						ELSE 
+						BEGIN
+							IF (i % 5 == 0) THEN
+								out ''Buzz'';
+							ELSE
+							BEGIN
+								out i;
+							END
+							END
+						END
+						END
 					END
-					IF (i % 5 == 0) THEN
-						out ''Buzz'';
-					END
-					IF (i % 3 != 0 && i % 5 != 0) THEN
-						out i;
 					END
 					OUT lb[0];
 					OUT lb[1];
@@ -323,36 +346,6 @@ namespace BefunGen
 				QUIT;
 			END
 			");
-
-			/*
-			debugMethod(@"
-			void calc()
-			var
-				int i := 0;
-				char[2] lb;
-			begin
-				lb[0] = (char)13;
-				lb[1] = (char)10;
-				
-				WHILE (i < 100) DO
-				BEGIN
-					IF (i % 3 == 0 && i % 5 == 0) THEN
-						out 'FizzBuzz';
-					ELSE IF (i % 3 == 0) THEN
-						out 'Fizz';
-					END ELSE IF (i % 5 == 0) THEN
-						out 'Buzz';
-					ELSE
-						out i;
-					END
-					OUT lb[0];
-					OUT lb[1];
-				END
-				
-				QUIT;
-			end
-			");
-			*/
 		}
 
 		private void btnRun_Click(object sender, EventArgs e)
