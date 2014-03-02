@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace BefunGen.AST
 {
-	public abstract class Statement : ASTObject
+	public abstract class Statement : ASTObject //TODO GET/SET/DEFINE DISPLAY
 	{
 		public Statement(SourceCodePosition pos)
 			: base(pos)
@@ -1038,6 +1038,136 @@ namespace BefunGen.AST
 
 		public override CodePiece generateCode(bool reversed)
 		{
+			if (Else.GetType() == typeof(Statement_NOP))
+			{
+				return generateCode_If(reversed);
+			}
+			else
+			{
+				return generateCode_IfElse(reversed);
+			}
+		}
+
+		public CodePiece generateCode_If(bool reversed)
+		{
+			CodePiece cp_cond = Condition.generateCode(reversed);
+			cp_cond.normalizeX();
+
+			CodePiece cp_body_if = Body.generateCode(reversed);
+			cp_body_if.normalizeX();
+
+			if (reversed)
+			{
+				// _v#!   CONDITION
+				//  
+				// 1>             v
+				// 
+				// ^      IF      <
+				CodePiece p = new CodePiece();
+
+				int right = Math.Max(cp_cond.Width + 1, cp_body_if.Width);
+				int mid = cp_cond.MaxY;
+				int bot = (mid + 1) - cp_body_if.MinY;
+
+				// Top-Left '_v#!'
+				p[-1, 0] = BCHelper.If_Horizontal;
+				p[0, 0] = BCHelper.PC_Down;
+				p[1, 0] = BCHelper.PC_Jump;
+				p[2, 0] = BCHelper.Not;
+				// Mid_Left '0>'
+				p[-1, mid] = BCHelper.Digit_1;
+				p[0, mid] = BCHelper.PC_Right;
+				// Mid-Right 'v'
+				p[right, mid] = BCHelper.PC_Down;
+				// Bottom-Left '^'
+				p[-1, bot] = BCHelper.PC_Up;
+				// Bottom-right '<'
+				p[right, bot] = BCHelper.PC_Left;
+
+				// Walkway Top (Condition -> end)
+				p.FillRowWW(0, cp_cond.Width + 3, right + 1);
+				// Walkway Mid ('0>' -> 'v')
+				p.FillRowWW(mid, 1, right);
+				// Walkway Bot (Body_If -> '<')
+				p.FillRowWW(bot, cp_body_if.Width, right);
+				// Walkway Left-Upper_1 ('_' -> '0')
+				p.FillColWW(-1, 1, mid);
+				// Walkway Left-Upper_2 ('v' -> '>')
+				p.FillColWW(0, 1, mid);
+				// Walkway Left-Lower ('0' -> '^')
+				p.FillColWW(-1, mid + 1, bot);
+				// Walkway Right-Lower ('v' -> '<')
+				p.FillColWW(right, mid + 1, bot);
+
+				// Set Condition
+				p.SetAt(3, 0, cp_cond);
+				// Set Body
+				p.SetAt(0, bot, cp_body_if);
+
+				return p;
+			}
+			else
+			{
+				// CONDITION #v_
+				// 
+				// v            <0
+				// 
+				// >   IF        ^
+				CodePiece p = new CodePiece();
+
+				int right = Math.Max(cp_cond.Width, cp_body_if.Width - 1);
+				int mid = cp_cond.MaxY;
+				int bot = (mid + 1) - cp_body_if.MinY;
+
+				// Top-Right '#v_'
+				p[right - 1, 0] = BCHelper.PC_Jump;
+				p[right, 0] = BCHelper.PC_Down;
+				p[right + 1, 0] = BCHelper.If_Horizontal;
+				// Mid-Left 'v'
+				p[-1, mid] = BCHelper.PC_Down;
+				// Mid-Right '<0'
+				p[right, mid] = BCHelper.PC_Left;
+				p[right + 1, mid] = BCHelper.Digit_0;
+				// Bottom-Left '>'
+				p[-1, bot] = BCHelper.PC_Right;
+				// Bottom-Right '^'
+				p[right + 1, bot] = BCHelper.PC_Up;
+
+				// Walkway Top  (Condition -> '#v_')
+				p.FillRowWW(0, cp_cond.Width - 1, right - 1);
+				// Walkway Mid  ('v' -> '<0')
+				p.FillRowWW(mid, 0, right);
+				// Walkway Bot  (Body_If -> '^')
+				p.FillRowWW(bot, cp_body_if.Width, right + 1);
+				// Walkway Left-Lower  ('v' -> '>')
+				p.FillColWW(-1, mid + 1, bot);
+				// Walkway Right-Upper_1  ('v' -> '<')
+				p.FillColWW(right, 1, mid);
+				// Walkway Right-Upper_2  ('_' -> '0')
+				p.FillColWW(right + 1, 1, mid);
+				// Walkway Right-Lower  ('0' -> '^')
+				p.FillColWW(right + 1, mid + 1, bot);
+
+				// Set Condition
+				p.SetAt(-1, 0, cp_cond);
+				// Set Body
+				p.SetAt(0, bot, cp_body_if);
+
+				return p;
+			}
+		}
+
+		public CodePiece generateCode_IfElse(bool reversed)
+		{
+			// > CONDITION v>
+			// 
+			// v           <
+			// 
+			// #
+			// >   IF       ^
+			// |
+			// 
+			// >   ELSE     ^
 			throw new NotImplementedException(); //TODO Implement
 		}
 	}
@@ -1123,13 +1253,13 @@ namespace BefunGen.AST
 				p[right, 0] = BCHelper.PC_Up;
 
 				// Fill Walkway between condition and Left
-				p.Fill(cp_cond.Width + 2, top, right, top + 1, BCHelper.Walkway);
+				p.FillRowWW(top, cp_cond.Width + 2, right);
 				// Fill Walkway between body and '<'
-				p.Fill(cp_body.Width, 0, right, 1, BCHelper.Walkway);
+				p.FillRowWW(0, cp_body.Width, right);
 				// Walkway Leftside Up
-				p.Fill(-1, top + 1, 0, 0, BCHelper.Walkway);
+				p.FillColWW(-1, top + 1, 0);
 				// Walkway righside down
-				p.Fill(right, top + 1, right + 1, 0, BCHelper.Walkway);
+				p.FillColWW(right, top + 1, 0);
 
 
 				// Insert Condition
@@ -1163,13 +1293,13 @@ namespace BefunGen.AST
 				p[right, 0] = BCHelper.PC_Left;
 
 				// Fill Walkway between condition and Tester
-				p.Fill(cp_cond.Width, top, right - 1, top + 1, BCHelper.Walkway);
+				p.FillRowWW(top, cp_cond.Width, right - 1);
 				// Fill Walkway between body and '<'
-				p.Fill(cp_body.Width, 0, right, 1, BCHelper.Walkway);
+				p.FillRowWW(0, cp_body.Width, right);
 				// Walkway Leftside Up
-				p.Fill(-1, top + 1, 0, 0, BCHelper.Walkway);
+				p.FillColWW(-1, top + 1, 0);
 				// Walkway righside down
-				p.Fill(right, top + 1, right + 1, 0, BCHelper.Walkway);
+				p.FillColWW(right, top + 1, 0);
 
 				// Insert Condition
 				p.SetAt(0, top, cp_cond);
@@ -1270,19 +1400,19 @@ namespace BefunGen.AST
 				p[right - 1, bottom] = BCHelper.PC_Up;
 
 				// Walkway top (Statement to '<')
-				p.Fill(cp_body.Width, 0, right, 1, BCHelper.Walkway);
+				p.FillRowWW(0, cp_body.Width, right);
 				// Walkway bottom (Condition to '^')
-				p.Fill(cp_cond.Width, bottom, right - 1, bottom + 1, BCHelper.Walkway);
+				p.FillRowWW(bottom, cp_cond.Width, right - 1);
 				// Walkway left-lower ('<' to '^')
-				p.Fill(-2, 1, -1, mid, BCHelper.Walkway);
+				p.FillColWW(-2, 1, mid);
 				// Walkway left-full ('v' to '>')
-				p.Fill(-1, 1, 0, bottom, BCHelper.Walkway);
+				p.FillColWW(-1, 1, bottom);
 				// Walkway right-lower ('^' to '_')
-				p.Fill(right, 1, right + 1, mid, BCHelper.Walkway);
+				p.FillColWW(right, 1, mid);
 				// Walkway right-upper ('^' to '<')
-				p.Fill(right - 1, mid + 1, right, bottom, BCHelper.Walkway);
+				p.FillColWW(right - 1, mid + 1, bottom);
 				// Walkway middle ('^' to '_^')
-				p.Fill(0, mid, right - 1, mid + 1, BCHelper.Walkway);
+				p.FillRowWW(mid, 0, right - 1);
 
 				// Insert Statement
 				p.SetAt(0, 0, cp_body);
@@ -1321,19 +1451,19 @@ namespace BefunGen.AST
 				p[right, bottom] = BCHelper.PC_Left;
 
 				// Walkway top (Statement to 'v')
-				p.Fill(cp_body.Width, 0, right, 1, BCHelper.Walkway);
+				p.FillRowWW(0, cp_body.Width, right);
 				// Walkway bottom (Condition to '<')
-				p.Fill(cp_cond.Width + 2, bottom, right, bottom + 1, BCHelper.Walkway);
+				p.FillRowWW(bottom, cp_cond.Width + 2, right);
 				// Walkway left-lower ('>' to '^')
-				p.Fill(-1, 1, 0, mid, BCHelper.Walkway);
+				p.FillColWW(-1, 1, mid);
 				// Walkway left-upper ('_' to '^')
-				p.Fill(0, mid + 1, 1, bottom, BCHelper.Walkway);
+				p.FillColWW(0, mid + 1, bottom);
 				// Walkway right-lower ('>' to '^')
-				p.Fill(right + 1, 1, right + 2, mid, BCHelper.Walkway);
+				p.FillColWW(right + 1, 1, mid);
 				// Walkway right-full ('v' to '<')
-				p.Fill(right, 1, right + 1, bottom, BCHelper.Walkway);
+				p.FillColWW(right, 1, bottom);
 				// Walkway middle ('^_' to '^')
-				p.Fill(1, mid, right, mid + 1, BCHelper.Walkway);
+				p.FillRowWW(mid, 1, right);
 
 				// Insert Statement
 				p.SetAt(0, 0, cp_body);

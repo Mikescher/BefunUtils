@@ -80,7 +80,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	public class Literal_Char : Literal_Value
+	public class Literal_Char : Literal_Value // TODO Escape Character \r \n \t etc
 	{
 		public readonly char Value;
 
@@ -215,7 +215,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	public class Literal_CharArr : Literal_Array
+	public class Literal_CharArr : Literal_Array // TODO Escape Character \r \n \t etc
 	{
 		public List<char> Value = new List<char>();
 

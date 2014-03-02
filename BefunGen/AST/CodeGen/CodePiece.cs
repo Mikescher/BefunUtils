@@ -1,5 +1,4 @@
 ﻿using BefunGen.AST.Exceptions;
-using BefunGen.MathExtensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -274,6 +273,21 @@ namespace BefunGen.AST.CodeGen
 		#endregion
 
 		#region Setter
+
+		public void FillRowWW(int y, int x1, int x2)
+		{
+			FillWW(x1, y, x2, y + 1);
+		}
+
+		public void FillColWW(int x, int y1, int y2)
+		{
+			FillWW(x, y1, x + 1, y2);
+		}
+
+		public void FillWW(int x1, int y1, int x2, int y2)
+		{
+			Fill(x1, y1, x2, y2, BCHelper.Walkway);
+		}
 
 		// x1, y1 included -- x2, y2 excluded
 		public void Fill(int x1, int y1, int x2, int y2, BefungeCommand c, object topleft_tag = null)

@@ -206,7 +206,7 @@ namespace BefunGen.AST
 				op.AppendLeft(BCHelper.PC_Up);
 
 				op[-1, -1] = BCHelper.PC_Down;
-				op.Fill(op.MinX + 1, -1, -1, 0, BCHelper.Walkway);
+				op.FillRowWW(-1, op.MinX + 1, -1);
 				op[op.MinX, -1] = BCHelper.PC_Right;
 
 				op.AppendLeft(BCHelper.If_Horizontal);
@@ -242,7 +242,7 @@ namespace BefunGen.AST
 				op.AppendRight(BCHelper.PC_Down);
 
 				op[0, 1] = BCHelper.PC_Up;
-				op.Fill(1, 1, op.MaxX - 1, 2, BCHelper.Walkway);
+				op.FillRowWW(1, 1, op.MaxX - 1);
 				op[op.MaxX - 1, 1] = BCHelper.PC_Left;
 
 				op.AppendRight(BCHelper.If_Horizontal);
@@ -267,13 +267,13 @@ namespace BefunGen.AST
 			{
 				if (reversed)
 				{
-					p.AppendLeft(NumberCodeHelper.generateCode(varX+pos, reversed));
+					p.AppendLeft(NumberCodeHelper.generateCode(varX + pos, reversed));
 					p.AppendLeft(NumberCodeHelper.generateCode(varY, reversed));
 					p.AppendLeft(BCHelper.Reflect_Set);
 				}
 				else
 				{
-					p.AppendRight(NumberCodeHelper.generateCode(varX+pos, reversed));
+					p.AppendRight(NumberCodeHelper.generateCode(varX + pos, reversed));
 					p.AppendRight(NumberCodeHelper.generateCode(varY, reversed));
 					p.AppendRight(BCHelper.Reflect_Set);
 				}

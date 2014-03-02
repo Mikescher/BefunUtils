@@ -8,7 +8,7 @@ namespace BefunGenTest
 {
 	[TestClass]
 	public class CodePieceTest
-	{
+	{//TODO Automatic Test resulting pros -> like BefungExec DebugMode -> Random input (perhaps multiple times)
 		#region Helper Methods
 
 		private TextFungeParser GParser = new TextFungeParser();
@@ -39,12 +39,16 @@ namespace BefunGenTest
 
 		private void debugExpression(string expr)
 		{
+			expr = expr.Replace(@"''", "\"");
+
 			Expression e = parseExpression(expr);
 			CodePiece pc = e.generateCode(false);
 		}
 
 		private void debugStatement(string stmt)
 		{
+			stmt = stmt.Replace(@"''", "\"");
+
 			Statement e = parseStatement(stmt);
 			CodePiece pc = e.generateCode(false);
 		}
@@ -54,10 +58,12 @@ namespace BefunGenTest
 			meth = Regex.Replace(meth, @"[\r\n]{1,2}[ \t]+[\r\n]{1,2}", "\r\n");
 			meth = Regex.Replace(meth, @"^[ \t]*[\r\n]{1,2}", "");
 			meth = Regex.Replace(meth, @"[\r\n]{1,2}[ \t]*$", "");
+			meth = meth.Replace(@"''", "\"");
 
 			Method e = parseMethod(meth);
 			CodePiece pc = e.generateCode(0, 0);
 		}
+
 		#endregion
 
 		[TestMethod]
@@ -155,9 +161,9 @@ namespace BefunGenTest
 				out lf;
 				i++;
 			    out (char)(48+(int)RAND);
-				out " + '"' + @"Hello" + '"' + @";
-				out " + '"' + @" ... " + '"' + @";
-				out " + '"' + @" World" + '"' + @";
+				out ''Hello'';
+				out '' ... '';
+				out '' World'';
 				out (char)(48+(int)RAND);
 				QUIT;
 			end
@@ -202,7 +208,7 @@ namespace BefunGenTest
 
 			debugExpression("true || false");
 
-			debugStatement("out \"blub:fasel\";");
+			debugStatement("out ''blub:fasel'';");
 
 			debugMethod(@"
 			void calc()
@@ -216,7 +222,7 @@ namespace BefunGenTest
 				while (i <= 66) do
 				begin
 					out i;
-					out " + '"' + " = " + '"' + @";
+					out '' = '';
 					out (char)i;
 					out lb[0];
 					out lb[1];
@@ -239,7 +245,7 @@ namespace BefunGenTest
 				while (i <= 128) do
 				begin
 					out i;
-					out " + '"' + " = " + '"' + @";
+					out '' = '';
 					out (char)i;
 					out lb[0];
 					out lb[1];
