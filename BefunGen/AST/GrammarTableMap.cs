@@ -1,7 +1,9 @@
 ﻿using BefunGen.AST.CodeGen;
+using BefunGen.AST.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace BefunGen.AST
 {
@@ -452,7 +454,7 @@ namespace BefunGen.AST
 
 				case ProductionIndex.Literal_char_Charliteral:
 					// <Literal_Char> ::= CharLiteral
-					result = new Literal_Char(p, getStrData(r)[1]);
+					result = new Literal_Char(p, unescapeChr(p, getStrTrimData(r)));
 					break;
 
 				case ProductionIndex.Literal_bool_True:
@@ -482,7 +484,7 @@ namespace BefunGen.AST
 
 				case ProductionIndex.Literal_string_Stringliteral:
 					// <Literal_String> ::= StringLiteral
-					result = new Literal_CharArr(p, getStrData(r).Substring(1, getStrData(r).Length - 2));
+					result = new Literal_CharArr(p, unescapeStr(p, getStrTrimData(r)));
 					break;
 
 				case ProductionIndex.Literal_digitarr_Lbrace_Rbrace:
@@ -748,6 +750,73 @@ namespace BefunGen.AST
 				Console.Beep();
 			}
 			return (string)r.get_Data(p);
+		}
+
+		private static string unescapeStr(SourceCodePosition p, string s)
+		{
+			StringBuilder outstr = new StringBuilder();
+
+			bool esc = false;
+			foreach (char chr in s)
+			{
+				if (esc)
+				{
+					outstr.Append(unescapeChr(p, "\\" + chr));
+
+					esc = false;
+				}
+				else
+				{
+					if (chr == '\\')
+						esc = true;
+					else
+						outstr.Append(chr);
+				}
+			}
+
+			return outstr.ToString();
+		}
+
+		private static char unescapeChr(SourceCodePosition p, string s)
+		{
+			if (s.Length == 1)
+			{
+				return s[0];
+			}
+			else if (s.Length == 2 && s[0] == '\\')
+			{
+				switch (s[1])
+				{
+					case 'r':
+						return '\r';
+					case 'n':
+						return '\n';
+					case '0':
+						return '\0';
+					case 'b':
+						return '\b';
+					case 'v':
+						return '\v';
+					case 'f':
+						return '\f';
+					case 'a':
+						return '\a';
+					case '\\':
+						return '\\';
+					default:
+						throw new InvalidFormatSpecifierException(s, p);
+				}
+			}
+			else
+			{
+				throw new InvalidFormatSpecifierException(s, p);
+			}
+		}
+
+		private static string getStrTrimData(GOLD.Reduction r)
+		{
+			string s = getStrData(r);
+			return s.Substring(1, s.Length - 2);
 		}
 	}
 }

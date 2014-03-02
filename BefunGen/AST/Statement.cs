@@ -577,7 +577,7 @@ namespace BefunGen.AST
 
 				p.AppendLeft(BCHelper.Digit_0);
 
-				p.AppendLeft(Value.generateCode(!reversed)); // <NOT reversed> so string is in reversed order on stack
+				p.AppendLeft(Value.generateCode(reversed));
 
 				p.AppendLeft(BCHelper.PC_Left);
 				p.AppendLeft(BCHelper.Out_ASCII);
@@ -603,7 +603,7 @@ namespace BefunGen.AST
 
 				p.AppendRight(BCHelper.Digit_0);
 
-				p.AppendRight(Value.generateCode(!reversed)); // <NOT reversed> so string is in reversed order on stack
+				p.AppendRight(Value.generateCode(reversed));
 
 				p.AppendRight(BCHelper.PC_Right);
 				p.AppendRight(BCHelper.Out_ASCII);

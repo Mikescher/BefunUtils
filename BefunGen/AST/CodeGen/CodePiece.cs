@@ -533,6 +533,32 @@ namespace BefunGen.AST.CodeGen
 			return commandArr[r].Count(p => p.Type != BefungeCommandType.NOP) == 1;
 		}
 
+		public int GetColumnCommandCount(int x)
+		{
+			int cnt = 0;
+
+			for (int y = MinY; y < MaxY; y++)
+			{
+				if (this[x, y].Type != BefungeCommandType.NOP)
+					cnt++;
+			}
+
+			return cnt;
+		}
+
+		public int GetRowCommandCount(int y)
+		{
+			int cnt = 0;
+
+			for (int x = MinX; x < MaxX; x++)
+			{
+				if (this[x, y].Type != BefungeCommandType.NOP)
+					cnt++;
+			}
+
+			return cnt;
+		}
+
 		#endregion
 
 		#region Optimizing
@@ -641,6 +667,28 @@ namespace BefunGen.AST.CodeGen
 			}
 
 			return connect;
+		}
+
+		public void TrimDoubleStringMode()
+		{
+			normalize();
+
+			int i = 0;
+
+			while (i < Width - 2)
+			{
+				if (this[i, 0].EqualsTagLess(this[i + 1, 0]) && this[i, 0].Type == BefungeCommandType.Stringmode)
+				{
+					if (this.GetColumnCommandCount(i) == 1 && this.GetColumnCommandCount(i + 1) == 1)
+					{
+						RemoveColumn(i + 1);
+						RemoveColumn(i);
+
+						i = 0;
+					}
+				}
+				i++;
+			}
 		}
 
 		#endregion

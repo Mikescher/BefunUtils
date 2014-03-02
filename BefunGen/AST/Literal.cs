@@ -80,7 +80,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	public class Literal_Char : Literal_Value // TODO Escape Character \r \n \t etc
+	public class Literal_Char : Literal_Value
 	{
 		public readonly char Value;
 
@@ -215,7 +215,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	public class Literal_CharArr : Literal_Array // TODO Escape Character \r \n \t etc
+	public class Literal_CharArr : Literal_Array
 	{
 		public List<char> Value = new List<char>();
 
@@ -254,28 +254,25 @@ namespace BefunGen.AST
 		public override CodePiece generateCode(bool reversed)
 		{
 			CodePiece p = new CodePiece();
-			int i = 0;
 
 			if (reversed)
 			{
-				p[i--, 0] = BCHelper.Stringmode;
-				foreach (char val in Value)
+				foreach (char val in Value.Reverse<char>()) // Reverse Value -> correct stack order
 				{
-					p[i--, 0] = BCHelper.chr(val);
+					p.AppendLeft(NumberCodeHelper.generateCode_Stringmode(val, reversed));
 				}
-				p[i--, 0] = BCHelper.Stringmode;
 			}
 			else
 			{
-				p[i++, 0] = BCHelper.Stringmode;
-				foreach (char val in Value)
+				foreach (char val in Value.Reverse<char>())// Reverse Value -> correct stack order
 				{
-					p[i++, 0] = BCHelper.chr(val);
+					p.AppendRight(NumberCodeHelper.generateCode_Stringmode(val, reversed));
 				}
-				p[i++, 0] = BCHelper.Stringmode;
 			}
 
 			p.normalize();
+
+			p.TrimDoubleStringMode();
 
 			return p;
 		}

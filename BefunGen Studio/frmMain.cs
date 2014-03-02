@@ -276,72 +276,22 @@ namespace BefunGen
 			void calc()
 			var
 				int i := 0;
-				char[2] lb;
+				char[2] lb := { '\r', '\n' };
 			begin
-				lb[0] = (char)13;
-				lb[1] = (char)10;
-				i = 1;				
+				OUT lb[0];
+				OUT lb[1];
+				
+				OUT ''A \r\n\r\n'';
 
-				WHILE (i < 100) DO
-				BEGIN
-					IF (i % 3 == 0 && i % 5 == 0) THEN
-						out ''FizzBuzz'';
-					ELSE
-					BEGIN
-						IF (i % 3 == 0) THEN
-							out ''Fizz'';
-						ELSE 
-						BEGIN
-							IF (i % 5 == 0) THEN
-								out ''Buzz'';
-							ELSE
-							BEGIN
-								out i;
-							END
-							END
-						END
-						END
-					END
-					END
-					OUT lb[0];
-					OUT lb[1];
+				OUT lb[0];
+				OUT lb[1];
 
-					i++;
-				END
+				OUT ''B'';
 
-				lb[0] = (char)13;
-				lb[1] = (char)10;
-				out ''>> FizzBuzz <<''; //Reverse
-				lb[0] = (char)13;
-				lb[1] = (char)10;
-				i = 1;
+				OUT lb[0];
+				OUT lb[1];
 
-				WHILE (i < 100) DO
-				BEGIN
-					IF (i % 3 == 0 && i % 5 == 0) THEN
-						out ''FizzBuzz'';
-					ELSE
-					BEGIN
-						IF (i % 3 == 0) THEN
-							out ''Fizz'';
-						ELSE 
-						BEGIN
-							IF (i % 5 == 0) THEN
-								out ''Buzz'';
-							ELSE
-							BEGIN
-								out i;
-							END
-							END
-						END
-						END
-					END
-					END
-					OUT lb[0];
-					OUT lb[1];
-
-					i++;
-				END
+				OUT ''C'';
 
 				QUIT;
 			END

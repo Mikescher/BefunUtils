@@ -18,7 +18,7 @@ namespace BefungExec.View.OpenGL
 		{
 			Bitmap b = Resources.raster;
 
-			if (!RunOptions.SYNTAX_HIGHLIGHTING)
+			if (!RunOptions.SYNTAX_HIGHLIGHTING) //TODO Wie bei Alexio js-Befunge :: Kein SyntaxHighlight when cursor drauf ist (oder breakpoint)
 			{
 				b = b.Clone(new Rectangle(0, 0, b.Width, b.Height), System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 

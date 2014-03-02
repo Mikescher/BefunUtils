@@ -300,5 +300,10 @@ namespace BefunGen.AST.CodeGen
 					throw new InvalidBefungeCommandTypeException(new SourceCodePosition());
 			}
 		}
+
+		public bool EqualsTagLess(BefungeCommand c)
+		{
+			return this.Tag == null && c.Tag == null && this.Type == c.Type && this.Param == c.Param;
+		}
 	}
 }

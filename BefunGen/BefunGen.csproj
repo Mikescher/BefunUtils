@@ -60,6 +60,7 @@
     <Compile Include="AST\CodeGen\SourceCodePosition.cs" />
     <Compile Include="AST\Exceptions\AccessTemporaryASTObjectException.cs" />
     <Compile Include="AST\Exceptions\ASTException.cs" />
+    <Compile Include="AST\Exceptions\InvalidFormatSpecifierException.cs" />
     <Compile Include="AST\Exceptions\InternalCodeGenException.cs" />
     <Compile Include="AST\Exceptions\CodePieceReverseException.cs" />
     <Compile Include="AST\Exceptions\InvalidCodeManipulationException.cs" />

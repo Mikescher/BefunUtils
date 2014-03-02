@@ -1,8 +1,4 @@
 ﻿using BefunGen.AST.Exceptions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace BefunGen.AST.CodeGen
 {
@@ -25,12 +21,14 @@ namespace BefunGen.AST.CodeGen
 				else if (CodeGenOptions.NumberLiteralRepresentation == NumberRep.Base9)
 				{
 					p = Base9Converter.generateCodeForLiteral(Value);
-					if (reversed) p.reverseX(false);
+					if (reversed)
+						p.reverseX(false);
 				}
 				else if (CodeGenOptions.NumberLiteralRepresentation == NumberRep.Factorization)
 				{
 					p = NumberFactorization.generateCodeForLiteral(Value);
-					if (reversed) p.reverseX(false);
+					if (reversed)
+						p.reverseX(false);
 				}
 				else
 				{
@@ -55,16 +53,10 @@ namespace BefunGen.AST.CodeGen
 			if (Value >= 0 && Value <= 9)
 			{
 				p[0, 0] = BCHelper.chr(Value);
-			} 
-			else if (Value == '"')
+			}
+			else if (Value == '"' || Value == '\r' || Value == '\n' || Value == '\a' || Value == '\0' || Value == '\b' || Value == '\v' || Value == '\f' || Value == '\0')
 			{
-				p[0, 0] = BCHelper.Stringmode;
-				p[1, 0] = BCHelper.chr(Value + 1);
-				p[2, 0] = BCHelper.Stringmode;
-				p[2, 0] = BCHelper.Digit_1;
-				p[2, 0] = BCHelper.Sub;
-
-				if (reversed) p.reverseX(false);
+				p = generateCode(Value, reversed);
 			}
 			else
 			{
