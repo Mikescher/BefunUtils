@@ -221,10 +221,11 @@ namespace BefungExec.View
 			{
 				for (int y = 0; y < prog.Height; y++)
 				{
-					if (new Rect2d(offx + x * w, offy + y * h, w, h).Includes(new Vec2d(px, py)))
+					if (new Rect2d(offx + (x - zoom.bl.X) * w, offy + (y - zoom.bl.Y) * h, w, h).Includes(new Vec2d(px, py)))
 					{
 						selx = x;
 						sely = y;
+						return;
 					}
 				}
 			}
@@ -239,11 +240,11 @@ namespace BefungExec.View
 					if (Math.Abs(selection.Width) > 1 && Math.Abs(selection.Height) > 1)
 					{
 						selection.normalize();
-						zoom = selection;       //TODO Re-Zoom fails: does not work when already zoomed - not offsetted
+						zoom = selection;
 					}
 					else if (selection.Width == 1 && selection.Height == 1)
 					{
-						prog.breakpoints[selection.bl.X, selection.bl.Y] = !prog.breakpoints[selection.bl.X, selection.bl.Y]; //TODO Breakopints fail when zoomed pos is not offsetted
+						prog.breakpoints[selection.bl.X, selection.bl.Y] = !prog.breakpoints[selection.bl.X, selection.bl.Y];
 					}
 				}
 
@@ -263,6 +264,9 @@ namespace BefungExec.View
 
 				int selx, sely;
 				getPointInProgram(arg.X, arg.Y, out selx, out sely);
+
+				if (selx == -1 && sely == -1)
+					return;
 
 				selection = new Rect2i(selection.bl, new Vec2i(selx + 1, sely + 1));
 			}
@@ -326,7 +330,7 @@ namespace BefungExec.View
 
 			if (selection != null)
 			{
-				Rect2d rect = new Rect2d(offx + (selection.tl.X) * w, offy + (zoom.Height - (selection.tl.Y - 0 * zoom.bl.Y)) * h, selection.Width * w, selection.Height * h);
+				Rect2d rect = new Rect2d(offx + ((selection.tl.X) - zoom.bl.X) * w, offy + ((zoom.Height - 1) - ((selection.tl.Y - 1) - zoom.bl.Y)) * h, selection.Width * w, selection.Height * h);
 
 				GL.Disable(EnableCap.Texture2D);
 

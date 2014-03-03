@@ -983,7 +983,7 @@ namespace BefunGen.AST
 
 	#region Constructs
 
-	public class Statement_If : Statement //TODO ELSE-FI Syntax (But no new ASt-Object - it will generate Ifs with ELses in it ..,)
+	public class Statement_If : Statement
 	{
 		public Expression Condition;
 		public Statement Body;
