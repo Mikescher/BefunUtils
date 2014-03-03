@@ -631,7 +631,7 @@ namespace BefunGen.AST
 		{
 			Value.linkResultTypes(owner);
 
-			if (Value.getResultType() is BType_Array) //TODO Output Char Array !
+			if (Value.getResultType() is BType_Array)
 				throw new ImplicitCastException(Value.getResultType(), new BType_Int(Position), Value.Position);
 			if (Value.getResultType() is BType_Bool)
 				throw new ImplicitCastException(Value.getResultType(), new BType_Int(Position), Value.Position);
@@ -786,11 +786,10 @@ namespace BefunGen.AST
 			ValueTarget.linkResultTypes(owner);
 
 			BType present = ValueTarget.getResultType();
-			BType expected = new BType_Char(null);
 
-			if (present != expected)
+			if (!(present is BType_Int || present is BType_Char))
 			{
-				throw new WrongTypeException(present, expected, ValueTarget.Position);
+				throw new WrongTypeException(present, new BType_Char(Position), ValueTarget.Position);
 			}
 		}
 
@@ -806,7 +805,27 @@ namespace BefunGen.AST
 
 		public override CodePiece generateCode(bool reversed)
 		{
-			throw new NotImplementedException(); //TODO Implement
+			CodePiece p = new CodePiece();
+
+			if (ValueTarget.getResultType() is BType_Char)
+				p[0, 0] = BCHelper.In_ASCII;
+			else if (ValueTarget.getResultType() is BType_Int)
+				p[0, 0] = BCHelper.In_Int;
+
+			if (reversed)
+			{
+				p.AppendLeft(ValueTarget.generateCodeSingle(reversed));
+				p.AppendLeft(BCHelper.Reflect_Set);
+				p.normalizeX();
+			}
+			else
+			{
+				p.AppendRight(ValueTarget.generateCodeSingle(reversed));
+				p.AppendRight(BCHelper.Reflect_Set);
+				p.normalizeX();
+			}
+
+			return p;
 		}
 	}
 

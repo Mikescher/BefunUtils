@@ -276,34 +276,19 @@ namespace BefunGen
 			debugMethod(@"
 			void calc()
 			var
-				int i := 0;
-				char[2] lb := { '\r', '\n' };
+				int i;
+				char c;
 			BEGIN
 	
-				out ''d'';
+				WHILE (TRUE) DO
+					IN i;
+					IN c;
 
-				BEGIN
-					OUT lb[(int)RAND];
-					OUT lb[(int)RAND];
-					
-					OUT '''';
-
-					OUT lb[(int)RAND];
-					OUT lb[(int)RAND];
-
-					OUT ''B'';
-
-					OUT lb[(int)RAND];
-					OUT lb[(int)RAND];
-
-					OUT ''C'';
-					
-					OUT lb[(int)RAND];
-					OUT lb[(int)RAND];
-
+					OUT i;
+					OUT '' = '';
+					OUT c;
+					OUT ''\r\n'';
 				END
-
-				QUIT;
 
 			END
 			");

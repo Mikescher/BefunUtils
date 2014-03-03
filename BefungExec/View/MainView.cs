@@ -114,7 +114,9 @@ namespace BefungExec.View
 		{
 			kb.update(Keyboard);
 
-			if (kb[Key.Escape])
+			bool isrun = (prog.mode == BefunProg.MODE_RUN);
+
+			if (isrun && kb[Key.Escape])
 			{
 				if (zoom != null)
 				{
@@ -126,7 +128,7 @@ namespace BefungExec.View
 				}
 			}
 
-			if (kb[Key.Space] && prog.mode == BefunProg.MODE_RUN)
+			if (isrun && kb[Key.Space] && prog.mode == BefunProg.MODE_RUN)
 			{
 				prog.paused = !prog.paused;
 			}
@@ -148,32 +150,32 @@ namespace BefungExec.View
 				}
 			}
 
-			if (kb[Key.Right])
+			if (isrun && kb[Key.Right])
 			{
 				prog.doSingleStep = true;
 			}
 
-			if (kb[Key.Number1])
+			if (isrun && kb[Key.Number1])
 			{
 				prog.curr_lvl_sleeptime = RunOptions.LOW_SLEEP_TIME;
 			}
 
-			if (kb[Key.Number2])
+			if (isrun && kb[Key.Number2])
 			{
 				prog.curr_lvl_sleeptime = RunOptions.SLEEP_TIME;
 			}
 
-			if (kb[Key.Number3])
+			if (isrun && kb[Key.Number3])
 			{
 				prog.curr_lvl_sleeptime = RunOptions.TOP_SLEEP_TIME;
 			}
 
-			if (kb[Key.R])
+			if (isrun && kb[Key.R])
 			{
 				reset();
 			}
 
-			if (kb[Key.C])
+			if (isrun && kb[Key.C])
 			{
 				for (int x = 0; x < prog.Width; x++)
 				{
