@@ -17,6 +17,7 @@ namespace BefungExec.View
 	{
 		private FrequencyCounter fps = new FrequencyCounter();
 		private FontRasterSheet font;
+		private FontRasterSheet bwfont;
 		private QFont DebugFont;
 		private QFont StackFont;
 		private QFont BoxFont;
@@ -83,14 +84,26 @@ namespace BefungExec.View
 			BoxFont.Options.DropShadowActive = true;
 			BoxFont.Options.Colour = Color4.Black;
 
-			font = FontRasterSheet.create();
+			font = FontRasterSheet.create(RunOptions.SYNTAX_HIGHLIGHTING);
+			bwfont = FontRasterSheet.create(false);
 		}
+
+		#region FormEvents
 
 		private void OnResize(object o, EventArgs arg)
 		{
 			GL.Viewport(0, 0, Width, Height);
 			QFont.InvalidateViewport();
 		}
+
+		private void OnClose(object o, EventArgs arg)
+		{
+			prog.running = false;
+		}
+
+		#endregion
+
+		#region KeyBoard
 
 		private void OnKeyPress(object o, KeyPressEventArgs arg)
 		{
@@ -192,6 +205,10 @@ namespace BefungExec.View
 			prog.reset_freeze_request = false;
 		}
 
+		#endregion
+
+		#region Mouse
+
 		private void OnMouseDown(object o, MouseButtonEventArgs arg)
 		{
 			if (!Mouse[MouseButton.Left])
@@ -203,31 +220,6 @@ namespace BefungExec.View
 			if (selx != -1 && sely != -1)
 			{
 				selection = new Rect2i(selx, sely, 1, 1);
-			}
-		}
-
-		private void getPointInProgram(int px, int py, out int selx, out int sely)
-		{
-			double offx;
-			double offy;
-			double w;
-			double h;
-			calcProgPos(out offx, out offy, out w, out h);
-
-			selx = -1;
-			sely = -1;
-
-			for (int x = 0; x < prog.Width; x++)
-			{
-				for (int y = 0; y < prog.Height; y++)
-				{
-					if (new Rect2d(offx + (x - zoom.bl.X) * w, offy + (y - zoom.bl.Y) * h, w, h).Includes(new Vec2d(px, py)))
-					{
-						selx = x;
-						sely = y;
-						return;
-					}
-				}
 			}
 		}
 
@@ -272,6 +264,8 @@ namespace BefungExec.View
 			}
 		}
 
+		#endregion
+
 		private void OnRender(object o, FrameEventArgs arg)
 		{
 			#region INIT
@@ -291,8 +285,6 @@ namespace BefungExec.View
 
 			#region SIZE
 
-			font.bind();
-
 			double offx;
 			double offy;
 			double w;
@@ -305,7 +297,7 @@ namespace BefungExec.View
 
 			long now = Environment.TickCount;
 
-
+			int f_binded = -1;
 			for (int x = zoom.bl.X; x < zoom.tr.X; x++)
 			{
 				for (int y = zoom.bl.Y; y < zoom.tr.Y; y++)
@@ -319,8 +311,20 @@ namespace BefungExec.View
 
 					GL.Color3(r, g, b);
 
-					font.Render(new Rect2d(offx + (x - zoom.bl.X) * w, offy + ((zoom.Height - 1) - (y - zoom.bl.Y)) * h, w, h), -4, prog[x, y]);
-
+					if (prog.breakpoints[x, y] || decay_perc > 0.25)
+					{
+						if (f_binded != 1)
+							bwfont.bind();
+						bwfont.Render(new Rect2d(offx + (x - zoom.bl.X) * w, offy + ((zoom.Height - 1) - (y - zoom.bl.Y)) * h, w, h), -4, prog[x, y]);
+						f_binded = 1;
+					}
+					else
+					{
+						if (f_binded != 2)
+							font.bind();
+						font.Render(new Rect2d(offx + (x - zoom.bl.X) * w, offy + ((zoom.Height - 1) - (y - zoom.bl.Y)) * h, w, h), -4, prog[x, y]);
+						f_binded = 2;
+					}
 				}
 			}
 
@@ -462,6 +466,31 @@ namespace BefungExec.View
 			return String.Format(@"{0:0.00} {1}Hz", freq, pref);
 		}
 
+		private void getPointInProgram(int px, int py, out int selx, out int sely)
+		{
+			double offx;
+			double offy;
+			double w;
+			double h;
+			calcProgPos(out offx, out offy, out w, out h);
+
+			selx = -1;
+			sely = -1;
+
+			for (int x = 0; x < prog.Width; x++)
+			{
+				for (int y = 0; y < prog.Height; y++)
+				{
+					if (new Rect2d(offx + (x - zoom.bl.X) * w, offy + (y - zoom.bl.Y) * h, w, h).Includes(new Vec2d(px, py)))
+					{
+						selx = x;
+						sely = y;
+						return;
+					}
+				}
+			}
+		}
+
 		private void calcProgPos(out double offx, out double offy, out double w, out double h)
 		{
 			int th = zoom.Height - 1;
@@ -533,9 +562,5 @@ namespace BefungExec.View
 			return h;
 		}
 
-		private void OnClose(object o, EventArgs arg)
-		{
-			prog.running = false;
-		}
 	}
 }
