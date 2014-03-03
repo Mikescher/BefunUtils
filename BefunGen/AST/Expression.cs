@@ -1620,42 +1620,22 @@ namespace BefunGen.AST
 
 				if (reversed)
 				{
-					// <1_v#
-					// ^ 0<
+					// !!
 					CodePiece op = new CodePiece();
 
-					op[0, 0] = BCHelper.PC_Left;
-					op[1, 0] = BCHelper.Digit_1;
-					op[2, 0] = BCHelper.If_Horizontal;
-					op[3, 0] = BCHelper.PC_Down;
-					op[4, 0] = BCHelper.PC_Jump;
-
-					op[0, 1] = BCHelper.PC_Up;
-					op[1, 1] = BCHelper.Walkway;
-					op[2, 1] = BCHelper.Digit_0;
-					op[3, 1] = BCHelper.PC_Left;
-					op[4, 1] = BCHelper.Unused;
+					op[0, 0] = BCHelper.Not;
+					op[1, 0] = BCHelper.Not;
 
 					p.AppendLeft(op);
 					p.normalizeX();
 				}
 				else
 				{
-					// #v_0>
-					//  >1 ^
+					// !!
 					CodePiece op = new CodePiece();
 
-					op[0, 0] = BCHelper.PC_Jump;
-					op[1, 0] = BCHelper.PC_Down;
-					op[2, 0] = BCHelper.If_Horizontal;
-					op[3, 0] = BCHelper.Digit_0;
-					op[4, 0] = BCHelper.PC_Right;
-
-					op[0, 1] = BCHelper.Unused;
-					op[1, 1] = BCHelper.PC_Right;
-					op[2, 1] = BCHelper.Digit_1;
-					op[3, 1] = BCHelper.Walkway;
-					op[4, 1] = BCHelper.PC_Up;
+					op[0, 0] = BCHelper.Not;
+					op[1, 0] = BCHelper.Not;
 
 					p.AppendRight(op);
 				}
