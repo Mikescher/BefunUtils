@@ -284,6 +284,93 @@ namespace BefunGenTest
 				QUIT;
 			END
 			");
+
+			debugMethod(@"
+			void calc()
+			var
+				int i := 0;
+				char[2] lb;
+			begin
+				lb[0] = (char)13;
+				lb[1] = (char)10;
+
+				while (i <= 128) do
+					out (int)(bool)(i % 3);
+					out lb[0];
+					out lb[1];
+					i++;
+				end
+				
+				QUIT;
+			END
+			");
+
+			debugMethod(@"
+			void calc()
+			var
+				int i := 0;
+				char[2] lb := { '\r', '\n' };
+			BEGIN
+	
+				out ''d'';
+
+				BEGIN
+					OUT lb[(int)RAND];
+					OUT lb[(int)RAND];
+					
+					OUT ''A \r\n\r\n'';
+
+					OUT lb[(int)RAND];
+					OUT lb[(int)RAND];
+
+					OUT ''B'';
+
+					OUT lb[(int)RAND];
+					OUT lb[(int)RAND];
+
+					OUT ''C'';
+					
+					OUT lb[(int)RAND];
+					OUT lb[(int)RAND];
+
+				END
+
+				QUIT;
+
+			END
+			");
+
+			debugMethod(@"
+			void calc()
+			var
+				int i := 0;
+				char[2] lb := { '\r', '\n' };
+			BEGIN
+				BEGIN
+					OUT lb[(int)RAND];
+					OUT lb[(int)RAND];
+					
+					OUT ''A \r\n\r\n'';
+
+					OUT lb[(int)RAND];
+					OUT lb[(int)RAND];
+
+					OUT ''B'';
+
+					OUT lb[(int)RAND];
+					OUT lb[(int)RAND];
+
+					OUT ''C'';
+					
+					OUT lb[(int)RAND];
+					OUT lb[(int)RAND];
+
+				END
+
+				QUIT;
+
+			END
+			");
 		}
 
 		[TestMethod]

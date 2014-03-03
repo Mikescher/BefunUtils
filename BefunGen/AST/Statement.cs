@@ -79,6 +79,301 @@ namespace BefunGen.AST
 
 		public override CodePiece generateCode(bool reversed)
 		{
+			// #######################
+
+			if (List.Count == 0)
+			{
+				return new CodePiece();
+			}
+			else if (List.Count == 1)
+			{
+				return List[0].generateCode(reversed);
+			}
+
+			// ##### STATEMENTS ######
+
+			List<Statement> stmts = List.ToList();
+			if (stmts.Count % 2 == 0)
+				stmts.Add(new Statement_NOP(Position));
+
+			// ##### CODEPIECES ######
+
+			List<CodePiece> cps = new List<CodePiece>();
+			for (int i = 0; i < stmts.Count; i++)
+			{
+				cps.Add(stmts[i].generateCode(reversed ^ (i % 2 != 0)));
+				cps[i].normalizeX();
+			}
+
+			// ##### Y-POSITIONS ######
+
+			List<int> ypos = new List<int>();
+			ypos.Add(0);
+			for (int i = 1; i < cps.Count; i++)
+			{
+				ypos.Add(ypos[i - 1] + cps[i - 1].MaxY - cps[i].MinY);
+			}
+
+			if (reversed)
+			{
+				CodePiece p = new CodePiece();
+
+				#region Reversed
+
+				// ##### WIDTHS ######
+
+				List<int> widths = new List<int>();
+				for (int i = 0; i < cps.Count; i += 2)
+				{
+					int a = i - 1;
+					int b = i;
+
+					bool first = (i == 0);
+					bool last = (i == cps.Count - 1);
+
+					int w_a;
+					int w_b;
+
+					if (first)
+						w_a = 0;
+					else
+						w_a = cps[a].Width;
+
+					if (last)
+						w_b = cps[b].Width - 1;
+					else
+						w_b = cps[b].Width;
+
+					int w = Math.Max(w_a, w_b);
+
+					if (!first)
+						widths.Add(w);
+					widths.Add(w);
+				}
+
+				int maxwidth = MathExt.Max(widths[0], widths.ToArray());
+
+				// ##### PC's ######
+
+				for (int i = 0; i < cps.Count; i++)
+				{
+					bool curr_rev = (i % 2 == 0);
+					bool first = (i == 0);
+					bool last = (i == cps.Count - 1);
+
+					if (first)
+					{
+						p[-1, ypos[i]] = BCHelper.PC_Down;
+					}
+					else if (last)
+					{
+						p[widths[i], ypos[i]] = BCHelper.PC_Left;
+					}
+					else if (curr_rev) // Reversed
+					{
+						p[-1, ypos[i]] = BCHelper.PC_Down;
+						p[widths[i], ypos[i]] = BCHelper.PC_Left;
+					}
+					else // Normal
+					{
+						p[-1, ypos[i]] = BCHelper.PC_Right;
+						p[widths[i], ypos[i]] = BCHelper.PC_Down;
+					}
+				}
+
+				// ##### Walkways ######
+
+				for (int i = 0; i < cps.Count; i++)
+				{
+					bool curr_rev = (i % 2 == 0);
+					bool first = (i == 0);
+					bool last = (i == cps.Count - 1);
+
+					if (first)
+					{
+						p.FillRowWW(ypos[i], cps[i].Width, maxwidth + 1);
+						p.FillColWW(-1, ypos[i] + 1, ypos[i] + cps[i].MaxY);
+					}
+					else if (last)
+					{
+						p.FillRowWW(ypos[i], cps[i].Width - 1, widths[i]);
+						p.FillColWW(widths[i], ypos[i] + cps[i].MinY, ypos[i]);
+					}
+					else
+					{
+						p.FillRowWW(ypos[i], cps[i].Width, widths[i]);
+
+						if (curr_rev) // Reversed
+						{
+							p.FillColWW(widths[i], ypos[i] + cps[i].MinY, ypos[i]);
+							p.FillColWW(-1, ypos[i] + 1, ypos[i] + cps[i].MaxY);
+						}
+						else
+						{
+							p.FillColWW(-1, ypos[i] + cps[i].MinY, ypos[i]);
+							p.FillColWW(widths[i], ypos[i] + 1, ypos[i] + cps[i].MaxY);
+						}
+					}
+				}
+
+				// ##### Outer-Walkway ######
+
+				int lastypos = ypos[ypos.Count - 1];
+				p[-2, lastypos] = BCHelper.PC_Up;
+				p[-2, 0] = BCHelper.PC_Left;
+
+				p.FillColWW(-2, 1, lastypos);
+
+				// ##### Statements ######
+
+				for (int i = 0; i < cps.Count; i++)
+				{
+					bool last = (i == cps.Count - 1);
+					int x = last ? -1 : 0;
+					int y = ypos[i];
+					CodePiece c = cps[i];
+
+					p.SetAt(x, y, c);
+				}
+
+				p.normalizeX();
+
+				#endregion
+
+				return p;
+			}
+			else
+			{
+				CodePiece p = new CodePiece();
+
+				#region Normal
+
+				// ##### WIDTHS ######
+
+				List<int> widths = new List<int>();
+				for (int i = 0; i < cps.Count; i += 2)
+				{
+					int a = i;
+					int b = i + 1;
+
+					bool first = (i == 0);
+					bool last = (i == cps.Count - 1);
+
+					int w_a;
+					int w_b;
+
+					if (first)
+						w_a = cps[a].Width - 1;
+					else
+						w_a = cps[a].Width;
+
+					if (last)
+						w_b = 0;
+					else
+						w_b = cps[b].Width;
+
+					int w = Math.Max(w_a, w_b);
+
+					widths.Add(w);
+					if (!last)
+						widths.Add(w);
+				}
+
+				int right = MathExt.Max(widths[0], widths.ToArray()) + 1;
+
+				// ##### PC's ######
+
+				for (int i = 0; i < cps.Count; i++)
+				{
+					bool curr_rev = (i % 2 != 0);
+					bool first = (i == 0);
+					bool last = (i == cps.Count - 1);
+
+					if (first)
+					{
+						p[widths[i], ypos[i]] = BCHelper.PC_Down;
+					}
+					else if (last)
+					{
+						p[-1, ypos[i]] = BCHelper.PC_Right;
+					}
+					else if (curr_rev) // Reversed
+					{
+						p[-1, ypos[i]] = BCHelper.PC_Down;
+						p[widths[i], ypos[i]] = BCHelper.PC_Left;
+					}
+					else // Normal
+					{
+						p[-1, ypos[i]] = BCHelper.PC_Right;
+						p[widths[i], ypos[i]] = BCHelper.PC_Down;
+					}
+				}
+
+				// ##### Walkways ######
+
+				for (int i = 0; i < cps.Count; i++)
+				{
+					bool curr_rev = (i % 2 != 0);
+					bool first = (i == 0);
+					bool last = (i == cps.Count - 1);
+
+					if (first)
+					{
+						p.FillRowWW(ypos[i], cps[i].Width - 1, widths[i]);
+						p.FillColWW(widths[i], ypos[i] + 1, ypos[i] + cps[i].MaxY);
+					}
+					else if (last)
+					{
+						p.FillRowWW(ypos[i], cps[i].Width, right);
+						p.FillColWW(-1, ypos[i] + cps[i].MinY, ypos[i]);
+					}
+					else
+					{
+						p.FillRowWW(ypos[i], cps[i].Width, widths[i]);
+
+						if (curr_rev) // Reversed
+						{
+							p.FillColWW(widths[i], ypos[i] + cps[i].MinY, ypos[i]);
+							p.FillColWW(-1, ypos[i] + 1, ypos[i] + cps[i].MaxY);
+						}
+						else
+						{
+							p.FillColWW(-1, ypos[i] + cps[i].MinY, ypos[i]);
+							p.FillColWW(widths[i], ypos[i] + 1, ypos[i] + cps[i].MaxY);
+						}
+					}
+				}
+
+				// ##### Outer-Walkway ######
+
+				int lastypos = ypos[ypos.Count - 1];
+				p[right, lastypos] = BCHelper.PC_Up;
+				p[right, 0] = BCHelper.PC_Right;
+
+				p.FillColWW(right, 1, lastypos);
+
+				// ##### Statements ######
+
+				for (int i = 0; i < cps.Count; i++)
+				{
+					bool first = (i == 0);
+					int x = first ? -1 : 0;
+					int y = ypos[i];
+					CodePiece c = cps[i];
+
+					p.SetAt(x, y, c);
+				}
+
+				p.normalizeX();
+
+				#endregion
+
+				return p;
+			}
+		}
+
+		public CodePiece generateCode_old(bool reversed)
+		{
 			List<TwoDirectionCodePiece> cp_stmts = new List<TwoDirectionCodePiece>();
 
 			for (int i = 0; i < List.Count; i++)

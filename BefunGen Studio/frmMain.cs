@@ -277,19 +277,34 @@ namespace BefunGen
 			void calc()
 			var
 				int i := 0;
-				char[2] lb;
-			begin
-				lb[0] = (char)13;
-				lb[1] = (char)10;
+				char[2] lb := { '\r', '\n' };
+			BEGIN
+	
+				out ''d'';
 
-				while (i <= 128) do
-					out (int)(bool)(i % 3);
-					out lb[0];
-					out lb[1];
-					i++;
-				end
-				
+				BEGIN
+					OUT lb[(int)RAND];
+					OUT lb[(int)RAND];
+					
+					OUT ''A \r\n\r\n'';
+
+					OUT lb[(int)RAND];
+					OUT lb[(int)RAND];
+
+					OUT ''B'';
+
+					OUT lb[(int)RAND];
+					OUT lb[(int)RAND];
+
+					OUT ''C'';
+					
+					OUT lb[(int)RAND];
+					OUT lb[(int)RAND];
+
+				END
+
 				QUIT;
+
 			END
 			");
 		}
@@ -309,7 +324,7 @@ namespace BefunGen
 				CodePiece b9 = Base9Converter.generateCodeForLiteral(i);
 				CodePiece nf = NumberFactorization.generateCodeForLiteral(i);
 
-				txt.AppendLine( String.Format(@"{0}{1:0000}: {2, -24} {3, -24} FAC: {4, -24} B9: {5, -24}",(i < 0) ? "" : " ", i, NumberCodeHelper.lastRep, p.ToSimpleString(), nf.ToSimpleString(), b9.ToSimpleString()) );
+				txt.AppendLine(String.Format(@"{0}{1:0000}: {2, -24} {3, -24} FAC: {4, -24} B9: {5, -24}", (i < 0) ? "" : " ", i, NumberCodeHelper.lastRep, p.ToSimpleString(), nf.ToSimpleString(), b9.ToSimpleString()));
 				switch (NumberCodeHelper.lastRep)
 				{
 					case NumberRep.CharConstant:
@@ -327,14 +342,14 @@ namespace BefunGen
 				}
 			}
 
-			txt.AppendLine( );
-			txt.AppendLine( new String('#', 32) );
-			txt.AppendLine( );
-			
-			txt.AppendLine( String.Format("{0,-16}", "CharConstant:") + count_CharConstant );
-			txt.AppendLine( String.Format("{0,-16}", "Base9:") + count_Base9 );
-			txt.AppendLine( String.Format("{0,-16}", "Factorization:") + count_Factorization );
-			txt.AppendLine( String.Format("{0,-16}", "Digit:") + count_Digit );
+			txt.AppendLine();
+			txt.AppendLine(new String('#', 32));
+			txt.AppendLine();
+
+			txt.AppendLine(String.Format("{0,-16}", "CharConstant:") + count_CharConstant);
+			txt.AppendLine(String.Format("{0,-16}", "Base9:") + count_Base9);
+			txt.AppendLine(String.Format("{0,-16}", "Factorization:") + count_Factorization);
+			txt.AppendLine(String.Format("{0,-16}", "Digit:") + count_Digit);
 
 			txtDebug.Text += txt.ToString();
 		}
