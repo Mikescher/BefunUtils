@@ -53,7 +53,9 @@
 			this.tabPage7 = new System.Windows.Forms.TabPage();
 			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
 			this.txtDebug = new System.Windows.Forms.TextBox();
+			this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
 			this.btnExecuteDebug = new System.Windows.Forms.Button();
+			this.btnDebugNumberRep = new System.Windows.Forms.Button();
 			this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
 			this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
 			this.btnLoadSYN = new System.Windows.Forms.Button();
@@ -76,6 +78,7 @@
 			this.tableLayoutPanel4.SuspendLayout();
 			this.tabPage7.SuspendLayout();
 			this.tableLayoutPanel1.SuspendLayout();
+			this.tableLayoutPanel5.SuspendLayout();
 			this.tableLayoutPanel2.SuspendLayout();
 			this.tableLayoutPanel3.SuspendLayout();
 			this.SuspendLayout();
@@ -384,7 +387,7 @@
 			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 77.97619F));
 			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 22.02381F));
 			this.tableLayoutPanel1.Controls.Add(this.txtDebug, 0, 0);
-			this.tableLayoutPanel1.Controls.Add(this.btnExecuteDebug, 1, 0);
+			this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel5, 1, 0);
 			this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 3);
 			this.tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -405,16 +408,49 @@
 			this.txtDebug.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
 			this.txtDebug.Size = new System.Drawing.Size(517, 206);
 			this.txtDebug.TabIndex = 0;
+			this.txtDebug.WordWrap = false;
+			// 
+			// tableLayoutPanel5
+			// 
+			this.tableLayoutPanel5.ColumnCount = 1;
+			this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.tableLayoutPanel5.Controls.Add(this.btnExecuteDebug, 0, 0);
+			this.tableLayoutPanel5.Controls.Add(this.btnDebugNumberRep, 0, 1);
+			this.tableLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.tableLayoutPanel5.Location = new System.Drawing.Point(526, 3);
+			this.tableLayoutPanel5.Name = "tableLayoutPanel5";
+			this.tableLayoutPanel5.RowCount = 7;
+			this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
+			this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
+			this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
+			this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
+			this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
+			this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
+			this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
+			this.tableLayoutPanel5.Size = new System.Drawing.Size(143, 206);
+			this.tableLayoutPanel5.TabIndex = 1;
 			// 
 			// btnExecuteDebug
 			// 
-			this.btnExecuteDebug.Location = new System.Drawing.Point(526, 3);
+			this.btnExecuteDebug.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.btnExecuteDebug.Location = new System.Drawing.Point(3, 3);
 			this.btnExecuteDebug.Name = "btnExecuteDebug";
-			this.btnExecuteDebug.Size = new System.Drawing.Size(143, 26);
+			this.btnExecuteDebug.Size = new System.Drawing.Size(137, 29);
 			this.btnExecuteDebug.TabIndex = 1;
 			this.btnExecuteDebug.Text = "Execute";
 			this.btnExecuteDebug.UseVisualStyleBackColor = true;
 			this.btnExecuteDebug.Click += new System.EventHandler(this.btnExecuteDebug_Click);
+			// 
+			// btnDebugNumberRep
+			// 
+			this.btnDebugNumberRep.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.btnDebugNumberRep.Location = new System.Drawing.Point(3, 38);
+			this.btnDebugNumberRep.Name = "btnDebugNumberRep";
+			this.btnDebugNumberRep.Size = new System.Drawing.Size(137, 29);
+			this.btnDebugNumberRep.TabIndex = 2;
+			this.btnDebugNumberRep.Text = "NumberRep";
+			this.btnDebugNumberRep.UseVisualStyleBackColor = true;
+			this.btnDebugNumberRep.Click += new System.EventHandler(this.btnDebugNumberRep_Click);
 			// 
 			// tableLayoutPanel2
 			// 
@@ -504,6 +540,7 @@
 			this.tabPage7.ResumeLayout(false);
 			this.tableLayoutPanel1.ResumeLayout(false);
 			this.tableLayoutPanel1.PerformLayout();
+			this.tableLayoutPanel5.ResumeLayout(false);
 			this.tableLayoutPanel2.ResumeLayout(false);
 			this.tableLayoutPanel3.ResumeLayout(false);
 			this.tableLayoutPanel3.PerformLayout();
@@ -537,11 +574,13 @@
 		private System.Windows.Forms.TabPage tabPage7;
 		private System.Windows.Forms.TextBox txtDebug;
 		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-		private System.Windows.Forms.Button btnExecuteDebug;
 		private System.Windows.Forms.SplitContainer splitContainer2;
 		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;
 		private System.Windows.Forms.Button btnGen;
 		private System.Windows.Forms.Button btnRun;
+		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel5;
+		private System.Windows.Forms.Button btnExecuteDebug;
+		private System.Windows.Forms.Button btnDebugNumberRep;
 	}
 }
 

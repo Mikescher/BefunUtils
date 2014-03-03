@@ -162,6 +162,22 @@ namespace BefunGen.AST.CodeGen
 			return builder.ToString();
 		}
 
+		public string ToSimpleString()
+		{
+			StringBuilder builder = new StringBuilder();
+			for (int y = MinY; y < MaxY; y++)
+			{
+				for (int x = MinX; x < MaxX; x++)
+				{
+					BefungeCommand bc = this[x, y];
+					builder.Append(bc.getCommandCode());
+				}
+				if (y < MaxY - 1)
+					builder.AppendLine();
+			}
+			return builder.ToString();
+		}
+
 		#endregion
 
 		#region Tags

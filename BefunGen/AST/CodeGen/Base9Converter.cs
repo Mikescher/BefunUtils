@@ -2,7 +2,7 @@
 
 namespace BefunGen.AST.CodeGen
 {
-	class Base9Converter
+	public class Base9Converter
 	{
 		public static CodePiece generateCodeForLiteral(int lit)
 		{

@@ -77,7 +77,7 @@ namespace BefunGen.AST
 			return result;
 		}
 
-		public override CodePiece generateCode(bool reversed) // TODO vllt so machen wie auch while/repUntil Stmt's (?) -> mimt SetAt
+		public override CodePiece generateCode(bool reversed)
 		{
 			List<TwoDirectionCodePiece> cp_stmts = new List<TwoDirectionCodePiece>();
 
@@ -85,7 +85,6 @@ namespace BefunGen.AST
 			{
 				Statement stmt = List[i];
 
-				//TODO Doing this two times makes the parse O(2^n) instead of O(n) --> what do ? (you could just dont do it - would change nothing .. just the sorting would be sometimes a little bit off)
 				cp_stmts.Add(new TwoDirectionCodePiece(stmt.generateCode(false), stmt.generateCode(true)));
 			}
 

@@ -3,16 +3,17 @@ namespace BefunGen.AST.CodeGen
 {
 	public enum NumberRep
 	{
-		CharConstant, //TODO What when neg
+		CharConstant,
 		Base9,
-		Factorization
-		//TODO Option to intelligent use Best Option
+		Factorization,
+		Digit, // Throws Error when not 0 <= x <= 9
+		Best
 	}
 
 	public class CodeGenOptions
 	{
 		// Defines how Number Literals get represented
-		public static NumberRep NumberLiteralRepresentation = NumberRep.Factorization;
+		public static NumberRep NumberLiteralRepresentation = NumberRep.Best;
 
 		// If 0 <= NumberLiteral <= 9 then generate as digit (only codegen - not in AST)
 		public static bool AutoDigitizeNumberLiterals = true;

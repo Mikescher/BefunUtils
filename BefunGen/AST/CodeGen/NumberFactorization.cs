@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace BefunGen.AST.CodeGen
 {
-	class NumberFactorization
+	public class NumberFactorization
 	{
 		public static CodePiece generateCodeForLiteral(int lit)
 		{
