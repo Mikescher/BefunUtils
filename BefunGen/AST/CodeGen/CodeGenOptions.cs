@@ -35,13 +35,8 @@ namespace BefunGen.AST.CodeGen
 		// The Value of reserved for variable fields before initialization 
 		public static BefungeCommand DefaultVarDeclarationSymbol = BCHelper.chr('V');
 
-		//TODO (Optional) When in STatementList and have Left->Right Statement test if next STatement is mirrorable (no If_Horiz) - the mirror it and append it directly beneath --> no empty line
-		// Expression Methodcall before codegen convert in AST to multiple statements (call methods->assign to var->use var in expr) (??? perhaps ???)
-
-		//TODO Reusable CodePoints can be "tagged" in the CodePiece class with special -unique- Tags (with Params) to find them later (like method enter, stack back etc)
-
-		//TODO Differentitate between real empty and walked empty cells (for debugging fill realempty with @)
-		//     --> Later better optimizing etc etc
+		// When hard casting to bool force the value to be '0' or '1'
+		public static bool ExtendedBooleanCast = false;
 	}
 
 	//Expressions are Left,0 in ... Right,0 out

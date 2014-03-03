@@ -92,7 +92,7 @@ namespace BefunGen.AST
 				cp_stmts.Add(new TwoDirectionCodePiece());
 
 			CodePiece p = new CodePiece();
-			if (reversed)
+			if (reversed) // TODO Redo with SetAt etc - and cleaener (! First Statement desnt need a '>' or '<', direction already right (leads to '<<' or '>>' in code) !)
 			{
 				#region Reversed
 				for (int i = 0; i < cp_stmts.Count - 2; i += 2)
@@ -495,9 +495,9 @@ namespace BefunGen.AST
 			Value.linkResultTypes(owner);
 
 			if (Value.getResultType() is BType_Array) //TODO Output Char Array !
-				throw new ImplicitCastException(new BType_Int(Position), Value.getResultType(), Value.Position);
+				throw new ImplicitCastException(Value.getResultType(), new BType_Int(Position), Value.Position);
 			if (Value.getResultType() is BType_Bool)
-				throw new ImplicitCastException(new BType_Int(Position), Value.getResultType(), Value.Position);
+				throw new ImplicitCastException(Value.getResultType(), new BType_Int(Position), Value.Position);
 		}
 
 		public override void linkMethods(Program owner)

@@ -277,23 +277,18 @@ namespace BefunGen
 			void calc()
 			var
 				int i := 0;
-				char[2] lb := { '\r', '\n' };
+				char[2] lb;
 			begin
-				OUT lb[0];
-				OUT lb[1];
+				lb[0] = (char)13;
+				lb[1] = (char)10;
+
+				while (i <= 128) do
+					out (int)(bool)(i % 3);
+					out lb[0];
+					out lb[1];
+					i++;
+				end
 				
-				OUT ''A \r\n\r\n'';
-
-				OUT lb[0];
-				OUT lb[1];
-
-				OUT ''B'';
-
-				OUT lb[0];
-				OUT lb[1];
-
-				OUT ''C'';
-
 				QUIT;
 			END
 			");

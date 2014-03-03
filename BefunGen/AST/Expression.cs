@@ -1614,7 +1614,59 @@ namespace BefunGen.AST
 
 		public override CodePiece generateCode(bool reversed)
 		{
-			return Expr.generateCode(reversed); //TODO Perhaps Cast bools to real 0|1 bools (perhaps CodeGenOption)
+			if (CodeGenOptions.ExtendedBooleanCast && Type.GetType() == typeof(BType_Bool))
+			{
+				CodePiece p = Expr.generateCode(reversed);
+
+				if (reversed)
+				{
+					// <1_v#
+					// ^ 0<
+					CodePiece op = new CodePiece();
+
+					op[0, 0] = BCHelper.PC_Left;
+					op[1, 0] = BCHelper.Digit_1;
+					op[2, 0] = BCHelper.If_Horizontal;
+					op[3, 0] = BCHelper.PC_Down;
+					op[4, 0] = BCHelper.PC_Jump;
+
+					op[0, 1] = BCHelper.PC_Up;
+					op[1, 1] = BCHelper.Walkway;
+					op[2, 1] = BCHelper.Digit_0;
+					op[3, 1] = BCHelper.PC_Left;
+					op[4, 1] = BCHelper.Unused;
+
+					p.AppendLeft(op);
+					p.normalizeX();
+				}
+				else
+				{
+					// #v_0>
+					//  >1 ^
+					CodePiece op = new CodePiece();
+
+					op[0, 0] = BCHelper.PC_Jump;
+					op[1, 0] = BCHelper.PC_Down;
+					op[2, 0] = BCHelper.If_Horizontal;
+					op[3, 0] = BCHelper.Digit_0;
+					op[4, 0] = BCHelper.PC_Right;
+
+					op[0, 1] = BCHelper.Unused;
+					op[1, 1] = BCHelper.PC_Right;
+					op[2, 1] = BCHelper.Digit_1;
+					op[3, 1] = BCHelper.Walkway;
+					op[4, 1] = BCHelper.PC_Up;
+
+					p.AppendRight(op);
+				}
+
+				return p;
+			}
+			else
+			{
+				return Expr.generateCode(reversed);
+			}
+
 		}
 	}
 
