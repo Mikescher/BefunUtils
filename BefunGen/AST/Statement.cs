@@ -79,8 +79,6 @@ namespace BefunGen.AST
 
 		public override CodePiece generateCode(bool reversed)
 		{
-			// #######################
-
 			if (List.Count == 0)
 			{
 				return new CodePiece();
@@ -103,6 +101,9 @@ namespace BefunGen.AST
 			{
 				cps.Add(stmts[i].generateCode(reversed ^ (i % 2 != 0)));
 				cps[i].normalizeX();
+
+				if (cps[i].Height == 0) // No total empty statements
+					cps[i][0, 0] = BCHelper.Walkway;
 			}
 
 			// ##### Y-POSITIONS ######
@@ -370,165 +371,6 @@ namespace BefunGen.AST
 
 				return p;
 			}
-		}
-
-		public CodePiece generateCode_old(bool reversed)
-		{
-			List<TwoDirectionCodePiece> cp_stmts = new List<TwoDirectionCodePiece>();
-
-			for (int i = 0; i < List.Count; i++)
-			{
-				Statement stmt = List[i];
-
-				cp_stmts.Add(new TwoDirectionCodePiece(stmt.generateCode(false), stmt.generateCode(true)));
-			}
-
-			if (cp_stmts.Count % 2 == 0)
-				cp_stmts.Add(new TwoDirectionCodePiece());
-
-			CodePiece p = new CodePiece();
-			if (reversed) // TODO Redo with SetAt etc - and cleaener (! First Statement desnt need a '>' or '<', direction already right (leads to '<<' or '>>' in code) !)
-			{
-				#region Reversed
-				for (int i = 0; i < cp_stmts.Count - 2; i += 2)
-				{
-					CodePiece cp_a = cp_stmts[i].Reversed;
-					CodePiece cp_b = cp_stmts[i + 1].Normal;
-
-					cp_a.normalizeX();
-					cp_b.normalizeX();
-
-					cp_a.AddXOffset(-cp_a.MaxX + 1);
-					cp_b.AddXOffset(-cp_b.MaxX + 1);
-
-					int mw = Math.Min(cp_a.MinX - 1, cp_b.MinX - 1);
-
-					cp_a[1, 0] = BCHelper.PC_Left;
-					cp_b[1, 0] = BCHelper.PC_Down;
-
-					cp_a.Fill(mw + 1, 0, cp_a.MinX, 1, BCHelper.Walkway);
-					cp_b.Fill(mw + 1, 0, cp_b.MinX, 1, BCHelper.Walkway);
-
-					cp_a[mw, 0] = BCHelper.PC_Down;
-					cp_b[mw, 0] = BCHelper.PC_Right;
-
-
-					cp_a.Fill(1, cp_a.MinY, 2, 0, BCHelper.Walkway);
-					cp_a.Fill(cp_a.MinX, 1, cp_a.MinX + 1, cp_a.MaxY, BCHelper.Walkway);
-
-					cp_b.Fill(cp_b.MinX, cp_b.MinY, cp_b.MinX + 1, 0, BCHelper.Walkway);
-					cp_b.Fill(1, 1, 2, cp_b.MaxY, BCHelper.Walkway);
-
-
-					p.AppendBottom(cp_a);
-					p.AppendBottom(cp_b);
-
-					if (i == 0)
-					{
-						p.AddYOffset(cp_a.MinY);
-					}
-				}
-
-				CodePiece last = cp_stmts[cp_stmts.Count - 1].Reversed;
-				last.normalizeX();
-				last.AddXOffset(-last.MaxX + 1);
-
-				if (cp_stmts.Count == 1)
-				{
-					p.AddYOffset(last.MinY);
-				}
-
-				int left = Math.Min(p.MinX - 1, last.MinX - 1);
-
-				last[1, 0] = BCHelper.PC_Left;
-				last.Fill(left + 1, 0, last.MinX, 1, BCHelper.Walkway);
-
-				p.AppendBottom(last);
-
-				int bottom = p.MaxY - last.MaxY;
-
-				if (bottom != 0)
-				{
-					p[left, bottom] = BCHelper.PC_Up;
-				}
-
-				p[left, 0] = BCHelper.PC_Left;
-
-				p.Fill(left, 1, left + 1, bottom, BCHelper.Walkway);
-
-				p.normalizeX();
-				#endregion
-			}
-			else
-			{
-				#region Normal
-				for (int i = 0; i < cp_stmts.Count - 2; i += 2)
-				{
-					CodePiece cp_a = cp_stmts[i].Normal;
-					CodePiece cp_b = cp_stmts[i + 1].Reversed;
-
-					cp_a.normalizeX();
-					cp_b.normalizeX();
-
-					int mw = Math.Max(cp_a.MaxX, cp_b.MaxX);
-
-					cp_a[-1, 0] = BCHelper.PC_Right;
-					cp_b[-1, 0] = BCHelper.PC_Down;
-
-					cp_a.Fill(cp_a.MaxX, 0, mw, 1, BCHelper.Walkway);
-					cp_b.Fill(cp_b.MaxX, 0, mw, 1, BCHelper.Walkway);
-
-					cp_a[mw, 0] = BCHelper.PC_Down;
-					cp_b[mw, 0] = BCHelper.PC_Left;
-
-
-					cp_a.Fill(-1, cp_a.MinY, 0, 0, BCHelper.Walkway);
-					cp_a.Fill(cp_a.MaxX - 1, 1, cp_a.MaxX, cp_a.MaxY, BCHelper.Walkway);
-
-					cp_b.Fill(cp_b.MaxX - 1, cp_b.MinY, cp_b.MaxX, 0, BCHelper.Walkway);
-					cp_b.Fill(-1, 1, 0, cp_b.MaxY, BCHelper.Walkway);
-
-
-					p.AppendBottom(cp_a);
-					p.AppendBottom(cp_b);
-
-					if (i == 0)
-					{
-						p.AddYOffset(cp_a.MinY);
-					}
-				}
-
-				CodePiece last = cp_stmts[cp_stmts.Count - 1].Normal;
-				last.normalizeX();
-
-				if (cp_stmts.Count == 1)
-				{
-					p.AddYOffset(last.MinY);
-				}
-
-				int right = Math.Max(p.MaxX, last.MaxX);
-
-				last.AppendLeft(BCHelper.PC_Right);
-				last.Fill(last.MaxX, 0, right, 1, BCHelper.Walkway);
-
-				p.AppendBottom(last);
-
-				int bottom = p.MaxY - last.MaxY;
-
-				if (bottom != 0)
-				{
-					p[right, bottom] = BCHelper.PC_Up;
-				}
-
-				p[right, 0] = BCHelper.PC_Right;
-
-				p.Fill(right, 1, right + 1, bottom, BCHelper.Walkway);
-
-				p.normalizeX();
-				#endregion
-			}
-
-			return p;
 		}
 	}
 
@@ -864,6 +706,9 @@ namespace BefunGen.AST
 
 		public override CodePiece generateCode(bool reversed)
 		{
+			if (Value.Count == 0)
+				return new CodePiece();
+
 			if (reversed)
 			{
 				// $_ #! #: #,<"???"0

@@ -286,7 +286,7 @@ namespace BefunGen
 					OUT lb[(int)RAND];
 					OUT lb[(int)RAND];
 					
-					OUT ''A \r\n\r\n'';
+					OUT '''';
 
 					OUT lb[(int)RAND];
 					OUT lb[(int)RAND];

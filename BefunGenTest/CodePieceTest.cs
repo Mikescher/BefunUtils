@@ -360,7 +360,7 @@ namespace BefunGenTest
 					OUT lb[(int)RAND];
 					OUT lb[(int)RAND];
 
-					OUT ''C'';
+					OUT '''';
 					
 					OUT lb[(int)RAND];
 					OUT lb[(int)RAND];
@@ -385,6 +385,8 @@ namespace BefunGenTest
 			debugStatement("STOP;");
 
 			debugStatement("QUIT;");
+
+			debugStatement("OUT '''';");
 		}
 
 		[TestMethod]
