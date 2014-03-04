@@ -39,6 +39,7 @@ namespace BefungExec.Logic
 		public const int MODE_RUN = 0;
 		public const int MODE_IN_INT = 1;
 		public const int MODE_IN_CHAR = 2;
+		public const int MODE_MOVEANDRUN = 3;
 
 		public int curr_lvl_sleeptime;
 
@@ -80,12 +81,20 @@ namespace BefungExec.Logic
 			{
 				if ((paused && !doSingleStep) || mode != MODE_RUN)
 				{
-					Thread.Sleep(curr_lvl_sleeptime);
-					decay();
+					if (mode == MODE_MOVEANDRUN)
+					{
+						move();
+						mode = MODE_RUN;
+					}
+					else
+					{
+						Thread.Sleep(curr_lvl_sleeptime);
+						decay();
 
-					testForFreeze();
+						testForFreeze();
 
-					start = Environment.TickCount;
+						start = Environment.TickCount;
+					}
 					continue;
 				}
 				freq.Inc();

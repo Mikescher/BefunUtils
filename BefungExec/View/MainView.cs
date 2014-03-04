@@ -145,8 +145,8 @@ namespace BefungExec.View
 				{
 					prog.push(int.Parse(currInput));
 					currInput = "";
-					prog.mode = BefunProg.MODE_RUN;
-					prog.move();
+					lastInput = null;
+					prog.mode = BefunProg.MODE_MOVEANDRUN;
 				}
 			}
 
@@ -397,8 +397,8 @@ namespace BefungExec.View
 
 						prog.push(currInput[0]);
 						currInput = "";
-						prog.mode = BefunProg.MODE_RUN;
-						prog.move();
+						lastInput = null;
+						prog.mode = BefunProg.MODE_MOVEANDRUN;
 					}
 				}
 
