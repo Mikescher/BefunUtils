@@ -1,4 +1,4 @@
-using BefunGen.AST.CodeGen;
+﻿using BefunGen.AST.CodeGen;
 using BefunGen.AST.Exceptions;
 using BefunGen.MathExtensions;
 using System;
@@ -905,7 +905,7 @@ namespace BefunGen.AST
 
 		public override CodePiece generateCode(bool reversed)
 		{
-			return new CodePiece(); // easy as that �\_(?)_/�
+			return new CodePiece(); // easy as that ¯\_(ツ)_/¯
 		}
 	}
 
