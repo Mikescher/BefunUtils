@@ -58,7 +58,7 @@ namespace BefunGen.AST
 
 			try
 			{
-				result.link();
+				result.prepare();
 			}
 			catch (ASTException e)
 			{

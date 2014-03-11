@@ -15,6 +15,7 @@ namespace BefunGen.AST
 			//--
 		}
 
+		public abstract bool extractMethodCalls(Method owner, out List<Statement> result, ref List<VarDeclaration> usedTmps);
 		public abstract void linkVariables(Method owner);
 		public abstract void linkResultTypes(Method owner);
 		public abstract void linkMethods(Program owner);
@@ -39,6 +40,34 @@ namespace BefunGen.AST
 		public override string getDebugString()
 		{
 			return string.Format("#StatementList\n[\n{0}\n]", indent(getDebugStringForList(List)));
+		}
+
+		public override bool extractMethodCalls(Method owner, out List<Statement> result, ref List<VarDeclaration> usedTmps)
+		{
+			bool all_changed = false;
+
+			List<Statement> new_list = new List<Statement>();
+
+			for (int i = 0; i < List.Count; i++)
+			{
+				List<VarDeclaration> usedTmps_new = new List<VarDeclaration>();
+				List<Statement> changed_stmts;
+				bool changed = List[i].extractMethodCalls(owner, out changed_stmts, ref usedTmps_new);
+
+				if (changed)
+					new_list.AddRange(changed_stmts);
+				else
+					new_list.Add(List[i]);
+
+				all_changed |= changed;
+			}
+
+			result = new List<Statement>() { this };
+
+			if (all_changed)
+				List = new_list;
+
+			return all_changed;
 		}
 
 		public override void linkVariables(Method owner)
@@ -400,6 +429,26 @@ namespace BefunGen.AST
 			return string.Format("#MethodCall {{{0}}} --> #Parameter: ({1})", Target.ID, indent(getDebugCommaStringForList(CallParameter)));
 		}
 
+		public override bool extractMethodCalls(Method owner, out List<Statement> result, ref List<VarDeclaration> usedTmps)
+		{
+			bool changed = false;
+			result = new List<Statement>() { this };
+
+			for (int i = 0; i < CallParameter.Count; i++)
+			{
+				List<Statement> result_stmts;
+				Expression newexpr;
+				if (CallParameter[i].extractMethodCalls(owner, out result_stmts, ref usedTmps, out newexpr))
+				{
+					changed = true;
+					result.InsertRange(0, result_stmts);
+					CallParameter[i] = newexpr;
+				}
+			}
+
+			return changed;
+		}
+
 		public override void linkVariables(Method owner)
 		{
 			foreach (Expression e in CallParameter)
@@ -479,6 +528,11 @@ namespace BefunGen.AST
 			return string.Format("#LABEL: {{{0}}}", ID);
 		}
 
+		public override bool extractMethodCalls(Method owner, out List<Statement> result, ref List<VarDeclaration> usedTmps)
+		{
+			throw new NotImplementedException();
+		}
+
 		public override void linkVariables(Method owner)
 		{
 			//NOP
@@ -528,6 +582,11 @@ namespace BefunGen.AST
 				throw new UnresolvableReferenceException(TargetIdentifier, Position);
 		}
 
+		public override bool extractMethodCalls(Method owner, out List<Statement> result, ref List<VarDeclaration> usedTmps)
+		{
+			throw new NotImplementedException();
+		}
+
 		public override void linkMethods(Program owner)
 		{
 			//NOP
@@ -568,6 +627,11 @@ namespace BefunGen.AST
 		public override string getDebugString()
 		{
 			return string.Format("#RETURN: {0}", Value.getDebugString());
+		}
+
+		public override bool extractMethodCalls(Method owner, out List<Statement> result, ref List<VarDeclaration> usedTmps)
+		{
+			throw new NotImplementedException();
 		}
 
 		public override void linkVariables(Method owner)
@@ -620,6 +684,11 @@ namespace BefunGen.AST
 		public override string getDebugString()
 		{
 			return string.Format("#OUT {0}", Value.getDebugString());
+		}
+
+		public override bool extractMethodCalls(Method owner, out List<Statement> result, ref List<VarDeclaration> usedTmps)
+		{
+			throw new NotImplementedException();
 		}
 
 		public override void linkVariables(Method owner)
@@ -682,6 +751,11 @@ namespace BefunGen.AST
 		public override string getDebugString()
 		{
 			return string.Format("#OUT {0}", Value.getDebugString());
+		}
+
+		public override bool extractMethodCalls(Method owner, out List<Statement> result, ref List<VarDeclaration> usedTmps)
+		{
+			throw new NotImplementedException();
 		}
 
 		public override void linkVariables(Method owner)
@@ -776,6 +850,11 @@ namespace BefunGen.AST
 			return string.Format("#IN {0}", ValueTarget.getDebugString());
 		}
 
+		public override bool extractMethodCalls(Method owner, out List<Statement> result, ref List<VarDeclaration> usedTmps)
+		{
+			throw new NotImplementedException();
+		}
+
 		public override void linkVariables(Method owner)
 		{
 			ValueTarget.linkVariables(owner);
@@ -841,6 +920,12 @@ namespace BefunGen.AST
 			return "#QUIT";
 		}
 
+		public override bool extractMethodCalls(Method owner, out List<Statement> result, ref List<VarDeclaration> usedTmps)
+		{
+			result = new List<Statement>();
+			return false;
+		}
+
 		public override void linkVariables(Method owner)
 		{
 			//NOP
@@ -881,6 +966,12 @@ namespace BefunGen.AST
 		public override string getDebugString()
 		{
 			return "#NOP";
+		}
+
+		public override bool extractMethodCalls(Method owner, out List<Statement> result, ref List<VarDeclaration> usedTmps)
+		{
+			result = new List<Statement>();
+			return false;
 		}
 
 		public override void linkVariables(Method owner)
@@ -926,6 +1017,12 @@ namespace BefunGen.AST
 		public override string getDebugString()
 		{
 			return string.Format("#INC {0}", Target.getDebugString());
+		}
+
+		public override bool extractMethodCalls(Method owner, out List<Statement> result, ref List<VarDeclaration> usedTmps)
+		{
+			result = new List<Statement>();
+			return false;
 		}
 
 		public override void linkVariables(Method owner)
@@ -1001,6 +1098,12 @@ namespace BefunGen.AST
 			return string.Format("#DEC {0}", Target.getDebugString());
 		}
 
+		public override bool extractMethodCalls(Method owner, out List<Statement> result, ref List<VarDeclaration> usedTmps)
+		{
+			result = new List<Statement>();
+			return false;
+		}
+
 		public override void linkVariables(Method owner)
 		{
 			Target.linkVariables(owner);
@@ -1074,6 +1177,11 @@ namespace BefunGen.AST
 		public override string getDebugString()
 		{
 			return string.Format("#ASSIGN {0} = ({1})", Target.getDebugString(), Expr.getDebugString());
+		}
+
+		public override bool extractMethodCalls(Method owner, out List<Statement> result, ref List<VarDeclaration> usedTmps)
+		{
+			throw new NotImplementedException();
 		}
 
 		public override void linkVariables(Method owner)
@@ -1166,6 +1274,11 @@ namespace BefunGen.AST
 		public override string getDebugString()
 		{
 			return string.Format("#IF ({0})\n{1}\n#IFELSE\n{2}", Condition.getDebugString(), indent(Body.getDebugString()), Else == null ? "  NULL" : indent(Else.getDebugString()));
+		}
+
+		public override bool extractMethodCalls(Method owner, out List<Statement> result, ref List<VarDeclaration> usedTmps)
+		{
+			throw new NotImplementedException();
 		}
 
 		public override void linkVariables(Method owner)
@@ -1485,6 +1598,11 @@ namespace BefunGen.AST
 			return string.Format("#WHILE ({0})\n{1}", Condition.getDebugString(), indent(Body.getDebugString()));
 		}
 
+		public override bool extractMethodCalls(Method owner, out List<Statement> result, ref List<VarDeclaration> usedTmps)
+		{
+			throw new NotImplementedException();
+		}
+
 		public override void linkVariables(Method owner)
 		{
 			Condition.linkVariables(owner);
@@ -1625,6 +1743,11 @@ namespace BefunGen.AST
 		public override string getDebugString()
 		{
 			return string.Format("#REPEAT-UNTIL ({0})\n{1}", Condition.getDebugString(), indent(Body.getDebugString()));
+		}
+
+		public override bool extractMethodCalls(Method owner, out List<Statement> result, ref List<VarDeclaration> usedTmps)
+		{
+			throw new NotImplementedException();
 		}
 
 		public override void linkVariables(Method owner)

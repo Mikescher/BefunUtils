@@ -54,7 +54,7 @@ namespace BefunGen.AST
 
 				case ProductionIndex.Methodbody:
 					// <MethodBody> ::= <VarDeclBody> <Statement>
-					result = new Method_Body(p, ((List_VarDeclarations)r.get_Data(0)).List, (Statement)r.get_Data(1));
+					result = new Method_Body(p, ((List_VarDeclarations)r.get_Data(0)).List, StmtToStmtList((Statement)r.get_Data(1)));
 					break;
 
 				case ProductionIndex.Methodheader_Identifier_Lparen_Rparen:
@@ -832,6 +832,14 @@ namespace BefunGen.AST
 		private static Statement_StatementList getStmtListAsStatement(SourceCodePosition p, GOLD.Reduction r, int pos)
 		{
 			return new Statement_StatementList(p, ((List_Statements)r.get_Data(pos)).List);
+		}
+
+		private static Statement_StatementList StmtToStmtList(Statement s)
+		{
+			if (s is Statement_StatementList)
+				return s as Statement_StatementList;
+			else
+				return new Statement_StatementList(s.Position, new List<Statement>() { s });
 		}
 	}
 }

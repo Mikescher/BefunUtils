@@ -10,6 +10,7 @@ namespace BefunGen.AST
 		protected const int PRIORITY_DIGIT = 2;
 		protected const int PRIORITY_CHAR = 3;
 		protected const int PRIORITY_INT = 4;
+		protected const int PRIORITY_UNION = 99;
 
 		public BType(SourceCodePosition pos)
 			: base(pos)
@@ -67,7 +68,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	public abstract class BType_Array : BType
+	public abstract class BType_Array : BType //TODO Work with arrays the same as with values (assiignment - parameter - return values - MethodCallExtraction - casting  ...) !!TESTING!!
 	{
 		public BType_Value InternalType { get { return getInternType(); } }
 
@@ -152,6 +153,35 @@ namespace BefunGen.AST
 		public override int getPriority()
 		{
 			return PRIORITY_INT;
+		}
+	}
+
+	public class BType_Union : BType_Value
+	{
+		public BType_Union(SourceCodePosition pos)
+			: base(pos)
+		{
+			//--
+		}
+
+		public override string getDebugString()
+		{
+			return "union";
+		}
+
+		public override Literal getDefaultValue()
+		{
+			return new Literal_Int(new SourceCodePosition(), 0);
+		}
+
+		public override bool isImplicitCastableTo(BType other)
+		{
+			return (other is BType_Value);
+		}
+
+		public override int getPriority()
+		{
+			return PRIORITY_UNION;
 		}
 	}
 

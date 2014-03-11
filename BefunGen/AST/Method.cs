@@ -13,10 +13,12 @@ namespace BefunGen.AST
 
 		public BType ResultType;
 		public string Identifier;
-		public List<VarDeclaration> Parameter;
 
-		public List<VarDeclaration> Variables; // Includes Parameter
-		public Statement Body;
+		public List<VarDeclaration> Parameter;
+		public List<VarDeclaration> TempVars;
+
+		public List<VarDeclaration> Variables; // Includes Parameter & Temps
+		public Statement_StatementList Body;
 
 		public readonly int ID;
 
@@ -26,7 +28,7 @@ namespace BefunGen.AST
 			//--
 		}
 
-		public Method(SourceCodePosition pos, BType t, string id, List<VarDeclaration> p, List<VarDeclaration> v, Statement b)
+		public Method(SourceCodePosition pos, BType t, string id, List<VarDeclaration> p, List<VarDeclaration> v, Statement_StatementList b)
 			: base(pos)
 		{
 			this.ID = M_ID_COUNTER;
@@ -39,6 +41,28 @@ namespace BefunGen.AST
 			this.Body = b;
 
 			Variables.AddRange(Parameter);
+
+			TempVars = new List<VarDeclaration>();
+		}
+
+		public VarDeclaration generateNewTempVar(BType t)
+		{
+			VarDeclaration vd;
+			if (t is BType_Value)
+			{
+				vd = new VarDeclaration_Value(new SourceCodePosition(), t as BType_Value, "@" + TempVars.Count, null);
+			}
+			else if (t is BType_Array)
+			{
+				vd = new VarDeclaration_Array(new SourceCodePosition(), t as BType_Array, "@" + TempVars.Count, null);
+			}
+			else
+			{
+				throw new WTFException();
+			}
+			TempVars.Add(vd);
+			Variables.Add(vd);
+			return vd;
 		}
 
 		public override string getDebugString()
@@ -50,6 +74,14 @@ namespace BefunGen.AST
 				indent(getDebugStringForList(Parameter)),
 				indent(getDebugStringForList(Variables.Where(p => !Parameter.Contains(p)).ToList())),
 				indent(Body.getDebugString()));
+		}
+
+		public void extractMethodCalls()
+		{
+			List<Statement> tmp0;
+			List<VarDeclaration> tmp = new List<VarDeclaration>();
+
+			Body.extractMethodCalls(this, out tmp0, ref tmp);
 		}
 
 		public void linkVariables()
@@ -311,9 +343,9 @@ namespace BefunGen.AST
 	public class Method_Body : ASTObject // TEMPORARY -- NOT IN RESULTING AST
 	{
 		public List<VarDeclaration> Variables;
-		public Statement Body;
+		public Statement_StatementList Body;
 
-		public Method_Body(SourceCodePosition pos, List<VarDeclaration> v, Statement b)
+		public Method_Body(SourceCodePosition pos, List<VarDeclaration> v, Statement_StatementList b)
 			: base(pos)
 		{
 			this.Variables = v;

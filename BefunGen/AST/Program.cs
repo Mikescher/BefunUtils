@@ -26,11 +26,19 @@ namespace BefunGen.AST
 			return string.Format("#Program ({0})\n[\n{1}\n]", Identifier, indent(getDebugStringForList(MethodList)));
 		}
 
-		public void link()
+		public void prepare()
 		{
-			linkVariables();   // Variable-uses get their ID
-			linkMethods();	   // Methodcalls get their ID
-			linkResultTypes(); // Statements get their Result-Type (and implicit casting is added)
+			extractMethodCalls();	// Moves Inline MethodCalls to own Statements
+
+			linkVariables();		// Variable-uses get their ID
+			linkMethods();			// Methodcalls get their ID
+			linkResultTypes();		// Statements get their Result-Type (and implicit casting is added)
+		}
+
+		private void extractMethodCalls()
+		{
+			foreach (Method m in MethodList)
+				m.extractMethodCalls();
 		}
 
 		private void linkVariables()
