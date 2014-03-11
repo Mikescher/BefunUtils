@@ -42,6 +42,14 @@ namespace BefunGen.AST
 			return string.Format("#StatementList\n[\n{0}\n]", indent(getDebugStringForList(List)));
 		}
 
+		public void extractMethodCalls(Method owner)
+		{
+			List<Statement> tmp0;
+			List<VarDeclaration> tmp = new List<VarDeclaration>();
+
+			extractMethodCalls(owner, out tmp0, ref tmp);
+		}
+
 		public override bool extractMethodCalls(Method owner, out List<Statement> result, ref List<VarDeclaration> usedTmps)
 		{
 			bool all_changed = false;
@@ -530,7 +538,8 @@ namespace BefunGen.AST
 
 		public override bool extractMethodCalls(Method owner, out List<Statement> result, ref List<VarDeclaration> usedTmps)
 		{
-			throw new NotImplementedException();
+			result = new List<Statement>();
+			return false;
 		}
 
 		public override void linkVariables(Method owner)
@@ -584,7 +593,8 @@ namespace BefunGen.AST
 
 		public override bool extractMethodCalls(Method owner, out List<Statement> result, ref List<VarDeclaration> usedTmps)
 		{
-			throw new NotImplementedException();
+			result = new List<Statement>();
+			return false;
 		}
 
 		public override void linkMethods(Program owner)
@@ -688,7 +698,21 @@ namespace BefunGen.AST
 
 		public override bool extractMethodCalls(Method owner, out List<Statement> result, ref List<VarDeclaration> usedTmps)
 		{
-			throw new NotImplementedException();
+			List<Statement> ls;
+			Expression newexpr;
+
+			if (Value.extractMethodCalls(owner, out ls, ref usedTmps, out newexpr)) 
+			{
+				Value = newexpr;
+				ls.Add(this);
+				result = ls;
+				return true;
+			} 
+			else 
+			{
+				result = new List<Statement>();
+				return false;
+			}
 		}
 
 		public override void linkVariables(Method owner)
@@ -755,7 +779,8 @@ namespace BefunGen.AST
 
 		public override bool extractMethodCalls(Method owner, out List<Statement> result, ref List<VarDeclaration> usedTmps)
 		{
-			throw new NotImplementedException();
+			result = new List<Statement>();
+			return false;
 		}
 
 		public override void linkVariables(Method owner)
@@ -1181,7 +1206,21 @@ namespace BefunGen.AST
 
 		public override bool extractMethodCalls(Method owner, out List<Statement> result, ref List<VarDeclaration> usedTmps)
 		{
-			throw new NotImplementedException();
+			List<Statement> ls;
+			Expression newexpr;
+
+			if (Expr.extractMethodCalls(owner, out ls, ref usedTmps, out newexpr))
+			{
+				Expr = newexpr;
+				ls.Add(this);
+				result = ls;
+				return true;
+			}
+			else
+			{
+				result = new List<Statement>();
+				return false;
+			}
 		}
 
 		public override void linkVariables(Method owner)
@@ -1584,9 +1623,9 @@ namespace BefunGen.AST
 	public class Statement_While : Statement
 	{
 		public Expression Condition;
-		public Statement Body;
+		public Statement_StatementList Body;
 
-		public Statement_While(SourceCodePosition pos, Expression c, Statement b)
+		public Statement_While(SourceCodePosition pos, Expression c, Statement_StatementList b)
 			: base(pos)
 		{
 			this.Condition = c;
@@ -1600,7 +1639,25 @@ namespace BefunGen.AST
 
 		public override bool extractMethodCalls(Method owner, out List<Statement> result, ref List<VarDeclaration> usedTmps)
 		{
-			throw new NotImplementedException();
+			List<Statement> ls;
+			Expression newexpr;
+
+			if (Condition.extractMethodCalls(owner, out ls, ref usedTmps, out newexpr))
+			{
+				Condition = newexpr;
+				ls.Add(this);
+				result = ls;
+
+				Body.extractMethodCalls(owner);
+				return true;
+			}
+			else
+			{
+				result = new List<Statement>();
+
+				Body.extractMethodCalls(owner);
+				return false;
+			}
 		}
 
 		public override void linkVariables(Method owner)
@@ -1731,9 +1788,9 @@ namespace BefunGen.AST
 	public class Statement_RepeatUntil : Statement
 	{
 		public Expression Condition;
-		public Statement Body;
+		public Statement_StatementList Body;
 
-		public Statement_RepeatUntil(SourceCodePosition pos, Expression c, Statement b)
+		public Statement_RepeatUntil(SourceCodePosition pos, Expression c, Statement_StatementList b)
 			: base(pos)
 		{
 			this.Condition = c;
@@ -1747,7 +1804,25 @@ namespace BefunGen.AST
 
 		public override bool extractMethodCalls(Method owner, out List<Statement> result, ref List<VarDeclaration> usedTmps)
 		{
-			throw new NotImplementedException();
+			List<Statement> ls;
+			Expression newexpr;
+
+			if (Condition.extractMethodCalls(owner, out ls, ref usedTmps, out newexpr))
+			{
+				Condition = newexpr;
+				ls.Add(this);
+				result = ls;
+
+				Body.extractMethodCalls(owner);
+				return true;
+			}
+			else
+			{
+				result = new List<Statement>();
+
+				Body.extractMethodCalls(owner);
+				return false;
+			}
 		}
 
 		public override void linkVariables(Method owner)
