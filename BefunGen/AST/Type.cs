@@ -1,4 +1,4 @@
-﻿using BefunGen.AST.CodeGen;
+using BefunGen.AST.CodeGen;
 using BefunGen.AST.Exceptions;
 using System.Linq;
 namespace BefunGen.AST
@@ -156,7 +156,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	public class BType_Union : BType_Value
+	public class BType_Union : BType_Value // Only for internal cast - is castable to everything
 	{
 		public BType_Union(SourceCodePosition pos)
 			: base(pos)
@@ -176,7 +176,7 @@ namespace BefunGen.AST
 
 		public override bool isImplicitCastableTo(BType other)
 		{
-			return (other is BType_Value);
+			return true;
 		}
 
 		public override int getPriority()

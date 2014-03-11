@@ -1,13 +1,11 @@
-﻿using BefunGen.AST.CodeGen;
+using BefunGen.AST.CodeGen;
 using BefunGen.AST.Exceptions;
 using BefunGen.MathExtensions;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace BefunGen.AST
 {
-	public abstract class Expression : ASTObject //TODO perhaps increment / decrement expression (prefix && suffix)
+	public abstract class Expression : ASTObject
 	{
 		public Expression(SourceCodePosition pos)
 			: base(pos)
@@ -15,37 +13,6 @@ namespace BefunGen.AST
 			//--
 		}
 
-		protected VarDeclaration getNewTempVar(Method owner, ref List<VarDeclaration> usedTmps, BType t)
-		{
-			foreach (VarDeclaration v in owner.TempVars)
-			{
-				if (v.Type == t && !usedTmps.Contains(v))
-					return v;
-			}
-
-			VarDeclaration vd = owner.generateNewTempVar(t);
-			usedTmps.Add(vd);
-
-			return vd;
-		}
-
-		protected Expression_ValuePointer GetValuePointerToVarDecl(SourceCodePosition pos, VarDeclaration v)
-		{
-			if (v.Type is BType_Value) 
-			{
-				return new Expression_DirectValuePointer(pos, v.Identifier);
-			} 
-			else if (v.Type is BType_Array) 
-			{
-				throw new WTFException(); // No Pointer to a whole array - yet
-			}
-			else
-			{
-				throw new WTFException();
-			}
-		}
-
-		public abstract bool extractMethodCalls(Method owner, out List<Statement> result_stmts, ref List<VarDeclaration> usedTmps, out Expression newexpr);
 		public abstract void linkVariables(Method owner);
 		public abstract void linkResultTypes(Method owner);
 		public abstract void linkMethods(Program owner);
@@ -67,34 +34,6 @@ namespace BefunGen.AST
 		{
 			this.Left = l;
 			this.Right = r;
-		}
-
-		public override bool extractMethodCalls(Method owner, out List<Statement> result_stmts, ref List<VarDeclaration> usedTmps, out Expression newexpr)
-		{
-			bool succ = false;
-
-			List<Statement> list_left;
-			Expression newexpr_left;
-
-			List<Statement> list_right;
-			Expression newexpr_right;
-
-			if (Left.extractMethodCalls(owner, out list_left, ref usedTmps, out newexpr_left))
-			{
-				succ = true;
-				Left = newexpr_left;
-			}
-
-			if (Right.extractMethodCalls(owner, out list_right, ref usedTmps, out newexpr_right))
-			{
-				succ = true;
-				Right = newexpr_right;
-			}
-
-			result_stmts = list_left.Concat(list_right).ToList();
-			newexpr = this;
-
-			return succ;
 		}
 
 		public override void linkVariables(Method owner)
@@ -296,26 +235,6 @@ namespace BefunGen.AST
 			this.Expr = e;
 		}
 
-		public override bool extractMethodCalls(Method owner, out List<Statement> result_stmts, ref List<VarDeclaration> usedTmps, out Expression newexpr)
-		{
-			bool succ = false;
-
-			List<Statement> list;
-			Expression newexpr_e;
-
-			succ = Expr.extractMethodCalls(owner, out list, ref usedTmps, out newexpr_e);
-
-			if (succ)
-			{
-				Expr = newexpr_e;
-			}
-
-			result_stmts = list;
-			newexpr = this;
-
-			return succ;
-		}
-
 		public override void linkVariables(Method owner)
 		{
 			Expr.linkVariables(owner);
@@ -333,13 +252,6 @@ namespace BefunGen.AST
 			: base(pos)
 		{
 			//--
-		}
-
-		public override bool extractMethodCalls(Method owner, out List<Statement> result_stmts, ref List<VarDeclaration> usedTmps, out Expression newexpr)
-		{
-			result_stmts = new List<Statement>();
-			newexpr = this;
-			return false;
 		}
 
 		public override void linkMethods(Program owner)
@@ -485,26 +397,6 @@ namespace BefunGen.AST
 		public override string getDebugString()
 		{
 			return Target.getShortDebugString();
-		}
-
-		public override bool extractMethodCalls(Method owner, out List<Statement> result_stmts, ref List<VarDeclaration> usedTmps, out Expression newexpr)
-		{
-			bool succ = false;
-
-			List<Statement> list;
-			Expression newexpr_e;
-
-			succ = Index.extractMethodCalls(owner, out list, ref usedTmps, out newexpr_e);
-
-			if (succ)
-			{
-				Index = newexpr_e;
-			}
-
-			result_stmts = list;
-			newexpr = this;
-
-			return succ;
 		}
 
 		public override void linkVariables(Method owner)
@@ -1649,13 +1541,6 @@ namespace BefunGen.AST
 			return string.Format("{0}", Value.getDebugString());
 		}
 
-		public override bool extractMethodCalls(Method owner, out List<Statement> result_stmts, ref List<VarDeclaration> usedTmps, out Expression newexpr)
-		{
-			result_stmts = new List<Statement>();
-			newexpr = this;
-			return false;
-		}
-
 		public override void linkVariables(Method owner)
 		{
 			//NOP
@@ -1693,13 +1578,6 @@ namespace BefunGen.AST
 		public override string getDebugString()
 		{
 			return "#RAND#";
-		}
-
-		public override bool extractMethodCalls(Method owner, out List<Statement> result_stmts, ref List<VarDeclaration> usedTmps, out Expression newexpr)
-		{
-			result_stmts = new List<Statement>();
-			newexpr = this;
-			return false;
 		}
 
 		public override void linkVariables(Method owner)
@@ -1775,42 +1653,29 @@ namespace BefunGen.AST
 			return Method.getDebugString();
 		}
 
-		public override bool extractMethodCalls(Method owner, out List<Statement> result_stmts, ref List<VarDeclaration> usedTmps, out Expression newexpr)
-		{
-			Method.extractMethodCalls(owner, out result_stmts, ref usedTmps);
-
-			VarDeclaration vd = getNewTempVar(owner, ref usedTmps, new BType_Union(Position));
-			
-			result_stmts[result_stmts.Count - 1] = new Statement_Assignment(Position, GetValuePointerToVarDecl(Position, vd), new Expression_FunctionCall(Position, (Statement_MethodCall)result_stmts[result_stmts.Count - 1]));
-
-			newexpr = GetValuePointerToVarDecl(Position, vd);
-
-			return true;
-		}
-
 		public override void linkVariables(Method owner)
 		{
-			Method.linkVariables(owner); //TODO throw new NotImplementedException();
+			Method.linkVariables(owner);
 		}
 
 		public override void linkResultTypes(Method owner)
 		{
-			Method.linkResultTypes(owner); //TODO throw new NotImplementedException();
+			Method.linkResultTypes(owner);
 		}
 
 		public override void linkMethods(Program owner)
 		{
-			Method.linkMethods(owner); //TODO throw new NotImplementedException();
+			Method.linkMethods(owner);
 		}
 
 		public override BType getResultType()
 		{
-			return Method.Target.ResultType; //TODO throw new NotImplementedException();
+			return Method.Target.ResultType;
 		}
 
 		public override CodePiece generateCode(bool reversed)
 		{
-			throw new InvalidASTStateException(Position);
+			throw new NotImplementedException(); //TODO Implement
 		}
 	}
 

@@ -1,4 +1,4 @@
-﻿using BefunGen.AST.CodeGen;
+using BefunGen.AST.CodeGen;
 using BefunGen.AST.Exceptions;
 using System;
 using System.Collections.Generic;
@@ -13,9 +13,7 @@ namespace BefunGen.AST
 
 		public BType ResultType;
 		public string Identifier;
-
 		public List<VarDeclaration> Parameter;
-		public List<VarDeclaration> TempVars;
 
 		public List<VarDeclaration> Variables; // Includes Parameter & Temps
 		public Statement_StatementList Body;
@@ -41,28 +39,6 @@ namespace BefunGen.AST
 			this.Body = b;
 
 			Variables.AddRange(Parameter);
-
-			TempVars = new List<VarDeclaration>();
-		}
-
-		public VarDeclaration generateNewTempVar(BType t)
-		{
-			VarDeclaration vd;
-			if (t is BType_Value)
-			{
-				vd = new VarDeclaration_Value(new SourceCodePosition(), t as BType_Value, "@" + TempVars.Count, null);
-			}
-			else if (t is BType_Array)
-			{
-				vd = new VarDeclaration_Array(new SourceCodePosition(), t as BType_Array, "@" + TempVars.Count, null);
-			}
-			else
-			{
-				throw new WTFException();
-			}
-			TempVars.Add(vd);
-			Variables.Add(vd);
-			return vd;
 		}
 
 		public override string getDebugString()
@@ -74,14 +50,6 @@ namespace BefunGen.AST
 				indent(getDebugStringForList(Parameter)),
 				indent(getDebugStringForList(Variables.Where(p => !Parameter.Contains(p)).ToList())),
 				indent(Body.getDebugString()));
-		}
-
-		public void extractMethodCalls()
-		{
-			List<Statement> tmp0;
-			List<VarDeclaration> tmp = new List<VarDeclaration>();
-
-			Body.extractMethodCalls(this, out tmp0, ref tmp);
 		}
 
 		public void linkVariables()

@@ -1,4 +1,4 @@
-﻿using BefunGen.AST.CodeGen;
+using BefunGen.AST.CodeGen;
 using BefunGen.AST.Exceptions;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,17 +28,9 @@ namespace BefunGen.AST
 
 		public void prepare()
 		{
-			extractMethodCalls();	// Moves Inline MethodCalls to own Statements
-
 			linkVariables();		// Variable-uses get their ID
 			linkMethods();			// Methodcalls get their ID
 			linkResultTypes();		// Statements get their Result-Type (and implicit casting is added)
-		}
-
-		private void extractMethodCalls()
-		{
-			foreach (Method m in MethodList)
-				m.extractMethodCalls();
 		}
 
 		private void linkVariables()

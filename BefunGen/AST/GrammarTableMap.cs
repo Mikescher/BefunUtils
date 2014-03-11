@@ -1,4 +1,4 @@
-﻿using BefunGen.AST.CodeGen;
+using BefunGen.AST.CodeGen;
 using BefunGen.AST.Exceptions;
 using System;
 using System.Collections.Generic;
