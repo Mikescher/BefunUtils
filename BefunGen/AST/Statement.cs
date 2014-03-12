@@ -609,7 +609,7 @@ namespace BefunGen.AST
 
 	public class Statement_Out : Statement
 	{
-		enum Out_Mode { OUT_INT, OUT_CHAR, OUT_CHAR_ARR };
+		public enum Out_Mode { OUT_INT, OUT_CHAR, OUT_CHAR_ARR };
 
 		public Expression Value;
 
@@ -733,13 +733,77 @@ namespace BefunGen.AST
 
 		private CodePiece generateCode_CharArr(bool reversed)
 		{
+			BType_CharArr type_right = Value.getResultType() as BType_CharArr;
+
+			CodePiece p_len = NumberCodeHelper.generateCode(type_right.Size - 1, reversed);
+
+			CodePiece p_tpx = NumberCodeHelper.generateCode(CodeGenConstants.TMP_FIELD_X, reversed);
+			CodePiece p_tpy = NumberCodeHelper.generateCode(CodeGenConstants.TMP_FIELD_Y, reversed);
+
+			CodePiece p_tpx_r = NumberCodeHelper.generateCode(CodeGenConstants.TMP_FIELD_X, !reversed);
+			CodePiece p_tpy_r = NumberCodeHelper.generateCode(CodeGenConstants.TMP_FIELD_Y, !reversed);
+
+
 			if (reversed)
 			{
-				CodePiece p = Value.generateCode(reversed);
+				// $_v#!g{TY}:{TX}, <p{TY}{TX}{M}
+				//   >:{TY}g1-\{TY}p^
+				CodePiece p = new CodePiece();
 
 				#region Reversed
 
-				throw new NotImplementedException();
+				p.AppendRight(BCHelper.Stack_Pop);
+				p.AppendRight(BCHelper.If_Horizontal);
+
+				p.AppendRight(BCHelper.PC_Down);
+				p[p.MaxX - 1, 1] = BCHelper.PC_Right;
+
+				CodePiece p_top = new CodePiece();
+				{
+					p_top.AppendRight(BCHelper.PC_Jump);
+					p_top.AppendRight(BCHelper.Not);
+					p_top.AppendRight(BCHelper.Reflect_Get);
+
+					p_top.AppendRight(p_tpy);
+					p_top.AppendRight(BCHelper.Stack_Dup);
+					p_top.AppendRight(p_tpx);
+					p_top.AppendRight(BCHelper.Out_ASCII);
+				}
+
+				CodePiece p_bot = new CodePiece();
+				{
+					p_bot.AppendRight(BCHelper.Stack_Dup);
+
+					p_bot.AppendRight(p_tpy_r);
+					p_bot.AppendRight(BCHelper.Reflect_Get);
+					p_bot.AppendRight(BCHelper.Digit_1);
+					p_bot.AppendRight(BCHelper.Sub);
+					p_bot.AppendRight(BCHelper.Stack_Swap);
+
+					p_bot.AppendRight(p_tpy_r);
+
+					p_bot.AppendRight(BCHelper.Reflect_Set);
+				}
+
+				int top_bot_start = p.MaxX;
+				int top_bot_end = top_bot_start + Math.Max(p_top.Width, p_bot.Width);
+
+				p[top_bot_end + 0, 1] = BCHelper.PC_Up;
+
+				p[top_bot_end + 0, 0] = BCHelper.PC_Left;
+				p[top_bot_end + 1, 0] = BCHelper.Reflect_Set;
+
+				p.AppendRight(p_tpy);
+				p.AppendRight(p_tpx);
+				p.AppendRight(p_len);
+
+				p.SetAt(top_bot_start, 0, p_top);
+				p.SetAt(top_bot_start, 1, p_bot);
+
+				p.FillRowWW(0, top_bot_start + p_top.Width, top_bot_end);
+				p.FillRowWW(1, top_bot_start + p_bot.Width, top_bot_end);
+
+				p.AppendRight(Value.generateCode(reversed));
 
 				#endregion
 
@@ -753,7 +817,52 @@ namespace BefunGen.AST
 
 				#region Normal
 
-				throw new NotImplementedException();
+				p.AppendRight(p_len);
+				p.AppendRight(p_tpx);
+				p.AppendRight(p_tpy);
+				p.AppendRight(BCHelper.Reflect_Set);
+
+				p.AppendRight(BCHelper.PC_Right);
+				p[p.MaxX - 1, 1] = BCHelper.PC_Up;
+
+				CodePiece p_top = new CodePiece();
+				{
+					p_top.AppendRight(BCHelper.Out_ASCII);
+					p_top.AppendRight(p_tpx);
+					p_top.AppendRight(BCHelper.Stack_Dup);
+					p_top.AppendRight(p_tpy);
+					p_top.AppendRight(BCHelper.Reflect_Get);
+				}
+
+				CodePiece p_bot = new CodePiece();
+				{
+					p_bot.AppendRight(BCHelper.Reflect_Set);
+
+					p_bot.AppendRight(p_tpy_r);
+
+					p_bot.AppendRight(BCHelper.Stack_Swap);
+					p_bot.AppendRight(BCHelper.Sub);
+					p_bot.AppendRight(BCHelper.Digit_1);
+					p_bot.AppendRight(BCHelper.Reflect_Get);
+					p_bot.AppendRight(p_tpy_r);
+				}
+
+				int top_bot_start = p.MaxX;
+				int top_bot_end = top_bot_start + Math.Max(p_top.Width, p_bot.Width);
+
+				p[top_bot_end + 0, 1] = BCHelper.Stack_Dup;
+				p[top_bot_end + 1, 1] = BCHelper.PC_Left;
+
+				p[top_bot_end + 0, 0] = BCHelper.PC_Jump;
+				p[top_bot_end + 1, 0] = BCHelper.PC_Down;
+				p[top_bot_end + 2, 0] = BCHelper.If_Horizontal;
+				p[top_bot_end + 3, 0] = BCHelper.Stack_Pop;
+
+				p.SetAt(top_bot_start, 0, p_top);
+				p.SetAt(top_bot_start, 1, p_bot);
+
+				p.FillRowWW(0, top_bot_start + p_top.Width, top_bot_end);
+				p.FillRowWW(1, top_bot_start + p_bot.Width, top_bot_end);
 
 				#endregion
 

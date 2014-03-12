@@ -1,5 +1,6 @@
 ﻿using BefunGen.AST.CodeGen;
 using System;
+using System.Linq;
 
 namespace BefunGen.AST.Exceptions
 {
@@ -11,7 +12,7 @@ namespace BefunGen.AST.Exceptions
 		}
 
 		public ImplicitCastException(SourceCodePosition pos, BType from, params BType[] to)
-			: base(String.Format("Cannot implicitly cast from {0} to {1}", from, string.Join(" or ", to.ToList())), pos)
+			: base(String.Format("Cannot implicitly cast from {0} to ({1})", from, string.Join(" or ", ((BType[])to).ToList())), pos)
 		{
 		}
 	}

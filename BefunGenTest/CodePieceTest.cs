@@ -371,6 +371,44 @@ namespace BefunGenTest
 
 			END
 			");
+
+			debugMethod(@"
+			void calc()
+			var
+				char[4] c;
+				char[4] d;
+				char[4] e;
+			BEGIN
+				c[0] = 'A';
+				c[1] = 'B';
+				c[2] = 'C';
+				c[3] = 'D';
+
+				d = c;
+				e = d;
+
+				OUT d[0];
+				OUT d[1];
+				OUT d[2];
+				OUT d[3];
+
+				OUT ''  -  '';
+
+				OUT e[0];
+				OUT e[1];
+				OUT e[2];
+				OUT e[3];
+
+				OUT ''  -  '';
+				
+				OUT d;
+				OUT ''::'';
+				OUT ''::'';
+				OUT e;
+
+				QUIT;
+			END
+			");
 		}
 
 		[TestMethod]

@@ -304,6 +304,7 @@ namespace BefunGen
 				
 				OUT d;
 				OUT ''::'';
+				OUT ''::'';
 				OUT e;
 
 				QUIT;
