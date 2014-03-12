@@ -989,7 +989,7 @@ namespace BefunGen.AST
 
 			BType present = ValueTarget.getResultType();
 
-			if (!(present is BType_Int || present is BType_Char))
+			if (!(present is BType_Int || present is BType_Char)) // TODO Input into CharArray && IntArray
 			{
 				throw new WrongTypeException(ValueTarget.Position, present, new BType_Int(Position), new BType_Char(Position));
 			}

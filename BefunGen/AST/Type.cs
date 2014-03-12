@@ -70,7 +70,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	public abstract class BType_Array : BType //TODO Work with arrays the same as with values (assiignment - parameter - return values - MethodCallExtraction - casting  ...) !!TESTING!!
+	public abstract class BType_Array : BType
 	{
 		public BType_Value InternalType { get { return getInternType(); } }
 

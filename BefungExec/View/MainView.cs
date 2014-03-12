@@ -368,7 +368,15 @@ namespace BefungExec.View
 			float fh = 15 + RenderFont(new Vec2d(10f, 15f), "Stack<" + currStack.Count + ">", -1, StackFont, false) * 1.15f;
 			for (int i = 0; i < currStack.Count; i++)
 			{
-				fh += RenderFont(new Vec2d(10f, fh), "" + currStack[i], -1, StackFont, false) * 1.15f;
+				int val = currStack[i];
+
+				string sval;
+				if (val >= 32 && val <= 126)
+					sval = string.Format("{0} <{1}>", val, (char)val);
+				else
+					sval = "" + val;
+
+				fh += RenderFont(new Vec2d(10f, fh), sval, -1, StackFont, false) * 1.15f;
 				if (h > 2 * Width)
 					break;
 			}
