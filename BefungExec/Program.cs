@@ -56,6 +56,11 @@ namespace BefungExec
 
 		private static CommandLineArguments parseParams(string[] args, out string code)
 		{
+			if (args.Length > 0 && File.Exists(args[0]))
+			{
+				args[0] = "-file=" + args[0];
+			}
+
 			CommandLineArguments cmda = new CommandLineArguments(args);
 
 			if (cmda.isEmpty())
@@ -168,9 +173,9 @@ namespace BefungExec
 				//RunOptions.DEBUGRUN = false; // Please do not debug demo :/
 			}
 
-			Console.WriteLine();
-			Console.WriteLine("Actual arguments:");
-			Array.ForEach(args, p => Console.WriteLine(p));
+			//Console.WriteLine();
+			//Console.WriteLine("Actual arguments:");
+			//Array.ForEach(args, p => Console.WriteLine(p));
 			Console.WriteLine();
 			return cmda;
 		}
