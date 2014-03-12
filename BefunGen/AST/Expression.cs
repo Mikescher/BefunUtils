@@ -72,7 +72,7 @@ namespace BefunGen.AST
 				if (present_L.isImplicitCastableTo(wanted_L))
 					Left = new Expression_Cast(Position, wanted_L, Left);
 				else
-					throw new ImplicitCastException(present_L, wanted_L, Position);
+					throw new ImplicitCastException(Position, present_L, wanted_L);
 			}
 
 			if (present_R != wanted_R)
@@ -80,7 +80,7 @@ namespace BefunGen.AST
 				if (present_R.isImplicitCastableTo(wanted_R))
 					Right = new Expression_Cast(Position, wanted_R, Right);
 				else
-					throw new ImplicitCastException(present_R, wanted_R, Position);
+					throw new ImplicitCastException(Position, present_R, wanted_R);
 			}
 		}
 
@@ -151,7 +151,7 @@ namespace BefunGen.AST
 				if (present_L.isImplicitCastableTo(wanted_L))
 					Left = new Expression_Cast(Position, wanted_L, Left);
 				else
-					throw new ImplicitCastException(present_L, wanted_L, Position);
+					throw new ImplicitCastException(Position, present_L, wanted_L);
 			}
 
 			if (present_R != wanted_R)
@@ -159,7 +159,7 @@ namespace BefunGen.AST
 				if (present_R.isImplicitCastableTo(wanted_R))
 					Right = new Expression_Cast(Position, wanted_R, Right);
 				else
-					throw new ImplicitCastException(present_R, wanted_R, Position);
+					throw new ImplicitCastException(Position, present_R, wanted_R);
 			}
 		}
 
@@ -309,6 +309,22 @@ namespace BefunGen.AST
 
 		public override CodePiece generateCode(bool reversed)
 		{
+			if (Target is VarDeclaration_Array)
+			{
+				return generateCode_Array(reversed);
+			}
+			else if (Target is VarDeclaration_Value)
+			{
+				return generateCode_Value(reversed);
+			}
+			else
+			{
+				throw new WTFException();
+			}
+		}
+
+		private CodePiece generateCode_Value(bool reversed)
+		{
 			CodePiece p = new CodePiece();
 
 			if (reversed)
@@ -327,6 +343,13 @@ namespace BefunGen.AST
 			p.normalizeX();
 
 			return p;
+		}
+
+		private CodePiece generateCode_Array(bool reversed)
+		{
+			VarDeclaration_Array vda = Target as VarDeclaration_Array;
+
+			return CodePieceStore.ReadArrayToStack(vda.Size, vda.CodePositionX, vda.CodePositionY, reversed);
 		}
 
 		// Puts X and Y on the stack: [X, Y]
@@ -425,7 +448,7 @@ namespace BefunGen.AST
 				if (present.isImplicitCastableTo(wanted))
 					Index = new Expression_Cast(Position, wanted, Index);
 				else
-					throw new ImplicitCastException(present, wanted, Position);
+					throw new ImplicitCastException(Position, present, wanted);
 			}
 		}
 
@@ -1385,7 +1408,7 @@ namespace BefunGen.AST
 			Expr.linkResultTypes(owner);
 
 			if (!(Expr.getResultType() is BType_Bool))
-				throw new ImplicitCastException(Expr.getResultType(), new BType_Bool(Position), Position);
+				throw new ImplicitCastException(Position, Expr.getResultType(), new BType_Bool(Position));
 		}
 
 		public override BType getResultType()
@@ -1430,7 +1453,7 @@ namespace BefunGen.AST
 			Expr.linkResultTypes(owner);
 
 			if (!(Expr.getResultType() is BType_Int))
-				throw new ImplicitCastException(Expr.getResultType(), new BType_Bool(Position), Position);
+				throw new ImplicitCastException(Position, Expr.getResultType(), new BType_Bool(Position));
 		}
 
 		public override BType getResultType()

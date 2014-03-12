@@ -52,8 +52,10 @@
     <Compile Include="AST\CodeGen\Base9Converter.cs" />
     <Compile Include="AST\CodeGen\BCHelper.cs" />
     <Compile Include="AST\CodeGen\BefungeCommand.cs" />
+    <Compile Include="AST\CodeGen\CodeGenConstants.cs" />
     <Compile Include="AST\CodeGen\CodeGenOptions.cs" />
     <Compile Include="AST\CodeGen\CodePiece.cs" />
+    <Compile Include="AST\CodeGen\CodePieceStore.cs" />
     <Compile Include="AST\CodeGen\TwoDirectionCodePiece.cs" />
     <Compile Include="AST\CodeGen\NumberCodeHelper.cs" />
     <Compile Include="AST\CodeGen\NumberFactorization.cs" />

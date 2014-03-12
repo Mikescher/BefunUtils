@@ -2,7 +2,7 @@
 
 namespace BefunGen.AST.CodeGen
 {
-	public class NumberCodeHelper
+	public static class NumberCodeHelper
 	{
 		public static NumberRep lastRep;
 

@@ -3,6 +3,8 @@ using BefunGen.AST.Exceptions;
 using System.Linq;
 namespace BefunGen.AST
 {
+	#region Parents
+
 	public abstract class BType : ASTObject
 	{
 		protected const int PRIORITY_VOID = 0;
@@ -125,38 +127,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	#region Value Types
-
-	public class BType_Int : BType_Value
-	{
-		public BType_Int(SourceCodePosition pos)
-			: base(pos)
-		{
-			//--
-		}
-
-		public override string getDebugString()
-		{
-			return "int";
-		}
-
-		public override Literal getDefaultValue()
-		{
-			return new Literal_Int(new SourceCodePosition(), 0);
-		}
-
-		public override bool isImplicitCastableTo(BType other)
-		{
-			return (other is BType_Int);
-		}
-
-		public override int getPriority()
-		{
-			return PRIORITY_INT;
-		}
-	}
-
-	public class BType_Union : BType_Value // Only for internal cast - is castable to everything
+	public class BType_Union : BType // Only for internal cast - is castable to everything
 	{
 		public BType_Union(SourceCodePosition pos)
 			: base(pos)
@@ -185,6 +156,39 @@ namespace BefunGen.AST
 		}
 	}
 
+	#endregion
+
+	#region Value Types
+
+	public class BType_Int : BType_Value
+	{
+		public BType_Int(SourceCodePosition pos)
+			: base(pos)
+		{
+			//--
+		}
+
+		public override string getDebugString()
+		{
+			return "int";
+		}
+
+		public override Literal getDefaultValue()
+		{
+			return new Literal_Int(new SourceCodePosition(), CodeGenOptions.DefaultNumeralValue);
+		}
+
+		public override bool isImplicitCastableTo(BType other)
+		{
+			return (other is BType_Int);
+		}
+
+		public override int getPriority()
+		{
+			return PRIORITY_INT;
+		}
+	}
+
 	public class BType_Digit : BType_Value
 	{
 		public BType_Digit(SourceCodePosition pos)
@@ -200,7 +204,7 @@ namespace BefunGen.AST
 
 		public override Literal getDefaultValue()
 		{
-			return new Literal_Digit(new SourceCodePosition(), 0);
+			return new Literal_Digit(new SourceCodePosition(), CodeGenOptions.DefaultNumeralValue);
 		}
 
 		public override bool isImplicitCastableTo(BType other)
@@ -229,7 +233,7 @@ namespace BefunGen.AST
 
 		public override Literal getDefaultValue()
 		{
-			return new Literal_Char(new SourceCodePosition(), '0');
+			return new Literal_Char(new SourceCodePosition(), CodeGenOptions.DefaultCharacterValue);
 		}
 
 		public override bool isImplicitCastableTo(BType other)
@@ -258,7 +262,7 @@ namespace BefunGen.AST
 
 		public override Literal getDefaultValue()
 		{
-			return new Literal_Bool(new SourceCodePosition(), false);
+			return new Literal_Bool(new SourceCodePosition(), CodeGenOptions.DefaultBooleanValue);
 		}
 
 		public override bool isImplicitCastableTo(BType other)
@@ -291,7 +295,7 @@ namespace BefunGen.AST
 
 		public override Literal getDefaultValue()
 		{
-			return new Literal_IntArr(new SourceCodePosition(), Enumerable.Repeat(0, Size).ToList());
+			return new Literal_IntArr(new SourceCodePosition(), Enumerable.Repeat((int)CodeGenOptions.DefaultNumeralValue, Size).ToList());
 		}
 
 		public override bool isImplicitCastableTo(BType other)
@@ -325,7 +329,7 @@ namespace BefunGen.AST
 
 		public override Literal getDefaultValue()
 		{
-			return new Literal_CharArr(new SourceCodePosition(), Enumerable.Repeat('0', Size).ToList());
+			return new Literal_CharArr(new SourceCodePosition(), Enumerable.Repeat(CodeGenOptions.DefaultCharacterValue, Size).ToList());
 		}
 
 		public override bool isImplicitCastableTo(BType other)
@@ -359,7 +363,7 @@ namespace BefunGen.AST
 
 		public override Literal getDefaultValue()
 		{
-			return new Literal_DigitArr(new SourceCodePosition(), Enumerable.Repeat((byte)0, Size).ToList());
+			return new Literal_DigitArr(new SourceCodePosition(), Enumerable.Repeat(CodeGenOptions.DefaultNumeralValue, Size).ToList());
 		}
 
 		public override bool isImplicitCastableTo(BType other)
@@ -393,7 +397,7 @@ namespace BefunGen.AST
 
 		public override Literal getDefaultValue()
 		{
-			return new Literal_IntArr(new SourceCodePosition(), Enumerable.Repeat(0, Size).ToList());
+			return new Literal_BoolArr(new SourceCodePosition(), Enumerable.Repeat(CodeGenOptions.DefaultBooleanValue, Size).ToList());
 		}
 
 		public override bool isImplicitCastableTo(BType other)

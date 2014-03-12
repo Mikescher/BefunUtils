@@ -434,7 +434,7 @@ namespace BefunGen.AST
 					if (present.isImplicitCastableTo(expected))
 						CallParameter[i] = new Expression_Cast(CallParameter[i].Position, expected, CallParameter[i]);
 					else
-						throw new ImplicitCastException(present, expected, CallParameter[i].Position);
+						throw new ImplicitCastException(CallParameter[i].Position, present, expected);
 				}
 			}
 		}
@@ -592,7 +592,7 @@ namespace BefunGen.AST
 				if (present.isImplicitCastableTo(expected))
 					Value = new Expression_Cast(Value.Position, expected, Value);
 				else
-					throw new ImplicitCastException(present, expected, Value.Position);
+					throw new ImplicitCastException(Value.Position, present, expected);
 			}
 		}
 
@@ -609,7 +609,11 @@ namespace BefunGen.AST
 
 	public class Statement_Out : Statement
 	{
+		enum Out_Mode { OUT_INT, OUT_CHAR, OUT_CHAR_ARR };
+
 		public Expression Value;
+
+		public Out_Mode Mode;
 
 		public Statement_Out(SourceCodePosition pos, Expression v)
 			: base(pos)
@@ -631,10 +635,47 @@ namespace BefunGen.AST
 		{
 			Value.linkResultTypes(owner);
 
-			if (Value.getResultType() is BType_Array)
-				throw new ImplicitCastException(Value.getResultType(), new BType_Int(Position), Value.Position);
-			if (Value.getResultType() is BType_Bool)
-				throw new ImplicitCastException(Value.getResultType(), new BType_Int(Position), Value.Position);
+			BType r = Value.getResultType();
+
+			BType_Char t_char = new BType_Char(Position);
+			BType_Int t_int = new BType_Int(Position);
+			BType_CharArr t_chararr = (r is BType_Array) ? new BType_CharArr(Position, (r as BType_Array).Size) : new BType_CharArr(Position, 0);
+
+			bool implToChar = r.isImplicitCastableTo(t_char);
+			bool implToInt = r.isImplicitCastableTo(t_int);
+			bool implToCharArr = (r is BType_Array) && r.isImplicitCastableTo(t_chararr);
+
+			if (implToInt)
+			{
+				Mode = Out_Mode.OUT_INT;
+
+				if (r != t_int)
+				{
+					Value = new Expression_Cast(Position, t_int, Value);
+				}
+			}
+			else if (implToChar)
+			{
+				Mode = Out_Mode.OUT_CHAR;
+
+				if (r != t_int)
+				{
+					Value = new Expression_Cast(Position, t_char, Value);
+				}
+			}
+			else if (implToCharArr)
+			{
+				Mode = Out_Mode.OUT_CHAR_ARR;
+
+				if (r != t_int)
+				{
+					Value = new Expression_Cast(Position, t_chararr, Value);
+				}
+			}
+			else
+			{
+				throw new ImplicitCastException(Position, r, t_int, t_char, t_chararr);
+			}
 		}
 
 		public override void linkMethods(Program owner)
@@ -649,23 +690,75 @@ namespace BefunGen.AST
 
 		public override CodePiece generateCode(bool reversed)
 		{
+			switch (Mode)
+			{
+				case Out_Mode.OUT_INT:
+					return generateCode_Int(reversed);
+				case Out_Mode.OUT_CHAR:
+					return generateCode_Char(reversed);
+				case Out_Mode.OUT_CHAR_ARR:
+					return generateCode_CharArr(reversed);
+				default:
+					throw new WTFException();
+			}
+		}
+
+		private CodePiece generateCode_Int(bool reversed)
+		{
 			CodePiece p = Value.generateCode(reversed);
 
-			BefungeCommand cmd_out;
-
-			if (Value.getResultType() is BType_Char)
-				cmd_out = BCHelper.Out_ASCII;
-			else
-				cmd_out = BCHelper.Out_Int;
-
 			if (reversed)
-				p.AppendLeft(cmd_out);
+				p.AppendLeft(BCHelper.Out_Int);
 			else
-				p.AppendRight(cmd_out);
+				p.AppendRight(BCHelper.Out_Int);
 
 			p.normalizeX();
 
 			return p;
+		}
+
+		private CodePiece generateCode_Char(bool reversed)
+		{
+			CodePiece p = Value.generateCode(reversed);
+
+			if (reversed)
+				p.AppendLeft(BCHelper.Out_ASCII);
+			else
+				p.AppendRight(BCHelper.Out_ASCII);
+
+			p.normalizeX();
+
+			return p;
+		}
+
+		private CodePiece generateCode_CharArr(bool reversed)
+		{
+			if (reversed)
+			{
+				CodePiece p = Value.generateCode(reversed);
+
+				#region Reversed
+
+				throw new NotImplementedException();
+
+				#endregion
+
+				return p;
+			}
+			else
+			{
+				// {M}{TX}{TY}p>,{TX}:{TY}g  #v_$
+				//             ^p{TY}\-1g{TY}:<
+				CodePiece p = Value.generateCode(reversed);
+
+				#region Normal
+
+				throw new NotImplementedException();
+
+				#endregion
+
+				return p;
+			}
 		}
 	}
 
@@ -789,7 +882,7 @@ namespace BefunGen.AST
 
 			if (!(present is BType_Int || present is BType_Char))
 			{
-				throw new WrongTypeException(present, new BType_Char(Position), ValueTarget.Position);
+				throw new WrongTypeException(ValueTarget.Position, present, new BType_Int(Position), new BType_Char(Position));
 			}
 		}
 
@@ -944,9 +1037,9 @@ namespace BefunGen.AST
 
 			BType present = Target.getResultType();
 
-			if (!(present == new BType_Int(null) || present == new BType_Digit(null) || present == new BType_Char(null)))
+			if (!(present == new BType_Int(Position) || present == new BType_Digit(Position) || present == new BType_Char(Position)))
 			{
-				throw new WrongTypeException(present, new List<BType>() { new BType_Int(null), new BType_Digit(null), new BType_Char(null) }, Target.Position);
+				throw new WrongTypeException(Target.Position, present, new BType_Int(Position), new BType_Digit(Position), new BType_Char(Position));
 			}
 		}
 
@@ -1017,9 +1110,9 @@ namespace BefunGen.AST
 
 			BType present = Target.getResultType();
 
-			if (!(present == new BType_Int(null) || present == new BType_Digit(null) || present == new BType_Char(null)))
+			if (!(present == new BType_Int(Position) || present == new BType_Digit(Position) || present == new BType_Char(Position)))
 			{
-				throw new WrongTypeException(present, new List<BType>() { new BType_Int(null), new BType_Digit(null), new BType_Char(null) }, Target.Position);
+				throw new WrongTypeException(Target.Position, present, new BType_Int(Position), new BType_Digit(Position), new BType_Char(Position));
 			}
 		}
 
@@ -1093,15 +1186,15 @@ namespace BefunGen.AST
 			Target.linkResultTypes(owner);
 			Expr.linkResultTypes(owner);
 
-			BType present = Target.getResultType();
-			BType expected = Expr.getResultType();
+			BType t_left = Target.getResultType();
+			BType t_right = Expr.getResultType();
 
-			if (present != expected)
+			if (t_left != t_right)
 			{
-				if (present.isImplicitCastableTo(expected))
-					Expr = new Expression_Cast(Expr.Position, expected, Expr);
+				if (t_right.isImplicitCastableTo(t_left))
+					Expr = new Expression_Cast(Expr.Position, t_left, Expr);
 				else
-					throw new ImplicitCastException(present, expected, Expr.Position);
+					throw new ImplicitCastException(Expr.Position, t_right, t_left);
 			}
 		}
 
@@ -1111,6 +1204,22 @@ namespace BefunGen.AST
 		}
 
 		public override CodePiece generateCode(bool reversed)
+		{
+			if (Target.getResultType() is BType_Array)
+			{
+				return generateCode_Array(reversed);
+			}
+			else if (Target.getResultType() is BType_Value)
+			{
+				return generateCode_Value(reversed);
+			}
+			else
+			{
+				throw new InvalidASTStateException(Position);
+			}
+		}
+
+		private CodePiece generateCode_Value(bool reversed)
 		{
 			CodePiece p = new CodePiece();
 
@@ -1129,6 +1238,31 @@ namespace BefunGen.AST
 				p.AppendRight(Target.generateCodeSingle(reversed));
 
 				p.AppendRight(BCHelper.Reflect_Set);
+
+				p.normalizeX();
+			}
+
+			return p;
+		}
+
+		private CodePiece generateCode_Array(bool reversed)
+		{
+			CodePiece p = new CodePiece();
+
+			BType_Array type = Target.getResultType() as BType_Array;
+			Expression_DirectValuePointer vPointer = Target as Expression_DirectValuePointer;
+
+			if (reversed)
+			{
+				p.AppendLeft(Expr.generateCode(reversed));
+				p.AppendLeft(CodePieceStore.WriteArrayFromStack(type.Size, vPointer.Target.CodePositionX, vPointer.Target.CodePositionY, reversed));
+
+				p.normalizeX();
+			}
+			else
+			{
+				p.AppendRight(Expr.generateCode(reversed));
+				p.AppendRight(CodePieceStore.WriteArrayFromStack(type.Size, vPointer.Target.CodePositionX, vPointer.Target.CodePositionY, reversed));
 
 				p.normalizeX();
 			}
@@ -1196,7 +1330,7 @@ namespace BefunGen.AST
 				if (present.isImplicitCastableTo(expected))
 					Condition = new Expression_Cast(Condition.Position, expected, Condition);
 				else
-					throw new ImplicitCastException(present, expected, Condition.Position);
+					throw new ImplicitCastException(Condition.Position, present, expected);
 			}
 		}
 
@@ -1510,7 +1644,7 @@ namespace BefunGen.AST
 				if (present.isImplicitCastableTo(expected))
 					Condition = new Expression_Cast(Condition.Position, expected, Condition);
 				else
-					throw new ImplicitCastException(present, expected, Condition.Position);
+					throw new ImplicitCastException(Condition.Position, present, expected);
 			}
 		}
 
@@ -1652,7 +1786,7 @@ namespace BefunGen.AST
 				if (present.isImplicitCastableTo(expected))
 					Condition = new Expression_Cast(Condition.Position, expected, Condition);
 				else
-					throw new ImplicitCastException(present, expected, Condition.Position);
+					throw new ImplicitCastException(Condition.Position, present, expected);
 			}
 		}
 

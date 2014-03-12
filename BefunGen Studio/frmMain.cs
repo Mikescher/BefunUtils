@@ -21,7 +21,7 @@ namespace BefunGen
 		private Thread parseThread;
 		bool threadRunning = true;
 
-		public frmMain()
+		public frmMain() //TODO Use AvalonEdit And the whole SharpCode Library for these things ... (http://www.codeproject.com/Articles/42490/Using-AvalonEdit-WPF-Text-Editor)
 		{
 			InitializeComponent();
 			tabControl1.SelectedIndex = 6;
@@ -276,20 +276,37 @@ namespace BefunGen
 			debugMethod(@"
 			void calc()
 			var
-				int i;
-				char c;
+				char[4] c;
+				char[4] d;
+				char[4] e;
 			BEGIN
-	
-				WHILE (TRUE) DO
-					IN i;
-					IN c;
+				c[0] = 'A';
+				c[1] = 'B';
+				c[2] = 'C';
+				c[3] = 'D';
 
-					OUT i;
-					OUT '' = '';
-					OUT c;
-					OUT ''\r\n'';
-				END
+				d = c;
+				e = d;
 
+				OUT d[0];
+				OUT d[1];
+				OUT d[2];
+				OUT d[3];
+
+				OUT ''  -  '';
+
+				OUT e[0];
+				OUT e[1];
+				OUT e[2];
+				OUT e[3];
+
+				OUT ''  -  '';
+				
+				OUT d;
+				OUT ''::'';
+				OUT e;
+
+				QUIT;
 			END
 			");
 		}

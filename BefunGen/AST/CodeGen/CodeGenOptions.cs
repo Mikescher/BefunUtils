@@ -10,7 +10,7 @@ namespace BefunGen.AST.CodeGen
 		Best
 	}
 
-	public class CodeGenOptions
+	public static class CodeGenOptions
 	{
 		// Defines how Number Literals get represented
 		public static NumberRep NumberLiteralRepresentation = NumberRep.Best;
@@ -37,6 +37,11 @@ namespace BefunGen.AST.CodeGen
 
 		// When hard casting to bool force the value to be '0' or '1'
 		public static bool ExtendedBooleanCast = false;
+
+		// Default Values for Init operations
+		public static byte DefaultNumeralValue   = 0;
+		public static char DefaultCharacterValue = ' ';
+		public static bool DefaultBooleanValue   = false;
 	}
 
 	//Expressions are Left,0 in ... Right,0 out
