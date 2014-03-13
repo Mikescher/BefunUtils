@@ -7,7 +7,7 @@ namespace BefunGen.AST.CodeGen.Tags
 {
 	public class TagLocation
 	{
-		public readonly object Tag { get{ return Command.Tag; } }
+		public readonly object Tag;
 
 		public readonly int X;
 		public readonly int Y;
@@ -16,7 +16,7 @@ namespace BefunGen.AST.CodeGen.Tags
 
 		public TagLocation(int px, int py, BefungeCommand cmd)
 		{
-			Tag = t;
+			Tag = cmd.Tag;
 			X = px;
 			Y = py;
 			Command = cmd;

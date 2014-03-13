@@ -29,9 +29,21 @@ namespace BefunGen.AST
 
 		public void prepare()
 		{
-			linkVariables();		// Variable-uses get their ID
-			linkMethods();			// Methodcalls get their ID
-			linkResultTypes();		// Statements get their Result-Type (and implicit casting is added)
+			// Reset ID-Counter
+			Method.resetCounter();
+			VarDeclaration.resetCounter();
+			Statement.resetCounter();
+
+			addressMethodsVariables();	// Methods get their Address
+			linkVariables();			// Variable-uses get their ID
+			linkMethods();				// Methodcalls get their ID   &&   Labels + MethodCalls get their CodePointAddress
+			linkResultTypes();			// Statements get their Result-Type (and implicit casting is added)
+		}
+
+		private void addressMethodsVariables()
+		{
+			foreach (Method m in MethodList)
+				m.createCodeAddress();
 		}
 
 		private void linkVariables()

@@ -216,7 +216,8 @@ namespace BefunGen
 			string txt = String.Format("program b var  bool a; begin a = (bool)({0}); end end", expr);
 			BefunGen.AST.Program p = GParser.generateAST(txt);
 
-			if (p == null) throw new Exception(GParser.FailMessage);
+			if (p == null)
+				throw new Exception(GParser.FailMessage);
 
 			return ((Expression_Cast)((Statement_Assignment)((Statement_StatementList)p.MainStatement.Body).List[0]).Expr).Expr;
 		}
@@ -226,7 +227,8 @@ namespace BefunGen
 			string txt = String.Format("program b var  bool a; begin {0} end end", stmt);
 			BefunGen.AST.Program p = GParser.generateAST(txt);
 
-			if (p == null) throw new Exception(GParser.FailMessage);
+			if (p == null)
+				throw new Exception(GParser.FailMessage);
 
 			return ((Statement_StatementList)p.MainStatement.Body).List[0];
 		}
@@ -236,7 +238,8 @@ namespace BefunGen
 			string txt = String.Format("program b begin end {0} end", meth);
 			BefunGen.AST.Program p = GParser.generateAST(txt);
 
-			if (p == null) throw new Exception(GParser.FailMessage);
+			if (p == null)
+				throw new Exception(GParser.FailMessage);
 
 			return p.MethodList[1];
 		}
@@ -245,7 +248,8 @@ namespace BefunGen
 		{
 			BefunGen.AST.Program p = GParser.generateAST(prog);
 
-			if (p == null) throw new Exception(GParser.FailMessage);
+			if (p == null)
+				throw new Exception(GParser.FailMessage);
 
 			return p;
 		}
@@ -303,7 +307,7 @@ namespace BefunGen
 				meth = Regex.Replace(meth, @"[\r\n]{1,2}[ \t]*$", "");
 
 				Method e = parseMethod(meth);
-				txtDebug.Text += "[METHOD] " + e.Identifier + ":" + e.ID + Environment.NewLine;
+				txtDebug.Text += "[METHOD] " + e.Identifier + ":" + e.MethodAddr + Environment.NewLine;
 				CodePiece pc = e.generateCode(0, 0);
 				txtDebug.Text += pc.ToString() + Environment.NewLine;
 			}
@@ -340,9 +344,9 @@ namespace BefunGen
 
 					OUT ''START\r\n'';
 
-					// ma();
-					// mb();
-					// mc();
+					ma();
+					mb();
+					mc();
 
 					OUT ''FIN\r\n'';
 

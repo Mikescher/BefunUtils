@@ -10,10 +10,66 @@ namespace BefunGen.AST
 {
 	public abstract class Statement : ASTObject //TODO GET/SET/DEFINE DISPLAY
 	{
+		private static int _CODEPOINT_ADDRESS_COUNTER = 0;
+		protected static int CODEPOINT_ADDRESS_COUNTER { get { return _CODEPOINT_ADDRESS_COUNTER++; } }
+
 		public Statement(SourceCodePosition pos)
 			: base(pos)
 		{
 			//--
+		}
+
+		public static void resetCounter()
+		{
+			_CODEPOINT_ADDRESS_COUNTER = 0;
+		}
+
+		public CodePiece extendVerticalMCTagsUpwards(CodePiece p)
+		{
+			List<TagLocation> entries = p.findAllTags(typeof(MethodCall_VerticalReEntry_Tag))
+				.OrderBy(tp => ((ICodeAddressTarget)((MethodCall_VerticalReEntry_Tag)tp.Tag).TagParam).CodePointAddr)
+				.ToList();
+			List<TagLocation> exits = p.findAllTags(typeof(MethodCall_VerticalExit_Tag));
+
+			int pos_y_exitline = p.MinY - 1;
+
+			foreach (TagLocation exit in exits)
+			{
+				MethodCall_VerticalExit_Tag tag_exit = exit.Tag as MethodCall_VerticalExit_Tag;
+				p[exit.X, pos_y_exitline] = BCHelper.PC_Right_tagged(new MethodCall_HorizontalExit_Tag((Method)tag_exit.TagParam));
+
+				try
+				{
+					p.CreateColWW(exit.X, pos_y_exitline + 1, exit.Y);
+				}
+				catch (InvalidCodeManipulationException ce)
+				{
+					throw new CommandPathFindingFailureException(ce.Message);
+				}
+			}
+
+			int entrycount = entries.Count;
+
+			int pos_y_entry = pos_y_exitline - entrycount * 3 + 2;
+
+			foreach (TagLocation entry in entries)
+			{
+				MethodCall_VerticalReEntry_Tag tag_entry = entry.Tag as MethodCall_VerticalReEntry_Tag;
+				p[entry.X, pos_y_entry] = BCHelper.PC_Down_tagged(new MethodCall_HorizontalReEntry_Tag((ICodeAddressTarget)tag_entry.TagParam));
+
+				try
+				{
+					p.CreateColWW(entry.X, pos_y_entry + 1, entry.Y);
+				}
+				catch (InvalidCodeManipulationException ce)
+				{
+					throw new CommandPathFindingFailureException(ce.Message);
+				}
+
+				pos_y_entry -= 3;
+			}
+
+			return p;
 		}
 
 		public abstract void linkVariables(Method owner);
@@ -24,6 +80,19 @@ namespace BefunGen.AST
 
 		public abstract CodePiece generateCode(bool reversed);
 	}
+
+	#region Interfaces
+
+	public interface ICodeAddressTarget
+	{
+		int CodePointAddr
+		{
+			get;
+			set;
+		}
+	}
+
+	#endregion
 
 	#region Other
 
@@ -86,7 +155,7 @@ namespace BefunGen.AST
 			}
 			else if (List.Count == 1)
 			{
-				return List[0].generateCode(reversed);
+				return extendVerticalMCTagsUpwards(List[0].generateCode(reversed));
 			}
 
 			// ##### STATEMENTS ######
@@ -100,7 +169,7 @@ namespace BefunGen.AST
 			List<CodePiece> cps = new List<CodePiece>();
 			for (int i = 0; i < stmts.Count; i++)
 			{
-				cps.Add(stmts[i].generateCode(reversed ^ (i % 2 != 0)));
+				cps.Add(extendVerticalMCTagsUpwards(stmts[i].generateCode(reversed ^ (i % 2 != 0))));
 				cps[i].normalizeX();
 
 				if (cps[i].Height == 0) // No total empty statements
@@ -375,12 +444,25 @@ namespace BefunGen.AST
 		}
 	}
 
-	public class Statement_MethodCall : Statement
+	public class Statement_MethodCall : Statement, ICodeAddressTarget
 	{
 		public List<Expression> CallParameter;
 
 		public string Identifier; // Temporary -- before linking;
 		public Method Target;
+
+		private int _CodePointAddr = -1;
+		public int CodePointAddr
+		{
+			get
+			{
+				return _CodePointAddr;
+			}
+			set
+			{
+				throw new Exception(); // NotWriteable
+			}
+		}
 
 		public Statement_MethodCall(SourceCodePosition pos, string id)
 			: base(pos)
@@ -398,7 +480,7 @@ namespace BefunGen.AST
 
 		public override string getDebugString()
 		{
-			return string.Format("#MethodCall {{{0}}} --> #Parameter: ({1})", Target.ID, indent(getDebugCommaStringForList(CallParameter)));
+			return string.Format("#MethodCall {{{0}}} ::{1}:: --> #Parameter: ({1})", Target.MethodAddr, CodePointAddr, indent(getDebugCommaStringForList(CallParameter)));
 		}
 
 		public override void linkVariables(Method owner)
@@ -453,8 +535,8 @@ namespace BefunGen.AST
 			{
 				#region Reversed
 
-				p[0, 0] = BCHelper.PC_Left_tagged(new MethodCall_ReEntry_Tag(Target));
-				p[1, 0] = BCHelper.PC_Up_tagged(new MethodCall_Exit_Tag(Target));
+				p[0, 0] = BCHelper.PC_Left_tagged(new MethodCall_VerticalReEntry_Tag(this));
+				p[1, 0] = BCHelper.PC_Up_tagged(new MethodCall_VerticalExit_Tag(Target));
 
 				#endregion
 			}
@@ -462,8 +544,8 @@ namespace BefunGen.AST
 			{
 				#region Normal
 
-				p[0, 0] = BCHelper.PC_Up_tagged(new MethodCall_Exit_Tag(Target));
-				p[1, 0] = BCHelper.PC_Right_tagged(new MethodCall_ReEntry_Tag(Target));
+				p[0, 0] = BCHelper.PC_Up_tagged(new MethodCall_VerticalExit_Tag(Target));
+				p[1, 0] = BCHelper.PC_Right_tagged(new MethodCall_VerticalReEntry_Tag(this));
 
 				#endregion
 			}
@@ -477,29 +559,32 @@ namespace BefunGen.AST
 
 	#region Keywords
 
-	public class Statement_Label : Statement
+	public class Statement_Label : Statement, ICodeAddressTarget
 	{
-		private static int _L_ID_COUNTER = 100;
-		protected static int L_ID_COUNTER { get { return _L_ID_COUNTER++; } }
-
 		public string Identifier;
-		public readonly int ID;
+
+		private int _CodePointAddr = -1;
+		public int CodePointAddr
+		{
+			get
+			{
+				return _CodePointAddr;
+			}
+			set
+			{
+				throw new Exception(); // Not writeable
+			}
+		}
 
 		public Statement_Label(SourceCodePosition pos, string ident)
 			: base(pos)
 		{
 			this.Identifier = ident;
-			ID = L_ID_COUNTER;
-		}
-
-		public static void resetCounter()
-		{
-			_L_ID_COUNTER = 1;
 		}
 
 		public override string getDebugString()
 		{
-			return string.Format("#LABEL: {{{0}}}", ID);
+			return string.Format("#LABEL: {{{0}}}", CodePointAddr);
 		}
 
 		public override void linkVariables(Method owner)
@@ -541,7 +626,7 @@ namespace BefunGen.AST
 
 		public override string getDebugString()
 		{
-			return string.Format("#GOTO: {{{0}}}", Target.ID);
+			return string.Format("#GOTO: {{{0}}}", Target.CodePointAddr);
 		}
 
 		public override void linkVariables(Method owner)
@@ -572,7 +657,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	public class Statement_Return : Statement
+	public class Statement_Return : Statement //TODO Force every method code-path to end with return
 	{
 		public Expression Value;
 

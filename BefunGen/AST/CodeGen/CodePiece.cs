@@ -227,16 +227,18 @@ namespace BefunGen.AST.CodeGen
 			return tag != null && findTag(tag) != null;
 		}
 
-		public List<TagLocation> findAllTags()
+		public List<TagLocation> findAllTags(params Type[] filter)
 		{
+			bool all = filter.Length == 0;
+
 			List<TagLocation> tl = new List<TagLocation>();
 
 			for (int x = MinX; x < MaxX; x++)
 			{
 				for (int y = MinY; y < MaxY; y++)
 				{
-					if (this[x, y].hasTag())
-						tl.Add( new TagLocation(x, y, this[x, y]) );
+					if (this[x, y].hasTag() && (all || filter.Any(f => (this[x, y].Tag.GetType().IsAssignableFrom(f)))))
+						tl.Add(new TagLocation(x, y, this[x, y]));
 				}
 			}
 
@@ -332,6 +334,21 @@ namespace BefunGen.AST.CodeGen
 
 		#region Setter
 
+		public void CreateRowWW(int y, int x1, int x2)
+		{
+			CreateWW(x1, y, x2, y + 1);
+		}
+
+		public void CreateColWW(int x, int y1, int y2)
+		{
+			CreateWW(x, y1, x + 1, y2);
+		}
+
+		public void CreateWW(int x1, int y1, int x2, int y2)
+		{
+			Fill(x1, y1, x2, y2, BCHelper.Walkway, true);
+		}
+
 		public void FillRowWW(int y, int x1, int x2)
 		{
 			FillWW(x1, y, x2, y + 1);
@@ -348,7 +365,7 @@ namespace BefunGen.AST.CodeGen
 		}
 
 		// x1, y1 included -- x2, y2 excluded
-		public void Fill(int x1, int y1, int x2, int y2, BefungeCommand c, object topleft_tag = null)
+		public void Fill(int x1, int y1, int x2, int y2, BefungeCommand c, object topleft_tag = null, bool skipExactCopies = false)
 		{
 			if (x1 >= x2)
 				return;
@@ -358,7 +375,11 @@ namespace BefunGen.AST.CodeGen
 			for (int x = x1; x < x2; x++)
 				for (int y = y1; y < y2; y++)
 				{
-					if (x == x1 && y == y1 && topleft_tag != null)
+					if (skipExactCopies && c.EqualsTagLess(this[x, y]))
+					{
+						// Do nothing - skiped
+					}
+					else if (x == x1 && y == y1 && topleft_tag != null)
 					{
 						this[x, y] = c.copyWithTag(topleft_tag);
 					}

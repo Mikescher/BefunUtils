@@ -57,8 +57,10 @@
     <Compile Include="AST\CodeGen\CodePiece.cs" />
     <Compile Include="AST\CodeGen\CodePieceStore.cs" />
     <Compile Include="AST\CodeGen\Tags\CodeTag.cs" />
-    <Compile Include="AST\CodeGen\Tags\MethodCall_ReEntry_Tag.cs" />
-    <Compile Include="AST\CodeGen\Tags\MethodCall_Exit_Tag.cs" />
+    <Compile Include="AST\CodeGen\Tags\MethodCall_HorizontalExit_Tag.cs" />
+    <Compile Include="AST\CodeGen\Tags\MethodCall_HorizontalReEntry_Tag.cs" />
+    <Compile Include="AST\CodeGen\Tags\MethodCall_VerticalReEntry_Tag.cs" />
+    <Compile Include="AST\CodeGen\Tags\MethodCall_VerticalExit_Tag.cs" />
     <Compile Include="AST\CodeGen\Tags\TagLocation.cs" />
     <Compile Include="AST\CodeGen\TwoDirectionCodePiece.cs" />
     <Compile Include="AST\CodeGen\NumberCodeHelper.cs" />
@@ -66,6 +68,7 @@
     <Compile Include="AST\CodeGen\SourceCodePosition.cs" />
     <Compile Include="AST\Exceptions\AccessTemporaryASTObjectException.cs" />
     <Compile Include="AST\Exceptions\ASTException.cs" />
+    <Compile Include="AST\Exceptions\CommandPathFindingFailureException.cs" />
     <Compile Include="AST\Exceptions\InvalidFormatSpecifierException.cs" />
     <Compile Include="AST\Exceptions\InternalCodeGenException.cs" />
     <Compile Include="AST\Exceptions\CodePieceReverseException.cs" />

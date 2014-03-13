@@ -8,8 +8,8 @@ namespace BefunGen.AST
 {
 	public class Method : ASTObject
 	{
-		private static int _M_ID_COUNTER = 100;
-		protected static int M_ID_COUNTER { get { return _M_ID_COUNTER++; } }
+		private static int _METHODADDRESS_COUNTER = 0;
+		protected static int METHODADDRESS_COUNTER { get { return _METHODADDRESS_COUNTER++; } }
 
 		public BType ResultType;
 		public string Identifier;
@@ -18,7 +18,8 @@ namespace BefunGen.AST
 		public List<VarDeclaration> Variables; // Includes Parameter & Temps
 		public Statement_StatementList Body;
 
-		public readonly int ID;
+		private int _METHODADDRESS = -1;
+		public int MethodAddr { get { return _METHODADDRESS; } private set { _METHODADDRESS = value; } }
 
 		public Method(SourceCodePosition pos, Method_Header h, Method_Body b)
 			: this(pos, h.ResultType, h.Identifier, h.Parameter, b.Variables, b.Body)
@@ -29,8 +30,6 @@ namespace BefunGen.AST
 		public Method(SourceCodePosition pos, BType t, string id, List<VarDeclaration> p, List<VarDeclaration> v, Statement_StatementList b)
 			: base(pos)
 		{
-			this.ID = M_ID_COUNTER;
-
 			this.ResultType = t;
 			this.Identifier = id;
 			this.Parameter = p;
@@ -44,12 +43,17 @@ namespace BefunGen.AST
 		public override string getDebugString()
 		{
 			return string.Format("#Method ({{{0}}}({1}):{2})\n[\n#Parameter:\n{3}\n#Variables:\n{4}\n#Body:\n{5}\n]",
-				ID,
+				MethodAddr,
 				Identifier,
 				ResultType.getDebugString(),
 				indent(getDebugStringForList(Parameter)),
 				indent(getDebugStringForList(Variables.Where(p => !Parameter.Contains(p)).ToList())),
 				indent(Body.getDebugString()));
+		}
+
+		public void createCodeAddress()
+		{
+			MethodAddr = METHODADDRESS_COUNTER;
 		}
 
 		public void linkVariables()
@@ -79,8 +83,10 @@ namespace BefunGen.AST
 
 		public static void resetCounter()
 		{
-			_M_ID_COUNTER = 1;
+			_METHODADDRESS_COUNTER = 0;
 		}
+
+		#region GenerateCode
 
 		public CodePiece generateCode(int meth_offset_x, int meth_offset_y)
 		{
@@ -286,6 +292,8 @@ namespace BefunGen.AST
 
 			return p;
 		}
+
+		#endregion
 	}
 
 	public class Method_Header : ASTObject // TEMPORARY -- NOT IN RESULTING AST
