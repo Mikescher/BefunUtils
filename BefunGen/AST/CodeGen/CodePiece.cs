@@ -1,4 +1,5 @@
-﻿using BefunGen.AST.Exceptions;
+﻿using BefunGen.AST.CodeGen.Tags;
+using BefunGen.AST.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -150,7 +151,7 @@ namespace BefunGen.AST.CodeGen
 				throw new InvalidCodeManipulationException("Modification of CodePiece : " + x + "|" + y);
 
 			if (hasTag(value.Tag))
-				throw new InvalidCodeManipulationException(string.Format("Duplicate Tag in CodePiece : [{0},{1}] = '{2}' = [{3},{4}])", x, y, value.Tag.ToString(), findTag(value.Tag).Item2, findTag(value.Tag).Item3));
+				throw new InvalidCodeManipulationException(string.Format("Duplicate Tag in CodePiece : [{0},{1}] = '{2}' = [{3},{4}])", x, y, value.Tag.ToString(), findTag(value.Tag).X, findTag(value.Tag).Y));
 
 			commandArr[x - MinX][y - MinY] = value;
 		}
@@ -180,6 +181,10 @@ namespace BefunGen.AST.CodeGen
 			}
 			builder.AppendLine("}");
 
+			List<TagLocation> tags = findAllTags();
+			foreach (TagLocation tag in tags)
+				builder.AppendFormat("[ ({0:000}|{1:000}):'{2}' := {3} ]", tag.X, tag.Y, tag.Command.getCommandCode(), tag.Tag);
+
 			return builder.ToString();
 		}
 
@@ -203,14 +208,14 @@ namespace BefunGen.AST.CodeGen
 
 		#region Tags
 
-		public Tuple<BefungeCommand, int, int> findTag(object tag)
+		public TagLocation findTag(object tag)
 		{
 			for (int x = MinX; x < MaxX; x++)
 			{
 				for (int y = MinY; y < MaxY; y++)
 				{
 					if (this[x, y].Tag == tag)
-						return Tuple.Create(this[x, y], x, y);
+						return new TagLocation(x, y, this[x, y]);
 				}
 			}
 
@@ -220,6 +225,22 @@ namespace BefunGen.AST.CodeGen
 		public bool hasTag(object tag)
 		{
 			return tag != null && findTag(tag) != null;
+		}
+
+		public List<TagLocation> findAllTags()
+		{
+			List<TagLocation> tl = new List<TagLocation>();
+
+			for (int x = MinX; x < MaxX; x++)
+			{
+				for (int y = MinY; y < MaxY; y++)
+				{
+					if (this[x, y].hasTag())
+						tl.Add( new TagLocation(x, y, this[x, y]) );
+				}
+			}
+
+			return tl;
 		}
 
 		#endregion

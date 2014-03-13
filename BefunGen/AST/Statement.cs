@@ -1,4 +1,5 @@
 ﻿using BefunGen.AST.CodeGen;
+using BefunGen.AST.CodeGen.Tags;
 using BefunGen.AST.Exceptions;
 using BefunGen.MathExtensions;
 using System;
@@ -446,7 +447,29 @@ namespace BefunGen.AST
 
 		public override CodePiece generateCode(bool reversed)
 		{
-			throw new NotImplementedException(); //TODO Implement
+			CodePiece p = new CodePiece();
+
+			if (reversed)
+			{
+				#region Reversed
+
+				p[0, 0] = BCHelper.PC_Left_tagged(new MethodCall_ReEntry_Tag(Target));
+				p[1, 0] = BCHelper.PC_Up_tagged(new MethodCall_Exit_Tag(Target));
+
+				#endregion
+			}
+			else
+			{
+				#region Normal
+
+				p[0, 0] = BCHelper.PC_Up_tagged(new MethodCall_Exit_Tag(Target));
+				p[1, 0] = BCHelper.PC_Right_tagged(new MethodCall_ReEntry_Tag(Target));
+
+				#endregion
+			}
+
+			return p;
+			//throw new NotImplementedException(); //TODO Implement
 		}
 	}
 

@@ -303,7 +303,12 @@ namespace BefunGen.AST.CodeGen
 
 		public bool EqualsTagLess(BefungeCommand c)
 		{
-			return this.Tag == null && c.Tag == null && this.Type == c.Type && this.Param == c.Param;
+			return hasTag() && c.hasTag() && this.Type == c.Type && this.Param == c.Param;
+		}
+
+		public bool hasTag()
+		{
+			return Tag != null;
 		}
 	}
 }

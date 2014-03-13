@@ -8,61 +8,111 @@ namespace BefunGenTest
 {
 	[TestClass]
 	public class CodePieceTest
-	{//TODO Automatic Test resulting pros -> like BefungExec DebugMode -> Random input (perhaps multiple times)
+	{
 		#region Helper Methods
 
 		private TextFungeParser GParser = new TextFungeParser();
 
-		private Expression parseExpression(string expr)
+		#region Parsing
+
+		private Program parseExpression(string type, string expr)
 		{
-			string txt = String.Format("program b var  bool a; begin a = (bool)({0}); end end", expr);
+			string txt = String.Format("program b var {0} a; begin a = {1}; end end", type, expr);
 			BefunGen.AST.Program p = GParser.generateAST(txt);
 
-			return ((Expression_Cast)((Statement_Assignment)((Statement_StatementList)p.MainStatement.Body).List[0]).Expr).Expr;
+			if (p == null) throw new Exception(GParser.FailMessage);
+
+			return p;
 		}
 
-		private Statement parseStatement(string stmt)
+		private Program parseStatement(string stmt)
 		{
 			string txt = String.Format("program b var  bool a; begin {0} end end", stmt);
 			BefunGen.AST.Program p = GParser.generateAST(txt);
 
-			return ((Statement_StatementList)p.MainStatement.Body).List[0];
+			if (p == null) throw new Exception(GParser.FailMessage);
+
+			return p;
 		}
 
-		private Method parseMethod(string meth)
+		private Program parseMethod(string call, string meth)
 		{
-			string txt = String.Format("program b begin end {0} end", meth);
+			string txt = String.Format("program b begin {0}; end {1} end", call, meth);
 			BefunGen.AST.Program p = GParser.generateAST(txt);
 
-			return p.MethodList[1];
+			if (p == null) throw new Exception(GParser.FailMessage);
+
+			return p;
 		}
 
-		private void debugExpression(string expr)
+		private Program parseProgram(string meth)
+		{
+			BefunGen.AST.Program p = GParser.generateAST(meth);
+
+			if (p == null) throw new Exception(GParser.FailMessage);
+
+			return p;
+		}
+
+		#endregion
+
+		#region Debugging
+
+		private void debugExpression(string type, string expr)
 		{
 			expr = expr.Replace(@"''", "\"");
 
-			Expression e = parseExpression(expr);
-			CodePiece pc = e.generateCode(false);
+			Program e = parseExpression(type, expr);
+			CodePiece pc = e.generateCode();
+
+			TestCP(pc);
 		}
 
 		private void debugStatement(string stmt)
 		{
 			stmt = stmt.Replace(@"''", "\"");
 
-			Statement e = parseStatement(stmt);
-			CodePiece pc = e.generateCode(false);
+			Program e = parseStatement(stmt);
+			CodePiece pc = e.generateCode();
+
+			TestCP(pc);
 		}
 
-		private void debugMethod(string meth)
+		private void debugMethod(string call, string meth)
 		{
 			meth = Regex.Replace(meth, @"[\r\n]{1,2}[ \t]+[\r\n]{1,2}", "\r\n");
 			meth = Regex.Replace(meth, @"^[ \t]*[\r\n]{1,2}", "");
 			meth = Regex.Replace(meth, @"[\r\n]{1,2}[ \t]*$", "");
 			meth = meth.Replace(@"''", "\"");
 
-			Method e = parseMethod(meth);
-			CodePiece pc = e.generateCode(0, 0);
+			Program e = parseMethod(call, meth);
+			CodePiece pc = e.generateCode();
+
+			TestCP(pc);
 		}
+
+		private void debugProgram(string prog)
+		{
+			prog = prog.Replace(@"''", "\"");
+
+			Program e = parseProgram(prog);
+			CodePiece pc = e.generateCode();
+
+			TestCP(pc);
+		}
+
+		#endregion
+
+		#region Testing
+
+		public void TestCP(CodePiece p)
+		{
+			//TODO Implement Automatic Testing
+
+			// --> //TODO Automatic Test resulting pros -> like BefungExec DebugMode -> Random input (perhaps multiple times)
+		}
+
+		#endregion
 
 		#endregion
 
@@ -103,23 +153,24 @@ namespace BefunGenTest
 		[TestMethod]
 		public void codeGenTest_Expr()
 		{
-			debugExpression("40*(-50+(int)rand)");
+			debugExpression("int", "40*(-50+(int)rand)");
 
-			debugExpression("100");
+			debugExpression("int", "100");
 
-			debugExpression("-100");
+			debugExpression("int", "-100");
 
-			debugExpression("137");
+			debugExpression("int", "137");
 
-			debugExpression("true && (false ^ true)");
+			debugExpression("bool", "true && (false ^ true)");
 
-			debugExpression("true || false");
+			debugExpression("bool", "true || false");
 		}
 
 		[TestMethod]
 		public void codeGenTest_Method_VarInitializer()
 		{
-			debugMethod(@"
+			debugMethod("doFiber(8)",
+			@"
 			int doFiber(int max)
 			var
 				int a := 4;
@@ -138,7 +189,8 @@ namespace BefunGenTest
 		[TestMethod]
 		public void codeGenTest_Method_CharCast()
 		{
-			debugMethod(@"
+			debugMethod("doIt()",
+			@"
 			int doIt()
 			var
 				char cr;
@@ -181,7 +233,8 @@ namespace BefunGenTest
 		[TestMethod]
 		public void codeGenTest_Method_OutExpression()
 		{
-			debugMethod(@"
+			debugMethod("doIt()",
+			@"
 			int doIt()
 			begin
 				out (char)(48+(int)RAND);
@@ -217,7 +270,8 @@ namespace BefunGenTest
 		[TestMethod]
 		public void codeGenTest_Method_ReversedOut()
 		{
-			debugMethod(@"
+			debugMethod("doIt()",
+			@"
 			int doIt()
 			begin
 				out (char) 54;
@@ -229,7 +283,8 @@ namespace BefunGenTest
 		[TestMethod]
 		public void codeGenTest_Method_ArrayIndexing()
 		{
-			debugMethod(@"
+			debugMethod("calc()",
+			@"
 			void calc()
 			var
 				int i := 60;
@@ -255,7 +310,8 @@ namespace BefunGenTest
 		[TestMethod]
 		public void codeGenTest_Method_ASCII_Table()
 		{
-			debugMethod(@"
+			debugMethod("calc()",
+			@"
 			void calc()
 			var
 				int i := 0;
@@ -281,7 +337,8 @@ namespace BefunGenTest
 		[TestMethod]
 		public void codeGenTest_Method_StringEscaping()
 		{
-			debugMethod(@"
+			debugMethod("calc()",
+			@"
 			void calc()
 			begin
 				OUT ''A \r\n\r\n'';
@@ -292,7 +349,8 @@ namespace BefunGenTest
 		[TestMethod]
 		public void codeGenTest_Method_StringEscaping_2()
 		{
-			debugMethod(@"
+			debugMethod("calc()",
+			@"
 			void calc()
 			var
 				int i := 0;
@@ -321,7 +379,8 @@ namespace BefunGenTest
 		[TestMethod]
 		public void codeGenTest_Method_BoolCasting()
 		{
-			debugMethod(@"
+			debugMethod("calc()",
+			@"
 			void calc()
 			var
 				int i := 0;
@@ -345,7 +404,8 @@ namespace BefunGenTest
 		[TestMethod]
 		public void codeGenTest_Method_Random()
 		{
-			debugMethod(@"
+			debugMethod("calc()",
+			@"
 			void calc()
 			var
 				int i := 0;
@@ -384,7 +444,8 @@ namespace BefunGenTest
 		[TestMethod]
 		public void codeGenTest_Method_Random_2()
 		{
-			debugMethod(@"
+			debugMethod("calc()",
+			@"
 			void calc()
 			var
 				int i := 0;
@@ -420,7 +481,8 @@ namespace BefunGenTest
 		[TestMethod]
 		public void codeGenTest_Method_OutputArray()
 		{
-			debugMethod(@"
+			debugMethod("calc()",
+			@"
 			void calc()
 			var
 				char[4] c;
@@ -462,7 +524,8 @@ namespace BefunGenTest
 		[TestMethod]
 		public void codeGenTest_Method_InputArray()
 		{
-			debugMethod(@"
+			debugMethod("calc()",
+			@"
 			void calc()
 			var
 				char[5] c;
@@ -507,7 +570,8 @@ namespace BefunGenTest
 		[TestMethod]
 		public void codeGenTest_FizzBuzz()
 		{
-			debugMethod(@"
+			debugMethod("calc()",
+			@"
 			void calc()
 			var
 				int i := 1;
@@ -557,7 +621,8 @@ namespace BefunGenTest
 			END
 			");
 
-			debugMethod(@"
+			debugMethod("calc()",
+			@"
 			void calc()
 			var
 				int i := 0;
