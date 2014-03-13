@@ -161,6 +161,83 @@ v
 */
 
 /*
+  ::Jumping and the stack::
+#############################
+
+RIGHT LANE :> Jump to Codepoint - jump back - Stack flooded
+LEFT LANE  :> Jump to Methodaddr - jump in - Stack unflooded
+
+
+EXIT::JUMP_IN ( doMethod(a, b) )
+########
+
+[STACK]  OWN_VARIABLES
+[STACK]  OWN_CODEPOINTADDR
+[STACK]  TARGET_PARAMETER
+[STACK]  TARGET_ADRESS ("Left Lane Adress" -> MethodAdress)
+[STACK]  1 (FOR JUMP_IN -> "Left Lane")
+
+
+
+EXIT::JUMP_BACK ( Return x )
+#########
+
+SAVE BACKJUMPADDR (Current Stack::Top) to TMP_2 (TMP_2 Exclusive to this OP ( BackJumpAddr )) //TODO Every Tmp Addr exclusive ?
+
+[STACK]  CALC RETURN VALUE TO STACK (ALWAYS -> VOID is also value (0) );
+[STACK]  PUT BACKJUMPADDR BACK ON STACK ("Right Lane Adress" -> CodePointAdress)
+[STACK]  0 (FOR JUMP_BACK -> "Right Lane")
+
+
+
+EXIT::JUMP_LABEL ( GOTO lbl1 )
+##########
+
+[STACK]  TARGET_ADRESS ("Right Lane Adress" -> CodePointAdress)
+[STACK]  0 (FOR JUMP_BACK -> "Right Lane") (little "hacky")
+
+
+
+ROUNDABOUT_PATH
+###############
+
+SWITCH BETWEEN LEFT/RIGHT LANE
+
+  /-- RIGHT LANE: FLOOD STACK BINARY FROM TARGETADRESS
+-|
+  \-- LEFT LANE: Do Nothing
+ 
+GO THROUGH LANES (Right: Flooded, Left: sub..sub..sub)
+
+
+
+ENTRY::JUMP_IN (From a jump in -> Left Lane)
+##########
+
+INIT VARS (STANDARD VALUES)
+INIT PARAMS [FROM STACK]
+{DO METHOD}
+
+
+
+ENTRY::JUMP_BACK (From a jump back -> Right Lane)
+##########
+
+SAVE RETURN VALUE FROM STACK SOMEWHERE ELSE (perhaps calculate max array size -> reserve global return value tmp space)
+RE-GET VARS FROM STACK
+PUT RETURN VALUE BACK TO STACK
+(If Statement_Call pop return value)
+
+
+
+ENTRY::JUMP_LABEL ( lbl1: )
+#################
+
+Do Nothing ... just go on ... stack is fine
+
+*/
+
+/*
 
 // Encode dynamically Base-9 number
 

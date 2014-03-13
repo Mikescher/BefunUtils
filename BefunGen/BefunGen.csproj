@@ -56,6 +56,7 @@
     <Compile Include="AST\CodeGen\CodeGenOptions.cs" />
     <Compile Include="AST\CodeGen\CodePiece.cs" />
     <Compile Include="AST\CodeGen\CodePieceStore.cs" />
+    <Compile Include="AST\CodeGen\Tags\CodeTag.cs" />
     <Compile Include="AST\CodeGen\TwoDirectionCodePiece.cs" />
     <Compile Include="AST\CodeGen\NumberCodeHelper.cs" />
     <Compile Include="AST\CodeGen\NumberFactorization.cs" />
