@@ -67,7 +67,7 @@ namespace BefunGenTest
 		#endregion
 
 		[TestMethod]
-		public void setTest()
+		public void CodePieceTest_Set()
 		{
 			CodePiece cp = new CodePiece();
 
@@ -117,7 +117,7 @@ namespace BefunGenTest
 		}
 
 		[TestMethod]
-		public void codeGenTest_Methods()
+		public void codeGenTest_Method_VarInitializer()
 		{
 			debugMethod(@"
 			int doFiber(int max)
@@ -133,7 +133,11 @@ namespace BefunGenTest
 				
 			end
 			");
+		}
 
+		[TestMethod]
+		public void codeGenTest_Method_CharCast()
+		{
 			debugMethod(@"
 			int doIt()
 			var
@@ -172,7 +176,11 @@ namespace BefunGenTest
 				QUIT;
 			end
 			");
+		}
 
+		[TestMethod]
+		public void codeGenTest_Method_OutExpression()
+		{
 			debugMethod(@"
 			int doIt()
 			begin
@@ -183,7 +191,11 @@ namespace BefunGenTest
 				QUIT;
 			end
 			");
+		}
 
+		[TestMethod]
+		public void codeGenTest_Method_NestedStatementLists()
+		{
 			debugStatement(@"
 			while (true) do
 				out (char)(48+(int)RAND);
@@ -200,7 +212,11 @@ namespace BefunGenTest
 				out (char)(48+(int)RAND);
 			end
 			");
+		}
 
+		[TestMethod]
+		public void codeGenTest_Method_ReversedOut()
+		{
 			debugMethod(@"
 			int doIt()
 			begin
@@ -208,7 +224,11 @@ namespace BefunGenTest
 				out (char) 55;
 			end
 			");
+		}
 
+		[TestMethod]
+		public void codeGenTest_Method_ArrayIndexing()
+		{
 			debugMethod(@"
 			void calc()
 			var
@@ -230,7 +250,11 @@ namespace BefunGenTest
 				QUIT;
 			end
 			");
+		}
 
+		[TestMethod]
+		public void codeGenTest_Method_ASCII_Table()
+		{
 			debugMethod(@"
 			void calc()
 			var
@@ -252,14 +276,22 @@ namespace BefunGenTest
 				QUIT;
 			end
 			");
+		}
 
+		[TestMethod]
+		public void codeGenTest_Method_StringEscaping()
+		{
 			debugMethod(@"
 			void calc()
 			begin
 				OUT ''A \r\n\r\n'';
 			END
 			");
+		}
 
+		[TestMethod]
+		public void codeGenTest_Method_StringEscaping_2()
+		{
 			debugMethod(@"
 			void calc()
 			var
@@ -284,7 +316,11 @@ namespace BefunGenTest
 				QUIT;
 			END
 			");
+		}
 
+		[TestMethod]
+		public void codeGenTest_Method_BoolCasting()
+		{
 			debugMethod(@"
 			void calc()
 			var
@@ -304,7 +340,11 @@ namespace BefunGenTest
 				QUIT;
 			END
 			");
+		}
 
+		[TestMethod]
+		public void codeGenTest_Method_Random()
+		{
 			debugMethod(@"
 			void calc()
 			var
@@ -339,7 +379,11 @@ namespace BefunGenTest
 
 			END
 			");
+		}
 
+		[TestMethod]
+		public void codeGenTest_Method_Random_2()
+		{
 			debugMethod(@"
 			void calc()
 			var
@@ -371,7 +415,11 @@ namespace BefunGenTest
 
 			END
 			");
+		}
 
+		[TestMethod]
+		public void codeGenTest_Method_OutputArray()
+		{
 			debugMethod(@"
 			void calc()
 			var
@@ -412,6 +460,37 @@ namespace BefunGenTest
 		}
 
 		[TestMethod]
+		public void codeGenTest_Method_InputArray()
+		{
+			debugMethod(@"
+			void calc()
+			var
+				char[5] c;
+				char[5] d;
+				char[5] e;
+
+				int[4] x;
+			BEGIN
+				IN c;
+				
+				d = c;
+
+				e[0] = d[4];
+				e[1] = d[3];
+				e[2] = d[2];
+				e[3] = d[1];
+				e[4] = d[0];
+
+				OUT c;
+				OUT '' -> '';
+				OUT e;
+
+				QUIT;
+			END
+			");
+		}
+
+		[TestMethod]
 		public void codeGenTest_Statements()
 		{
 			debugStatement("out ''blub:fasel'';");
@@ -421,8 +500,6 @@ namespace BefunGenTest
 			debugStatement("QUIT;");
 
 			debugStatement("STOP;");
-
-			debugStatement("QUIT;");
 
 			debugStatement("OUT '''';");
 		}
