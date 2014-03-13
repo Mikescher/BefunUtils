@@ -965,7 +965,11 @@ namespace BefunGen.AST
 
 	public class Statement_In : Statement
 	{
+		public enum In_Mode { IN_INT, IN_CHAR, IN_CHAR_ARR, IN_INT_ARR };
+
 		public Expression_ValuePointer ValueTarget;
+
+		public In_Mode Mode;
 
 		public Statement_In(SourceCodePosition pos, Expression_ValuePointer vt)
 			: base(pos)
@@ -989,9 +993,30 @@ namespace BefunGen.AST
 
 			BType present = ValueTarget.getResultType();
 
-			if (!(present is BType_Int || present is BType_Char)) // TODO Input into CharArray && IntArray
+			BType expec_int = new BType_Int(Position);
+			BType expec_char = new BType_Char(Position);
+			BType expec_chararr = (present is BType_Array) ? new BType_CharArr(Position, (present as BType_Array).Size) : new BType_CharArr(Position, 0);
+			BType expec_intarr = (present is BType_Array) ? new BType_IntArr(Position, (present as BType_Array).Size) : new BType_IntArr(Position, 0);
+
+			if (present == expec_char)
 			{
-				throw new WrongTypeException(ValueTarget.Position, present, new BType_Int(Position), new BType_Char(Position));
+				Mode = In_Mode.IN_CHAR;
+			}
+			else if (present == expec_int)
+			{
+				Mode = In_Mode.IN_INT;
+			}
+			else if (present == expec_chararr)
+			{
+				Mode = In_Mode.IN_CHAR_ARR;
+			}
+			else if (present == expec_intarr)
+			{
+				Mode = In_Mode.IN_INT_ARR;
+			}
+			else
+			{
+				throw new WrongTypeException(ValueTarget.Position, present, expec_char, expec_int, expec_chararr, expec_intarr);
 			}
 		}
 
@@ -1007,12 +1032,26 @@ namespace BefunGen.AST
 
 		public override CodePiece generateCode(bool reversed)
 		{
+			switch (Mode)
+			{
+				case In_Mode.IN_INT:
+					return generateCode_Int(reversed);
+				case In_Mode.IN_CHAR:
+					return generateCode_Char(reversed);
+				case In_Mode.IN_CHAR_ARR:
+					return generateCode_CharArr(reversed);
+				case In_Mode.IN_INT_ARR:
+					return generateCode_IntArr(reversed);
+				default:
+					throw new WTFException();
+			}
+		}
+
+		private CodePiece generateCode_Int(bool reversed)
+		{
 			CodePiece p = new CodePiece();
 
-			if (ValueTarget.getResultType() is BType_Char)
-				p[0, 0] = BCHelper.In_ASCII;
-			else if (ValueTarget.getResultType() is BType_Int)
-				p[0, 0] = BCHelper.In_Int;
+			p[0, 0] = BCHelper.In_Int;
 
 			if (reversed)
 			{
@@ -1028,6 +1067,92 @@ namespace BefunGen.AST
 			}
 
 			return p;
+		}
+
+		private CodePiece generateCode_Char(bool reversed)
+		{
+			CodePiece p = new CodePiece();
+
+			p[0, 0] = BCHelper.In_ASCII;
+
+			if (reversed)
+			{
+				p.AppendLeft(ValueTarget.generateCodeSingle(reversed));
+				p.AppendLeft(BCHelper.Reflect_Set);
+				p.normalizeX();
+			}
+			else
+			{
+				p.AppendRight(ValueTarget.generateCodeSingle(reversed));
+				p.AppendRight(BCHelper.Reflect_Set);
+				p.normalizeX();
+			}
+
+			return p;
+		}
+
+		private CodePiece generateCode_CharArr(bool reversed)
+		{
+			Expression_DirectValuePointer vp = ValueTarget as Expression_DirectValuePointer;
+			int len = (ValueTarget.getResultType() as BType_Array).Size;
+
+			CodePiece p_len = NumberCodeHelper.generateCode(len, reversed);
+			CodePiece p_write = CodePieceStore.WriteArrayFromReversedStack(len, vp.Target.CodePositionX, vp.Target.CodePositionY, reversed);
+
+			if (reversed)
+			{
+				CodePiece p = CodePiece.ParseFromLine(@"$_>#!:$#-\#1\>#~<");
+
+				p.AppendRight(p_len);
+				p.AppendLeft(p_write);
+
+				p.normalizeX();
+
+				return p;
+			}
+			else
+			{
+				CodePiece p = CodePiece.ParseFromLine(@">~#<\1#\-#$:_$");
+
+				p.AppendLeft(p_len);
+				p.AppendRight(p_write);
+
+				p.normalizeX();
+
+				return p;
+			}
+		}
+
+		private CodePiece generateCode_IntArr(bool reversed)
+		{
+			Expression_DirectValuePointer vp = ValueTarget as Expression_DirectValuePointer;
+			int len = (ValueTarget.getResultType() as BType_Array).Size;
+
+			CodePiece p_len = NumberCodeHelper.generateCode(len, reversed);
+			CodePiece p_write = CodePieceStore.WriteArrayFromReversedStack(len, vp.Target.CodePositionX, vp.Target.CodePositionY, reversed);
+
+			if (reversed)
+			{
+				CodePiece p = CodePiece.ParseFromLine(@"$_>#!:$#-\#1\>#&<");
+
+				p.AppendRight(p_len);
+				p.AppendLeft(p_write);
+
+				p.normalizeX();
+
+				return p;
+			}
+			else
+			{
+				CodePiece p = CodePiece.ParseFromLine(@">&#<\1#\-#$:_$");
+
+				p.AppendLeft(p_len);
+				p.AppendRight(p_write);
+
+				p.normalizeX();
+
+				return p;
+			}
 		}
 	}
 

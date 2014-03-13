@@ -306,5 +306,194 @@ namespace BefunGen.AST.CodeGen
 				return p;
 			}
 		}
+
+		// Normally Arrays are reversed on Stack -> this Method is for the reversed case --> Stack is normal on stack
+		public static CodePiece WriteArrayFromReversedStack(int arrLen, int arrX, int arrY, bool reversed)
+		{
+			// Result: Horizontal     [LEFT, 0] IN ... [RIGHT, 0] OUT (or the other way when reversed)
+
+			// Array is !! NOT !! reversed in Stack --> will land normal on Field
+			// _____
+			// | D |
+			// | C |
+			// | B | -->
+			// | A |
+			// ¯¯¯¯¯
+			//			
+			// [A, B, C, D]
+			//
+
+			CodePiece p_tpx = NumberCodeHelper.generateCode(CodeGenConstants.TMP_FIELD_X, reversed);
+			CodePiece p_tpy = NumberCodeHelper.generateCode(CodeGenConstants.TMP_FIELD_Y, reversed);
+
+			CodePiece p_tpx_r = NumberCodeHelper.generateCode(CodeGenConstants.TMP_FIELD_X, !reversed);
+			CodePiece p_tpy_r = NumberCodeHelper.generateCode(CodeGenConstants.TMP_FIELD_Y, !reversed);
+
+			CodePiece p_len = NumberCodeHelper.generateCode(arrLen - 1, reversed);
+			CodePiece p_arx = NumberCodeHelper.generateCode(arrX, reversed);
+			CodePiece p_ary = NumberCodeHelper.generateCode(arrY, reversed);
+
+			if (reversed)
+			{
+				// _v#!p{Y}+g{TY}{TX}{X}\g{TY}{TX}<p{TY}{TX}{M}
+				//  >{TX}:{TY}g1-\{TY}p           ^        
+				CodePiece p = new CodePiece();
+
+				#region Reversed
+
+				int bot_start;
+				int bot_end;
+
+				bot_start = 0;
+
+				p[-1, 0] = BCHelper.If_Horizontal;
+				p[0, 0] = BCHelper.PC_Down;
+				p[1, 0] = BCHelper.PC_Jump;
+				p[2, 0] = BCHelper.Not;
+
+				p.AppendRight(BCHelper.Reflect_Set);
+
+				p.AppendRight(p_ary);
+
+				p.AppendRight(BCHelper.Add);
+				p.AppendRight(BCHelper.Reflect_Get);
+
+				p.AppendRight(p_tpy);
+				p.AppendRight(p_tpx);
+				p.AppendRight(p_arx);
+
+				p.AppendRight(BCHelper.Stack_Swap);
+				p.AppendRight(BCHelper.Reflect_Get);
+
+				p.AppendRight(p_tpy);
+				p.AppendRight(p_tpx);
+
+				bot_end = p.MaxX;
+
+				p.AppendRight(BCHelper.PC_Left);
+				p.AppendRight(BCHelper.Reflect_Set);
+
+				p.AppendRight(p_tpy);
+				p.AppendRight(p_tpx);
+
+				p.AppendRight(p_len);
+
+				CodePiece p_bottom = new CodePiece();
+				{
+					#region Generate_Bottom
+
+					p_bottom.AppendRight(p_tpx_r);
+
+					p_bottom.AppendRight(BCHelper.Stack_Dup);
+
+					p_bottom.AppendRight(p_tpy_r);
+
+					p_bottom.AppendRight(BCHelper.Reflect_Get);
+					p_bottom.AppendRight(BCHelper.Digit_1);
+					p_bottom.AppendRight(BCHelper.Sub);
+					p_bottom.AppendRight(BCHelper.Stack_Swap);
+
+					p_bottom.AppendRight(p_tpy_r);
+
+					p_bottom.AppendRight(BCHelper.Reflect_Set);
+
+					p_bottom.normalizeX();
+
+					#endregion
+				}
+
+				p[bot_start, 1] = BCHelper.PC_Right;
+				p[bot_end, 1] = BCHelper.PC_Up;
+
+				p.SetAt(bot_start + 1, 1, p_bottom);
+
+				p.FillRowWW(1, bot_start + 1 + p_bottom.Width, bot_end);
+
+				p.normalizeX();
+
+				#endregion
+
+				return p;
+			}
+			else
+			{
+				// {M}{TX}{TY}p>{TX}{TY}g\{X}{TX}{TY}g+{Y}p#v_
+				//           ^p{TY}\-1g{TY}:{TX}            < 
+				CodePiece p = new CodePiece();
+
+				#region Normal
+
+				int bot_start;
+				int bot_end;
+
+				p.AppendRight(p_len);
+
+				p.AppendRight(p_tpx);
+				p.AppendRight(p_tpy);
+
+				p.AppendRight(BCHelper.Reflect_Set);
+				bot_start = p.MaxX;
+				p.AppendRight(BCHelper.PC_Right);
+
+				p.AppendRight(p_tpx);
+				p.AppendRight(p_tpy);
+
+				p.AppendRight(BCHelper.Reflect_Get);
+				p.AppendRight(BCHelper.Stack_Swap);
+
+				p.AppendRight(p_arx);
+				p.AppendRight(p_tpx);
+				p.AppendRight(p_tpy);
+
+				p.AppendRight(BCHelper.Reflect_Get);
+				p.AppendRight(BCHelper.Add);
+
+				p.AppendRight(p_ary);
+
+				p.AppendRight(BCHelper.Reflect_Set);
+
+				p.AppendRight(BCHelper.PC_Jump);
+				bot_end = p.MaxX;
+				p.AppendRight(BCHelper.PC_Down);
+				p.AppendRight(BCHelper.If_Horizontal);
+
+				CodePiece p_bottom = new CodePiece();
+				{
+					#region Generate_Bottom
+
+					p_bottom[0, 0] = BCHelper.Reflect_Set;
+
+					p_bottom.AppendRight(p_tpy_r);
+
+					p_bottom.AppendRight(BCHelper.Stack_Swap);
+					p_bottom.AppendRight(BCHelper.Sub);
+					p_bottom.AppendRight(BCHelper.Digit_1);
+					p_bottom.AppendRight(BCHelper.Reflect_Get);
+
+					p_bottom.AppendRight(p_tpy_r);
+
+					p_bottom.AppendRight(BCHelper.Stack_Dup);
+
+					p_bottom.AppendRight(p_tpx_r);
+
+					p_bottom.normalizeX();
+
+					#endregion
+				}
+
+				p[bot_start, 1] = BCHelper.PC_Up;
+				p[bot_end, 1] = BCHelper.PC_Left;
+
+				p.SetAt(bot_start + 1, 1, p_bottom);
+
+				p.FillRowWW(1, bot_start + 1 + p_bottom.Width, bot_end);
+
+				p.normalizeX();
+
+				#endregion
+
+				return p;
+			}
+		}
 	}
 }

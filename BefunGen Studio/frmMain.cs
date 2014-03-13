@@ -276,35 +276,24 @@ namespace BefunGen
 			debugMethod(@"
 			void calc()
 			var
-				char[4] c;
-				char[4] d;
-				char[4] e;
+				char[5] c;
+				char[5] d;
+				char[5] e;
+
+				int[4] x;
 			BEGIN
-				c[0] = 'A';
-				c[1] = 'B';
-				c[2] = 'C';
-				c[3] = 'D';
-
-				d = c;
-				e = d;
-
-				OUT d[0];
-				OUT d[1];
-				OUT d[2];
-				OUT d[3];
-
-				OUT ''  -  '';
-
-				OUT e[0];
-				OUT e[1];
-				OUT e[2];
-				OUT e[3];
-
-				OUT ''  -  '';
+				IN c;
 				
-				OUT d;
-				OUT ''::'';
-				OUT ''::'';
+				d = c;
+
+				e[0] = d[4];
+				e[1] = d[3];
+				e[2] = d[2];
+				e[3] = d[1];
+				e[4] = d[0];
+
+				OUT c;
+				OUT '' -> '';
 				OUT e;
 
 				QUIT;

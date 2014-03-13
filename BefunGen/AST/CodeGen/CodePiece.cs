@@ -28,7 +28,8 @@ namespace BefunGen.AST.CodeGen
 
 		#endregion
 
-		#region Konstruktor
+		#region Construct
+
 		public CodePiece()
 		{
 			MinX = 0;
@@ -37,6 +38,26 @@ namespace BefunGen.AST.CodeGen
 			MaxX = 0;
 			MaxY = 0;
 		}
+
+		public static CodePiece ParseFromLine(string l)
+		{
+			CodePiece p = new CodePiece();
+
+			for (int i = 0; i < l.Length; i++)
+			{
+				char c = l[i];
+
+				if (c == ' ')
+					throw new InternalCodeGenException(); // Space is undefinied: NOP <> Walkway
+
+				BefungeCommand cmd = BCHelper.FindCommand(c);
+
+				p[i, 0] = cmd;
+			}
+
+			return p;
+		}
+
 		#endregion
 
 		#region Internal

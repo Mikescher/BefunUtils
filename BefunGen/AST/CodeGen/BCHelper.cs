@@ -426,5 +426,54 @@ namespace BefunGen.AST.CodeGen
 		}
 
 		#endregion
+
+		#region Helper
+
+		public static BefungeCommand FindCommand(char c)
+		{
+			switch (c)
+			{
+				case ' ': return BCHelper.Walkway;
+				case '+': return BCHelper.Add;
+				case '-': return BCHelper.Sub;
+				case '*': return BCHelper.Mult;
+				case '/': return BCHelper.Div;
+				case '%': return BCHelper.Modulo;
+				case '!': return BCHelper.Not;
+				case '`': return BCHelper.GreaterThan;
+				case '>': return BCHelper.PC_Right;
+				case '<': return BCHelper.PC_Left;
+				case '^': return BCHelper.PC_Up;
+				case 'v': return BCHelper.PC_Down;
+				case '?': return BCHelper.PC_Random;
+				case '_': return BCHelper.If_Horizontal;
+				case '|': return BCHelper.If_Vertical;
+				case '"': return BCHelper.Stringmode;
+				case ':': return BCHelper.Stack_Dup;
+				case '\\': return BCHelper.Stack_Swap;
+				case '$': return BCHelper.Stack_Pop;
+				case '.': return BCHelper.Out_Int;
+				case ',': return BCHelper.Out_ASCII;
+				case '#': return BCHelper.PC_Jump;
+				case 'p': return BCHelper.Reflect_Set;
+				case 'g': return BCHelper.Reflect_Get;
+				case '&': return BCHelper.In_Int;
+				case '~': return BCHelper.In_ASCII;
+				case '@': return BCHelper.Stop;
+				case '0': return BCHelper.Digit_0;
+				case '1': return BCHelper.Digit_1;
+				case '2': return BCHelper.Digit_2;
+				case '3': return BCHelper.Digit_3;
+				case '4': return BCHelper.Digit_4;
+				case '5': return BCHelper.Digit_5;
+				case '6': return BCHelper.Digit_6;
+				case '7': return BCHelper.Digit_7;
+				case '8': return BCHelper.Digit_8;
+				case '9': return BCHelper.Digit_9;
+				default:  return BCHelper.chr(c);
+			}
+		}
+
+		#endregion
 	}
 }
