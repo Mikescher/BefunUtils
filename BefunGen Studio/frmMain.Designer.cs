@@ -56,6 +56,7 @@
 			this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
 			this.btnExecuteDebug = new System.Windows.Forms.Button();
 			this.btnDebugNumberRep = new System.Windows.Forms.Button();
+			this.btnSendToRun = new System.Windows.Forms.Button();
 			this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
 			this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
 			this.btnLoadSYN = new System.Windows.Forms.Button();
@@ -416,6 +417,7 @@
 			this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this.tableLayoutPanel5.Controls.Add(this.btnExecuteDebug, 0, 0);
 			this.tableLayoutPanel5.Controls.Add(this.btnDebugNumberRep, 0, 1);
+			this.tableLayoutPanel5.Controls.Add(this.btnSendToRun, 0, 2);
 			this.tableLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tableLayoutPanel5.Location = new System.Drawing.Point(526, 3);
 			this.tableLayoutPanel5.Name = "tableLayoutPanel5";
@@ -451,6 +453,17 @@
 			this.btnDebugNumberRep.Text = "NumberRep";
 			this.btnDebugNumberRep.UseVisualStyleBackColor = true;
 			this.btnDebugNumberRep.Click += new System.EventHandler(this.btnDebugNumberRep_Click);
+			// 
+			// btnSendToRun
+			// 
+			this.btnSendToRun.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.btnSendToRun.Location = new System.Drawing.Point(3, 73);
+			this.btnSendToRun.Name = "btnSendToRun";
+			this.btnSendToRun.Size = new System.Drawing.Size(137, 29);
+			this.btnSendToRun.TabIndex = 3;
+			this.btnSendToRun.Text = "Send To Run";
+			this.btnSendToRun.UseVisualStyleBackColor = true;
+			this.btnSendToRun.Click += new System.EventHandler(this.btnSendToRun_Click);
 			// 
 			// tableLayoutPanel2
 			// 
@@ -581,6 +594,7 @@
 		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel5;
 		private System.Windows.Forms.Button btnExecuteDebug;
 		private System.Windows.Forms.Button btnDebugNumberRep;
+		private System.Windows.Forms.Button btnSendToRun;
 	}
 }
 

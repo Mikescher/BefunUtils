@@ -603,7 +603,8 @@ namespace BefunGen.AST
 
 		public override CodePiece generateCode(bool reversed)
 		{
-			throw new NotImplementedException(); //TODO Implement
+			return CodePiece.ParseFromLine(@"""RETURN""");
+			//throw new NotImplementedException(); //TODO Implement
 		}
 	}
 

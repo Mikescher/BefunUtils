@@ -1,5 +1,6 @@
 using BefunGen.AST.CodeGen;
 using BefunGen.AST.Exceptions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -9,7 +10,7 @@ namespace BefunGen.AST
 	{
 		public string Identifier;
 		public Method MainStatement;
-		public List<Method> MethodList; // Includes MainStatement
+		public List<Method> MethodList; // Includes MainStatement (at 0)
 
 		public Program(SourceCodePosition pos, string id, Method m, List<Method> mlst)
 			: base(pos)
@@ -58,7 +59,37 @@ namespace BefunGen.AST
 
 		public CodePiece generateCode()
 		{
-			return new CodePiece(); //TODO Final Implement
+			List<Tuple<int, int, CodePiece>> meth_pieces = new List<Tuple<int, int, CodePiece>>();
+
+			CodePiece p = new CodePiece();
+
+			int meth_offset_x = 1;
+			int meth_offset_y = 1;
+
+			p[0, 0] = BCHelper.PC_Down;
+
+			for (int i = 0; i < MethodList.Count; i++)
+			{
+				Method m = MethodList[i];
+
+				CodePiece p_method = m.generateCode(meth_offset_x, meth_offset_y);
+
+				int mx = meth_offset_x - p_method.MinX;
+				int my = meth_offset_y - p_method.MinY;
+
+				meth_pieces.Add(Tuple.Create(mx, my, p_method));
+
+				p.SetAt(mx, my, p_method);
+
+				meth_offset_y += p_method.Height + CodeGenConstants.VERTICAL_METHOD_DISTANCE;
+			}
+
+			// Path to main
+			p[0, meth_pieces[0].Item2] = BCHelper.PC_Right;
+			p.FillColWW(0, 1, meth_pieces[0].Item2);
+			p.FillRowWW(meth_pieces[0].Item2, 1, meth_pieces[0].Item1);
+
+			return p;
 		}
 	}
 
