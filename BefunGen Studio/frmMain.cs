@@ -343,6 +343,8 @@ namespace BefunGen
 		{
 			debugProgram(@"
 			program testprog
+				VAR
+					int i;
 				BEGIN
 
 					OUT ''START\r\n'';

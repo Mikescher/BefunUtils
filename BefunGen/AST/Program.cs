@@ -1,4 +1,5 @@
 using BefunGen.AST.CodeGen;
+using BefunGen.AST.CodeGen.Tags;
 using BefunGen.AST.Exceptions;
 using System;
 using System.Collections.Generic;
@@ -96,10 +97,11 @@ namespace BefunGen.AST
 				meth_offset_y += p_method.Height + CodeGenConstants.VERTICAL_METHOD_DISTANCE;
 			}
 
-			// Path to main
-			p[0, meth_pieces[0].Item2] = BCHelper.PC_Right;
-			p.FillColWW(0, 1, meth_pieces[0].Item2);
-			p.FillRowWW(meth_pieces[0].Item2, 1, meth_pieces[0].Item1);
+			// Path to main --TEMP--
+			int entry_y = meth_pieces[0].Item2 + (meth_pieces[0].Item3.findTagSingle(typeof(MethodEntry_FullInitialization_Tag)).Y - meth_pieces[0].Item3.MinX);
+			p[0, entry_y] = BCHelper.PC_Right;
+			p.FillColWW(0, 1, entry_y);
+			p.FillRowWW(entry_y, 1, meth_pieces[0].Item1);
 
 			return p;
 		}

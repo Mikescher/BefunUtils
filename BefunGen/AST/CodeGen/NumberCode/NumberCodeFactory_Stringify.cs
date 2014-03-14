@@ -14,6 +14,10 @@ namespace BefunGen.AST.CodeGen.NumberCode
 		public static CodePiece generateCode(int Value, bool reversed)
 		{
 			CodePiece p = generateCode(Value);
+
+			if (p == null)
+				return null;
+
 			if (reversed)
 				p.reverseX(false);
 			return p;
@@ -65,20 +69,6 @@ namespace BefunGen.AST.CodeGen.NumberCode
 				return null;
 			}
 
-			//for (int currASCII = MIN_ASCII; currASCII <= MAX_ASCII; currASCII++)
-			//{
-			//	if (currASCII * currASCII == lit)
-			//	{
-			//		CodePiece p = new CodePiece();
-			//		p[0, 0] = BCHelper.Stringmode;
-			//		p[1, 0] = BCHelper.chr(currASCII);
-			//		p[2, 0] = BCHelper.chr(currASCII);
-			//		p[3, 0] = BCHelper.Stringmode;
-			//		p[4, 0] = BCHelper.Mult;
-			//		return p;
-			//	}
-			//}
-
 			List<char> str;
 			List<StripOp> ops;
 
@@ -105,7 +95,6 @@ namespace BefunGen.AST.CodeGen.NumberCode
 							throw new WTFException();
 					}
 				}
-
 
 				return p;
 			}
@@ -179,7 +168,6 @@ namespace BefunGen.AST.CodeGen.NumberCode
 			str = null;
 			ops = null;
 			return false;
-
 		}
 	}
 }

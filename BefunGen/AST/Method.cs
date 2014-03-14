@@ -1,4 +1,5 @@
 using BefunGen.AST.CodeGen;
+using BefunGen.AST.CodeGen.Tags;
 using BefunGen.AST.Exceptions;
 using System;
 using System.Collections.Generic;
@@ -98,7 +99,9 @@ namespace BefunGen.AST
 			//<<-- Entry Point
 
 			// Generate Initialization of Variables
-			p.AppendBottom(generateCode_VariableIntialization());
+			CodePiece p_vi = generateCode_VariableIntialization();
+			p_vi.SetTag(0, 0, new MethodEntry_FullInitialization_Tag(this));
+			p.AppendBottom(p_vi);
 
 			// Generate Initialization of Parameters
 			p.AppendBottom(generateCode_ParameterIntialization());
@@ -216,6 +219,8 @@ namespace BefunGen.AST
 			}
 
 			p.normalizeX();
+
+			p.forceNonEmpty();
 
 			return p;
 		}

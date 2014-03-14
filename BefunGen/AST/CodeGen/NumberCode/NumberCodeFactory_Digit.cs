@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
+﻿
 namespace BefunGen.AST.CodeGen.NumberCode
 {
 	public class NumberCodeFactory_Digit
@@ -10,6 +6,10 @@ namespace BefunGen.AST.CodeGen.NumberCode
 		public static CodePiece generateCode(int Value, bool reversed)
 		{
 			CodePiece p = generateCode(Value);
+
+			if (p == null)
+				return null;
+
 			if (reversed)
 				p.reverseX(false);
 			return p;

@@ -103,7 +103,7 @@ namespace BefunGen.AST
 
 		public override CodePiece generateCode(bool reversed)
 		{
-			return NumberCodeFactory_StringmodeChar.generateCode(Value, reversed);
+			return NumberCodeFactory_StringmodeChar.generateCode(Value, reversed) ?? NumberCodeHelper.generateCode(Value, reversed);
 		}
 	}
 
@@ -260,14 +260,14 @@ namespace BefunGen.AST
 			{
 				foreach (char val in Value.Reverse<char>()) // Reverse Value -> correct stack order
 				{
-					p.AppendLeft(NumberCodeFactory_StringmodeChar.generateCode(val, reversed));
+					p.AppendLeft(NumberCodeFactory_StringmodeChar.generateCode(val, reversed) ?? NumberCodeHelper.generateCode(val, reversed));
 				}
 			}
 			else
 			{
 				foreach (char val in Value.Reverse<char>())// Reverse Value -> correct stack order
 				{
-					p.AppendRight(NumberCodeFactory_StringmodeChar.generateCode(val, reversed));
+					p.AppendRight(NumberCodeFactory_StringmodeChar.generateCode(val, reversed) ?? NumberCodeHelper.generateCode(val, reversed));
 				}
 			}
 
@@ -280,7 +280,7 @@ namespace BefunGen.AST
 
 		public override CodePiece generateCode(int pos, bool reversed)
 		{
-			return NumberCodeFactory_StringmodeChar.generateCode(Value[pos], reversed);
+			return NumberCodeFactory_StringmodeChar.generateCode(Value[pos], reversed) ?? NumberCodeHelper.generateCode(pos, reversed);
 		}
 	}
 

@@ -31,7 +31,7 @@ namespace BefunGen.AST.CodeGen
 
 		#region Construct
 
-		public CodePiece(BefungeCommand cmd) 
+		public CodePiece(BefungeCommand cmd)
 			: this()
 		{
 			this[0, 0] = cmd;
@@ -162,6 +162,14 @@ namespace BefunGen.AST.CodeGen
 			commandArr[x - MinX][y - MinY] = value;
 		}
 
+		private void forceSet(int x, int y, BefungeCommand value) // Suppresses CodeModificationException
+		{
+			if (!IsIncluded(x, y))
+				expand(x, y);
+
+			commandArr[x - MinX][y - MinY] = value;
+		}
+
 		private BefungeCommand get(int x, int y)
 		{
 			if (IsIncluded(x, y))
@@ -249,6 +257,23 @@ namespace BefunGen.AST.CodeGen
 			}
 
 			return tl;
+		}
+
+		public TagLocation findTagSingle(Type t)
+		{
+			return findAllTags(t).Single();
+		}
+
+		public void SetTag(int x, int y, object tag)
+		{
+			BefungeCommand cmd = this[x, y];
+
+			if (cmd.hasTag())
+				throw new InvalidCodeManipulationException("Tryed to remove existing Tag: " + cmd.Tag + " with: " + tag);
+
+			BefungeCommand newcmd = new BefungeCommand(cmd.Type, cmd.Param, tag);
+
+			forceSet(x, y, newcmd);
 		}
 
 		#endregion
@@ -864,6 +889,12 @@ namespace BefunGen.AST.CodeGen
 
 			MinX += ox;
 			MaxX += ox;
+		}
+
+		public void forceNonEmpty()
+		{
+			if (Width == 0 || Height == 0)
+				this[0, 0] = BCHelper.Walkway;
 		}
 
 		#endregion

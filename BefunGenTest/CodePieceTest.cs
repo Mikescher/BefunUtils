@@ -17,20 +17,22 @@ namespace BefunGenTest
 
 		private Program parseExpression(string type, string expr)
 		{
-			string txt = String.Format("program b var {0} a; begin a = {1}; end end", type, expr);
+			string txt = String.Format("program b var {0} a; begin a = {1}; QUIT; end end", type, expr);
 			BefunGen.AST.Program p = GParser.generateAST(txt);
 
-			if (p == null) throw new Exception(GParser.FailMessage);
+			if (p == null)
+				throw new Exception(GParser.FailMessage);
 
 			return p;
 		}
 
 		private Program parseStatement(string stmt)
 		{
-			string txt = String.Format("program b var  bool a; begin {0} end end", stmt);
+			string txt = String.Format("program b var  bool a; begin {0} QUIT; end end", stmt);
 			BefunGen.AST.Program p = GParser.generateAST(txt);
 
-			if (p == null) throw new Exception(GParser.FailMessage);
+			if (p == null)
+				throw new Exception(GParser.FailMessage);
 
 			return p;
 		}
@@ -40,7 +42,8 @@ namespace BefunGenTest
 			string txt = String.Format("program b begin {0}; end {1} end", call, meth);
 			BefunGen.AST.Program p = GParser.generateAST(txt);
 
-			if (p == null) throw new Exception(GParser.FailMessage);
+			if (p == null)
+				throw new Exception(GParser.FailMessage);
 
 			return p;
 		}
@@ -49,7 +52,8 @@ namespace BefunGenTest
 		{
 			BefunGen.AST.Program p = GParser.generateAST(meth);
 
-			if (p == null) throw new Exception(GParser.FailMessage);
+			if (p == null)
+				throw new Exception(GParser.FailMessage);
 
 			return p;
 		}
@@ -107,9 +111,7 @@ namespace BefunGenTest
 
 		public void TestCP(CodePiece p)
 		{
-			//TODO Implement Automatic Testing
-
-			// --> //TODO Automatic Test resulting pros -> like BefungExec DebugMode -> Random input (perhaps multiple times)
+			MultiCPTester.Test_Common(p.ToSimpleString());
 		}
 
 		#endregion
@@ -155,6 +157,8 @@ namespace BefunGenTest
 		[TestMethod]
 		public void codeGenTest_Expr()
 		{
+			debugExpression("int", "5+5");
+
 			debugExpression("int", "40*(-50+(int)rand)");
 
 			debugExpression("int", "100");
@@ -678,6 +682,18 @@ namespace BefunGenTest
 				QUIT;
 			END
 			");
+		}
+
+		[TestMethod]
+		public void numberCodeFactoryTest_Normal()
+		{
+			//TODO
+		}
+
+		[TestMethod]
+		public void numberCodeFactoryTest_Reverse()
+		{
+			//TODO
 		}
 	}
 }

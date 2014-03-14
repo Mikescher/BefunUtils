@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
+﻿
 namespace BefunGen.AST.CodeGen.NumberCode
 {
 	public class NumberCodeFactory_StringmodeChar
@@ -10,6 +6,10 @@ namespace BefunGen.AST.CodeGen.NumberCode
 		public static CodePiece generateCode(int Value, bool reversed)
 		{
 			CodePiece p = generateCode(Value);
+
+			if (p == null)
+				return null;
+
 			if (reversed)
 				p.reverseX(false);
 			return p;
@@ -28,7 +28,7 @@ namespace BefunGen.AST.CodeGen.NumberCode
 				p[4, 0] = BCHelper.Sub;
 
 				return p;
-			} 
+			}
 			else if (Value == (int)'"')
 			{
 				p[0, 0] = BCHelper.Digit_1;
@@ -38,7 +38,7 @@ namespace BefunGen.AST.CodeGen.NumberCode
 				p[4, 0] = BCHelper.Add;
 
 				return p;
-			} 
+			}
 			else if (Value <= -(int)' ' && Value >= -(int)'~')
 			{
 				p[0, 0] = BCHelper.Digit_0;
