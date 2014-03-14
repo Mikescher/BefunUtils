@@ -890,7 +890,7 @@ namespace BefunGen.AST
 				p[3, 1] = BCHelper.Walkway;
 				p[4, 1] = BCHelper.PC_Up;
 
-				p[0, 2] = BCHelper.PC_Left;
+				p[0, 2] = BCHelper.PC_Right;
 				p[1, 2] = BCHelper.Digit_1;
 				p[2, 2] = BCHelper.Walkway;
 				p[3, 2] = BCHelper.Walkway;
