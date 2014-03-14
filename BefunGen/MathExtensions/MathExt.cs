@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace BefunGen.MathExtensions
 {
@@ -29,6 +28,24 @@ namespace BefunGen.MathExtensions
 				v1 = Math.Min(v1, v);
 			}
 			return v1;
+		}
+
+		public static long IntPow(int x, short power)
+		{
+			if (power == 0)
+				return 1;
+			if (power == 1)
+				return x;
+			// ----------------------
+			int n = 15;
+			while ((power <<= 1) >= 0)
+				n--;
+
+			long tmp = x;
+			while (--n > 0)
+				tmp = tmp * tmp *
+					 (((power <<= 1) < 0) ? x : 1);
+			return tmp;
 		}
 	}
 }

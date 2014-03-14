@@ -394,7 +394,7 @@ namespace BefunGen
 
 		private void btnDebugNumberRep_Click(object sender, EventArgs e)
 		{
-			string bench = NumberCodeHelper.generateBenchmark(2048, true);
+			string bench = NumberCodeHelper.generateBenchmark(16384, true);
 
 			txtDebug.Text = bench;
 

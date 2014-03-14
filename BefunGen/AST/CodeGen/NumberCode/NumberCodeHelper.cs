@@ -95,8 +95,8 @@ namespace BefunGen.AST.CodeGen.NumberCode
 			result.Add(Tuple.Create(NumberRep.Digit, NumberCodeFactory_Digit.generateCode(Value)));
 			result.Add(Tuple.Create(NumberRep.Base9, NumberCodeFactory_Base9.generateCode(Value)));
 			result.Add(Tuple.Create(NumberRep.Factorization, NumberCodeFactory_Factorization.generateCode(Value)));
-			result.Add(Tuple.Create(NumberRep.Stringify, NumberCodeFactory_Stringify.generateCode(Value)));
 			result.Add(Tuple.Create(NumberRep.StringmodeChar, NumberCodeFactory_StringmodeChar.generateCode(Value)));
+			result.Add(Tuple.Create(NumberRep.Stringify, NumberCodeFactory_Stringify.generateCode(Value)));
 
 			if (filter)
 				return result.Where(p => p.Item2 != null).ToList();
@@ -115,7 +115,8 @@ namespace BefunGen.AST.CodeGen.NumberCode
 			int[] count = new int[reps.Count];
 			Array.Clear(count, 0, reps.Count);
 
-			int mxw = Enumerable.Range(MIN, MAX + 1).Max(p1 => generateAllCode(p1, true).Max(p2 => p2.Item2.Width)) + 3;
+			//int mxw = Enumerable.Range(MIN, MAX + 1).Max(p1 => generateAllCode(p1, true).Max(p2 => p2.Item2.Width)) + 3;
+			int mxw = 24;
 
 			StringBuilder txt = new StringBuilder();
 

@@ -116,6 +116,8 @@ namespace BefunGenTest
 
 		#endregion
 
+		//TODO automatic Test all different NumberCodeGen Methods (Range: 16384)
+
 		[TestMethod]
 		public void CodePieceTest_Set()
 		{
