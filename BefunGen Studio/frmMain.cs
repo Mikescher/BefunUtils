@@ -1,5 +1,6 @@
 ﻿using BefunGen.AST;
 using BefunGen.AST.CodeGen;
+using BefunGen.AST.CodeGen.NumberCode;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -7,6 +8,8 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace BefunGen
 {
@@ -391,47 +394,12 @@ namespace BefunGen
 
 		private void btnDebugNumberRep_Click(object sender, EventArgs e)
 		{
-			int count_CharConstant = 0;
-			int count_Base9 = 0;
-			int count_Factorization = 0;
-			int count_Digit = 0;
+			string bench = NumberCodeHelper.generateBenchmark(2048, true);
 
-			StringBuilder txt = new StringBuilder();
+			txtDebug.Text = bench;
 
-			for (int i = -1024; i < 1024; i++)
-			{
-				CodePiece p = NumberCodeHelper.generateCode(i, false);
-				CodePiece b9 = Base9Converter.generateCodeForLiteral(i);
-				CodePiece nf = NumberFactorization.generateCodeForLiteral(i);
-
-				txt.AppendLine(String.Format(@"{0}{1:0000}: {2, -24} {3, -24} FAC: {4, -24} B9: {5, -24}", (i < 0) ? "" : " ", i, NumberCodeHelper.lastRep, p.ToSimpleString(), nf.ToSimpleString(), b9.ToSimpleString()));
-				switch (NumberCodeHelper.lastRep)
-				{
-					case NumberRep.CharConstant:
-						count_CharConstant++;
-						break;
-					case NumberRep.Base9:
-						count_Base9++;
-						break;
-					case NumberRep.Factorization:
-						count_Factorization++;
-						break;
-					case NumberRep.Digit:
-						count_Digit++;
-						break;
-				}
-			}
-
-			txt.AppendLine();
-			txt.AppendLine(new String('#', 32));
-			txt.AppendLine();
-
-			txt.AppendLine(String.Format("{0,-16}", "CharConstant:") + count_CharConstant);
-			txt.AppendLine(String.Format("{0,-16}", "Base9:") + count_Base9);
-			txt.AppendLine(String.Format("{0,-16}", "Factorization:") + count_Factorization);
-			txt.AppendLine(String.Format("{0,-16}", "Digit:") + count_Digit);
-
-			txtDebug.Text += txt.ToString();
+			txtDebug.Focus();
+			txtDebug.SelectAll();
 		}
 
 		private void btnRun_Click(object sender, EventArgs e)

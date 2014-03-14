@@ -1,4 +1,5 @@
 ﻿using BefunGen.AST.CodeGen;
+using BefunGen.AST.CodeGen.NumberCode;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -102,7 +103,7 @@ namespace BefunGen.AST
 
 		public override CodePiece generateCode(bool reversed)
 		{
-			return NumberCodeHelper.generateCode_Stringmode(Value, reversed);
+			return NumberCodeFactory_StringmodeChar.generateCode(Value, reversed);
 		}
 	}
 
@@ -128,7 +129,7 @@ namespace BefunGen.AST
 
 		public override CodePiece generateCode(bool reversed)
 		{
-			return NumberCodeHelper.generateCode(Value);
+			return NumberCodeFactory_Boolean.generateCode(Value);
 		}
 	}
 
@@ -154,7 +155,7 @@ namespace BefunGen.AST
 
 		public override CodePiece generateCode(bool reversed)
 		{
-			return NumberCodeHelper.generateCode_Digit(Value);
+			return NumberCodeFactory_Digit.generateCode(Value);
 		}
 	}
 
@@ -259,14 +260,14 @@ namespace BefunGen.AST
 			{
 				foreach (char val in Value.Reverse<char>()) // Reverse Value -> correct stack order
 				{
-					p.AppendLeft(NumberCodeHelper.generateCode_Stringmode(val, reversed));
+					p.AppendLeft(NumberCodeFactory_StringmodeChar.generateCode(val, reversed));
 				}
 			}
 			else
 			{
 				foreach (char val in Value.Reverse<char>())// Reverse Value -> correct stack order
 				{
-					p.AppendRight(NumberCodeHelper.generateCode_Stringmode(val, reversed));
+					p.AppendRight(NumberCodeFactory_StringmodeChar.generateCode(val, reversed));
 				}
 			}
 
@@ -279,7 +280,7 @@ namespace BefunGen.AST
 
 		public override CodePiece generateCode(int pos, bool reversed)
 		{
-			return NumberCodeHelper.generateCode_Stringmode(Value[pos], reversed);
+			return NumberCodeFactory_StringmodeChar.generateCode(Value[pos], reversed);
 		}
 	}
 
@@ -340,7 +341,7 @@ namespace BefunGen.AST
 
 		public override CodePiece generateCode(int pos, bool reversed)
 		{
-			return NumberCodeHelper.generateCode(Value[pos]);
+			return NumberCodeFactory_Boolean.generateCode(Value[pos]);
 		}
 	}
 
@@ -401,7 +402,7 @@ namespace BefunGen.AST
 
 		public override CodePiece generateCode(int pos, bool reversed)
 		{
-			return NumberCodeHelper.generateCode_Digit(Value[pos]);
+			return NumberCodeFactory_Digit.generateCode(Value[pos]);
 		}
 	}
 

@@ -3,10 +3,12 @@ namespace BefunGen.AST.CodeGen
 {
 	public enum NumberRep
 	{
-		CharConstant,
+		StringmodeChar,	// CANT REPRESENT EVERYTHING !!
 		Base9,
 		Factorization,
-		Digit, // Throws Error when not 0 <= x <= 9
+		Stringify,		// CANT REPRESENT EVERYTHING !!
+		Digit,			// CANT REPRESENT EVERYTHING !!
+		Boolean,		// CANT REPRESENT EVERYTHING !!
 		Best
 	}
 
@@ -14,9 +16,6 @@ namespace BefunGen.AST.CodeGen
 	{
 		// Defines how Number Literals get represented
 		public static NumberRep NumberLiteralRepresentation = NumberRep.Best;
-
-		// If 0 <= NumberLiteral <= 9 then generate as digit (only codegen - not in AST)
-		public static bool AutoDigitizeNumberLiterals = true;
 
 		// Removes 2x STringmodetoogle after each other rfrom Expression (eg "" )
 		public static bool StripDoubleStringmodeToogle = true;

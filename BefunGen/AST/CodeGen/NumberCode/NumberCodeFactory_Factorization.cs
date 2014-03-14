@@ -1,11 +1,19 @@
 ﻿using BefunGen.AST.Exceptions;
 using System.Collections.Generic;
 
-namespace BefunGen.AST.CodeGen
+namespace BefunGen.AST.CodeGen.NumberCode
 {
-	public static class NumberFactorization
+	public static class NumberCodeFactory_Factorization
 	{
-		public static CodePiece generateCodeForLiteral(int lit)
+		public static CodePiece generateCode(int Value, bool reversed)
+		{
+			CodePiece p = generateCode(Value);
+			if (reversed)
+				p.reverseX(false);
+			return p;
+		}
+
+		public static CodePiece generateCode(int lit)
 		{
 			bool isneg;
 			if (isneg = lit < 0)

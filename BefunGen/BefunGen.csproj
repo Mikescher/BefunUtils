@@ -49,13 +49,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AST\ASTObject.cs" />
-    <Compile Include="AST\CodeGen\Base9Converter.cs" />
+    <Compile Include="AST\CodeGen\NumberCode\NumberCodeFactory_Boolean.cs" />
+    <Compile Include="AST\CodeGen\NumberCode\NumberCodeFactory_Digit.cs" />
+    <Compile Include="AST\CodeGen\NumberCode\NumberCodeFactory_Stringify.cs" />
+    <Compile Include="AST\CodeGen\NumberCode\NumberCodeFactory_Base9.cs" />
     <Compile Include="AST\CodeGen\BCHelper.cs" />
     <Compile Include="AST\CodeGen\BefungeCommand.cs" />
     <Compile Include="AST\CodeGen\CodeGenConstants.cs" />
     <Compile Include="AST\CodeGen\CodeGenOptions.cs" />
     <Compile Include="AST\CodeGen\CodePiece.cs" />
     <Compile Include="AST\CodeGen\CodePieceStore.cs" />
+    <Compile Include="AST\CodeGen\NumberCode\NumberCodeFactory_StringmodeChar.cs" />
     <Compile Include="AST\CodeGen\Tags\CodeTag.cs" />
     <Compile Include="AST\CodeGen\Tags\MethodCall_HorizontalExit_Tag.cs" />
     <Compile Include="AST\CodeGen\Tags\MethodCall_HorizontalReEntry_Tag.cs" />
@@ -63,8 +67,8 @@
     <Compile Include="AST\CodeGen\Tags\MethodCall_VerticalExit_Tag.cs" />
     <Compile Include="AST\CodeGen\Tags\TagLocation.cs" />
     <Compile Include="AST\CodeGen\TwoDirectionCodePiece.cs" />
-    <Compile Include="AST\CodeGen\NumberCodeHelper.cs" />
-    <Compile Include="AST\CodeGen\NumberFactorization.cs" />
+    <Compile Include="AST\CodeGen\NumberCode\NumberCodeHelper.cs" />
+    <Compile Include="AST\CodeGen\NumberCode\NumberCodeFactory_Factorization.cs" />
     <Compile Include="AST\CodeGen\SourceCodePosition.cs" />
     <Compile Include="AST\Exceptions\AccessTemporaryASTObjectException.cs" />
     <Compile Include="AST\Exceptions\ASTException.cs" />

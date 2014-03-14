@@ -1,4 +1,5 @@
 using BefunGen.AST.CodeGen;
+using BefunGen.AST.CodeGen.NumberCode;
 using BefunGen.AST.Exceptions;
 using BefunGen.MathExtensions;
 using System;

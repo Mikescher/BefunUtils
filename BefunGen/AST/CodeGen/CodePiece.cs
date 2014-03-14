@@ -31,6 +31,12 @@ namespace BefunGen.AST.CodeGen
 
 		#region Construct
 
+		public CodePiece(BefungeCommand cmd) 
+			: this()
+		{
+			this[0, 0] = cmd;
+		}
+
 		public CodePiece()
 		{
 			MinX = 0;
