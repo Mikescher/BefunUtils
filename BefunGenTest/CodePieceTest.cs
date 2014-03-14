@@ -1,7 +1,9 @@
 ﻿using BefunGen.AST;
 using BefunGen.AST.CodeGen;
+using BefunGen.AST.CodeGen.NumberCode;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
 namespace BefunGenTest
@@ -9,6 +11,9 @@ namespace BefunGenTest
 	[TestClass]
 	public class CodePieceTest
 	{
+		private const int NC_RANGE_MIN = -16384;
+		private const int NC_RANGE_MAX = +16384;
+
 		#region Helper Methods
 
 		private TextFungeParser GParser = new TextFungeParser();
@@ -117,8 +122,6 @@ namespace BefunGenTest
 		#endregion
 
 		#endregion
-
-		//TODO automatic Test all different NumberCodeGen Methods (Range: 16384)
 
 		[TestMethod]
 		public void CodePieceTest_Set()
@@ -687,13 +690,25 @@ namespace BefunGenTest
 		[TestMethod]
 		public void numberCodeFactoryTest_Normal()
 		{
-			//TODO
+			for (int i = NC_RANGE_MIN; i < NC_RANGE_MAX; i++)
+			{
+				List<Tuple<NumberRep, CodePiece>> vs = NumberCodeHelper.generateAllCode(i, true);
+
+				foreach (var val in vs)
+					MultiCPTester.Test_ForStackValue(val.Item2.ToSimpleString() + "@", i);
+			}
 		}
 
 		[TestMethod]
 		public void numberCodeFactoryTest_Reverse()
 		{
-			//TODO
+			for (int i = NC_RANGE_MIN; i < NC_RANGE_MAX; i++)
+			{
+				List<Tuple<NumberRep, CodePiece>> vs = NumberCodeHelper.generateAllCode(i, true, true);
+
+				foreach (var val in vs)
+					MultiCPTester.Test_ForStackValueReverse("@" + val.Item2.ToSimpleString(), i);
+			}
 		}
 	}
 }

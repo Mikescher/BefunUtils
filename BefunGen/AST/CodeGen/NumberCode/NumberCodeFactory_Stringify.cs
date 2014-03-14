@@ -124,6 +124,9 @@ namespace BefunGen.AST.CodeGen.NumberCode
 
 			for (char curr = MAX_ASCII; curr >= MIN_ASCII; curr--)
 			{
+				if (curr == '"')
+					continue;
+
 				if (val % curr == 0 && val / curr > MIN_ASCII)
 				{
 					List<char> o_str;

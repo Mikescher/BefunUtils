@@ -85,24 +85,24 @@ namespace BefunGen.AST.CodeGen.NumberCode
 			throw new WTFException();
 		}
 
-		public static List<Tuple<NumberRep, CodePiece>> generateAllCode(int Value, bool filter)
+		public static List<Tuple<NumberRep, CodePiece>> generateAllCode(int Value, bool filter, bool reversed = false)
 		{
 			List<Tuple<NumberRep, CodePiece>> result = new List<Tuple<NumberRep, CodePiece>>();
 
 			// Order is Priority !!!
 
-			result.Add(Tuple.Create(NumberRep.Boolean, NumberCodeFactory_Boolean.generateCode(Value)));
-			result.Add(Tuple.Create(NumberRep.Digit, NumberCodeFactory_Digit.generateCode(Value)));
-			result.Add(Tuple.Create(NumberRep.Base9, NumberCodeFactory_Base9.generateCode(Value)));
-			result.Add(Tuple.Create(NumberRep.Factorization, NumberCodeFactory_Factorization.generateCode(Value)));
-			result.Add(Tuple.Create(NumberRep.StringmodeChar, NumberCodeFactory_StringmodeChar.generateCode(Value)));
-			result.Add(Tuple.Create(NumberRep.Stringify, NumberCodeFactory_Stringify.generateCode(Value)));
+			result.Add(Tuple.Create(NumberRep.Boolean, NumberCodeFactory_Boolean.generateCode(Value, reversed)));
+			result.Add(Tuple.Create(NumberRep.Digit, NumberCodeFactory_Digit.generateCode(Value, reversed)));
+			result.Add(Tuple.Create(NumberRep.Base9, NumberCodeFactory_Base9.generateCode(Value, reversed)));
+			result.Add(Tuple.Create(NumberRep.Factorization, NumberCodeFactory_Factorization.generateCode(Value, reversed)));
+			result.Add(Tuple.Create(NumberRep.StringmodeChar, NumberCodeFactory_StringmodeChar.generateCode(Value, reversed)));
+			result.Add(Tuple.Create(NumberRep.Stringify, NumberCodeFactory_Stringify.generateCode(Value, reversed)));
 
 			if (filter)
 				return result.Where(p => p.Item2 != null).ToList();
 			else
 				return result;
-			
+
 		}
 
 		public static string generateBenchmark(int cnt, bool doNeg)
@@ -121,7 +121,7 @@ namespace BefunGen.AST.CodeGen.NumberCode
 			StringBuilder txt = new StringBuilder();
 
 			txt.AppendFormat("{0, -7} ", "Number");
-			txt.AppendFormat("{0, -16} {1, -"+mxw + "}", "Best", "Best");
+			txt.AppendFormat("{0, -16} {1, -" + mxw + "}", "Best", "Best");
 			reps.ForEach(p => txt.AppendFormat("{0, -" + mxw + "} ", p.ToString()));
 			txt.AppendLine();
 			txt.AppendLine();
@@ -145,7 +145,7 @@ namespace BefunGen.AST.CodeGen.NumberCode
 			txt.AppendLine();
 			txt.AppendLine(new String('#', 32));
 			txt.AppendLine();
-			
+
 			ticks = Environment.TickCount - ticks;
 
 			reps.ForEach(p => txt.AppendLine(String.Format("{0,-16}: {1}", p.ToString(), count[reps.IndexOf(p)])));
