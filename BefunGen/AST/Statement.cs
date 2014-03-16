@@ -27,17 +27,19 @@ namespace BefunGen.AST
 
 		public CodePiece extendVerticalMCTagsUpwards(CodePiece p)
 		{
-			List<TagLocation> entries = p.findAllTags(typeof(MethodCall_VerticalReEntry_Tag))
-				.OrderBy(tp => ((ICodeAddressTarget)((MethodCall_VerticalReEntry_Tag)tp.Tag).TagParam).CodePointAddr)
+			List<TagLocation> entries = p.findAllActiveCodeTags(typeof(MethodCall_VerticalReEntry_Tag))
+				.OrderBy(tp => (tp.Tag.TagParam as ICodeAddressTarget).CodePointAddr)
 				.ToList();
-			List<TagLocation> exits = p.findAllTags(typeof(MethodCall_VerticalExit_Tag));
+			List<TagLocation> exits = p.findAllActiveCodeTags(typeof(MethodCall_VerticalExit_Tag));
 
 			int pos_y_exitline = p.MinY - 1;
 
 			foreach (TagLocation exit in exits)
 			{
 				MethodCall_VerticalExit_Tag tag_exit = exit.Tag as MethodCall_VerticalExit_Tag;
-				p[exit.X, pos_y_exitline] = BCHelper.PC_Right_tagged(new MethodCall_HorizontalExit_Tag((Method)tag_exit.TagParam));
+				tag_exit.deactivate();
+
+				p[exit.X, pos_y_exitline] = BCHelper.PC_Right_tagged(new MethodCall_HorizontalExit_Tag(tag_exit.TagParam as Method));
 
 				try
 				{
@@ -56,6 +58,8 @@ namespace BefunGen.AST
 			foreach (TagLocation entry in entries)
 			{
 				MethodCall_VerticalReEntry_Tag tag_entry = entry.Tag as MethodCall_VerticalReEntry_Tag;
+				tag_entry.deactivate();
+
 				p[entry.X, pos_y_entry] = BCHelper.PC_Down_tagged(new MethodCall_HorizontalReEntry_Tag((ICodeAddressTarget)tag_entry.TagParam));
 
 				try
@@ -150,6 +154,10 @@ namespace BefunGen.AST
 
 		public override CodePiece generateCode(bool reversed)
 		{
+			CodePiece p = new CodePiece();
+
+			#region Special Cases
+
 			if (List.Count == 0)
 			{
 				return new CodePiece();
@@ -159,13 +167,17 @@ namespace BefunGen.AST
 				return extendVerticalMCTagsUpwards(List[0].generateCode(reversed));
 			}
 
-			// ##### STATEMENTS ######
+			#endregion
+
+			#region Get Statements
 
 			List<Statement> stmts = List.ToList();
 			if (stmts.Count % 2 == 0)
 				stmts.Add(new Statement_NOP(Position));
 
-			// ##### CODEPIECES ######
+			#endregion
+
+			#region Generate Codepieces
 
 			List<CodePiece> cps = new List<CodePiece>();
 			for (int i = 0; i < stmts.Count; i++)
@@ -177,7 +189,9 @@ namespace BefunGen.AST
 					cps[i][0, 0] = BCHelper.Walkway;
 			}
 
-			// ##### Y-POSITIONS ######
+			#endregion
+
+			#region Calculate Y-Positions
 
 			List<int> ypos = new List<int>();
 			ypos.Add(0);
@@ -186,10 +200,12 @@ namespace BefunGen.AST
 				ypos.Add(ypos[i - 1] + cps[i - 1].MaxY - cps[i].MinY);
 			}
 
+			#endregion
+
+			#region Combine Pieces
+
 			if (reversed)
 			{
-				CodePiece p = new CodePiece();
-
 				#region Reversed
 
 				// ##### WIDTHS ######
@@ -308,16 +324,10 @@ namespace BefunGen.AST
 					p.SetAt(x, y, c);
 				}
 
-				p.normalizeX();
-
 				#endregion
-
-				return p;
 			}
 			else
 			{
-				CodePiece p = new CodePiece();
-
 				#region Normal
 
 				// ##### WIDTHS ######
@@ -436,12 +446,44 @@ namespace BefunGen.AST
 					p.SetAt(x, y, c);
 				}
 
-				p.normalizeX();
-
 				#endregion
 
-				return p;
 			}
+
+			p.normalizeX();
+
+			#endregion
+
+			#region Extend MehodCall-Tags
+
+			List<TagLocation> entries = p.findAllActiveCodeTags(typeof(MethodCall_HorizontalReEntry_Tag));
+			List<TagLocation> exits = p.findAllActiveCodeTags(typeof(MethodCall_HorizontalExit_Tag));
+
+			foreach (TagLocation entry in entries)
+			{
+				MethodCall_HorizontalReEntry_Tag tag_entry = entry.Tag as MethodCall_HorizontalReEntry_Tag;
+
+				p.CreateRowWW(entry.Y, p.MinX, entry.X);
+
+				tag_entry.deactivate();
+
+				p.SetTag(p.MinX, entry.Y, new MethodCall_HorizontalReEntry_Tag(tag_entry.TagParam as ICodeAddressTarget), true);
+			}
+
+			foreach (TagLocation exit in exits)
+			{
+				MethodCall_HorizontalExit_Tag tag_exit = exit.Tag as MethodCall_HorizontalExit_Tag;
+
+				p.CreateRowWW(exit.Y, exit.X + 1, p.MaxX);
+
+				tag_exit.deactivate();
+
+				p.SetTag(p.MaxX - 1, exit.Y, new MethodCall_HorizontalExit_Tag(tag_exit.TagParam as Method), true);
+			}
+
+			#endregion
+
+			return p;
 		}
 	}
 
@@ -528,7 +570,7 @@ namespace BefunGen.AST
 			return null;
 		}
 
-		public override CodePiece generateCode(bool reversed)
+		public override CodePiece generateCode(bool reversed) //TODO Implement the rest
 		{
 			CodePiece p = new CodePiece();
 
@@ -552,7 +594,7 @@ namespace BefunGen.AST
 			}
 
 			return p;
-			//throw new NotImplementedException(); //TODO Implement
+
 		}
 	}
 

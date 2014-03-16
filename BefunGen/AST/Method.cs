@@ -144,12 +144,12 @@ namespace BefunGen.AST
 
 				if (var is VarDeclaration_Value)
 				{
-					lit[0, 0] = CodeGenOptions.DefaultVarDeclarationSymbol.copyWithTag(var);
+					lit[0, 0] = CodeGenOptions.DefaultVarDeclarationSymbol.copyWithTag(new VarDeclaration_Tag(var));
 				}
 				else
 				{
 					int sz = (var as VarDeclaration_Array).Size;
-					lit.Fill(0, 0, sz, 1, CodeGenOptions.DefaultVarDeclarationSymbol, var);
+					lit.Fill(0, 0, sz, 1, CodeGenOptions.DefaultVarDeclarationSymbol, new VarDeclaration_Tag(var));
 				}
 
 				var.CodePositionX = mo_x + paramX;

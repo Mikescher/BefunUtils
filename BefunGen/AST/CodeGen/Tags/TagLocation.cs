@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
+﻿
 namespace BefunGen.AST.CodeGen.Tags
 {
 	public class TagLocation
 	{
-		public readonly object Tag;
+		public readonly CodeTag Tag;
 
 		public readonly int X;
 		public readonly int Y;

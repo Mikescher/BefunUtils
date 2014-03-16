@@ -406,7 +406,7 @@
 			this.txtDebug.Multiline = true;
 			this.txtDebug.Name = "txtDebug";
 			this.txtDebug.ReadOnly = true;
-			this.txtDebug.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+			this.txtDebug.ScrollBars = System.Windows.Forms.ScrollBars.Both;
 			this.txtDebug.Size = new System.Drawing.Size(517, 206);
 			this.txtDebug.TabIndex = 0;
 			this.txtDebug.WordWrap = false;

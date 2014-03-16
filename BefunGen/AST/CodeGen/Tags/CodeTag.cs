@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
+﻿
 namespace BefunGen.AST.CodeGen.Tags
 {
 	public abstract class CodeTag
@@ -11,10 +7,24 @@ namespace BefunGen.AST.CodeGen.Tags
 		public readonly string TagName;
 		public readonly object TagParam;
 
-		public CodeTag(string name) 
+		private bool _Active = true;
+		public bool Active { get { return _Active; } }
+
+
+		public CodeTag(string name)
 			: this(name, null)
 		{
 			//-
+		}
+
+		public void deactivate()
+		{
+			_Active = false;
+		}
+
+		public bool isActive()
+		{
+			return Active;
 		}
 
 		public CodeTag(string name, object param)
@@ -31,7 +41,7 @@ namespace BefunGen.AST.CodeGen.Tags
 
 		public override string ToString()
 		{
-			return (hasParam()) ? (string.Format("{0} ({1}) <{2}>", TagName, TagParam, UUID)) : (string.Format("{0} <{2}>", TagName, UUID));
+			return (hasParam()) ? (string.Format("[{0}] {1} ({2}) <{3}>", Active ? "+" : "-", TagName, TagParam, UUID)) : (string.Format("{0} <{2}>", TagName, UUID));
 		}
 	}
 }

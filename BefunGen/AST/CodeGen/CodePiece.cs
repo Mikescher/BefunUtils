@@ -197,7 +197,7 @@ namespace BefunGen.AST.CodeGen
 
 			List<TagLocation> tags = findAllTags();
 			foreach (TagLocation tag in tags)
-				builder.AppendFormat("[ ({0:000}|{1:000}):'{2}' := {3} ]", tag.X, tag.Y, tag.Command.getCommandCode(), tag.Tag);
+				builder.AppendFormat("[ ({0:000}|{1:000}):'{2}' := {3} ]{4}", tag.X, tag.Y, tag.Command.getCommandCode(), tag.Tag, Environment.NewLine);
 
 			return builder.ToString();
 		}
@@ -222,7 +222,7 @@ namespace BefunGen.AST.CodeGen
 
 		#region Tags
 
-		public TagLocation findTag(object tag)
+		public TagLocation findTag(CodeTag tag)
 		{
 			for (int x = MinX; x < MaxX; x++)
 			{
@@ -236,7 +236,7 @@ namespace BefunGen.AST.CodeGen
 			return null;
 		}
 
-		public bool hasTag(object tag)
+		public bool hasTag(CodeTag tag)
 		{
 			return tag != null && findTag(tag) != null;
 		}
@@ -259,16 +259,21 @@ namespace BefunGen.AST.CodeGen
 			return tl;
 		}
 
+		public List<TagLocation> findAllActiveCodeTags(params Type[] filter)
+		{
+			return findAllTags(filter).Where(p => p.Tag.isActive()).ToList();
+		}
+
 		public TagLocation findTagSingle(Type t)
 		{
 			return findAllTags(t).Single();
 		}
 
-		public void SetTag(int x, int y, object tag)
+		public void SetTag(int x, int y, CodeTag tag, bool force = false)
 		{
 			BefungeCommand cmd = this[x, y];
 
-			if (cmd.hasTag())
+			if (cmd.hasTag() && !force)
 				throw new InvalidCodeManipulationException("Tryed to remove existing Tag: " + cmd.Tag + " with: " + tag);
 
 			BefungeCommand newcmd = new BefungeCommand(cmd.Type, cmd.Param, tag);
@@ -377,7 +382,7 @@ namespace BefunGen.AST.CodeGen
 
 		public void CreateWW(int x1, int y1, int x2, int y2)
 		{
-			Fill(x1, y1, x2, y2, BCHelper.Walkway, true);
+			Fill(x1, y1, x2, y2, BCHelper.Walkway, null, true);
 		}
 
 		public void FillRowWW(int y, int x1, int x2)
@@ -396,7 +401,7 @@ namespace BefunGen.AST.CodeGen
 		}
 
 		// x1, y1 included -- x2, y2 excluded
-		public void Fill(int x1, int y1, int x2, int y2, BefungeCommand c, object topleft_tag = null, bool skipExactCopies = false)
+		public void Fill(int x1, int y1, int x2, int y2, BefungeCommand c, CodeTag topleft_tag = null, bool skipExactCopies = false)
 		{
 			if (x1 >= x2)
 				return;
@@ -685,7 +690,7 @@ namespace BefunGen.AST.CodeGen
 
 			for (int y = Math.Min(l.MinY, r.MinY); y < Math.Max(l.MaxY, r.MaxY); y++)
 			{
-				object Tag = null;
+				CodeTag Tag = null;
 
 				if (l[x_l, y].Tag != null && r[x_r, y].Tag != null)
 				{
@@ -738,7 +743,7 @@ namespace BefunGen.AST.CodeGen
 
 			for (int x = Math.Min(t.MinX, b.MinX); x < Math.Max(t.MaxX, b.MaxX); x++)
 			{
-				object Tag = null;
+				CodeTag Tag = null;
 
 				if (t[x, y_t].Tag != null && b[x, y_b].Tag != null)
 				{

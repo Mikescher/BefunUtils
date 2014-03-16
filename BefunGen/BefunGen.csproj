@@ -67,6 +67,7 @@
     <Compile Include="AST\CodeGen\Tags\MethodCall_VerticalReEntry_Tag.cs" />
     <Compile Include="AST\CodeGen\Tags\MethodCall_VerticalExit_Tag.cs" />
     <Compile Include="AST\CodeGen\Tags\TagLocation.cs" />
+    <Compile Include="AST\CodeGen\Tags\VarDeclaration_Tag.cs" />
     <Compile Include="AST\CodeGen\TwoDirectionCodePiece.cs" />
     <Compile Include="AST\CodeGen\NumberCode\NumberCodeHelper.cs" />
     <Compile Include="AST\CodeGen\NumberCode\NumberCodeFactory_Factorization.cs" />

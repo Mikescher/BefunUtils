@@ -1,4 +1,5 @@
-﻿using BefunGen.AST.Exceptions;
+﻿using BefunGen.AST.CodeGen.Tags;
+using BefunGen.AST.Exceptions;
 using System;
 
 namespace BefunGen.AST.CodeGen
@@ -43,7 +44,7 @@ namespace BefunGen.AST.CodeGen
 
 		public readonly int Param;
 
-		public readonly object Tag;
+		public readonly CodeTag Tag;
 
 		public BefungeCommand(BefungeCommandType _t)
 			: this(_t, 0)
@@ -51,7 +52,7 @@ namespace BefunGen.AST.CodeGen
 			//--
 		}
 
-		public BefungeCommand(BefungeCommandType _t, object _p)
+		public BefungeCommand(BefungeCommandType _t, CodeTag _p)
 			: this(_t, 0, _p)
 		{
 			//--
@@ -63,7 +64,7 @@ namespace BefunGen.AST.CodeGen
 			//--
 		}
 
-		public BefungeCommand(BefungeCommandType _t, int _p, object _g)
+		public BefungeCommand(BefungeCommandType _t, int _p, CodeTag _g)
 		{
 			Type = _t;
 			Param = _p;
@@ -171,7 +172,7 @@ namespace BefunGen.AST.CodeGen
 			}
 		}
 
-		public BefungeCommand copyWithTag(object _g)
+		public BefungeCommand copyWithTag(CodeTag _g)
 		{
 			return new BefungeCommand(Type, Param, _g);
 		}
@@ -303,7 +304,7 @@ namespace BefunGen.AST.CodeGen
 
 		public bool EqualsTagLess(BefungeCommand c)
 		{
-			return hasTag() && c.hasTag() && this.Type == c.Type && this.Param == c.Param;
+			return !hasTag() && !c.hasTag() && this.Type == c.Type && this.Param == c.Param;
 		}
 
 		public bool hasTag()

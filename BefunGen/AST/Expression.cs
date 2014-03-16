@@ -1629,7 +1629,6 @@ namespace BefunGen.AST
 			//  >>1v
 			// #^?0>>
 			//   > 0^
-
 			CodePiece p = new CodePiece();
 
 			p[0, -1] = BCHelper.Unused;
