@@ -157,7 +157,8 @@ namespace BefunGen.AST
 		{
 			for (int i = 0; i < List.Count; i++)
 			{
-				if (List[i].allPathsReturn()) return true;
+				if (List[i].allPathsReturn())
+					return true;
 			}
 			return false;
 		}
@@ -879,7 +880,7 @@ namespace BefunGen.AST
 
 		public override CodePiece generateCode(bool reversed)
 		{
-			throw new NotImplementedException(); //TODO Implement
+			throw new BGNotImplementedException(); //TODO Implement
 		}
 	}
 
@@ -928,7 +929,7 @@ namespace BefunGen.AST
 
 		public override CodePiece generateCode(bool reversed)
 		{
-			throw new NotImplementedException(); //TODO Implement
+			throw new BGNotImplementedException(); //TODO Implement
 		}
 	}
 
@@ -992,7 +993,7 @@ namespace BefunGen.AST
 		public override CodePiece generateCode(bool reversed)
 		{
 			return CodePiece.ParseFromLine(@"""RETURN""");
-			//throw new NotImplementedException(); //TODO Implement
+			//throw new BGNotImplementedException(); //TODO Implement
 		}
 	}
 
@@ -1936,8 +1937,8 @@ namespace BefunGen.AST
 
 	#endregion Operations
 
-	#region Constructs //TODO Extend MC-Tags in STructures
-
+	#region Constructs
+	//TODO Do MC-Tags in all Structures ?
 	public class Statement_If : Statement
 	{
 		public Expression Condition;

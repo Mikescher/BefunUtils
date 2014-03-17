@@ -61,6 +61,8 @@
     <Compile Include="AST\CodeGen\CodePieceStore.cs" />
     <Compile Include="AST\CodeGen\NumberCode\NumberCodeFactory_StringmodeChar.cs" />
     <Compile Include="AST\CodeGen\Tags\CodeTag.cs" />
+    <Compile Include="AST\CodeGen\Tags\TemporaryResultCodeField_Tag.cs" />
+    <Compile Include="AST\CodeGen\Tags\TemporaryCodeField_Tag.cs" />
     <Compile Include="AST\CodeGen\Tags\MethodEntry_FullInitialization_Tag.cs" />
     <Compile Include="AST\CodeGen\Tags\MethodCall_HorizontalExit_Tag.cs" />
     <Compile Include="AST\CodeGen\Tags\MethodCall_HorizontalReEntry_Tag.cs" />

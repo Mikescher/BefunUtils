@@ -154,6 +154,10 @@ namespace BefunGen.AST
 		public VarDeclaration_Array(SourceCodePosition pos, BType_Array t, string id)
 			: base(pos, t, id, null)
 		{
+			if (Size < 2)
+			{
+				throw new ArrayTooSmallException(Position);
+			}
 		}
 
 		public VarDeclaration_Array(SourceCodePosition pos, BType_Array t, string id, Literal_Array v)
@@ -173,9 +177,106 @@ namespace BefunGen.AST
 
 		public override CodePiece generateCode(bool reversed)
 		{
-			CodePiece p = new CodePiece();
-
 			Literal_Array value = Initial as Literal_Array;
+
+			if (value.isUniform())
+			{
+				return generateCode_Uniform(reversed, value);
+			}
+			else
+			{
+				return generateCode_Universal(reversed, value);
+			}
+		}
+
+		private CodePiece generateCode_Uniform(bool reversed, Literal_Array value)
+		{
+			int varX_start = CodePositionX;
+			int varX_end = CodePositionX + Size - 1;
+			int varY = CodePositionY;
+
+			if (reversed)
+			{
+				// $_v#!`\{X2}:p{Y}\{V}:<{X1}
+				//   >1+                ^
+				CodePiece p = new CodePiece();
+
+				p.AppendRight(BCHelper.Stack_Pop);
+				p.AppendRight(BCHelper.If_Horizontal);
+
+				int bot_end = p.MaxX;
+
+				p.AppendRight(BCHelper.PC_Down);
+				p.AppendRight(BCHelper.PC_Jump);
+				p.AppendRight(BCHelper.Not);
+				p.AppendRight(BCHelper.GreaterThan);
+				p.AppendRight(BCHelper.Stack_Swap);
+				p.AppendRight(NumberCodeHelper.generateCode(varX_end, reversed));
+				p.AppendRight(BCHelper.Stack_Dup);
+				p.AppendRight(BCHelper.Reflect_Set);
+				p.AppendRight(NumberCodeHelper.generateCode(varY, reversed));
+				p.AppendRight(BCHelper.Stack_Swap);
+				p.AppendRight(value.generateCode(0, reversed));
+				p.AppendRight(BCHelper.Stack_Dup);
+
+				int bot_start = p.MaxX;
+
+				p.AppendRight(BCHelper.PC_Right);
+				p.AppendRight(NumberCodeHelper.generateCode(varX_start, reversed));
+
+				p[bot_start + 0, 1] = BCHelper.PC_Right;
+				p[bot_start + 1, 1] = BCHelper.Digit_1;
+				p[bot_start + 2, 1] = BCHelper.Add;
+
+				p.FillRowWW(1, bot_start + 3, bot_end);
+
+				p[bot_end, 1] = BCHelper.PC_Up;
+
+				return p;
+			}
+			else
+			{
+				// {X1}>:{V}\{Y}p:{X2}\`#v_$
+				//     ^+1               < 
+				CodePiece p = new CodePiece();
+
+				p.AppendRight(NumberCodeHelper.generateCode(varX_start, reversed));
+
+				int bot_start = p.MaxX;
+
+				p.AppendRight(BCHelper.PC_Right);
+				p.AppendRight(BCHelper.Stack_Dup);
+				p.AppendRight(value.generateCode(varX_start, reversed));
+				p.AppendRight(BCHelper.Stack_Swap);
+				p.AppendRight(NumberCodeHelper.generateCode(varY, reversed));
+				p.AppendRight(BCHelper.Reflect_Set);
+				p.AppendRight(BCHelper.Stack_Dup);
+				p.AppendRight(NumberCodeHelper.generateCode(varX_end, reversed));
+				p.AppendRight(BCHelper.Stack_Swap);
+				p.AppendRight(BCHelper.GreaterThan);
+				p.AppendRight(BCHelper.PC_Jump);
+
+				int bot_end = p.MaxX;
+
+				p.AppendRight(BCHelper.PC_Down);
+				p.AppendRight(BCHelper.If_Horizontal);
+				p.AppendRight(BCHelper.Stack_Pop);
+
+				p[bot_start + 0, 1] = BCHelper.PC_Up;
+				p[bot_start + 1, 1] = BCHelper.Add;
+				p[bot_start + 2, 1] = BCHelper.Digit_1;
+
+				p.FillRowWW(1, bot_start + 3, bot_end);
+
+				p[bot_end, 1] = BCHelper.PC_Left;
+
+				return p;
+			}
+		}
+
+		private CodePiece generateCode_Universal(bool reversed, Literal_Array value)
+		{
+			CodePiece p = new CodePiece();
 
 			int varX = CodePositionX - 1;
 			int varY = CodePositionY;

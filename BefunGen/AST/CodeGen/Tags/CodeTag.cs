@@ -41,7 +41,12 @@ namespace BefunGen.AST.CodeGen.Tags
 
 		public override string ToString()
 		{
-			return (hasParam()) ? (string.Format("[{0}] {1} ({2}) <{3}>", Active ? "+" : "-", TagName, TagParam, UUID)) : (string.Format("{0} <{2}>", TagName, UUID));
+			return 
+				(hasParam()) 
+				? 
+				(string.Format("[{0}] {1} ({2}) <{3}>", Active ? "+" : "-", TagName, TagParam, UUID))
+				:
+				(string.Format("[{0}] {1} <{2}>",  Active ? "+" : "-", TagName, UUID));
 		}
 	}
 }

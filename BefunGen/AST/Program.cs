@@ -120,7 +120,7 @@ namespace BefunGen.AST
 
 			#endregion
 
-			int highway_x = MathExt.Max(p.MaxX, 3 + CodePieceStore.BooleanStackFlooder().Width, 6, CodeGenConstants.TMP_FIELD_RETURNVAL.X + maxReturnValWidth); //MaxMethodWidth, TopLane_Left, TopLane_Right, SPace for TempVars
+			int highway_x = MathExt.Max(p.MaxX, 3 + CodePieceStore.BooleanStackFlooder().Width, CodeGenConstants.TMP_FIELD_RETURNVAL.X + maxReturnValWidth); //MaxMethodWidth, TopLane_Left, SPace for TempVars
 
 			#region Generate Lanes (Left Lane && Right Lane)
 
@@ -177,14 +177,14 @@ namespace BefunGen.AST
 			// v
 			// 1 v{STACKFLOODER}        <
 			//                          |
-			// v  +1                    <
+			// v                        <
 			// .#.                      #
 			// .#.                      !
 			// .#.
 			CodePiece p_TopLane = new CodePiece();
 
 			p_TopLane[0, 0] = BCHelper.PC_Down;
-			p_TopLane[0, 1] = BCHelper.Digit_1;
+			p_TopLane[0, 1] = BCHelper.Digit_0;
 			p_TopLane[0, 2] = BCHelper.Walkway;
 			p_TopLane[0, 3] = BCHelper.PC_Down;
 
@@ -194,10 +194,7 @@ namespace BefunGen.AST
 			p_TopLane[2, 2] = BCHelper.Walkway;
 			p_TopLane[2, 3] = BCHelper.Walkway;
 
-			p_TopLane[3, 3] = BCHelper.Add;
-			p_TopLane[4, 3] = BCHelper.Digit_1;
-
-			p_TopLane.FillRowWW(3, 5, highway_x);
+			p_TopLane.FillRowWW(3, 3, highway_x);
 
 			CodePiece p_flooder = CodePieceStore.BooleanStackFlooder();
 			p_TopLane.SetAt(3, 1, p_flooder);
@@ -209,6 +206,11 @@ namespace BefunGen.AST
 			p_TopLane[highway_x, 4] = BCHelper.PC_Jump;
 			p_TopLane[highway_x, 5] = BCHelper.Not;
 
+			p[CodeGenConstants.TMP_FIELD.X, CodeGenConstants.TMP_FIELD.Y] = CodeGenOptions.DefaultTempSymbol.copyWithTag(new TemporaryCodeField_Tag());
+			p.Fill(CodeGenConstants.TMP_FIELD_RETURNVAL.X, CodeGenConstants.TMP_FIELD_RETURNVAL.Y, 
+				CodeGenConstants.TMP_FIELD_RETURNVAL.X + maxReturnValWidth, CodeGenConstants.TMP_FIELD_RETURNVAL.Y + 1,
+				CodeGenOptions.DefaultResultTempSymbol,
+				new TemporaryResultCodeField_Tag(maxReturnValWidth));
 
 			p.SetAt(0, 0, p_TopLane, true);
 
@@ -233,10 +235,10 @@ namespace BefunGen.AST
 
 				first = false;
 			}
-			
+
 			#endregion
 
-			return p;	
+			return p;
 		}
 	}
 

@@ -83,10 +83,10 @@ namespace BefunGen.AST
 
 		public int Size;
 
-		public BType_Array(SourceCodePosition pos)
+		public BType_Array(SourceCodePosition pos, int sz)
 			: base(pos)
 		{
-			//--
+			Size = sz;
 		}
 
 		public override int GetSize()
@@ -305,9 +305,8 @@ namespace BefunGen.AST
 	public class BType_IntArr : BType_Array
 	{
 		public BType_IntArr(SourceCodePosition pos, int sz)
-			: base(pos)
+			: base(pos, sz)
 		{
-			this.Size = sz;
 		}
 
 		public override string getDebugString()
@@ -339,9 +338,8 @@ namespace BefunGen.AST
 	public class BType_CharArr : BType_Array
 	{
 		public BType_CharArr(SourceCodePosition pos, int sz)
-			: base(pos)
+			: base(pos, sz)
 		{
-			this.Size = sz;
 		}
 
 		public override string getDebugString()
@@ -373,9 +371,8 @@ namespace BefunGen.AST
 	public class BType_DigitArr : BType_Array
 	{
 		public BType_DigitArr(SourceCodePosition pos, int sz)
-			: base(pos)
+			: base(pos, sz)
 		{
-			this.Size = sz;
 		}
 
 		public override string getDebugString()
@@ -407,9 +404,8 @@ namespace BefunGen.AST
 	public class BType_BoolArr : BType_Array
 	{
 		public BType_BoolArr(SourceCodePosition pos, int sz)
-			: base(pos)
+			: base(pos, sz)
 		{
-			this.Size = sz;
 		}
 
 		public override string getDebugString()

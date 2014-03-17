@@ -22,12 +22,13 @@ program example
 		// Print Fibbonacci
 		
 		if (name[0] == 'n') then
-			goto lbl2
+//			goto lbl2
+			return;
 		end
 		
 		doFiber(100);
 		
-		lbl2:
+//		lbl2:
 		
 		out euclid(44, 12);
 	end

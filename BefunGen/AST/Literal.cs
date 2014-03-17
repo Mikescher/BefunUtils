@@ -49,6 +49,8 @@ namespace BefunGen.AST
 		}
 
 		public abstract CodePiece generateCode(int pos, bool reversed);
+
+		public abstract bool isUniform();
 	}
 
 	#endregion Parents
@@ -188,6 +190,11 @@ namespace BefunGen.AST
 			return new BType_IntArr(new SourceCodePosition(), Count);
 		}
 
+		public override bool isUniform()
+		{
+			return Value.All(p => p == Value[0]);
+		}
+
 		protected override void AppendDefaultValue()
 		{
 			Value.Add(CodeGenOptions.DefaultNumeralValue);
@@ -240,6 +247,11 @@ namespace BefunGen.AST
 		protected override int getCount()
 		{
 			return Value.Count;
+		}
+
+		public override bool isUniform()
+		{
+			return Value.All(p => p == Value[0]);
 		}
 
 		public override BType getBType()
@@ -309,6 +321,11 @@ namespace BefunGen.AST
 			return new BType_BoolArr(new SourceCodePosition(), Count);
 		}
 
+		public override bool isUniform()
+		{
+			return Value.All(p => p == Value[0]);
+		}
+
 		protected override void AppendDefaultValue()
 		{
 			Value.Add(CodeGenOptions.DefaultBooleanValue);
@@ -368,6 +385,11 @@ namespace BefunGen.AST
 		public override BType getBType()
 		{
 			return new BType_DigitArr(new SourceCodePosition(), Count);
+		}
+
+		public override bool isUniform()
+		{
+			return Value.All(p => p == Value[0]);
 		}
 
 		protected override void AppendDefaultValue()

@@ -405,9 +405,27 @@ namespace BefunGen
 
 		private void btnRun_Click(object sender, EventArgs e)
 		{
+			string txt = txtCode.Text;
+
+			int bstart = txt.IndexOf('{');
+			int bend = txt.LastIndexOf('}');
+
+			if (!(bend > bstart && bend >= 0 && bstart >= 0))
+			{
+				return;
+			}
+			
+			txt = txt.Substring(bstart + 1, bend - bstart - 1);
+			txt = txt.Trim(' ', '\r', '\n', '\t');
+
+			txtCode.Text = txt;
+			txtCode.Select(0, 0);
+
+			tabControl1.SelectedIndex = 5;
+
 			try
 			{
-				string code = txtCode.Text;
+				string code = txt;
 
 				string path = Path.Combine(Application.StartupPath, "code_tmp.b93");
 
@@ -430,7 +448,7 @@ namespace BefunGen
 
 		private void btnGen_Click(object sender, EventArgs e)
 		{
-			BefunGen.AST.Program p = GParser.generateAST(txtSource.Text);
+			BefunGen.AST.Program p = GParser.generateAST(txtSource.Document.Text);
 			if (p == null)
 			{
 				txtCode.Text = GParser.FailMessage;
