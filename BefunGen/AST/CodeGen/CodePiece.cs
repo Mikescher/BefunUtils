@@ -638,17 +638,17 @@ namespace BefunGen.AST.CodeGen
 			return Width == 1;
 		}
 
-		public bool lastRowIsSingle()
+		public bool lastColumnIsSingle()
 		{
-			return IsRowSingle(Width - 1);
+			return IsColumnSingle(Width - 1);
 		}
 
-		public bool firstRowIsSingle()
+		public bool firstColumnIsSingle()
 		{
-			return IsRowSingle(0);
+			return IsColumnSingle(0);
 		}
 
-		public bool IsRowSingle(int r)
+		public bool IsColumnSingle(int r)
 		{
 			return commandArr[r].Count(p => p.Type != BefungeCommandType.NOP) == 1;
 		}
@@ -666,13 +666,28 @@ namespace BefunGen.AST.CodeGen
 			return cnt;
 		}
 
-		public int GetRowCommandCount(int y)
+		public bool lastRowIsSingle(bool ignoreWalkway = false)
+		{
+			return IsRowSingle(Height - 1, ignoreWalkway);
+		}
+
+		public bool firstRowIsSingle(bool ignoreWalkway = false)
+		{
+			return IsRowSingle(0, ignoreWalkway);
+		}
+
+		public bool IsRowSingle(int r, bool ignoreWalkway = false)
+		{
+			return GetRowCommandCount(r, ignoreWalkway) == 1;
+		}
+
+		public int GetRowCommandCount(int y, bool ignoreWalkway = false)
 		{
 			int cnt = 0;
 
 			for (int x = MinX; x < MaxX; x++)
 			{
-				if (this[x, y].Type != BefungeCommandType.NOP)
+				if (this[x, y].Type != BefungeCommandType.NOP && (!ignoreWalkway || this[x, y].Type != BefungeCommandType.Walkway))
 					cnt++;
 			}
 

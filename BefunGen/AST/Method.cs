@@ -304,7 +304,7 @@ namespace BefunGen.AST
 
 		private CodePiece generateCode_Body()
 		{
-			CodePiece p = Body.generateCode(false); //TODO Body doesnt need useless bottom line (bend over so its right-out)
+			CodePiece p = Body.generateStrippedCode();
 
 			p.normalizeX();
 

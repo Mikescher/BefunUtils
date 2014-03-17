@@ -129,11 +129,11 @@ namespace BefunGen.AST.CodeGen
 			// [A, B, C, D]
 			//
 
-			CodePiece p_tpx = NumberCodeHelper.generateCode(CodeGenConstants.TMP_FIELD_X, reversed);
-			CodePiece p_tpy = NumberCodeHelper.generateCode(CodeGenConstants.TMP_FIELD_Y, reversed);
+			CodePiece p_tpx = NumberCodeHelper.generateCode(CodeGenConstants.TMP_FIELD.X, reversed);
+			CodePiece p_tpy = NumberCodeHelper.generateCode(CodeGenConstants.TMP_FIELD.Y, reversed);
 
-			CodePiece p_tpx_r = NumberCodeHelper.generateCode(CodeGenConstants.TMP_FIELD_X, !reversed);
-			CodePiece p_tpy_r = NumberCodeHelper.generateCode(CodeGenConstants.TMP_FIELD_Y, !reversed);
+			CodePiece p_tpx_r = NumberCodeHelper.generateCode(CodeGenConstants.TMP_FIELD.X, !reversed);
+			CodePiece p_tpy_r = NumberCodeHelper.generateCode(CodeGenConstants.TMP_FIELD.Y, !reversed);
 
 			CodePiece p_len = NumberCodeHelper.generateCode(arrLen - 1, reversed);
 			CodePiece p_arx = NumberCodeHelper.generateCode(arrX, reversed);
@@ -324,11 +324,11 @@ namespace BefunGen.AST.CodeGen
 			// [A, B, C, D]
 			//
 
-			CodePiece p_tpx = NumberCodeHelper.generateCode(CodeGenConstants.TMP_FIELD_X, reversed);
-			CodePiece p_tpy = NumberCodeHelper.generateCode(CodeGenConstants.TMP_FIELD_Y, reversed);
+			CodePiece p_tpx = NumberCodeHelper.generateCode(CodeGenConstants.TMP_FIELD.X, reversed);
+			CodePiece p_tpy = NumberCodeHelper.generateCode(CodeGenConstants.TMP_FIELD.Y, reversed);
 
-			CodePiece p_tpx_r = NumberCodeHelper.generateCode(CodeGenConstants.TMP_FIELD_X, !reversed);
-			CodePiece p_tpy_r = NumberCodeHelper.generateCode(CodeGenConstants.TMP_FIELD_Y, !reversed);
+			CodePiece p_tpx_r = NumberCodeHelper.generateCode(CodeGenConstants.TMP_FIELD.X, !reversed);
+			CodePiece p_tpy_r = NumberCodeHelper.generateCode(CodeGenConstants.TMP_FIELD.Y, !reversed);
 
 			CodePiece p_len = NumberCodeHelper.generateCode(arrLen - 1, reversed);
 			CodePiece p_arx = NumberCodeHelper.generateCode(arrX, reversed);

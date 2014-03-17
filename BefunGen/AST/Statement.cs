@@ -495,6 +495,213 @@ namespace BefunGen.AST
 
 			return p;
 		}
+
+		public CodePiece generateStrippedCode()
+		{
+			// Always normal direction
+
+			CodePiece p = new CodePiece();
+
+			#region Special Cases
+
+			if (List.Count == 0)
+			{
+				return new CodePiece();
+			}
+			else if (List.Count == 1)
+			{
+				return extendVerticalMCTagsUpwards(List[0].generateCode(false));
+			}
+
+			#endregion
+
+			#region Get Statements
+
+			List<Statement> stmts = List.ToList();
+			if (stmts.Count % 2 == 0)
+				stmts.Add(new Statement_NOP(Position));
+
+			#endregion
+
+			#region Generate Codepieces
+
+			List<CodePiece> cps = new List<CodePiece>();
+			for (int i = 0; i < stmts.Count; i++)
+			{
+				cps.Add(extendVerticalMCTagsUpwards(stmts[i].generateCode(i % 2 != 0)));
+				cps[i].normalizeX();
+
+				if (cps[i].Height == 0) // No total empty statements
+					cps[i][0, 0] = BCHelper.Walkway;
+			}
+
+			#endregion
+
+			#region Calculate Y-Positions
+
+			List<int> ypos = new List<int>();
+			ypos.Add(0);
+			for (int i = 1; i < cps.Count; i++)
+			{
+				ypos.Add(ypos[i - 1] + cps[i - 1].MaxY - cps[i].MinY);
+			}
+
+			#endregion
+
+			#region Combine Pieces
+
+			// ##### WIDTHS ######
+
+			List<int> widths = new List<int>();
+			for (int i = 0; i < cps.Count; i += 2)
+			{
+				int a = i;
+				int b = i + 1;
+
+				bool first = (i == 0);
+				bool last = (i == cps.Count - 1);
+
+				int w_a;
+				int w_b;
+
+				if (first)
+					w_a = cps[a].Width - 1;
+				else
+					w_a = cps[a].Width;
+
+				if (last)
+					w_b = 0;
+				else
+					w_b = cps[b].Width;
+
+				int w = Math.Max(w_a, w_b);
+
+				widths.Add(w);
+				if (!last)
+					widths.Add(w);
+			}
+
+			int right = MathExt.Max(widths[0], widths.ToArray()) + 1;
+
+			// ##### PC's ######
+
+			for (int i = 0; i < cps.Count; i++)
+			{
+				bool curr_rev = (i % 2 != 0);
+				bool first = (i == 0);
+				bool last = (i == cps.Count - 1);
+
+				if (first)
+				{
+					p[widths[i], ypos[i]] = BCHelper.PC_Down;
+				}
+				else if (last)
+				{
+					p[-1, ypos[i]] = BCHelper.PC_Right;
+				}
+				else if (curr_rev) // Reversed
+				{
+					p[-1, ypos[i]] = BCHelper.PC_Down;
+					p[widths[i], ypos[i]] = BCHelper.PC_Left;
+				}
+				else // Normal
+				{
+					p[-1, ypos[i]] = BCHelper.PC_Right;
+					p[widths[i], ypos[i]] = BCHelper.PC_Down;
+				}
+			}
+
+			// ##### Walkways ######
+
+			for (int i = 0; i < cps.Count; i++)
+			{
+				bool curr_rev = (i % 2 != 0);
+				bool first = (i == 0);
+				bool last = (i == cps.Count - 1);
+
+				if (first)
+				{
+					p.FillRowWW(ypos[i], cps[i].Width - 1, widths[i]);
+					p.FillColWW(widths[i], ypos[i] + 1, ypos[i] + cps[i].MaxY);
+				}
+				else if (last)
+				{
+					p.FillRowWW(ypos[i], cps[i].Width, right);
+					p.FillColWW(-1, ypos[i] + cps[i].MinY, ypos[i]);
+				}
+				else
+				{
+					p.FillRowWW(ypos[i], cps[i].Width, widths[i]);
+
+					if (curr_rev) // Reversed
+					{
+						p.FillColWW(widths[i], ypos[i] + cps[i].MinY, ypos[i]);
+						p.FillColWW(-1, ypos[i] + 1, ypos[i] + cps[i].MaxY);
+					}
+					else
+					{
+						p.FillColWW(-1, ypos[i] + cps[i].MinY, ypos[i]);
+						p.FillColWW(widths[i], ypos[i] + 1, ypos[i] + cps[i].MaxY);
+					}
+				}
+			}
+
+			// ##### Statements ######
+
+			for (int i = 0; i < cps.Count; i++)
+			{
+				bool first = (i == 0);
+				int x = first ? -1 : 0;
+				int y = ypos[i];
+				CodePiece c = cps[i];
+
+				p.SetAt(x, y, c);
+			}
+
+			p.normalizeX();
+
+			#endregion
+
+			#region Extend MehodCall-Tags
+
+			List<TagLocation> entries = p.findAllActiveCodeTags(typeof(MethodCall_HorizontalReEntry_Tag));
+			List<TagLocation> exits = p.findAllActiveCodeTags(typeof(MethodCall_HorizontalExit_Tag));
+
+			foreach (TagLocation entry in entries)
+			{
+				MethodCall_HorizontalReEntry_Tag tag_entry = entry.Tag as MethodCall_HorizontalReEntry_Tag;
+
+				p.CreateRowWW(entry.Y, p.MinX, entry.X);
+
+				tag_entry.deactivate();
+
+				p.SetTag(p.MinX, entry.Y, new MethodCall_HorizontalReEntry_Tag(tag_entry.TagParam as ICodeAddressTarget), true);
+			}
+
+			foreach (TagLocation exit in exits)
+			{
+				MethodCall_HorizontalExit_Tag tag_exit = exit.Tag as MethodCall_HorizontalExit_Tag;
+
+				p.CreateRowWW(exit.Y, exit.X + 1, p.MaxX);
+
+				tag_exit.deactivate();
+
+				p.SetTag(p.MaxX - 1, exit.Y, new MethodCall_HorizontalExit_Tag(tag_exit.TagParam as Method), true);
+			}
+
+			#endregion
+
+			#region Strip LastLine
+
+			if (List.Count % 2 == 0 && p.lastRowIsSingle(true))
+			{
+				p.RemoveRow(p.MaxY - 1);
+			}
+
+			#endregion
+
+			return p;
+		}
 	}
 
 	public class Statement_MethodCall : Statement, ICodeAddressTarget
@@ -924,11 +1131,11 @@ namespace BefunGen.AST
 
 			CodePiece p_len = NumberCodeHelper.generateCode(type_right.Size - 1, reversed);
 
-			CodePiece p_tpx = NumberCodeHelper.generateCode(CodeGenConstants.TMP_FIELD_X, reversed);
-			CodePiece p_tpy = NumberCodeHelper.generateCode(CodeGenConstants.TMP_FIELD_Y, reversed);
+			CodePiece p_tpx = NumberCodeHelper.generateCode(CodeGenConstants.TMP_FIELD.X, reversed);
+			CodePiece p_tpy = NumberCodeHelper.generateCode(CodeGenConstants.TMP_FIELD.Y, reversed);
 
-			CodePiece p_tpx_r = NumberCodeHelper.generateCode(CodeGenConstants.TMP_FIELD_X, !reversed);
-			CodePiece p_tpy_r = NumberCodeHelper.generateCode(CodeGenConstants.TMP_FIELD_Y, !reversed);
+			CodePiece p_tpx_r = NumberCodeHelper.generateCode(CodeGenConstants.TMP_FIELD.X, !reversed);
+			CodePiece p_tpy_r = NumberCodeHelper.generateCode(CodeGenConstants.TMP_FIELD.Y, !reversed);
 
 
 			if (reversed)

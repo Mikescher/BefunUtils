@@ -118,6 +118,11 @@ namespace BefunGen.AST
 			//--
 		}
 
+		public override int GetSize()
+		{
+			return 1;
+		}
+
 		public override string getDebugString()
 		{
 			return "void";
@@ -145,6 +150,11 @@ namespace BefunGen.AST
 			: base(pos)
 		{
 			//--
+		}
+
+		public override int GetSize()
+		{
+			throw new InvalidASTStateException(Position);
 		}
 
 		public override string getDebugString()

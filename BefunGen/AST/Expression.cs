@@ -105,7 +105,7 @@ namespace BefunGen.AST
 
 			if (CodeGenOptions.StripDoubleStringmodeToogle)
 			{
-				if (cp_l.lastRowIsSingle() && cp_r.firstRowIsSingle() && cp_l[cp_l.MaxX - 1, 0].Type == BefungeCommandType.Stringmode && cp_r[0, 0].Type == BefungeCommandType.Stringmode)
+				if (cp_l.lastColumnIsSingle() && cp_r.firstColumnIsSingle() && cp_l[cp_l.MaxX - 1, 0].Type == BefungeCommandType.Stringmode && cp_r[0, 0].Type == BefungeCommandType.Stringmode)
 				{
 					cp_l.RemoveColumn(cp_l.MaxX - 1);
 					cp_r.RemoveColumn(0);
