@@ -1,6 +1,7 @@
 using BefunGen.AST.CodeGen;
 using BefunGen.AST.CodeGen.Tags;
 using BefunGen.AST.Exceptions;
+using BefunGen.MathExtensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -83,14 +84,16 @@ namespace BefunGen.AST
 
 		public CodePiece generateCode()
 		{
-			List<Tuple<int, int, CodePiece>> meth_pieces = new List<Tuple<int, int, CodePiece>>();
+			List<Tuple<MathExt.Point, CodePiece>> meth_pieces = new List<Tuple<MathExt.Point, CodePiece>>();
 
 			CodePiece p = new CodePiece();
 
-			int meth_offset_x = 1;
-			int meth_offset_y = 1;
+			int lane_start_y = 4;
 
-			p[0, 0] = BCHelper.PC_Down;
+			int meth_offset_x = 3 + CodeGenConstants.LANE_VERTICAL_MARGIN;
+			int meth_offset_y = lane_start_y + 3; // +3 For the MinY=5 of VerticalLaneTurnout_Dec || bzw +2 for LaneChooser
+
+			#region Insert Methods
 
 			for (int i = 0; i < MethodList.Count; i++)
 			{
@@ -101,20 +104,132 @@ namespace BefunGen.AST
 				int mx = meth_offset_x - p_method.MinX;
 				int my = meth_offset_y - p_method.MinY;
 
-				meth_pieces.Add(Tuple.Create(mx, my, p_method));
+				meth_pieces.Add(Tuple.Create(new MathExt.Point(mx, my), p_method));
 
 				p.SetAt(mx, my, p_method);
 
 				meth_offset_y += p_method.Height + CodeGenConstants.VERTICAL_METHOD_DISTANCE;
 			}
 
-			// Path to main --TEMP--
-			int entry_y = meth_pieces[0].Item2 + (meth_pieces[0].Item3.findTagSingle(typeof(MethodEntry_FullInitialization_Tag)).Y - meth_pieces[0].Item3.MinX);
-			p[0, entry_y] = BCHelper.PC_Right;
-			p.FillColWW(0, 1, entry_y);
-			p.FillRowWW(entry_y, 1, meth_pieces[0].Item1);
+			#endregion
 
-			return p;
+			int highway_x = MathExt.Max(p.MaxX, 3 + CodePieceStore.BooleanStackFlooder().Width, 6); //MaxMethodWidth, TopLane_Left, TopLane_Right //TODO Add Space for TempVars
+
+			#region Generate Lanes (Left Lane && Right Lane)
+
+			List<TagLocation> method_entries = p.findAllActiveCodeTags(typeof(MethodEntry_FullInitialization_Tag)) // Left Lane
+				.OrderBy(tp => tp.Y)
+				.ToList();
+			List<TagLocation> code_entries = p.findAllActiveCodeTags(typeof(MethodCall_HorizontalReEntry_Tag)) // Right Lane
+				.OrderBy(tp => tp.Y)
+				.ToList();
+
+			int last;
+			bool first;
+
+			//######### LEFT LANE #########
+
+			first = true;
+			last = lane_start_y;
+			foreach (TagLocation method_entry in method_entries)
+			{
+				CodePiece p_turnout = CodePieceStore.VerticalLaneTurnout_Dec(first);
+
+				p.FillColWW(0, last, method_entry.Y + p_turnout.MinY);
+				p.SetAt(0, method_entry.Y, p_turnout);
+				p.FillRowWW(method_entry.Y, 3, method_entry.X);
+				last = method_entry.Y + p_turnout.MaxY;
+				first = false;
+			}
+			p.FillColWW(0, last, p.MaxY);
+
+			//######### RIGHT LANE #########
+
+			first = true;
+			last = lane_start_y;
+			foreach (TagLocation code_entry in code_entries)
+			{
+				CodePiece p_turnout = CodePieceStore.VerticalLaneTurnout_Test();
+
+				p.FillColWW(2, last, code_entry.Y + p_turnout.MinY);
+				p.SetAt(2, code_entry.Y, p_turnout);
+				p.CreateRowWW(code_entry.Y, 3, code_entry.X);
+				last = code_entry.Y + p_turnout.MaxY;
+				first = false;
+			}
+			p.FillColWW(2, last, p.MaxY);
+
+			//######### MIDDLE LANE #########
+
+			p.Fill(1, lane_start_y, 2, p.MaxY, BCHelper.PC_Jump);
+
+			#endregion
+
+			#region Generate Top Lane
+
+			// v
+			// 1 v{STACKFLOODER}        <
+			//                          |
+			// v  +1                    <
+			// .#.                      #
+			// .#.                      !
+			// .#.
+			CodePiece p_TopLane = new CodePiece();
+
+			p_TopLane[0, 0] = BCHelper.PC_Down;
+			p_TopLane[0, 1] = BCHelper.Digit_1;
+			p_TopLane[0, 2] = BCHelper.Walkway;
+			p_TopLane[0, 3] = BCHelper.PC_Down;
+
+			p_TopLane[1, 3] = BCHelper.Walkway;
+
+			p_TopLane[2, 1] = BCHelper.PC_Down;
+			p_TopLane[2, 2] = BCHelper.Walkway;
+			p_TopLane[2, 3] = BCHelper.Walkway;
+
+			p_TopLane[3, 3] = BCHelper.Add;
+			p_TopLane[4, 3] = BCHelper.Digit_1;
+
+			p_TopLane.FillRowWW(3, 5, highway_x);
+
+			CodePiece p_flooder = CodePieceStore.BooleanStackFlooder();
+			p_TopLane.SetAt(3, 1, p_flooder);
+			p_TopLane.FillRowWW(1, 3 + p_flooder.Width, highway_x);
+
+			p_TopLane[highway_x, 1] = BCHelper.PC_Left;
+			p_TopLane[highway_x, 2] = BCHelper.If_Vertical;
+			p_TopLane[highway_x, 3] = BCHelper.PC_Left;
+			p_TopLane[highway_x, 4] = BCHelper.PC_Jump;
+			p_TopLane[highway_x, 5] = BCHelper.Not;
+
+
+			p.SetAt(0, 0, p_TopLane, true);
+
+			#endregion
+
+			#region Generate Highway (Path on right side of code)
+
+			List<TagLocation> code_exits = p.findAllActiveCodeTags(typeof(MethodCall_HorizontalExit_Tag))
+				.OrderBy(tp => tp.Y)
+				.ToList();
+
+			first = true;
+			last = 6;
+			foreach (TagLocation exit in code_exits)
+			{
+				p.FillColWW(highway_x, last, exit.Y);
+				p[highway_x, exit.Y] = BCHelper.PC_Up;
+				p.CreateRowWW(exit.Y, exit.X + 1, highway_x);
+				last = exit.Y + 1;
+
+				exit.Tag.deactivate();
+
+				first = false;
+			}
+			
+			#endregion
+
+			return p;	
 		}
 	}
 

@@ -123,6 +123,10 @@ namespace BefunGen.AST
 
 			p.AppendBottom(generateCode_Body());
 
+			// Force MIN_METHOD_HEIGHT
+			while (p.Height < CodeGenConstants.MIN_METHOD_HEIGHT)
+				p.AppendBottom(BCHelper.PC_Jump); //TODO Better Char ??
+
 			return p;
 		}
 
@@ -235,7 +239,7 @@ namespace BefunGen.AST
 
 			p.normalizeX();
 
-			p.forceNonEmpty();
+			p.forceNonEmpty(BCHelper.PC_Down);
 
 			return p;
 		}
@@ -300,7 +304,7 @@ namespace BefunGen.AST
 
 		private CodePiece generateCode_Body()
 		{
-			CodePiece p = Body.generateCode(false);
+			CodePiece p = Body.generateCode(false); //TODO Body doesnt need useless bottom line (bend over so its right-out)
 
 			p.normalizeX();
 

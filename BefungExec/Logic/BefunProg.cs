@@ -373,7 +373,7 @@ namespace BefungExec.Logic
 			PC %= dimension;
 
 			if (bx != PC.X || by != PC.Y)
-				err = "PC wrapped around ledge" + bx + " " + by + " " + PC.X + " " + PC.Y;
+				err = "PC wrapped around ledge (" + bx + "|" + by + ") - (" + PC.X + "|" + PC.Y + ")";
 		}
 
 		private void decay()

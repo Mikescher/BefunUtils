@@ -4,6 +4,18 @@ namespace BefunGen.MathExtensions
 {
 	public class MathExt
 	{
+		public struct Point
+		{
+			public readonly int X;
+			public readonly int Y;
+
+			public Point(int xx, int yy)
+			{
+				X = xx;
+				Y = yy;
+			}
+		}
+
 		public static void Swap<T>(ref T lhs, ref T rhs)
 		{
 			T temp;

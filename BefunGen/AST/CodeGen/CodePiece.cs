@@ -23,6 +23,8 @@ namespace BefunGen.AST.CodeGen
 
 		public int Height { get { return MaxY - MinY; } }
 
+		public int Size { get { return Width * Height; } }
+
 		private List<List<BefungeCommand>> commandArr = new List<List<BefungeCommand>>();
 
 		public BefungeCommand this[int x, int y] { get { return get(x, y); } set { set(x, y, value); } }
@@ -46,7 +48,7 @@ namespace BefunGen.AST.CodeGen
 			MaxY = 0;
 		}
 
-		public static CodePiece ParseFromLine(string l)
+		public static CodePiece ParseFromLine(string l, bool interpretSpaceAsWalkway = false)
 		{
 			CodePiece p = new CodePiece();
 
@@ -54,7 +56,7 @@ namespace BefunGen.AST.CodeGen
 			{
 				char c = l[i];
 
-				if (c == ' ')
+				if (c == ' ' && !interpretSpaceAsWalkway)
 					throw new InternalCodeGenException(); // Space is undefinied: NOP <> Walkway
 
 				BefungeCommand cmd = BCHelper.FindCommand(c);
@@ -427,12 +429,15 @@ namespace BefunGen.AST.CodeGen
 
 		}
 
-		public void SetAt(int paramX, int paramY, CodePiece lit)
+		public void SetAt(int paramX, int paramY, CodePiece lit, bool skipNop = false)
 		{
 			for (int x = lit.MinX; x < lit.MaxX; x++)
 			{
 				for (int y = lit.MinY; y < lit.MaxY; y++)
 				{
+					if (skipNop && lit[x, y].Type == BefungeCommandType.NOP)
+						continue;
+
 					this[x + paramX, y + paramY] = lit[x, y];
 				}
 			}
@@ -896,10 +901,10 @@ namespace BefunGen.AST.CodeGen
 			MaxX += ox;
 		}
 
-		public void forceNonEmpty()
+		public void forceNonEmpty(BefungeCommand cmd)
 		{
-			if (Width == 0 || Height == 0)
-				this[0, 0] = BCHelper.Walkway;
+			if (Size == 0)
+				this[0, 0] = cmd;
 		}
 
 		#endregion

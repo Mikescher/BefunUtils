@@ -496,5 +496,75 @@ namespace BefunGen.AST.CodeGen
 				return p;
 			}
 		}
+
+		public static CodePiece VerticalLaneTurnout_Test()
+		{
+			// #
+			// >
+			// |
+			CodePiece p = new CodePiece();
+
+			p[0, -1] = BCHelper.PC_Jump;
+			p[0, +0] = BCHelper.PC_Right;
+			p[0, +1] = BCHelper.If_Vertical;
+
+			return p;
+		}
+
+		public static CodePiece VerticalLaneTurnout_Dec(bool stripped)
+		{
+			if (stripped)
+			{
+				// :
+				// !
+				// #
+				// >
+				// |
+				CodePiece p = new CodePiece();
+
+				p[0, -3] = BCHelper.Stack_Dup;
+				p[0, -2] = BCHelper.Not;
+				p[0, -1] = BCHelper.PC_Jump;
+				p[0, +0] = BCHelper.PC_Right;
+				p[0, +1] = BCHelper.If_Vertical;
+
+				return p;
+			}
+			else
+			{
+				// 1
+				// -
+				// :
+				// !
+				// #
+				// >
+				// |
+				CodePiece p = new CodePiece();
+
+				p[0, -5] = BCHelper.Digit_1;
+				p[0, -4] = BCHelper.Sub;
+				p[0, -3] = BCHelper.Stack_Dup;
+				p[0, -2] = BCHelper.Not;
+				p[0, -1] = BCHelper.PC_Jump;
+				p[0, +0] = BCHelper.PC_Right;
+				p[0, +1] = BCHelper.If_Vertical;
+
+				return p;
+			}
+		}
+
+		public static CodePiece BooleanStackFlooder()
+		{
+			//Stack Flooder ALWAYS reversed (right -> left)
+
+			// $_v#!:-1<\1
+			//   >0\   ^
+			CodePiece p = new CodePiece();
+
+			p.SetAt(0, 0, CodePiece.ParseFromLine(@"$_v#!:-1<\1"));
+			p.SetAt(2, 1, CodePiece.ParseFromLine(@">0\   ^", true));
+
+			return p;
+		}
 	}
 }

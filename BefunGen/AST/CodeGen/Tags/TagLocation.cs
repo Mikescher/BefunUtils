@@ -1,4 +1,5 @@
 ﻿
+using System;
 namespace BefunGen.AST.CodeGen.Tags
 {
 	public class TagLocation
@@ -16,6 +17,11 @@ namespace BefunGen.AST.CodeGen.Tags
 			X = px;
 			Y = py;
 			Command = cmd;
+		}
+
+		public override string ToString()
+		{
+			return String.Format(@"({0}|{1}) {2}", X, Y, base.ToString());
 		}
 	}
 }

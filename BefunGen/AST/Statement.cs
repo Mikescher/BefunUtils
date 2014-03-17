@@ -1729,7 +1729,7 @@ namespace BefunGen.AST
 
 	#endregion Operations
 
-	#region Constructs
+	#region Constructs //TODO Extend MC-Tags in STructures
 
 	public class Statement_If : Statement
 	{
