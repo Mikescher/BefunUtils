@@ -82,11 +82,18 @@ namespace BefunGen.AST
 			return MethodList.Count(p => p.Identifier.ToLower() == ident.ToLower()) == 1 ? MethodList.Single(p => p.Identifier.ToLower() == ident.ToLower()) : null;
 		}
 
+		public int getMaxReturnValueWidth()
+		{
+			return MathExt.Max(1, MethodList.Select(p => p.ResultType.GetSize()).ToArray());
+		}
+
 		public CodePiece generateCode()
 		{
 			List<Tuple<MathExt.Point, CodePiece>> meth_pieces = new List<Tuple<MathExt.Point, CodePiece>>();
 
 			CodePiece p = new CodePiece();
+
+			int maxReturnValWidth = getMaxReturnValueWidth();
 
 			int lane_start_y = 4;
 
@@ -113,7 +120,7 @@ namespace BefunGen.AST
 
 			#endregion
 
-			int highway_x = MathExt.Max(p.MaxX, 3 + CodePieceStore.BooleanStackFlooder().Width, 6); //MaxMethodWidth, TopLane_Left, TopLane_Right //TODO Add Space for TempVars
+			int highway_x = MathExt.Max(p.MaxX, 3 + CodePieceStore.BooleanStackFlooder().Width, 6, CodeGenConstants.TMP_FIELD_RETURNVAL.X + maxReturnValWidth); //MaxMethodWidth, TopLane_Left, TopLane_Right, SPace for TempVars
 
 			#region Generate Lanes (Left Lane && Right Lane)
 

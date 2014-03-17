@@ -20,6 +20,8 @@ namespace BefunGen.AST
 			//--
 		}
 
+		public abstract int GetSize();
+
 		public override bool Equals(System.Object obj)
 		{
 			if (obj == null)
@@ -68,6 +70,11 @@ namespace BefunGen.AST
 		{
 			//--
 		}
+
+		public override int GetSize()
+		{
+			return 1;
+		}
 	}
 
 	public abstract class BType_Array : BType
@@ -80,6 +87,11 @@ namespace BefunGen.AST
 			: base(pos)
 		{
 			//--
+		}
+
+		public override int GetSize()
+		{
+			return Size;
 		}
 
 		public override bool Equals(BType p)

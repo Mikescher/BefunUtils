@@ -17,14 +17,14 @@ namespace BefunGen.AST.CodeGen
 		// Defines how Number Literals get represented
 		public static NumberRep NumberLiteralRepresentation = NumberRep.Best;
 
-		// Removes 2x STringmodetoogle after each other rfrom Expression (eg "" )
+		// Removes 2x Stringmodetoogle after each other from Expression (eg "" )
 		public static bool StripDoubleStringmodeToogle = true;
 
 		// Every NOP-Command is displayed as an Exit-Command
 		public static bool SetNOPCellsToCustom = true;
 		public static char CustomNOPSymbol = (char)164;//'@'; //'\u00F8';
 
-		// When combining two CodePieces try to combine the two connecting columns/rows to a signle one
+		// When combining two CodePieces try to combine the two connecting columns/rows to a single one
 		public static bool CompressHorizontalCombining = true;
 		public static bool CompressVerticalCombining = true;
 
@@ -33,6 +33,12 @@ namespace BefunGen.AST.CodeGen
 
 		// The Value of reserved for variable fields before initialization 
 		public static BefungeCommand DefaultVarDeclarationSymbol = BCHelper.chr('V');
+
+		// The Value of reserved for temp_field before initialization 
+		public static BefungeCommand DefaultTempSymbol = BCHelper.chr('T');
+
+		// The Value of reserved for temp_field_returnval before initialization 
+		public static BefungeCommand DefaultResultTempSymbol = BCHelper.chr('R');
 
 		// When hard casting to bool force the value to be '0' or '1'
 		public static bool ExtendedBooleanCast = false;
