@@ -6,12 +6,11 @@ using System.Text;
 
 namespace BefunGen.AST.Exceptions
 {
-	public class CodePieceReverseException : Exception
+	public abstract class BefunGenUserException : BefunGenException
 	{
-		public CodePieceReverseException(CodePiece p)
-			: base("Cannot reverse Codepiece " + p + ".")
+		public BefunGenUserException(string msg, SourceCodePosition pos)
+			: base("USER", msg, pos)
 		{
-
 		}
 	}
 }

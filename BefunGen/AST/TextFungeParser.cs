@@ -40,7 +40,7 @@ namespace BefunGen.AST
 			{
 				result = (Program)parse(txt);
 			}
-			catch (ASTException e)
+			catch (BefunGenException e)
 			{
 				FailMessage = e.ToString();
 				return null;
@@ -58,7 +58,7 @@ namespace BefunGen.AST
 			{
 				result.prepare();
 			}
-			catch (ASTException e)
+			catch (BefunGenException e)
 			{
 				FailMessage = e.ToString();
 				return null;

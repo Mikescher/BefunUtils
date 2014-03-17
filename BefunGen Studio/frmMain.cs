@@ -332,7 +332,8 @@ namespace BefunGen
 			}
 			catch (Exception e)
 			{
-				txtDebug.Text += Regex.Replace(e.ToString().Replace(" in ", Environment.NewLine + "      in "), @"in.*BefunGen\\", "in ");
+				txtDebug.Text += e.ToString();
+				//txtDebug.Text += Regex.Replace(e.ToString().Replace(" in ", Environment.NewLine + "      in "), @"in.*BefunGen\\", "in ");
 				//txtDebug.Text += e.ToString().Replace("in", Environment.NewLine + "      in").Replace(@"e:\Eigene Dateien\Dropbox\Eigene EDV\Visual Studio\Projects\BefunGen\BefunGen\", "");
 			}
 		}
