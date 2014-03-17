@@ -28,6 +28,8 @@ namespace BefunGen.AST
 			return string.Format("#Program ({0})\n[\n{1}\n]", Identifier, indent(getDebugStringForList(MethodList)));
 		}
 
+		#region Prepare
+
 		public void prepare()
 		{
 			// Reset ID-Counter
@@ -35,6 +37,7 @@ namespace BefunGen.AST
 			VarDeclaration.resetCounter();
 			Statement.resetCounter();
 
+			forceMethodReturn();		// Every Method must always end with a RETURN
 			addressMethodsVariables();	// Methods get their Address
 			linkVariables();			// Variable-uses get their ID
 			linkMethods();				// Methodcalls get their ID   &&   Labels + MethodCalls get their CodePointAddress
@@ -64,6 +67,14 @@ namespace BefunGen.AST
 			foreach (Method m in MethodList)
 				m.linkResultTypes();
 		}
+
+		private void forceMethodReturn()
+		{
+			foreach (Method m in MethodList)
+				m.forceMethodReturn();
+		}
+
+		#endregion
 
 		public Method findMethodByIdentifier(string ident)
 		{

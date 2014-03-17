@@ -72,6 +72,21 @@ namespace BefunGen.AST
 			Body.linkResultTypes(this);
 		}
 
+		public void forceMethodReturn()
+		{
+			if (!Body.allPathsReturn())
+			{
+				if (ResultType is BType_Void)
+				{
+					Body.List.Add(new Statement_Return(Position));
+				}
+				else
+				{
+					throw new NotAllPathsReturnException(this, Position);
+				}
+			}
+		}
+
 		public VarDeclaration findVariableByIdentifier(string ident)
 		{
 			return Variables.Count(p => p.Identifier.ToLower() == ident.ToLower()) == 1 ? Variables.Single(p => p.Identifier.ToLower() == ident.ToLower()) : null;

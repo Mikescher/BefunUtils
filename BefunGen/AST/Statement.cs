@@ -80,6 +80,7 @@ namespace BefunGen.AST
 		public abstract void linkVariables(Method owner);
 		public abstract void linkResultTypes(Method owner);
 		public abstract void linkMethods(Program owner);
+		public abstract bool allPathsReturn();
 
 		public abstract Statement_Label findLabelByIdentifier(string ident);
 
@@ -150,6 +151,15 @@ namespace BefunGen.AST
 			}
 
 			return result;
+		}
+
+		public override bool allPathsReturn()
+		{
+			for (int i = 0; i < List.Count; i++)
+			{
+				if (List[i].allPathsReturn()) return true;
+			}
+			return false;
 		}
 
 		public override CodePiece generateCode(bool reversed)
@@ -565,6 +575,11 @@ namespace BefunGen.AST
 			}
 		}
 
+		public override bool allPathsReturn()
+		{
+			return false;
+		}
+
 		public override Statement_Label findLabelByIdentifier(string ident)
 		{
 			return null;
@@ -645,6 +660,11 @@ namespace BefunGen.AST
 			//NOP
 		}
 
+		public override bool allPathsReturn()
+		{
+			return false;
+		}
+
 		public override Statement_Label findLabelByIdentifier(string ident)
 		{
 			return ident.ToLower() == Identifier.ToLower() ? this : null;
@@ -689,6 +709,11 @@ namespace BefunGen.AST
 			//NOP
 		}
 
+		public override bool allPathsReturn()
+		{
+			return false;
+		}
+
 		public override Statement_Label findLabelByIdentifier(string ident)
 		{
 			return null;
@@ -700,7 +725,7 @@ namespace BefunGen.AST
 		}
 	}
 
-	public class Statement_Return : Statement //TODO Force every method code-path to end with return
+	public class Statement_Return : Statement
 	{
 		public Expression Value;
 
@@ -745,6 +770,11 @@ namespace BefunGen.AST
 				else
 					throw new ImplicitCastException(Value.Position, present, expected);
 			}
+		}
+
+		public override bool allPathsReturn()
+		{
+			return true;
 		}
 
 		public override Statement_Label findLabelByIdentifier(string ident)
@@ -833,6 +863,11 @@ namespace BefunGen.AST
 		public override void linkMethods(Program owner)
 		{
 			Value.linkMethods(owner);
+		}
+
+		public override bool allPathsReturn()
+		{
+			return false;
 		}
 
 		public override Statement_Label findLabelByIdentifier(string ident)
@@ -1053,6 +1088,11 @@ namespace BefunGen.AST
 			//NOP
 		}
 
+		public override bool allPathsReturn()
+		{
+			return false;
+		}
+
 		public override Statement_Label findLabelByIdentifier(string ident)
 		{
 			return null;
@@ -1175,6 +1215,11 @@ namespace BefunGen.AST
 		public override void linkMethods(Program owner)
 		{
 			ValueTarget.linkMethods(owner);
+		}
+
+		public override bool allPathsReturn()
+		{
+			return false;
 		}
 
 		public override Statement_Label findLabelByIdentifier(string ident)
@@ -1335,6 +1380,11 @@ namespace BefunGen.AST
 			//NOP
 		}
 
+		public override bool allPathsReturn()
+		{
+			return true;
+		}
+
 		public override Statement_Label findLabelByIdentifier(string ident)
 		{
 			return null;
@@ -1375,6 +1425,11 @@ namespace BefunGen.AST
 		public override void linkMethods(Program owner)
 		{
 			//NOP
+		}
+
+		public override bool allPathsReturn()
+		{
+			return false;
 		}
 
 		public override Statement_Label findLabelByIdentifier(string ident)
@@ -1427,6 +1482,11 @@ namespace BefunGen.AST
 			{
 				throw new WrongTypeException(Target.Position, present, new BType_Int(Position), new BType_Digit(Position), new BType_Char(Position));
 			}
+		}
+
+		public override bool allPathsReturn()
+		{
+			return false;
 		}
 
 		public override Statement_Label findLabelByIdentifier(string ident)
@@ -1500,6 +1560,11 @@ namespace BefunGen.AST
 			{
 				throw new WrongTypeException(Target.Position, present, new BType_Int(Position), new BType_Digit(Position), new BType_Char(Position));
 			}
+		}
+
+		public override bool allPathsReturn()
+		{
+			return false;
 		}
 
 		public override Statement_Label findLabelByIdentifier(string ident)
@@ -1582,6 +1647,11 @@ namespace BefunGen.AST
 				else
 					throw new ImplicitCastException(Expr.Position, t_right, t_left);
 			}
+		}
+
+		public override bool allPathsReturn()
+		{
+			return false;
 		}
 
 		public override Statement_Label findLabelByIdentifier(string ident)
@@ -1718,6 +1788,11 @@ namespace BefunGen.AST
 				else
 					throw new ImplicitCastException(Condition.Position, present, expected);
 			}
+		}
+
+		public override bool allPathsReturn()
+		{
+			return Body.allPathsReturn() && Else.allPathsReturn();
 		}
 
 		public override Statement_Label findLabelByIdentifier(string ident)
@@ -2034,6 +2109,11 @@ namespace BefunGen.AST
 			}
 		}
 
+		public override bool allPathsReturn()
+		{
+			return false; // Its possible that the Body isnt executed at all
+		}
+
 		public override Statement_Label findLabelByIdentifier(string ident)
 		{
 			return null;
@@ -2174,6 +2254,11 @@ namespace BefunGen.AST
 				else
 					throw new ImplicitCastException(Condition.Position, present, expected);
 			}
+		}
+
+		public override bool allPathsReturn()
+		{
+			return Body.allPathsReturn(); // Body is executed at least once
 		}
 
 		public override Statement_Label findLabelByIdentifier(string ident)
