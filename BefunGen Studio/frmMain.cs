@@ -346,13 +346,13 @@ namespace BefunGen
 					int i;
 				BEGIN
 
-					OUT ''START\r\n'';
+					OUT ''\r\nSTART\r\n'';
 
 					ma();
 					mb();
 					mc();
 
-					OUT ''FIN\r\n'';
+					OUT ''\r\nFIN\r\n'';
 
 					QUIT;
 				END
@@ -363,6 +363,7 @@ namespace BefunGen
 					OUT ''A1'';
 					OUT ''A2'';
 					OUT ''A3'';
+					OUT ''\r\n'';
 
 					RETURN;
 
@@ -374,6 +375,7 @@ namespace BefunGen
 					OUT ''B1'';
 					OUT ''B2'';
 					OUT ''B3'';
+					OUT ''\r\n'';
 
 					RETURN;
 
@@ -385,6 +387,7 @@ namespace BefunGen
 					OUT ''C1'';
 					OUT ''C2'';
 					OUT ''C3'';
+					OUT ''\r\n'';
 
 					RETURN;
 
@@ -475,10 +478,7 @@ namespace BefunGen
 
 			if (end > start && end >= 0 && start >= 0)
 			{
-				txt = txt.Substring(start + 1, end - start - 1);
-				txt = txt.Trim(' ', '\r', '\n', '\t');
-
-				txtCode.Text = txt;
+				txtCode.Text = txtDebug.Text;
 				txtCode.Select(0, 0);
 
 				tabControl1.SelectedIndex = 5;

@@ -93,4 +93,10 @@ namespace BefunGen.AST.Exceptions
 		public ArrayTooSmallException(SourceCodePosition pos)
 			: base(String.Format("The size of the array is too small"), pos) { }
 	}
+
+	public class InlineVoidMethodCallException : BefunGenUserException
+	{
+		public InlineVoidMethodCallException(SourceCodePosition pos)
+			: base("Call of an void-Method inside of a expression", pos) { }
+	}
 }

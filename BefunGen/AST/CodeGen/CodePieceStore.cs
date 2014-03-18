@@ -8,6 +8,11 @@ namespace BefunGen.AST.CodeGen
 {
 	public static class CodePieceStore
 	{
+		public static CodePiece ReadArrayToStack(VarDeclaration_Array v, bool reversed)
+		{
+			return ReadArrayToStack(v.Size, v.CodePositionX, v.CodePositionY, reversed);
+		}
+
 		public static CodePiece ReadArrayToStack(int arrLen, int arrX, int arrY, bool reversed)
 		{
 			// Result: Horizontal     [LEFT, 0] IN ... [RIGHT, 0] OUT (or the other way when reversed)
@@ -114,6 +119,11 @@ namespace BefunGen.AST.CodeGen
 			}
 		}
 
+		public static CodePiece WriteArrayFromStack(VarDeclaration_Array v, bool reversed)
+		{
+			return WriteArrayFromStack(v.Size, v.CodePositionX, v.CodePositionY, reversed);
+		}
+
 		public static CodePiece WriteArrayFromStack(int arrLen, int arrX, int arrY, bool reversed)
 		{
 			// Result: Horizontal     [LEFT, 0] IN ... [RIGHT, 0] OUT (or the other way when reversed)
@@ -129,11 +139,11 @@ namespace BefunGen.AST.CodeGen
 			// [A, B, C, D]
 			//
 
-			CodePiece p_tpx = NumberCodeHelper.generateCode(CodeGenConstants.TMP_FIELD.X, reversed);
-			CodePiece p_tpy = NumberCodeHelper.generateCode(CodeGenConstants.TMP_FIELD.Y, reversed);
+			CodePiece p_tpx = NumberCodeHelper.generateCode(CodeGenConstants.TMP_FIELD_IO_ARR.X, reversed);
+			CodePiece p_tpy = NumberCodeHelper.generateCode(CodeGenConstants.TMP_FIELD_IO_ARR.Y, reversed);
 
-			CodePiece p_tpx_r = NumberCodeHelper.generateCode(CodeGenConstants.TMP_FIELD.X, !reversed);
-			CodePiece p_tpy_r = NumberCodeHelper.generateCode(CodeGenConstants.TMP_FIELD.Y, !reversed);
+			CodePiece p_tpx_r = NumberCodeHelper.generateCode(CodeGenConstants.TMP_FIELD_IO_ARR.X, !reversed);
+			CodePiece p_tpy_r = NumberCodeHelper.generateCode(CodeGenConstants.TMP_FIELD_IO_ARR.Y, !reversed);
 
 			CodePiece p_len = NumberCodeHelper.generateCode(arrLen - 1, reversed);
 			CodePiece p_arx = NumberCodeHelper.generateCode(arrX, reversed);
@@ -324,11 +334,11 @@ namespace BefunGen.AST.CodeGen
 			// [A, B, C, D]
 			//
 
-			CodePiece p_tpx = NumberCodeHelper.generateCode(CodeGenConstants.TMP_FIELD.X, reversed);
-			CodePiece p_tpy = NumberCodeHelper.generateCode(CodeGenConstants.TMP_FIELD.Y, reversed);
+			CodePiece p_tpx = NumberCodeHelper.generateCode(CodeGenConstants.TMP_FIELD_IO_ARR.X, reversed);
+			CodePiece p_tpy = NumberCodeHelper.generateCode(CodeGenConstants.TMP_FIELD_IO_ARR.Y, reversed);
 
-			CodePiece p_tpx_r = NumberCodeHelper.generateCode(CodeGenConstants.TMP_FIELD.X, !reversed);
-			CodePiece p_tpy_r = NumberCodeHelper.generateCode(CodeGenConstants.TMP_FIELD.Y, !reversed);
+			CodePiece p_tpx_r = NumberCodeHelper.generateCode(CodeGenConstants.TMP_FIELD_IO_ARR.X, !reversed);
+			CodePiece p_tpy_r = NumberCodeHelper.generateCode(CodeGenConstants.TMP_FIELD_IO_ARR.Y, !reversed);
 
 			CodePiece p_len = NumberCodeHelper.generateCode(arrLen - 1, reversed);
 			CodePiece p_arx = NumberCodeHelper.generateCode(arrX, reversed);
@@ -561,7 +571,7 @@ namespace BefunGen.AST.CodeGen
 			//   >0\   ^
 			CodePiece p = new CodePiece();
 
-			p.SetAt(0, 0, CodePiece.ParseFromLine(@"$_v#!:-1<\1"));
+			p.SetAt(0, 0, CodePiece.ParseFromLine(@"$_v#!:-1<\1+1"));
 			p.SetAt(2, 1, CodePiece.ParseFromLine(@">0\   ^", true));
 
 			return p;

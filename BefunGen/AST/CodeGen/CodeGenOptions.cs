@@ -187,11 +187,17 @@ EXIT::JUMP_IN ( doMethod(a, b) )
 EXIT::JUMP_BACK ( Return x )
 #########
 
-SAVE BACKJUMPADDR (Current Stack::Top) to TMP_2 (TMP_2 Exclusive to this OP ( BackJumpAddr )) //TODO Every Tmp Addr exclusive ?
-
-[STACK]  CALC RETURN VALUE TO STACK (ALWAYS -> VOID is also value (0) );
-[STACK]  PUT BACKJUMPADDR BACK ON STACK ("Right Lane Adress" -> CodePointAdress)
-[STACK]  0 (FOR JUMP_BACK -> "Right Lane")
+IF (RETURN VALUE) 
+	[STACK]  CALC RETURN VALUE TO STACK (ALWAYS -> VOID is also value (0) );
+	[STACK]  Stack_Swap (Switch BackJumpAddr and ReturnVal)
+	[STACK]  0 (FOR JUMP_BACK -> "Right Lane")
+IF (RETURN ARRAY)
+	[STACK]  CALC RETURN VALUE TO STACK (ALWAYS -> VOID is also value (0) );
+	PUT RETURNVAL to TMP_RETURN_FIELD
+	PUT BACKJUMPADDR TO TMP_JMP_ADDR
+	READ RETURNVAL BACK AGAIN
+	READ BACKJUMPADDR BACK AGAIN
+	[STACK]  0 (FOR JUMP_BACK -> "Right Lane")
 
 
 

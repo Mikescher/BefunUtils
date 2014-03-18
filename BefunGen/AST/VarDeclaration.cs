@@ -75,7 +75,7 @@ namespace BefunGen.AST
 
 		// Code for Variable Initialization
 		public abstract CodePiece generateCode(bool reversed);
-		public abstract CodePiece generateCode_Parameter(bool reversed);
+		public abstract CodePiece generateCode_SetToStackVal(bool reversed);
 	}
 
 	#region Children
@@ -119,7 +119,7 @@ namespace BefunGen.AST
 			return p;
 		}
 
-		public override CodePiece generateCode_Parameter(bool reversed)
+		public override CodePiece generateCode_SetToStackVal(bool reversed)
 		{
 			CodePiece p = new CodePiece();
 
@@ -358,32 +358,9 @@ namespace BefunGen.AST
 			return p;
 		}
 
-		public override CodePiece generateCode_Parameter(bool reversed)
+		public override CodePiece generateCode_SetToStackVal(bool reversed)
 		{
-			CodePiece p = new CodePiece();
-
-			int varX = CodePositionX;
-			int varY = CodePositionY;
-
-			for (int pos = 0; pos < Size; pos++)
-			{
-				if (reversed)
-				{
-					p.AppendLeft(NumberCodeHelper.generateCode(varX + pos, reversed));
-					p.AppendLeft(NumberCodeHelper.generateCode(varY, reversed));
-					p.AppendLeft(BCHelper.Reflect_Set);
-				}
-				else
-				{
-					p.AppendRight(NumberCodeHelper.generateCode(varX + pos, reversed));
-					p.AppendRight(NumberCodeHelper.generateCode(varY, reversed));
-					p.AppendRight(BCHelper.Reflect_Set);
-				}
-			}
-
-			p.normalizeX();
-
-			return p;
+			return CodePieceStore.WriteArrayFromStack(this, reversed);
 		}
 	}
 

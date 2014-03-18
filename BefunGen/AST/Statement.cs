@@ -78,6 +78,7 @@ namespace BefunGen.AST
 		}
 
 		public abstract void linkVariables(Method owner);
+		public abstract void addressCodePoints();
 		public abstract void linkResultTypes(Method owner);
 		public abstract void linkMethods(Program owner);
 		public abstract bool allPathsReturn();
@@ -121,6 +122,14 @@ namespace BefunGen.AST
 		{
 			foreach (Statement s in List)
 				s.linkVariables(owner);
+		}
+
+		public override void addressCodePoints() 
+		{
+			for (int i = 0; i < List.Count; i++)
+			{
+				List[i].addressCodePoints();
+			}
 		}
 
 		public override void linkMethods(Program owner)
@@ -712,6 +721,8 @@ namespace BefunGen.AST
 		public string Identifier; // Temporary -- before linking;
 		public Method Target;
 
+		public Method owner;
+
 		private int _CodePointAddr = -1;
 		public int CodePointAddr
 		{
@@ -746,8 +757,18 @@ namespace BefunGen.AST
 
 		public override void linkVariables(Method owner)
 		{
+			this.owner = owner;
+
 			foreach (Expression e in CallParameter)
 				e.linkVariables(owner);
+		}
+
+		public override void addressCodePoints()
+		{
+			_CodePointAddr = CODEPOINT_ADDRESS_COUNTER;
+
+			foreach (Expression e in CallParameter)
+				e.addressCodePoints();
 		}
 
 		public override void linkMethods(Program owner)
@@ -795,14 +816,125 @@ namespace BefunGen.AST
 
 		public override CodePiece generateCode(bool reversed) //TODO Implement the rest
 		{
+			if (CodePointAddr < 0)
+				throw new InvalidASTStateException(Position);
+
 			CodePiece p = new CodePiece();
 
 			if (reversed)
 			{
 				#region Reversed
 
-				p[0, 0] = BCHelper.PC_Left_tagged(new MethodCall_VerticalReEntry_Tag(this));
-				p[1, 0] = BCHelper.PC_Up_tagged(new MethodCall_VerticalExit_Tag(Target));
+				// ######## BEFORE EXIT::JUMP-IN ########
+
+				#region EXIT::JUMPIN
+
+				// Put own Variables on Stack
+
+				for (int i = 0; i < owner.Variables.Count; i++)
+				{
+					if (owner.Variables[i] is VarDeclaration_Value)
+					{
+						VarDeclaration_Value var = owner.Variables[i] as VarDeclaration_Value;
+
+						p.AppendLeft(new Expression_DirectValuePointer(Position, var).generateCode(reversed));
+					}
+					else if (owner.Variables[i] is VarDeclaration_Array)
+					{
+						VarDeclaration_Array var = owner.Variables[i] as VarDeclaration_Array;
+
+						p.AppendLeft(CodePieceStore.ReadArrayToStack(var, reversed));
+					}
+					else
+					{
+						throw new WTFException();
+					}
+				}
+
+				// Put own JumpBack-Adress on Stack
+
+				p.AppendLeft(NumberCodeHelper.generateCode(CodePointAddr, reversed));
+
+				// Put Parameter on Stack
+
+				for (int i = 0; i < CallParameter.Count; i++)
+				{
+					p.AppendLeft(CallParameter[i].generateCode(reversed));
+				}
+
+				// Put TargetAdress on Stack
+
+				p.AppendLeft(NumberCodeHelper.generateCode(Target.MethodAddr, reversed));
+
+				// Put Lane Switch on Stack
+
+				p.AppendLeft(BCHelper.Digit_1);
+
+				#endregion
+
+				// ######## JUMPS ########
+
+				p.AppendLeft(BCHelper.PC_Up_tagged(new MethodCall_VerticalExit_Tag(Target)));
+				p.AppendLeft(BCHelper.PC_Left_tagged(new MethodCall_VerticalReEntry_Tag(this)));
+
+				// ######## AFTER ENTRY::JUMP-BACK ########
+
+				#region ENTRY::JUMP-BACK
+
+				// Store Result int TMP_RESULT Field
+
+				if (Target.ResultType is BType_Void)
+				{
+					p.AppendLeft(BCHelper.Stack_Pop); // Nobody cares about the result ...
+				}
+				else if (Target.ResultType is BType_Value)
+				{
+					p.AppendLeft(NumberCodeHelper.generateCode(CodeGenConstants.TMP_FIELD_RETURNVAL.X, reversed));
+					p.AppendLeft(NumberCodeHelper.generateCode(CodeGenConstants.TMP_FIELD_RETURNVAL.Y, reversed));
+
+					p.AppendLeft(BCHelper.Reflect_Set);
+				}
+				else if (Target.ResultType is BType_Value)
+				{
+					p.AppendLeft(CodePieceStore.WriteArrayFromStack((
+						Target.ResultType as BType_Array).Size,
+						CodeGenConstants.TMP_FIELD_RETURNVAL.X,
+						CodeGenConstants.TMP_FIELD_RETURNVAL.Y,
+						reversed));
+				}
+				else throw new WTFException();
+
+				// Restore Variables
+
+				for (int i = owner.Variables.Count - 1; i >= owner.Variables.Count; i--)
+				{
+					p.AppendLeft(owner.Variables[i].generateCode_SetToStackVal(reversed));
+				}
+
+				// Put ReturnValue Back to Stack
+
+				if (Target.ResultType is BType_Void)
+				{
+					// DO nothing - Nobody cares about the result ...
+				}
+				else if (Target.ResultType is BType_Value)
+				{
+					p.AppendLeft(NumberCodeHelper.generateCode(CodeGenConstants.TMP_FIELD_RETURNVAL.X, reversed));
+					p.AppendLeft(NumberCodeHelper.generateCode(CodeGenConstants.TMP_FIELD_RETURNVAL.Y, reversed));
+
+					p.AppendLeft(BCHelper.Reflect_Get);
+				}
+				else if (Target.ResultType is BType_Value)
+				{
+					p.AppendLeft(CodePieceStore.ReadArrayToStack((
+						Target.ResultType as BType_Array).Size,
+						CodeGenConstants.TMP_FIELD_RETURNVAL.X,
+						CodeGenConstants.TMP_FIELD_RETURNVAL.Y,
+						reversed));
+				}
+				else throw new WTFException();
+
+				#endregion
 
 				#endregion
 			}
@@ -810,11 +942,121 @@ namespace BefunGen.AST
 			{
 				#region Normal
 
-				p[0, 0] = BCHelper.PC_Up_tagged(new MethodCall_VerticalExit_Tag(Target));
-				p[1, 0] = BCHelper.PC_Right_tagged(new MethodCall_VerticalReEntry_Tag(this));
+				// ######## BEFORE EXIT::JUMP-IN ########
+
+				#region EXIT::JUMPIN
+
+				// Put own Variables on Stack
+
+				for (int i = 0; i < owner.Variables.Count; i++)
+				{
+					if (owner.Variables[i] is VarDeclaration_Value)
+					{
+						VarDeclaration_Value var = owner.Variables[i] as VarDeclaration_Value;
+
+						p.AppendRight(new Expression_DirectValuePointer(Position, var).generateCode(reversed));
+					}
+					else if (owner.Variables[i] is VarDeclaration_Array)
+					{
+						VarDeclaration_Array var = owner.Variables[i] as VarDeclaration_Array;
+
+						p.AppendRight(CodePieceStore.ReadArrayToStack(var, reversed));
+					}
+					else
+					{
+						throw new WTFException();
+					}
+				}
+
+				// Put own JumpBack-Adress on Stack
+
+				p.AppendRight(NumberCodeHelper.generateCode(CodePointAddr, reversed));
+
+				// Put Parameter on Stack
+
+				for (int i = 0; i < CallParameter.Count; i++)
+				{
+					p.AppendRight(CallParameter[i].generateCode(reversed));
+				}
+
+				// Put TargetAdress on Stack
+
+				p.AppendRight(NumberCodeHelper.generateCode(Target.MethodAddr ,reversed));
+
+				// Put Lane Switch on Stack
+
+				p.AppendRight(BCHelper.Digit_1);
+
+				#endregion
+
+				// ######## JUMPS ########
+
+				p.AppendRight( BCHelper.PC_Up_tagged(new MethodCall_VerticalExit_Tag(Target)) );
+				p.AppendRight( BCHelper.PC_Right_tagged(new MethodCall_VerticalReEntry_Tag(this)) );
+
+				// ######## AFTER ENTRY::JUMP-BACK ########
+
+				#region ENTRY::JUMP-BACK
+
+				// Store Result int TMP_RESULT Field
+
+				if (Target.ResultType is BType_Void)
+				{
+					p.AppendRight(BCHelper.Stack_Pop); // Nobody cares about the result ...
+				}
+				else if (Target.ResultType is BType_Value)
+				{
+					p.AppendRight(NumberCodeHelper.generateCode(CodeGenConstants.TMP_FIELD_RETURNVAL.X, reversed));
+					p.AppendRight(NumberCodeHelper.generateCode(CodeGenConstants.TMP_FIELD_RETURNVAL.Y, reversed));
+
+					p.AppendRight(BCHelper.Reflect_Set);
+				}
+				else if (Target.ResultType is BType_Value)
+				{
+					p.AppendRight(CodePieceStore.WriteArrayFromStack((
+						Target.ResultType as BType_Array).Size, 
+						CodeGenConstants.TMP_FIELD_RETURNVAL.X, 
+						CodeGenConstants.TMP_FIELD_RETURNVAL.Y, 
+						reversed));
+				}
+				else throw new WTFException();
+
+				// Restore Variables
+
+				for (int i = owner.Variables.Count - 1; i >= owner.Variables.Count; i--)
+				{
+					p.AppendRight(owner.Variables[i].generateCode_SetToStackVal(reversed));
+				}
+
+				// Put ReturnValue Back to Stack
+
+				if (Target.ResultType is BType_Void)
+				{
+					// DO nothing - Nobody cares about the result ...
+				}
+				else if (Target.ResultType is BType_Value)
+				{
+					p.AppendRight(NumberCodeHelper.generateCode(CodeGenConstants.TMP_FIELD_RETURNVAL.X, reversed));
+					p.AppendRight(NumberCodeHelper.generateCode(CodeGenConstants.TMP_FIELD_RETURNVAL.Y, reversed));
+
+					p.AppendRight(BCHelper.Reflect_Get);
+				}
+				else if (Target.ResultType is BType_Value)
+				{
+					p.AppendRight(CodePieceStore.ReadArrayToStack((
+						Target.ResultType as BType_Array).Size,
+						CodeGenConstants.TMP_FIELD_RETURNVAL.X,
+						CodeGenConstants.TMP_FIELD_RETURNVAL.Y,
+						reversed));
+				}
+				else throw new WTFException();
+
+				#endregion
 
 				#endregion
 			}
+
+			p.normalizeX();
 
 			return p;
 
@@ -851,6 +1093,11 @@ namespace BefunGen.AST
 		public override string getDebugString()
 		{
 			return string.Format("#LABEL: {{{0}}}", CodePointAddr);
+		}
+
+		public override void addressCodePoints()
+		{
+			_CodePointAddr = CODEPOINT_ADDRESS_COUNTER;
 		}
 
 		public override void linkVariables(Method owner)
@@ -900,6 +1147,11 @@ namespace BefunGen.AST
 			return string.Format("#GOTO: {{{0}}}", Target.CodePointAddr);
 		}
 
+		public override void addressCodePoints()
+		{
+			// NOP
+		}
+
 		public override void linkVariables(Method owner)
 		{
 			Target = owner.findLabelByIdentifier(TargetIdentifier);
@@ -937,6 +1189,8 @@ namespace BefunGen.AST
 	{
 		public Expression Value;
 
+		public BType ResultType;
+
 		public Statement_Return(SourceCodePosition pos)
 			: base(pos)
 		{
@@ -959,6 +1213,11 @@ namespace BefunGen.AST
 			Value.linkVariables(owner);
 		}
 
+		public override void addressCodePoints()
+		{
+			Value.addressCodePoints();
+		}
+
 		public override void linkMethods(Program owner)
 		{
 			Value.linkMethods(owner);
@@ -978,6 +1237,8 @@ namespace BefunGen.AST
 				else
 					throw new ImplicitCastException(Value.Position, present, expected);
 			}
+
+			ResultType = owner.ResultType;
 		}
 
 		public override bool allPathsReturn()
@@ -992,8 +1253,91 @@ namespace BefunGen.AST
 
 		public override CodePiece generateCode(bool reversed)
 		{
-			return CodePiece.ParseFromLine(@"""RETURN""");
-			//throw new BGNotImplementedException(); //TODO Implement
+			if (ResultType is BType_Void)
+			{
+				return generateCode_Void(reversed);
+			}
+			else if (ResultType is BType_Value)
+			{
+				return generateCode_Value(reversed);
+			}
+			else if (ResultType is BType_Array)
+			{
+				return generateCode_Array(reversed);
+			}
+			else throw new WTFException();
+		}
+
+		private CodePiece generateCode_Void(bool reversed)
+		{
+			CodePiece p = CodePiece.ParseFromLine(@"0\0");
+
+			p.AppendRight(BCHelper.PC_Up_tagged(new MethodCall_VerticalExit_Tag(null)));
+
+			if (reversed) p.reverseX(false);
+
+			return p;
+
+		}
+
+		private CodePiece generateCode_Value(bool reversed)
+		{
+			CodePiece p = new CodePiece(); 
+
+			if (reversed)
+			{
+				#region Reversed
+
+				p.AppendRight(BCHelper.PC_Up_tagged(new MethodCall_VerticalExit_Tag(null)));
+
+				p.AppendRight(BCHelper.Digit_0); // Right Lane
+
+				p.AppendRight(BCHelper.Stack_Swap); // Swap BackjumpAddr back to Stack-Front
+
+				p.AppendRight(Value.generateCode(reversed));
+
+				#endregion
+			}
+			else
+			{
+				#region Normal
+
+				p.AppendRight(Value.generateCode(reversed));
+
+				p.AppendRight(BCHelper.Stack_Swap); // Swap BackjumpAddr back to Stack-Front
+
+				p.AppendRight(BCHelper.Digit_0); // Right Lane
+
+				p.AppendRight(BCHelper.PC_Up_tagged(new MethodCall_VerticalExit_Tag(null)));
+
+				#endregion
+
+			}
+
+			p.normalizeX();
+			return p;
+		}
+
+		private CodePiece generateCode_Array(bool reversed)
+		{
+			throw new BGNotImplementedException();
+
+			//CodePiece p = new CodePiece();
+
+			//if (reversed)
+			//{
+			//	#region Reversed
+			//	#endregion
+			//}
+			//else
+			//{
+			//	#region Normal
+			//	#endregion
+
+			//}
+
+			//p.normalizeX();
+			//return p;
 		}
 	}
 
@@ -1019,6 +1363,11 @@ namespace BefunGen.AST
 		public override void linkVariables(Method owner)
 		{
 			Value.linkVariables(owner);
+		}
+
+		public override void addressCodePoints()
+		{
+			Value.addressCodePoints();
 		}
 
 		public override void linkResultTypes(Method owner)
@@ -1132,11 +1481,11 @@ namespace BefunGen.AST
 
 			CodePiece p_len = NumberCodeHelper.generateCode(type_right.Size - 1, reversed);
 
-			CodePiece p_tpx = NumberCodeHelper.generateCode(CodeGenConstants.TMP_FIELD.X, reversed);
-			CodePiece p_tpy = NumberCodeHelper.generateCode(CodeGenConstants.TMP_FIELD.Y, reversed);
+			CodePiece p_tpx = NumberCodeHelper.generateCode(CodeGenConstants.TMP_FIELD_OUT_ARR.X, reversed);
+			CodePiece p_tpy = NumberCodeHelper.generateCode(CodeGenConstants.TMP_FIELD_OUT_ARR.Y, reversed);
 
-			CodePiece p_tpx_r = NumberCodeHelper.generateCode(CodeGenConstants.TMP_FIELD.X, !reversed);
-			CodePiece p_tpy_r = NumberCodeHelper.generateCode(CodeGenConstants.TMP_FIELD.Y, !reversed);
+			CodePiece p_tpx_r = NumberCodeHelper.generateCode(CodeGenConstants.TMP_FIELD_OUT_ARR.X, !reversed);
+			CodePiece p_tpy_r = NumberCodeHelper.generateCode(CodeGenConstants.TMP_FIELD_OUT_ARR.Y, !reversed);
 
 
 			if (reversed)
@@ -1286,6 +1635,11 @@ namespace BefunGen.AST
 			//NOP
 		}
 
+		public override void addressCodePoints()
+		{
+			//NOP
+		}
+
 		public override void linkResultTypes(Method owner)
 		{
 			//NOP
@@ -1311,7 +1665,7 @@ namespace BefunGen.AST
 			if (Value.Count == 0)
 				return new CodePiece();
 
-			if (reversed)
+			if (reversed) //TODO Use better out code (from Alexio)
 			{
 				// $_ #! #: #,<"???"0
 				CodePiece p = new CodePiece();
@@ -1385,6 +1739,11 @@ namespace BefunGen.AST
 		public override void linkVariables(Method owner)
 		{
 			ValueTarget.linkVariables(owner);
+		}
+
+		public override void addressCodePoints()
+		{
+			ValueTarget.addressCodePoints();
 		}
 
 		public override void linkResultTypes(Method owner)
@@ -1583,6 +1942,11 @@ namespace BefunGen.AST
 			//NOP
 		}
 
+		public override void addressCodePoints()
+		{
+			//NOP
+		}
+
 		public override void linkMethods(Program owner)
 		{
 			//NOP
@@ -1621,6 +1985,11 @@ namespace BefunGen.AST
 		}
 
 		public override void linkVariables(Method owner)
+		{
+			//NOP
+		}
+
+		public override void addressCodePoints()
 		{
 			//NOP
 		}
@@ -1673,6 +2042,11 @@ namespace BefunGen.AST
 		public override void linkVariables(Method owner)
 		{
 			Target.linkVariables(owner);
+		}
+
+		public override void addressCodePoints()
+		{
+			Target.addressCodePoints();
 		}
 
 		public override void linkMethods(Program owner)
@@ -1751,6 +2125,11 @@ namespace BefunGen.AST
 		public override void linkVariables(Method owner)
 		{
 			Target.linkVariables(owner);
+		}
+
+		public override void addressCodePoints()
+		{
+			Target.addressCodePoints();
 		}
 
 		public override void linkMethods(Program owner)
@@ -1832,6 +2211,12 @@ namespace BefunGen.AST
 		{
 			Target.linkVariables(owner);
 			Expr.linkVariables(owner);
+		}
+
+		public override void addressCodePoints()
+		{
+			Target.addressCodePoints();
+			Expr.addressCodePoints();
 		}
 
 		public override void linkMethods(Program owner)
@@ -1971,6 +2356,13 @@ namespace BefunGen.AST
 			Condition.linkVariables(owner);
 			Body.linkVariables(owner);
 			Else.linkVariables(owner);
+		}
+
+		public override void addressCodePoints()
+		{
+			Condition.addressCodePoints();
+			Body.addressCodePoints();
+			Else.addressCodePoints();
 		}
 
 		public override void linkMethods(Program owner)
@@ -2294,6 +2686,12 @@ namespace BefunGen.AST
 			Body.linkVariables(owner);
 		}
 
+		public override void addressCodePoints()
+		{
+			Condition.addressCodePoints();
+			Body.addressCodePoints();
+		}
+
 		public override void linkMethods(Program owner)
 		{
 			Condition.linkMethods(owner);
@@ -2439,6 +2837,12 @@ namespace BefunGen.AST
 		{
 			Condition.linkVariables(owner);
 			Body.linkVariables(owner);
+		}
+
+		public override void addressCodePoints()
+		{
+			Condition.addressCodePoints();
+			Body.addressCodePoints();
 		}
 
 		public override void linkMethods(Program owner)

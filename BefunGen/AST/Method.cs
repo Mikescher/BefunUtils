@@ -62,6 +62,11 @@ namespace BefunGen.AST
 			Body.linkVariables(this);
 		}
 
+		public void addressCodePoints()
+		{
+			Body.addressCodePoints();
+		}
+
 		public void linkMethods(Program owner)
 		{
 			Body.linkMethods(owner);
@@ -111,21 +116,16 @@ namespace BefunGen.AST
 			// Generate Space for Variables
 			p.AppendBottom(generateCode_Variables(meth_offset_x, meth_offset_y));
 
-			//<<-- Entry Point
-
 			// Generate Initialization of Variables
 			CodePiece p_vi = generateCode_VariableIntialization();
-			p_vi.SetTag(0, 0, new MethodEntry_FullInitialization_Tag(this));
+			p_vi.SetTag(0, 0, new MethodEntry_FullInitialization_Tag(this));  //v<-- Entry Point
 			p.AppendBottom(p_vi);
 
 			// Generate Initialization of Parameters
 			p.AppendBottom(generateCode_ParameterIntialization());
 
+			// Generate Statements
 			p.AppendBottom(generateCode_Body());
-
-			// Force MIN_METHOD_HEIGHT
-			while (p.Height < CodeGenConstants.MIN_METHOD_HEIGHT)
-				p.AppendBottom(BCHelper.PC_Jump); //TODO Better Char ??
 
 			return p;
 		}
@@ -254,8 +254,8 @@ namespace BefunGen.AST
 			{
 				VarDeclaration var = Parameter[i];
 
-				CodePiece p_init_lr = var.generateCode_Parameter(false);
-				CodePiece p_init_rl = var.generateCode_Parameter(true);
+				CodePiece p_init_lr = var.generateCode_SetToStackVal(false);
+				CodePiece p_init_rl = var.generateCode_SetToStackVal(true);
 
 				paramDecls.Add(new TwoDirectionCodePiece(var.generateCode(false), var.generateCode(true)));
 			}

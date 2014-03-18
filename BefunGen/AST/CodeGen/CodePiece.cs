@@ -243,6 +243,11 @@ namespace BefunGen.AST.CodeGen
 			return tag != null && findTag(tag) != null;
 		}
 
+		public bool hasActiveTag(params Type[] filter)
+		{
+			return findAllActiveCodeTags(filter).Count > 0;
+		}
+
 		public List<TagLocation> findAllTags(params Type[] filter)
 		{
 			bool all = filter.Length == 0;

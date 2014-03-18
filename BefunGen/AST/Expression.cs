@@ -17,6 +17,7 @@ namespace BefunGen.AST
 		public abstract void linkVariables(Method owner);
 		public abstract void linkResultTypes(Method owner);
 		public abstract void linkMethods(Program owner);
+		public abstract void addressCodePoints();
 
 		public abstract BType getResultType();
 
@@ -41,6 +42,12 @@ namespace BefunGen.AST
 		{
 			Left.linkVariables(owner);
 			Right.linkVariables(owner);
+		}
+
+		public override void addressCodePoints()
+		{
+			Left.addressCodePoints();
+			Right.addressCodePoints();
 		}
 
 		public override void linkMethods(Program owner)
@@ -241,6 +248,11 @@ namespace BefunGen.AST
 			Expr.linkVariables(owner);
 		}
 
+		public override void addressCodePoints()
+		{
+			Expr.addressCodePoints();
+		}
+
 		public override void linkMethods(Program owner)
 		{
 			Expr.linkMethods(owner);
@@ -256,6 +268,11 @@ namespace BefunGen.AST
 		}
 
 		public override void linkMethods(Program owner)
+		{
+			//NOP
+		}
+
+		public override void addressCodePoints()
 		{
 			//NOP
 		}
@@ -281,6 +298,13 @@ namespace BefunGen.AST
 			: base(pos)
 		{
 			this.Identifier = id;
+		}
+
+		public Expression_DirectValuePointer(SourceCodePosition pos, VarDeclaration target)
+			: base(pos)
+		{
+			this.Identifier = null;
+			this.Target = target;
 		}
 
 		public override string getDebugString()
@@ -1570,6 +1594,11 @@ namespace BefunGen.AST
 			//NOP
 		}
 
+		public override void addressCodePoints()
+		{
+			//NOP
+		}
+
 		public override void linkResultTypes(Method owner)
 		{
 			//NOP
@@ -1605,6 +1634,11 @@ namespace BefunGen.AST
 		}
 
 		public override void linkVariables(Method owner)
+		{
+			//NOP
+		}
+
+		public override void addressCodePoints()
 		{
 			//NOP
 		}
@@ -1663,42 +1697,52 @@ namespace BefunGen.AST
 
 	public class Expression_FunctionCall : Expression
 	{
-		public Statement_MethodCall Method;
+		public Statement_MethodCall MethodCall;
 
 		public Expression_FunctionCall(SourceCodePosition pos, Statement_MethodCall mc)
 			: base(pos)
 		{
-			this.Method = mc;
+			this.MethodCall = mc;
 		}
 
 		public override string getDebugString()
 		{
-			return Method.getDebugString();
+			return MethodCall.getDebugString();
 		}
 
 		public override void linkVariables(Method owner)
 		{
-			Method.linkVariables(owner);
+			MethodCall.linkVariables(owner);
+		}
+
+		public override void addressCodePoints()
+		{
+			MethodCall.addressCodePoints();
 		}
 
 		public override void linkResultTypes(Method owner)
 		{
-			Method.linkResultTypes(owner);
+			MethodCall.linkResultTypes(owner);
 		}
 
 		public override void linkMethods(Program owner)
 		{
-			Method.linkMethods(owner);
+			MethodCall.linkMethods(owner);
+
+			if (MethodCall.Target.ResultType is BType_Void)
+			{
+				throw new InlineVoidMethodCallException(Position);
+			}
 		}
 
 		public override BType getResultType()
 		{
-			return Method.Target.ResultType;
+			return MethodCall.Target.ResultType;
 		}
 
 		public override CodePiece generateCode(bool reversed)
 		{
-			return Method.generateCode(reversed);
+			return MethodCall.generateCode(reversed);
 			// throw new BGNotImplementedException(); 
 			//TODO Implement
 		}
