@@ -49,6 +49,8 @@ namespace BefunGen.AST
 				{
 					throw new CommandPathFindingFailureException(ce.Message);
 				}
+
+				pos_y_exitline--;
 			}
 
 			int entrycount = entries.Count;
@@ -2402,14 +2404,101 @@ namespace BefunGen.AST
 
 		public override CodePiece generateCode(bool reversed)
 		{
+			CodePiece p;
+
 			if (Else.GetType() == typeof(Statement_NOP))
 			{
-				return generateCode_If(reversed);
+				p = generateCode_If(reversed);
 			}
 			else
 			{
-				return generateCode_IfElse(reversed);
+				p = generateCode_IfElse(reversed);
 			}
+
+			#region Extend MehodCall-Tags
+
+			#region Entries
+
+			p.normalizeX();
+
+			List<TagLocation> entries = p.findAllActiveCodeTags(typeof(MethodCall_HorizontalReEntry_Tag));
+
+			// Cant generate Path - because it would collide on the left side at X==0
+			bool hasLeftOutCollisions = entries.Any(x => p[0, x.Y].Type == BefungeCommandType.Walkway || p[0, x.Y].Type == BefungeCommandType.NOP);
+
+			if (hasLeftOutCollisions)
+			{
+
+				p[-1, 0] = BCHelper.Walkway;
+				foreach (TagLocation entry in entries)
+				{
+					MethodCall_HorizontalReEntry_Tag tag_entry = entry.Tag as MethodCall_HorizontalReEntry_Tag;
+
+					if (p[0, entry.Y].Type == BefungeCommandType.Walkway || p[0, entry.Y].Type == BefungeCommandType.NOP)
+					{
+						p.CreateRowWW(entry.Y, -1, entry.X);
+
+						tag_entry.deactivate();
+
+						p.SetTag(-1, entry.Y, new MethodCall_HorizontalReEntry_Tag(tag_entry.TagParam as ICodeAddressTarget), true);
+					}
+					else
+					{
+						p.CreateRowWW(entry.Y, 1, entry.X);
+						p[-1, entry.Y] = BCHelper.PC_Jump;
+
+						tag_entry.deactivate();
+
+						p.SetTag(-1, entry.Y, new MethodCall_HorizontalReEntry_Tag(tag_entry.TagParam as ICodeAddressTarget), true);
+					}
+				}
+				p.normalizeX();
+			}
+			else
+			{
+				foreach (TagLocation entry in entries)
+				{
+					MethodCall_HorizontalReEntry_Tag tag_entry = entry.Tag as MethodCall_HorizontalReEntry_Tag;
+
+					p.CreateRowWW(entry.Y, 0, entry.X);
+					p[0, entry.Y] = BCHelper.PC_Jump;
+
+					tag_entry.deactivate();
+
+					p.SetTag(0, entry.Y, new MethodCall_HorizontalReEntry_Tag(tag_entry.TagParam as ICodeAddressTarget), true);
+				}
+			}
+
+			#endregion
+
+			#region Exits
+
+			List<TagLocation> exits = p.findAllActiveCodeTags(typeof(MethodCall_HorizontalExit_Tag));
+
+			foreach (TagLocation exit in exits)
+			{
+				MethodCall_HorizontalExit_Tag tag_exit = exit.Tag as MethodCall_HorizontalExit_Tag;
+
+				if (p[p.MaxX - 1, exit.Y].Type == BefungeCommandType.Walkway || p[p.MaxX - 1, exit.Y].Type == BefungeCommandType.NOP)
+				{
+					p.CreateRowWW(exit.Y, exit.X + 1, p.MaxX);
+				}
+				else
+				{
+					p.CreateRowWW(exit.Y, exit.X + 1, p.MaxX - 2);
+					p[p.MaxX - 2, exit.Y] = BCHelper.PC_Jump;
+				}
+
+				tag_exit.deactivate();
+
+				p.SetTag(p.MaxX - 1, exit.Y, new MethodCall_HorizontalExit_Tag(tag_exit.TagParam as Method), true);
+			}
+
+			#endregion
+
+			#endregion
+
+			return p;
 		}
 
 		public CodePiece generateCode_If(bool reversed)
@@ -2420,14 +2509,17 @@ namespace BefunGen.AST
 			CodePiece cp_body_if = Body.generateCode(reversed);
 			cp_body_if.normalizeX();
 
+			CodePiece p = new CodePiece();
+
 			if (reversed)
 			{
+				#region Reversed
+
 				// _v#!   CONDITION
 				//  
 				// 1>             v
 				// 
 				// ^      IF      <
-				CodePiece p = new CodePiece();
 
 				int right = Math.Max(cp_cond.Width + 1, cp_body_if.Width);
 				int mid = cp_cond.MaxY;
@@ -2468,16 +2560,17 @@ namespace BefunGen.AST
 				// Set Body
 				p.SetAt(0, bot, cp_body_if);
 
-				return p;
+				#endregion
 			}
 			else
 			{
+				#region Normal
+
 				// CONDITION #v_
 				// 
 				// v            <0
 				// 
 				// >   IF        ^
-				CodePiece p = new CodePiece();
 
 				int right = Math.Max(cp_cond.Width, cp_body_if.Width - 1);
 				int mid = cp_cond.MaxY;
@@ -2517,8 +2610,10 @@ namespace BefunGen.AST
 				// Set Body
 				p.SetAt(0, bot, cp_body_if);
 
-				return p;
+				#endregion
 			}
+
+			return p;
 		}
 
 		public CodePiece generateCode_IfElse(bool reversed)
@@ -2532,8 +2627,12 @@ namespace BefunGen.AST
 			CodePiece cp_else = Else.generateCode(reversed);
 			cp_else.normalizeX();
 
+			CodePiece p = new CodePiece();
+
 			if (reversed)
 			{
+				#region Reversed
+
 				// <v  CONDITION
 				// 
 				//  >          v
@@ -2543,7 +2642,6 @@ namespace BefunGen.AST
 				//             |
 				// 
 				// ^    ELSE   <
-				CodePiece p = new CodePiece();
 
 				int right = MathExt.Max(cp_cond.Width, cp_if.Width, cp_else.Width) - 1;
 				int mid = cp_cond.MaxY;
@@ -2594,10 +2692,12 @@ namespace BefunGen.AST
 				// Insert Else
 				p.SetAt(-1, yelse, cp_else);
 
-				return p;
+				#endregion
 			}
 			else
 			{
+				#region Normal
+
 				// CONDITION   v>
 				// 
 				// v           <
@@ -2607,7 +2707,6 @@ namespace BefunGen.AST
 				// |
 				// 
 				// >    ELSE    ^
-				CodePiece p = new CodePiece();
 
 				int right = MathExt.Max(cp_cond.Width, cp_if.Width, cp_else.Width) - 1;
 				int mid = cp_cond.MaxY;
@@ -2658,8 +2757,10 @@ namespace BefunGen.AST
 				// Insert Else
 				p.SetAt(0, yelse, cp_else);
 
-				return p;
+				#endregion
 			}
+
+			return p;
 		}
 	}
 

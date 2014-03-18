@@ -9,7 +9,7 @@ using System.Text.RegularExpressions;
 namespace BefunGenTest
 {
 	[TestClass]
-	public class CodePieceTest
+	public class UnitTests
 	{
 		private const int NC_RANGE_MIN = -16384;
 		private const int NC_RANGE_MAX = +16384;
@@ -107,6 +107,16 @@ namespace BefunGenTest
 			Program e = parseProgram(prog);
 			CodePiece pc = e.generateCode();
 
+			TestCP_Terminate(pc);
+		}
+
+		private void debugProgram_Terminate(string prog)
+		{
+			prog = prog.Replace(@"''", "\"");
+
+			Program e = parseProgram(prog);
+			CodePiece pc = e.generateCode();
+
 			TestCP(pc);
 		}
 
@@ -115,6 +125,11 @@ namespace BefunGenTest
 		#region Testing
 
 		public void TestCP(CodePiece p)
+		{
+			MultiCPTester.Test_Common(p.ToSimpleString());
+		}
+
+		public void TestCP_Terminate(CodePiece p)
 		{
 			MultiCPTester.Test_Common(p.ToSimpleString());
 		}
@@ -577,7 +592,7 @@ namespace BefunGenTest
 		}
 
 		[TestMethod]
-		public void codeGenTest_FizzBuzz()
+		public void codeGenTest_Method_FizzBuzz()
 		{
 			debugMethod("calc()",
 			@"
@@ -709,6 +724,64 @@ namespace BefunGenTest
 				foreach (var val in vs)
 					MultiCPTester.Test_ForStackValueReverse("@" + val.Item2.ToSimpleString(), i);
 			}
+		}
+
+		public void codeGenTest_Program_MethodCalls()
+		{
+			debugProgram_Terminate(@"
+			program testprog
+				VAR
+					int i;
+				BEGIN
+
+					OUT ''\r\nSTART\r\n'';
+
+					ma();
+					mb();
+					mc();
+
+					OUT ''\r\nFIN\r\n'';
+
+					QUIT;
+				END
+
+				VOID ma()
+				BEGIN
+				
+					OUT ''A1'';
+					OUT ''A2'';
+					OUT ''A3'';
+					OUT ''\r\n'';
+
+					RETURN;
+
+				END
+
+				VOID mb()
+				BEGIN
+
+					OUT ''B1'';
+					OUT ''B2'';
+					OUT ''B3'';
+					OUT ''\r\n'';
+
+					RETURN;
+
+				END
+
+				VOID mc()
+				BEGIN
+
+					OUT ''C1'';
+					OUT ''C2'';
+					OUT ''C3'';
+					OUT ''\r\n'';
+
+					RETURN;
+
+				END
+			END
+			");
 		}
 	}
 }

@@ -1,4 +1,5 @@
 ﻿
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace BefunGenTest
 {
 	public class MultiCPTester
@@ -18,6 +19,34 @@ namespace BefunGenTest
 				{
 					tester = new CPTester(prog);
 					tester.run(MAX_STEP);
+				}
+			}
+		}
+
+		public static void Test_Terminate(string prog)
+		{
+			CPTester tester = new CPTester(prog);
+
+			tester.run(MAX_STEP);
+
+			if (tester.StepCount >= (MAX_STEP - 8))
+				Assert.Fail();
+
+			if (tester.Stack.Count > 0)
+				Assert.Fail();
+
+			if (tester.hadRandomElements())
+			{
+				for (int i = 0; i < RAND_RUN_COUNT; i++)
+				{
+					tester = new CPTester(prog);
+					tester.run(MAX_STEP);
+
+					if (tester.StepCount >= (MAX_STEP - 8))
+						Assert.Fail();
+
+					if (tester.Stack.Count > 0)
+						Assert.Fail();
 				}
 			}
 		}
