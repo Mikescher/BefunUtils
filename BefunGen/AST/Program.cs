@@ -11,17 +11,17 @@ namespace BefunGen.AST
 	public class Program : ASTObject
 	{
 		public string Identifier;
-		public Method MainStatement;
+		public Method MainMethod;
 		public List<Method> MethodList; // Includes MainStatement (at 0)
 
 		public Program(SourceCodePosition pos, string id, Method m, List<Method> mlst)
 			: base(pos)
 		{
 			this.Identifier = id;
-			this.MainStatement = m;
+			this.MainMethod = m;
 			this.MethodList = mlst.ToList();
 
-			MethodList.Insert(0, MainStatement);
+			MethodList.Insert(0, MainMethod);
 		}
 
 		public override string getDebugString()
@@ -79,7 +79,7 @@ namespace BefunGen.AST
 		private void forceMethodReturn()
 		{
 			foreach (Method m in MethodList)
-				m.forceMethodReturn();
+				m.forceMethodReturn(m == MainMethod);
 		}
 
 		#endregion

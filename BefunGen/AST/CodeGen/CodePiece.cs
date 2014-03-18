@@ -448,6 +448,18 @@ namespace BefunGen.AST.CodeGen
 			}
 		}
 
+		public void replaceWalkway(int x, int y, BefungeCommand cmd, bool deleteTags)
+		{
+			if (this[x, y].EqualsTagLess(BCHelper.Walkway) || (deleteTags && this[x, y].Type == BefungeCommandType.Walkway))
+			{
+				forceSet(x, y, cmd);
+			}
+			else
+			{
+				this[x, y] = cmd;
+			}
+		}
+
 		#endregion
 
 		#region Append

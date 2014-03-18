@@ -219,7 +219,7 @@ namespace BefunGen
 			if (p == null)
 				throw new Exception(GParser.FailMessage);
 
-			return ((Expression_Cast)((Statement_Assignment)((Statement_StatementList)p.MainStatement.Body).List[0]).Expr).Expr;
+			return ((Expression_Cast)((Statement_Assignment)((Statement_StatementList)p.MainMethod.Body).List[0]).Expr).Expr;
 		}
 
 		private Statement parseStatement(string stmt)
@@ -230,7 +230,7 @@ namespace BefunGen
 			if (p == null)
 				throw new Exception(GParser.FailMessage);
 
-			return ((Statement_StatementList)p.MainStatement.Body).List[0];
+			return ((Statement_StatementList)p.MainMethod.Body).List[0];
 		}
 
 		private Method parseMethod(string meth)
@@ -348,23 +348,47 @@ program example
 
 	int euclid(int a, int b) 
 	begin
-		OUT ''e '';
+		OUT a;
+		OUT ''  '';
+		OUT b;
+		OUT ''  '';
+		return 1337;
+	end
+end
+");
+
+/*
+			debugProgram(@"
+program example
+	begin
+		out euclid(44, 12);
+	end
+
+	int euclid(int a, int b) 
+	begin
+		OUT ''1 '';
 		if (a == 0) then
+			OUT ''2 '';
 			return b;
 		else 
+			OUT ''3 '';
 			if (b == 0) then
+				OUT ''4 '';
 				return a;
 			else 
+				OUT ''5 '';
 				if (a > b) then
+					OUT ''6 '';
 					return a - b;
 				else
+					OUT ''7 '';
 					return b - a;
 				end
 			end
 		end
 	end
 end
-");
+"); */
 
 
 			/*

@@ -567,11 +567,11 @@ namespace BefunGen.AST.CodeGen
 		{
 			//Stack Flooder ALWAYS reversed (right -> left)
 
-			// $_v#!:-1<\1
+			// $_v#!:-1<\1+1:
 			//   >0\   ^
 			CodePiece p = new CodePiece();
 
-			p.SetAt(0, 0, CodePiece.ParseFromLine(@"$_v#!:-1<\1+1"));
+			p.SetAt(0, 0, CodePiece.ParseFromLine(@"$_v#!:-1<\1+1:"));
 			p.SetAt(2, 1, CodePiece.ParseFromLine(@">0\   ^", true));
 
 			return p;

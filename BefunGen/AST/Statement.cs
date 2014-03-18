@@ -2482,16 +2482,23 @@ namespace BefunGen.AST
 				if (p[p.MaxX - 1, exit.Y].Type == BefungeCommandType.Walkway || p[p.MaxX - 1, exit.Y].Type == BefungeCommandType.NOP)
 				{
 					p.CreateRowWW(exit.Y, exit.X + 1, p.MaxX);
+
+					tag_exit.deactivate();
+
+					p.SetTag(p.MaxX - 1, exit.Y, new MethodCall_HorizontalExit_Tag(tag_exit.TagParam as Method), true);
 				}
 				else
 				{
 					p.CreateRowWW(exit.Y, exit.X + 1, p.MaxX - 2);
-					p[p.MaxX - 2, exit.Y] = BCHelper.PC_Jump;
+
+					p.replaceWalkway(p.MaxX - 2, exit.Y, BCHelper.PC_Jump, true);
+
+					tag_exit.deactivate();
+
+					p.SetTag(p.MaxX - 1, exit.Y, new MethodCall_HorizontalExit_Tag(tag_exit.TagParam as Method), true);
 				}
 
-				tag_exit.deactivate();
 
-				p.SetTag(p.MaxX - 1, exit.Y, new MethodCall_HorizontalExit_Tag(tag_exit.TagParam as Method), true);
 			}
 
 			#endregion

@@ -77,11 +77,15 @@ namespace BefunGen.AST
 			Body.linkResultTypes(this);
 		}
 
-		public void forceMethodReturn()
+		public void forceMethodReturn(bool isMain)
 		{
 			if (!Body.allPathsReturn())
 			{
-				if (ResultType is BType_Void)
+				if (isMain)
+				{
+					Body.List.Add(new Statement_Quit(Position));
+				} 
+				else 	if (ResultType is BType_Void)
 				{
 					Body.List.Add(new Statement_Return(Position));
 				}
@@ -254,10 +258,7 @@ namespace BefunGen.AST
 			{
 				VarDeclaration var = Parameter[i];
 
-				CodePiece p_init_lr = var.generateCode_SetToStackVal(false);
-				CodePiece p_init_rl = var.generateCode_SetToStackVal(true);
-
-				paramDecls.Add(new TwoDirectionCodePiece(var.generateCode(false), var.generateCode(true)));
+				paramDecls.Add(new TwoDirectionCodePiece(var.generateCode_SetToStackVal(false), var.generateCode_SetToStackVal(true)));
 			}
 
 			if (paramDecls.Count % 2 != 0)
