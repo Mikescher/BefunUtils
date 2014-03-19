@@ -512,5 +512,43 @@ namespace BefunGenTest
 			");
 		}
 
+		[TestMethod]
+		public void codeGenTest_Method_GotoHell()
+		{
+			BFTestHelper.debugMethod("blub()",
+			@"
+			program example
+				begin
+					blub();
+				end
+			
+				void blub()
+				var
+					int i := 10;
+				begin
+
+					lblstart:
+
+					OUT i;
+
+					i--;
+
+					IF (i != 0) THEN
+						OUT ''\r\n'';
+						GOTO lblstart
+					ELSE
+						GOTO lblend
+					END
+
+					OUT ''WADWAD'';
+
+					lblend:
+					QUIT;
+
+				end
+			end
+			");
+		}
+
 	}
 }

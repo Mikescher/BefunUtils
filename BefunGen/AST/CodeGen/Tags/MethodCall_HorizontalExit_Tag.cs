@@ -8,5 +8,23 @@ namespace BefunGen.AST.CodeGen.Tags
 		{
 			//NOP
 		}
+
+		public MethodCall_HorizontalExit_Tag(Statement_Label target)
+			: base("Horizontal_MethodCall_Exit (Label)", target)
+		{
+			//NOP
+		}
+
+		public MethodCall_HorizontalExit_Tag(object target)
+			: base("Horizontal_MethodCall_Exit (" + target.GetType().Name + ")", target)
+		{
+			//NOP
+		}
+
+		public MethodCall_HorizontalExit_Tag()
+			: base("Vertical_MethodCall_Exit (PARAMLESS)")
+		{
+			//NOP
+		}
 	}
 }

@@ -343,19 +343,32 @@ namespace BefunGen
 			debugProgram(@"
 			program example
 				begin
-					out blub();
+					blub();
 				end
 			
-				char[5] blub()
+				void blub()
 				var
-					char[5] result;
+					int i := 10;
 				begin
-					result[0] = 'H';
-					result[1] = 'e';
-					result[2] = 'l';
-					result[3] = 'l';
-					result[4] = 'o';
-					return result;
+
+					lblstart:
+
+					OUT i;
+
+					i--;
+
+					IF (i != 0) THEN
+						OUT ''\r\n'';
+						GOTO lblstart
+					ELSE
+						GOTO lblend
+					END
+
+					OUT ''WADWAD'';
+
+					lblend:
+					QUIT;
+
 				end
 			end
 ");

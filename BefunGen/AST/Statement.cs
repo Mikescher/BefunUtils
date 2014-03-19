@@ -39,7 +39,7 @@ namespace BefunGen.AST
 				MethodCall_VerticalExit_Tag tag_exit = exit.Tag as MethodCall_VerticalExit_Tag;
 				tag_exit.deactivate();
 
-				p[exit.X, pos_y_exitline] = BCHelper.PC_Right_tagged(new MethodCall_HorizontalExit_Tag(tag_exit.TagParam as Method));
+				p[exit.X, pos_y_exitline] = BCHelper.PC_Right_tagged(new MethodCall_HorizontalExit_Tag(tag_exit.TagParam));
 
 				try
 				{
@@ -500,7 +500,7 @@ namespace BefunGen.AST
 
 				tag_exit.deactivate();
 
-				p.SetTag(p.MaxX - 1, exit.Y, new MethodCall_HorizontalExit_Tag(tag_exit.TagParam as Method), true);
+				p.SetTag(p.MaxX - 1, exit.Y, new MethodCall_HorizontalExit_Tag(tag_exit.TagParam), true);
 			}
 
 			#endregion
@@ -698,7 +698,7 @@ namespace BefunGen.AST
 
 				tag_exit.deactivate();
 
-				p.SetTag(p.MaxX - 1, exit.Y, new MethodCall_HorizontalExit_Tag(tag_exit.TagParam as Method), true);
+				p.SetTag(p.MaxX - 1, exit.Y, new MethodCall_HorizontalExit_Tag(tag_exit.TagParam), true);
 			}
 
 			#endregion
@@ -1175,7 +1175,14 @@ namespace BefunGen.AST
 
 		public override CodePiece generateCode(bool reversed)
 		{
-			throw new BGNotImplementedException(); //TODO Implement
+			if (reversed)
+			{
+				return new CodePiece(BCHelper.PC_Left_tagged(new MethodCall_VerticalReEntry_Tag(this)));
+			}
+			else
+			{
+				return new CodePiece(BCHelper.PC_Right_tagged(new MethodCall_VerticalReEntry_Tag(this)));
+			}
 		}
 	}
 
@@ -1229,7 +1236,28 @@ namespace BefunGen.AST
 
 		public override CodePiece generateCode(bool reversed)
 		{
-			throw new BGNotImplementedException(); //TODO Implement
+			CodePiece p = new CodePiece();
+
+			if (reversed)
+			{
+				p.AppendLeft(NumberCodeHelper.generateCode(Target.CodePointAddr, reversed));
+
+				p.AppendLeft(BCHelper.Digit_0); // Right Lane
+
+				p.AppendLeft(BCHelper.PC_Up_tagged(new MethodCall_VerticalExit_Tag(Target)));
+			}
+			else
+			{
+				p.AppendRight(NumberCodeHelper.generateCode(Target.CodePointAddr, reversed));
+
+				p.AppendRight(BCHelper.Digit_0); // Right Lane
+
+				p.AppendRight(BCHelper.PC_Up_tagged(new MethodCall_VerticalExit_Tag(Target)));
+			}
+
+			p.normalizeX();
+
+			return p;
 		}
 	}
 
@@ -1320,7 +1348,7 @@ namespace BefunGen.AST
 		{
 			CodePiece p = CodePiece.ParseFromLine(@"0\0");
 
-			p.AppendRight(BCHelper.PC_Up_tagged(new MethodCall_VerticalExit_Tag(null)));
+			p.AppendRight(BCHelper.PC_Up_tagged(new MethodCall_VerticalExit_Tag()));
 
 			if (reversed) p.reverseX(false);
 
@@ -1336,7 +1364,7 @@ namespace BefunGen.AST
 			{
 				#region Reversed
 
-				p.AppendRight(BCHelper.PC_Up_tagged(new MethodCall_VerticalExit_Tag(null)));
+				p.AppendRight(BCHelper.PC_Up_tagged(new MethodCall_VerticalExit_Tag()));
 
 				p.AppendRight(BCHelper.Digit_0); // Right Lane
 
@@ -1356,7 +1384,7 @@ namespace BefunGen.AST
 
 				p.AppendRight(BCHelper.Digit_0); // Right Lane
 
-				p.AppendRight(BCHelper.PC_Up_tagged(new MethodCall_VerticalExit_Tag(null)));
+				p.AppendRight(BCHelper.PC_Up_tagged(new MethodCall_VerticalExit_Tag()));
 
 				#endregion
 
@@ -1390,7 +1418,7 @@ namespace BefunGen.AST
 
 				p.AppendLeft(BCHelper.Digit_0); // Right Lane
 
-				p.AppendLeft(BCHelper.PC_Up_tagged(new MethodCall_VerticalExit_Tag(null)));
+				p.AppendLeft(BCHelper.PC_Up_tagged(new MethodCall_VerticalExit_Tag()));
 
 				#endregion
 			}
@@ -1412,7 +1440,7 @@ namespace BefunGen.AST
 
 				p.AppendRight(BCHelper.Digit_0); // Right Lane
 
-				p.AppendRight(BCHelper.PC_Up_tagged(new MethodCall_VerticalExit_Tag(null)));
+				p.AppendRight(BCHelper.PC_Up_tagged(new MethodCall_VerticalExit_Tag()));
 
 				#endregion
 
@@ -2565,7 +2593,7 @@ namespace BefunGen.AST
 
 					tag_exit.deactivate();
 
-					p.SetTag(p.MaxX - 1, exit.Y, new MethodCall_HorizontalExit_Tag(tag_exit.TagParam as Method), true);
+					p.SetTag(p.MaxX - 1, exit.Y, new MethodCall_HorizontalExit_Tag(tag_exit.TagParam), true);
 				}
 				else
 				{
@@ -2575,7 +2603,7 @@ namespace BefunGen.AST
 
 					tag_exit.deactivate();
 
-					p.SetTag(p.MaxX - 1, exit.Y, new MethodCall_HorizontalExit_Tag(tag_exit.TagParam as Method), true);
+					p.SetTag(p.MaxX - 1, exit.Y, new MethodCall_HorizontalExit_Tag(tag_exit.TagParam), true);
 				}
 
 
