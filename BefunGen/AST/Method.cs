@@ -226,13 +226,13 @@ namespace BefunGen.AST
 				cp_a[mw, 0] = BCHelper.PC_Down;
 				cp_b[mw, 0] = BCHelper.PC_Left;
 
-				for (int y = cp_a.MinY; y < cp_a.MaxY; y++)
-					if (y != 0)
-						cp_a[cp_a.MaxX - 1, y] = BCHelper.Walkway;
 
-				for (int y = cp_b.MinY; y < cp_b.MaxY; y++)
-					if (y != 0)
-						cp_b[cp_b.MaxX - 1, y] = BCHelper.Walkway;
+				cp_a.FillColWW(cp_a.MaxX - 1, 1, cp_a.MaxY);
+				cp_a.FillColWW(cp_a.MinX, cp_a.MinY, 0);
+
+				cp_b.FillColWW(cp_b.MaxX - 1, cp_b.MinY, 0);
+				cp_b.FillColWW(cp_b.MinX, 1, cp_b.MaxY);
+
 
 				cp_a.normalizeX();
 				cp_b.normalizeX();

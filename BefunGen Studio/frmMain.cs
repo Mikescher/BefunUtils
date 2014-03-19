@@ -341,61 +341,6 @@ namespace BefunGen
 		private void btnExecuteDebug_Click(object sender, EventArgs earg) //TODO Allow '_' in identifier
 		{
 			debugProgram(@"
-program b 
-begin 
-	doFiber(8); 
-end 
-	int doFiber(int max)
-	var
-		int a := 4;
-		bool b;	
-		char cc := 'o';
-		int[4] e := {40, 48, 60, -20};
-		bool c;
-		bool d := 10;
-		int[8] h;
-	begin
-		return max;
-	end
-end
-");
-
-/*
-			debugProgram(@"
-program example
-	begin
-		out euclid(44, 12);
-	end
-
-	int euclid(int a, int b) 
-	begin
-		OUT ''1 '';
-		if (a == 0) then
-			OUT ''2 '';
-			return b;
-		else 
-			OUT ''3 '';
-			if (b == 0) then
-				OUT ''4 '';
-				return a;
-			else 
-				OUT ''5 '';
-				if (a > b) then
-					OUT ''6 '';
-					return a - b;
-				else
-					OUT ''7 '';
-					return b - a;
-				end
-			end
-		end
-	end
-end
-"); */
-
-
-			/*
-			debugProgram(@"
 			program testprog
 				VAR
 					int i;
@@ -448,8 +393,40 @@ end
 
 				END
 			END
-			");
-			*/
+");
+
+/*
+			debugProgram(@"
+program example
+	begin
+		out euclid(44, 12);
+	end
+
+	int euclid(int a, int b) 
+	begin
+		OUT ''1 '';
+		if (a == 0) then
+			OUT ''2 '';
+			return b;
+		else 
+			OUT ''3 '';
+			if (b == 0) then
+				OUT ''4 '';
+				return a;
+			else 
+				OUT ''5 '';
+				if (a > b) then
+					OUT ''6 '';
+					return a - b;
+				else
+					OUT ''7 '';
+					return b - a;
+				end
+			end
+		end
+	end
+end
+"); */
 		}
 
 		private void btnDebugNumberRep_Click(object sender, EventArgs e)
@@ -476,11 +453,6 @@ end
 			
 			txt = txt.Substring(bstart + 1, bend - bstart - 1);
 			txt = txt.Trim(' ', '\r', '\n', '\t');
-
-			txtCode.Text = txt;
-			txtCode.Select(0, 0);
-
-			tabControl1.SelectedIndex = 5;
 
 			try
 			{

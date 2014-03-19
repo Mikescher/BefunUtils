@@ -816,7 +816,12 @@ namespace BefunGen.AST
 			return null;
 		}
 
-		public override CodePiece generateCode(bool reversed) //TODO Implement the rest
+		public override CodePiece generateCode(bool reversed)
+		{
+			return generateCode(reversed, true);
+		}
+
+		public CodePiece generateCode(bool reversed, bool popResult)
 		{
 			if (CodePointAddr < 0)
 				throw new InvalidASTStateException(Position);
@@ -885,7 +890,23 @@ namespace BefunGen.AST
 
 				// Store Result int TMP_RESULT Field
 
-				if (Target.ResultType is BType_Void)
+				if (popResult)
+				{
+					if (Target.ResultType is BType_Void)
+					{
+						p.AppendLeft(BCHelper.Stack_Pop);
+					}
+					else if (Target.ResultType is BType_Value)
+					{
+						p.AppendLeft(BCHelper.Stack_Pop);
+					}
+					else if (Target.ResultType is BType_Array)
+					{
+						//TODO Pop Size * Stack
+					}
+					else throw new WTFException();
+				}
+				else if (Target.ResultType is BType_Void)
 				{
 					p.AppendLeft(BCHelper.Stack_Pop); // Nobody cares about the result ...
 				}
@@ -896,7 +917,7 @@ namespace BefunGen.AST
 
 					p.AppendLeft(BCHelper.Reflect_Set);
 				}
-				else if (Target.ResultType is BType_Value)
+				else if (Target.ResultType is BType_Array)
 				{
 					p.AppendLeft(CodePieceStore.WriteArrayFromStack((
 						Target.ResultType as BType_Array).Size,
@@ -908,14 +929,18 @@ namespace BefunGen.AST
 
 				// Restore Variables
 
-				for (int i = owner.Variables.Count - 1; i >= owner.Variables.Count; i--)
+				for (int i = owner.Variables.Count - 1; i >= 0; i--)
 				{
 					p.AppendLeft(owner.Variables[i].generateCode_SetToStackVal(reversed));
 				}
 
 				// Put ReturnValue Back to Stack
 
-				if (Target.ResultType is BType_Void)
+				if (popResult)
+				{
+					// Do nothing - no really ...
+				}
+				else if (Target.ResultType is BType_Void)
 				{
 					// DO nothing - Nobody cares about the result ...
 				}
@@ -926,7 +951,7 @@ namespace BefunGen.AST
 
 					p.AppendLeft(BCHelper.Reflect_Get);
 				}
-				else if (Target.ResultType is BType_Value)
+				else if (Target.ResultType is BType_Array)
 				{
 					p.AppendLeft(CodePieceStore.ReadArrayToStack((
 						Target.ResultType as BType_Array).Size,
@@ -1002,7 +1027,23 @@ namespace BefunGen.AST
 
 				// Store Result int TMP_RESULT Field
 
-				if (Target.ResultType is BType_Void)
+				if (popResult)
+				{
+					if (Target.ResultType is BType_Void)
+					{
+						p.AppendRight(BCHelper.Stack_Pop);
+					}
+					else if (Target.ResultType is BType_Value)
+					{
+						p.AppendRight(BCHelper.Stack_Pop);
+					}
+					else if (Target.ResultType is BType_Array)
+					{
+						//TODO Pop Size * Stack
+					}
+					else throw new WTFException();
+				} 
+				else if (Target.ResultType is BType_Void)
 				{
 					p.AppendRight(BCHelper.Stack_Pop); // Nobody cares about the result ...
 				}
@@ -1013,7 +1054,7 @@ namespace BefunGen.AST
 
 					p.AppendRight(BCHelper.Reflect_Set);
 				}
-				else if (Target.ResultType is BType_Value)
+				else if (Target.ResultType is BType_Array)
 				{
 					p.AppendRight(CodePieceStore.WriteArrayFromStack((
 						Target.ResultType as BType_Array).Size, 
@@ -1025,16 +1066,20 @@ namespace BefunGen.AST
 
 				// Restore Variables
 
-				for (int i = owner.Variables.Count - 1; i >= owner.Variables.Count; i--)
+				for (int i = owner.Variables.Count - 1; i >= 0; i--)
 				{
 					p.AppendRight(owner.Variables[i].generateCode_SetToStackVal(reversed));
 				}
 
 				// Put ReturnValue Back to Stack
 
-				if (Target.ResultType is BType_Void)
+				if (popResult)
 				{
-					// DO nothing - Nobody cares about the result ...
+					// Do nothing - no really ...
+				}
+				else if (Target.ResultType is BType_Void)
+				{
+					// Do nothing - Nobody cares about the result ...
 				}
 				else if (Target.ResultType is BType_Value)
 				{
@@ -1043,7 +1088,7 @@ namespace BefunGen.AST
 
 					p.AppendRight(BCHelper.Reflect_Get);
 				}
-				else if (Target.ResultType is BType_Value)
+				else if (Target.ResultType is BType_Array)
 				{
 					p.AppendRight(CodePieceStore.ReadArrayToStack((
 						Target.ResultType as BType_Array).Size,

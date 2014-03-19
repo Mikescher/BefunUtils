@@ -204,7 +204,7 @@ namespace BefunGen.AST
 				p.AppendRight(BCHelper.Stack_Pop);
 				p.AppendRight(BCHelper.If_Horizontal);
 
-				int bot_end = p.MaxX;
+				int bot_start = p.MaxX;
 
 				p.AppendRight(BCHelper.PC_Down);
 				p.AppendRight(BCHelper.PC_Jump);
@@ -219,9 +219,9 @@ namespace BefunGen.AST
 				p.AppendRight(value.generateCode(0, reversed));
 				p.AppendRight(BCHelper.Stack_Dup);
 
-				int bot_start = p.MaxX;
+				int bot_end = p.MaxX;
 
-				p.AppendRight(BCHelper.PC_Right);
+				p.AppendRight(BCHelper.PC_Left);
 				p.AppendRight(NumberCodeHelper.generateCode(varX_start, reversed));
 
 				p[bot_start + 0, 1] = BCHelper.PC_Right;

@@ -92,5 +92,29 @@ program example
 end
 			");
 		}
+
+		[TestMethod]
+		public void codeGenTest_Program_ArrayReturn()
+		{
+			BFTestHelper.debugProgram_Terminate(@"
+			program example
+				begin
+					out blub();
+				end
+			
+				char[5] blub()
+				var
+					char[5] result;
+				begin
+					result[0] = 'H';
+					result[1] = 'e';
+					result[2] = 'l';
+					result[3] = 'l';
+					result[4] = 'o';
+					return result;
+				end
+			end
+			");
+		}
 	}
 }
