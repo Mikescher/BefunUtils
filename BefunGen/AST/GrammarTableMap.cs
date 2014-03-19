@@ -18,13 +18,38 @@ namespace BefunGen.AST
 			switch ((ProductionIndex)r.Parent.TableIndex()) // Regex for empty cases:     ^\s+//[^\r]+\r\n\s+break;
 			{
 				case ProductionIndex.Program:
-					// <Program> ::= <Header> <MainStatements> <MethodList> <Footer>
-					result = new Program(p, ((Program_Header)r.get_Data(0)).Identifier, (Method)r.get_Data(1), ((List_Methods)r.get_Data(2)).List);
+					// <Program> ::= <Program> ::= <Header> <Constants> <GlobalVars> <MainStatements> <MethodList> <Footer>
+					result = new Program(p, ((Program_Header)r.get_Data(0)).Identifier, (Method)r.get_Data(3), ((List_Methods)r.get_Data(4)).List); //TODO
 					break;
 
 				case ProductionIndex.Header_Program_Identifier:
 					// <Header> ::= program Identifier
 					result = new Program_Header(p, getStrData(1, r));
+					break;
+
+				case ProductionIndex.Header_Program_Identifier_Colon_Display_Lbracket_Comma_Rbracket:
+					//  <Header> ::= program Identifier ':' display '[' <Literal_Int> ',' <Literal_Int> ']'
+					result = new Program_Header(p, getStrData(1, r), );
+					break;
+
+				case ProductionIndex.Constants_Const:
+					// <Constants> ::= const <VarList>
+					result = (List_VarDeclarations)r.get_Data(1);
+					break;
+
+				case ProductionIndex.Constants:
+					// <Constants> ::= 
+					result = new List_VarDeclarations(p);
+					break;
+
+				case ProductionIndex.Globalvars_Global:
+					// <GlobalVars> ::= global <VarList>
+					result = (List_VarDeclarations)r.get_Data(1);
+					break;
+
+				case ProductionIndex.Globalvars:
+					// <GlobalVars> ::= 
+					result = new List_VarDeclarations(p);
 					break;
 
 				case ProductionIndex.Footer_End:
@@ -117,6 +142,16 @@ namespace BefunGen.AST
 					result = createASTDeclarationFromReduction(r, true, p);
 					break;
 
+				case ProductionIndex.Optionalstatement:
+					// <OptionalStatement> ::= <Statement>
+					result = (Statement)r.get_Data(0);
+					break;
+
+				case ProductionIndex.Optionalstatement2:
+					// <OptionalStatement> ::= 
+					result = new Statement_NOP(p);
+					break;
+
 				case ProductionIndex.Statement_Semi:
 					// <Statement> ::= <Stmt_Quit> ';'
 					result = (Statement)r.get_Data(0);
@@ -147,6 +182,16 @@ namespace BefunGen.AST
 					result = (Statement)r.get_Data(0);
 					break;
 
+				case ProductionIndex.Statement_Semi7:
+					// <Statement> ::= <Stmt_Goto> ';'
+					result = (Statement)r.get_Data(0);
+					break;
+
+				case ProductionIndex.Statement_Semi8:
+					// <Statement> ::= <Stmt_Call> ';'
+					result = (Statement)r.get_Data(0);
+					break;
+
 				case ProductionIndex.Statement_Begin_End:
 					// <Statement> ::= begin <StatementList> end
 					result = getStmtListAsStatement(p, r, 1);
@@ -163,22 +208,17 @@ namespace BefunGen.AST
 					break;
 
 				case ProductionIndex.Statement3:
-					// <Statement> ::= <Stmt_Repeat>
+					// <Statement> ::= <Stmt_For>
 					result = (Statement)r.get_Data(0);
 					break;
 
 				case ProductionIndex.Statement4:
-					// <Statement> ::= <Stmt_Goto>
+					// <Statement> ::= <Stmt_Repeat>
 					result = (Statement)r.get_Data(0);
 					break;
 
 				case ProductionIndex.Statement5:
 					// <Statement> ::= <Stmt_Label>
-					result = (Statement)r.get_Data(0);
-					break;
-
-				case ProductionIndex.Statement6:
-					// <Statement> ::= <Stmt_Call> ';'
 					result = (Statement)r.get_Data(0);
 					break;
 
@@ -278,8 +318,13 @@ namespace BefunGen.AST
 					break;
 
 				case ProductionIndex.Stmt_while_While_Lparen_Rparen_Do_End:
-					// <Stmt_While> ::= while '(' <<Expression>> ')' do <StatementList> end
+					// <Stmt_While> ::= while '(' <Expression> ')' do <StatementList> end
 					result = new Statement_While(p, (Expression)r.get_Data(2), getStmtListAsStatement(p, r, 5));
+					break;
+
+				case ProductionIndex.Stmt_for_For_Lparen_Semi_Semi_Rparen_Do_End:
+					// <Stmt_For> ::= for '(' <OptionalStatement> ';' <OptionalExpression> ';' <OptionalStatement> ')' do <StatementList> end
+					result = null; //TODO
 					break;
 
 				case ProductionIndex.Stmt_repeat_Repeat_Until_Lparen_Rparen:
@@ -547,6 +592,16 @@ namespace BefunGen.AST
 					result = new List_LiteralBools(p, (Literal_Bool)r.get_Data(0));
 					break;
 
+				case ProductionIndex.Optionalexpression:
+					// <OptionalExpression> ::= <Expression>
+					result = (Expression)r.get_Data(0);
+					break;
+
+				case ProductionIndex.Optionalexpression2:
+					// <OptionalExpression> ::= 
+					result = new Literal_Bool(p, true);
+					break;
+
 				case ProductionIndex.Expression:
 					// <Expression> ::= <Expr Bool>
 					result = (Expression)r.get_Data(0);
@@ -716,6 +771,12 @@ namespace BefunGen.AST
 					// <ValuePointer> ::= Identifier '[' <Expression> ']'
 					result = new Expression_ArrayValuePointer(p, getStrData(r), (Expression)r.get_Data(2));
 					break;
+
+				case ProductionIndex.Valuepointer_Display_Lbracket_Comma_Rbracket:
+					// <ValuePointer> ::= display '[' <Expression> ',' <Expression> ']'
+					result = null; //TODO
+					break;
+
 			}  //switch
 
 			if (result == null)

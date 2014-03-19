@@ -9,7 +9,7 @@ using System.Linq;
 namespace BefunGen.AST
 {
 	public class Program : ASTObject
-	{ 
+	{
 		//TODO Add global Variables
 		//TODO Add global constants (like #define )
 		//TODO Add For-Loop (-> Convert to While)-> Direct when Gen AST
@@ -236,7 +236,7 @@ namespace BefunGen.AST
 			p[CodeGenConstants.TMP_FIELD_IO_ARR.X, CodeGenConstants.TMP_FIELD_IO_ARR.Y] = CodeGenOptions.DefaultTempSymbol.copyWithTag(new TemporaryCodeField_Tag());
 			p[CodeGenConstants.TMP_FIELD_OUT_ARR.X, CodeGenConstants.TMP_FIELD_OUT_ARR.Y] = CodeGenOptions.DefaultTempSymbol.copyWithTag(new TemporaryCodeField_Tag());
 			p[CodeGenConstants.TMP_FIELD_JMP_ADDR.X, CodeGenConstants.TMP_FIELD_JMP_ADDR.Y] = CodeGenOptions.DefaultTempSymbol.copyWithTag(new TemporaryCodeField_Tag());
-			p.Fill(CodeGenConstants.TMP_ARRFIELD_RETURNVAL.X, CodeGenConstants.TMP_ARRFIELD_RETURNVAL.Y, 
+			p.Fill(CodeGenConstants.TMP_ARRFIELD_RETURNVAL.X, CodeGenConstants.TMP_ARRFIELD_RETURNVAL.Y,
 				CodeGenConstants.TMP_ARRFIELD_RETURNVAL.X + maxReturnValWidth, CodeGenConstants.TMP_ARRFIELD_RETURNVAL.Y + 1,
 				CodeGenOptions.DefaultResultTempSymbol,
 				new TemporaryResultCodeField_Tag(maxReturnValWidth));
@@ -288,10 +288,23 @@ namespace BefunGen.AST
 	{
 		public string Identifier;
 
+		public int DisplayWidth;
+		public int DisplayHeight;
+
 		public Program_Header(SourceCodePosition pos, string id)
 			: base(pos)
 		{
 			this.Identifier = id;
+			DisplayHeight = 0;
+			DisplayWidth = 0;
+		}
+
+		public Program_Header(SourceCodePosition pos, string id, int w, int h)
+			: base(pos)
+		{
+			this.Identifier = id;
+			DisplayHeight = w;
+			DisplayWidth = h;
 		}
 
 		public override string getDebugString()
