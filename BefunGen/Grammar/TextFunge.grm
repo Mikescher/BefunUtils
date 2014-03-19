@@ -20,6 +20,7 @@ Comment Line           = '//'
 {Oct Digit}            = [01234567]
 
 {UnderscoreLetter}     = {Letter} + {&5F}
+{AlphaNumUndescore}    = {AlphaNumeric} + {&5F}
 
 {String Ch}            = {Printable} - ["]
 {Char Ch}              = {Printable} - ['']
@@ -31,7 +32,7 @@ Comment Line           = '//'
 StringLiteral          = '"'( {String Ch} | '\'{Printable} )* '"'
 CharLiteral            = '' ( {Char Ch} | '\'{Printable} )''
 
-Identifier             = {UnderscoreLetter}{AlphaNumeric}*
+Identifier             = {UnderscoreLetter}{AlphaNumUndescore}*
 
 DigitLiteral           = '#'{Digit}
 DecLiteral             = '-'?[0123456789]{Digit}*
@@ -42,10 +43,17 @@ HexLiteral             = 0x{Hex Digit}+
 !#######################
 
 
-<Program>              ::= <Header> <MainStatements> <MethodList> <Footer>
+<Program>              ::= <Header> <Constants> <GlobalVars> <MainStatements> <MethodList> <Footer>
 
 <Header>               ::= 'program' Identifier
+                       |   'program' Identifier ':' 'display' '[' <Literal_Int> ',' <Literal_Int> ']'
 <Footer>               ::= 'end'
+  
+<Constants>            ::= 'const' <VarList>
+                       |
+                      
+<GlobalVars>           ::= 'global' <VarList>
+                       |
 
 <MethodList>           ::= <MethodList> <Method>
                        |
@@ -84,6 +92,8 @@ HexLiteral             = 0x{Hex Digit}+
 ! STATEMENT !
 !############
 
+<OptionalStatement>    ::= <Statement>
+                       |
 
 <Statement>            ::= <Stmt_Quit> ';'
                        |   <Stmt_Return> ';'
@@ -94,8 +104,9 @@ HexLiteral             = 0x{Hex Digit}+
                        |   'begin' <StatementList> 'end'
                        |   <Stmt_If>
                        |   <Stmt_While>
+                       |   <Stmt_For>
                        |   <Stmt_Repeat>
-                       |   <Stmt_Goto>
+                       |   <Stmt_Goto> ';'
                        |   <Stmt_Label>
                        |   <Stmt_Call> ';'
 
@@ -132,6 +143,8 @@ HexLiteral             = 0x{Hex Digit}+
                        |
 
 <Stmt_While>           ::= 'while' '(' <Expression> ')' 'do' <StatementList> 'end'
+
+<Stmt_For>             ::= 'for' '(' <OptionalStatement> ';' <OptionalExpression> ';' <OptionalStatement> ')' 'do' <StatementList> 'end'
 
 <Stmt_Repeat>          ::= 'repeat' <StatementList> 'until' '(' <Expression> ')'
 
@@ -216,6 +229,8 @@ HexLiteral             = 0x{Hex Digit}+
 ! EXPRESSION !
 !#############
 
+<OptionalExpression>   ::= <Expression>
+                       |
 
 <Expression>           ::= <Expr Bool>
 
@@ -261,4 +276,5 @@ HexLiteral             = 0x{Hex Digit}+
 
 <ValuePointer>         ::= Identifier
                        |   Identifier '[' <Expression> ']'
+                       |   'display' '[' <Expression> ',' <Expression> ']'
 

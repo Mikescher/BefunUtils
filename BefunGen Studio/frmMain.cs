@@ -341,40 +341,6 @@ namespace BefunGen
 		private void btnExecuteDebug_Click(object sender, EventArgs earg) //TODO Allow '_' in identifier
 		{
 			debugProgram(@"
-			program example
-				begin
-					blub();
-				end
-			
-				void blub()
-				var
-					int i := 10;
-				begin
-
-					lblstart:
-
-					OUT i;
-
-					i--;
-
-					IF (i != 0) THEN
-						OUT ''\r\n'';
-						GOTO lblstart
-					ELSE
-						GOTO lblend
-					END
-
-					OUT ''WADWAD'';
-
-					lblend:
-					QUIT;
-
-				end
-			end
-");
-
-/*
-			debugProgram(@"
 program example
 	begin
 		out euclid(44, 12);
@@ -382,29 +348,22 @@ program example
 
 	int euclid(int a, int b) 
 	begin
-		OUT ''1 '';
 		if (a == 0) then
-			OUT ''2 '';
 			return b;
 		else 
-			OUT ''3 '';
 			if (b == 0) then
-				OUT ''4 '';
 				return a;
 			else 
-				OUT ''5 '';
 				if (a > b) then
-					OUT ''6 '';
-					return a - b;
+					return euclid(a - b, b);
 				else
-					OUT ''7 '';
-					return b - a;
+					return euclid(a, b - a);
 				end
 			end
 		end
 	end
 end
-"); */
+");
 		}
 
 		private void btnDebugNumberRep_Click(object sender, EventArgs e)

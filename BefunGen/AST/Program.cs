@@ -9,7 +9,11 @@ using System.Linq;
 namespace BefunGen.AST
 {
 	public class Program : ASTObject
-	{
+	{ 
+		//TODO Add global Variables
+		//TODO Add global constants (like #define )
+		//TODO Add For-Loop (-> Convert to While)-> Direct when Gen AST
+		//TODO Identifier dürfen keine Keywords sein -> Keywordlist
 		public string Identifier;
 		public Method MainMethod;
 		public List<Method> MethodList; // Includes MainStatement (at 0)

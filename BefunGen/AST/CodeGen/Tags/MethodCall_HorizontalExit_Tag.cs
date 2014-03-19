@@ -16,7 +16,7 @@ namespace BefunGen.AST.CodeGen.Tags
 		}
 
 		public MethodCall_HorizontalExit_Tag(object target)
-			: base("Horizontal_MethodCall_Exit (" + target.GetType().Name + ")", target)
+			: base("Horizontal_MethodCall_Exit ( ??? )", target)
 		{
 			//NOP
 		}
