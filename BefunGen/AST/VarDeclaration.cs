@@ -246,7 +246,7 @@ namespace BefunGen.AST
 
 				p.AppendRight(BCHelper.PC_Right);
 				p.AppendRight(BCHelper.Stack_Dup);
-				p.AppendRight(value.generateCode(varX_start, reversed));
+				p.AppendRight(value.generateCode(0, reversed));
 				p.AppendRight(BCHelper.Stack_Swap);
 				p.AppendRight(NumberCodeHelper.generateCode(varY, reversed));
 				p.AppendRight(BCHelper.Reflect_Set);

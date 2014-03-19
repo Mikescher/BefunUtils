@@ -1,199 +1,22 @@
-﻿using BefunGen.AST;
-using BefunGen.AST.CodeGen;
+﻿using BefunGen.AST.CodeGen;
 using BefunGen.AST.CodeGen.NumberCode;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace BefunGenTest
 {
 	[TestClass]
-	public class UnitTests
+	public class Test_Methods
 	{
-		private const int NC_RANGE_MIN = -16384;
-		private const int NC_RANGE_MAX = +16384;
-
-		#region Helper Methods
-
-		private TextFungeParser GParser = new TextFungeParser();
-
-		#region Parsing
-
-		private Program parseExpression(string type, string expr)
-		{
-			string txt = String.Format("program b var {0} a; begin a = {1}; QUIT; end end", type, expr);
-			BefunGen.AST.Program p = GParser.generateAST(txt);
-
-			if (p == null)
-				throw new Exception(GParser.FailMessage);
-
-			return p;
-		}
-
-		private Program parseStatement(string stmt)
-		{
-			string txt = String.Format("program b var  bool a; begin {0} QUIT; end end", stmt);
-			BefunGen.AST.Program p = GParser.generateAST(txt);
-
-			if (p == null)
-				throw new Exception(GParser.FailMessage);
-
-			return p;
-		}
-
-		private Program parseMethod(string call, string meth)
-		{
-			string txt = String.Format("program b begin {0}; end {1} end", call, meth);
-			BefunGen.AST.Program p = GParser.generateAST(txt);
-
-			if (p == null)
-				throw new Exception(GParser.FailMessage);
-
-			return p;
-		}
-
-		private Program parseProgram(string meth)
-		{
-			BefunGen.AST.Program p = GParser.generateAST(meth);
-
-			if (p == null)
-				throw new Exception(GParser.FailMessage);
-
-			return p;
-		}
-
-		#endregion
-
-		#region Debugging
-
-		private void debugExpression(string type, string expr)
-		{
-			expr = expr.Replace(@"''", "\"");
-
-			Program e = parseExpression(type, expr);
-			CodePiece pc = e.generateCode();
-
-			TestCP(pc);
-		}
-
-		private void debugStatement(string stmt)
-		{
-			stmt = stmt.Replace(@"''", "\"");
-
-			Program e = parseStatement(stmt);
-			CodePiece pc = e.generateCode();
-
-			TestCP(pc);
-		}
-
-		private void debugMethod(string call, string meth)
-		{
-			meth = Regex.Replace(meth, @"[\r\n]{1,2}[ \t]+[\r\n]{1,2}", "\r\n");
-			meth = Regex.Replace(meth, @"^[ \t]*[\r\n]{1,2}", "");
-			meth = Regex.Replace(meth, @"[\r\n]{1,2}[ \t]*$", "");
-			meth = meth.Replace(@"''", "\"");
-
-			Program e = parseMethod(call, meth);
-			CodePiece pc = e.generateCode();
-
-			TestCP(pc);
-		}
-
-		private void debugProgram(string prog)
-		{
-			prog = prog.Replace(@"''", "\"");
-
-			Program e = parseProgram(prog);
-			CodePiece pc = e.generateCode();
-
-			TestCP_Terminate(pc);
-		}
-
-		private void debugProgram_Terminate(string prog)
-		{
-			prog = prog.Replace(@"''", "\"");
-
-			Program e = parseProgram(prog);
-			CodePiece pc = e.generateCode();
-
-			TestCP(pc);
-		}
-
-		#endregion
-
-		#region Testing
-
-		public void TestCP(CodePiece p)
-		{
-			MultiCPTester.Test_Common(p.ToSimpleString());
-		}
-
-		public void TestCP_Terminate(CodePiece p)
-		{
-			MultiCPTester.Test_Common(p.ToSimpleString());
-		}
-
-		#endregion
-
-		#endregion
-
-		[TestMethod]
-		public void CodePieceTest_Set()
-		{
-			CodePiece cp = new CodePiece();
-
-			cp[0, 0] = new BefungeCommand(BefungeCommandType.Add);
-			Assert.AreEqual(1, cp.Width);
-			Assert.AreEqual(1, cp.Height);
-
-			cp[0, 2] = new BefungeCommand(BefungeCommandType.Add);
-			Assert.AreEqual(1, cp.Width);
-			Assert.AreEqual(3, cp.Height);
-
-			cp[2, 0] = new BefungeCommand(BefungeCommandType.Add);
-			Assert.AreEqual(3, cp.Width);
-			Assert.AreEqual(3, cp.Height);
-
-			cp[2, 2] = new BefungeCommand(BefungeCommandType.Add);
-			Assert.AreEqual(3, cp.Width);
-			Assert.AreEqual(3, cp.Height);
-
-			cp[0, -2] = new BefungeCommand(BefungeCommandType.Add);
-			Assert.AreEqual(3, cp.Width);
-			Assert.AreEqual(5, cp.Height);
-
-			cp[-2, 0] = new BefungeCommand(BefungeCommandType.Add);
-			Assert.AreEqual(5, cp.Width);
-			Assert.AreEqual(5, cp.Height);
-
-			cp[-2, -2] = new BefungeCommand(BefungeCommandType.Add);
-			Assert.AreEqual(5, cp.Width);
-			Assert.AreEqual(5, cp.Height);
-		}
-
-		[TestMethod]
-		public void codeGenTest_Expr()
-		{
-			debugExpression("int", "5+5");
-
-			debugExpression("int", "40*(-50+(int)rand)");
-
-			debugExpression("int", "100");
-
-			debugExpression("int", "-100");
-
-			debugExpression("int", "137");
-
-			debugExpression("bool", "true && (false ^ true)");
-
-			debugExpression("bool", "true || false");
-		}
 
 		[TestMethod]
 		public void codeGenTest_Method_VarInitializer()
 		{
-			debugMethod("doFiber(8)",
+			BFTestHelper.debugMethod("doFiber(8)",
 			@"
 			int doFiber(int max)
 			var
@@ -205,7 +28,7 @@ namespace BefunGenTest
 				bool d := 10;
 				int[8] h;
 			begin
-				
+				return max;
 			end
 			");
 		}
@@ -213,7 +36,7 @@ namespace BefunGenTest
 		[TestMethod]
 		public void codeGenTest_Method_CharCast()
 		{
-			debugMethod("doIt()",
+			BFTestHelper.debugMethod("doIt()",
 			@"
 			int doIt()
 			var
@@ -257,7 +80,7 @@ namespace BefunGenTest
 		[TestMethod]
 		public void codeGenTest_Method_OutExpression()
 		{
-			debugMethod("doIt()",
+			BFTestHelper.debugMethod("doIt()",
 			@"
 			int doIt()
 			begin
@@ -273,7 +96,7 @@ namespace BefunGenTest
 		[TestMethod]
 		public void codeGenTest_Method_NestedStatementLists()
 		{
-			debugStatement(@"
+			BFTestHelper.debugStatement(@"
 			while (true) do
 				out (char)(48+(int)RAND);
 				begin
@@ -294,12 +117,13 @@ namespace BefunGenTest
 		[TestMethod]
 		public void codeGenTest_Method_ReversedOut()
 		{
-			debugMethod("doIt()",
+			BFTestHelper.debugMethod("doIt()",
 			@"
 			int doIt()
 			begin
 				out (char) 54;
 				out (char) 55;
+				return 0;
 			end
 			");
 		}
@@ -307,7 +131,7 @@ namespace BefunGenTest
 		[TestMethod]
 		public void codeGenTest_Method_ArrayIndexing()
 		{
-			debugMethod("calc()",
+			BFTestHelper.debugMethod("calc()",
 			@"
 			void calc()
 			var
@@ -334,7 +158,7 @@ namespace BefunGenTest
 		[TestMethod]
 		public void codeGenTest_Method_ASCII_Table()
 		{
-			debugMethod("calc()",
+			BFTestHelper.debugMethod("calc()",
 			@"
 			void calc()
 			var
@@ -361,7 +185,7 @@ namespace BefunGenTest
 		[TestMethod]
 		public void codeGenTest_Method_StringEscaping()
 		{
-			debugMethod("calc()",
+			BFTestHelper.debugMethod("calc()",
 			@"
 			void calc()
 			begin
@@ -373,7 +197,7 @@ namespace BefunGenTest
 		[TestMethod]
 		public void codeGenTest_Method_StringEscaping_2()
 		{
-			debugMethod("calc()",
+			BFTestHelper.debugMethod("calc()",
 			@"
 			void calc()
 			var
@@ -403,7 +227,7 @@ namespace BefunGenTest
 		[TestMethod]
 		public void codeGenTest_Method_BoolCasting()
 		{
-			debugMethod("calc()",
+			BFTestHelper.debugMethod("calc()",
 			@"
 			void calc()
 			var
@@ -428,7 +252,7 @@ namespace BefunGenTest
 		[TestMethod]
 		public void codeGenTest_Method_Random()
 		{
-			debugMethod("calc()",
+			BFTestHelper.debugMethod("calc()",
 			@"
 			void calc()
 			var
@@ -468,7 +292,7 @@ namespace BefunGenTest
 		[TestMethod]
 		public void codeGenTest_Method_Random_2()
 		{
-			debugMethod("calc()",
+			BFTestHelper.debugMethod("calc()",
 			@"
 			void calc()
 			var
@@ -505,7 +329,7 @@ namespace BefunGenTest
 		[TestMethod]
 		public void codeGenTest_Method_OutputArray()
 		{
-			debugMethod("calc()",
+			BFTestHelper.debugMethod("calc()",
 			@"
 			void calc()
 			var
@@ -548,7 +372,7 @@ namespace BefunGenTest
 		[TestMethod]
 		public void codeGenTest_Method_InputArray()
 		{
-			debugMethod("calc()",
+			BFTestHelper.debugMethod("calc()",
 			@"
 			void calc()
 			var
@@ -578,23 +402,9 @@ namespace BefunGenTest
 		}
 
 		[TestMethod]
-		public void codeGenTest_Statements()
-		{
-			debugStatement("out ''blub:fasel'';");
-
-			debugStatement("out (char)50;");
-
-			debugStatement("QUIT;");
-
-			debugStatement("STOP;");
-
-			debugStatement("OUT '''';");
-		}
-
-		[TestMethod]
 		public void codeGenTest_Method_FizzBuzz()
 		{
-			debugMethod("calc()",
+			BFTestHelper.debugMethod("calc()",
 			@"
 			void calc()
 			var
@@ -645,7 +455,7 @@ namespace BefunGenTest
 			END
 			");
 
-			debugMethod("calc()",
+			BFTestHelper.debugMethod("calc()",
 			@"
 			void calc()
 			var
@@ -702,86 +512,5 @@ namespace BefunGenTest
 			");
 		}
 
-		[TestMethod]
-		public void numberCodeFactoryTest_Normal()
-		{
-			for (int i = NC_RANGE_MIN; i < NC_RANGE_MAX; i++)
-			{
-				List<Tuple<NumberRep, CodePiece>> vs = NumberCodeHelper.generateAllCode(i, true);
-
-				foreach (var val in vs)
-					MultiCPTester.Test_ForStackValue(val.Item2.ToSimpleString() + "@", i);
-			}
-		}
-
-		[TestMethod]
-		public void numberCodeFactoryTest_Reverse()
-		{
-			for (int i = NC_RANGE_MIN; i < NC_RANGE_MAX; i++)
-			{
-				List<Tuple<NumberRep, CodePiece>> vs = NumberCodeHelper.generateAllCode(i, true, true);
-
-				foreach (var val in vs)
-					MultiCPTester.Test_ForStackValueReverse("@" + val.Item2.ToSimpleString(), i);
-			}
-		}
-
-		public void codeGenTest_Program_MethodCalls()
-		{
-			debugProgram_Terminate(@"
-			program testprog
-				VAR
-					int i;
-				BEGIN
-
-					OUT ''\r\nSTART\r\n'';
-
-					ma();
-					mb();
-					mc();
-
-					OUT ''\r\nFIN\r\n'';
-
-					QUIT;
-				END
-
-				VOID ma()
-				BEGIN
-				
-					OUT ''A1'';
-					OUT ''A2'';
-					OUT ''A3'';
-					OUT ''\r\n'';
-
-					RETURN;
-
-				END
-
-				VOID mb()
-				BEGIN
-
-					OUT ''B1'';
-					OUT ''B2'';
-					OUT ''B3'';
-					OUT ''\r\n'';
-
-					RETURN;
-
-				END
-
-				VOID mc()
-				BEGIN
-
-					OUT ''C1'';
-					OUT ''C2'';
-					OUT ''C3'';
-					OUT ''\r\n'';
-
-					RETURN;
-
-				END
-			END
-			");
-		}
 	}
 }

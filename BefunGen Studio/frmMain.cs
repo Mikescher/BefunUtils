@@ -341,18 +341,21 @@ namespace BefunGen
 		private void btnExecuteDebug_Click(object sender, EventArgs earg) //TODO Allow '_' in identifier
 		{
 			debugProgram(@"
-program example
+program b 
+begin 
+	doFiber(8); 
+end 
+	int doFiber(int max)
+	var
+		int a := 4;
+		bool b;	
+		char cc := 'o';
+		int[4] e := {40, 48, 60, -20};
+		bool c;
+		bool d := 10;
+		int[8] h;
 	begin
-		out euclid(44, 12);
-	end
-
-	int euclid(int a, int b) 
-	begin
-		OUT a;
-		OUT ''  '';
-		OUT b;
-		OUT ''  '';
-		return 1337;
+		return max;
 	end
 end
 ");
