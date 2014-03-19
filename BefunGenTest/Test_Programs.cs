@@ -116,5 +116,29 @@ end
 			end
 			");
 		}
+
+		public void codeGenTest_Program_ArrayReturn_2()
+		{
+			BFTestHelper.debugProgram_Terminate(@"
+			program example
+				begin
+					out blub();
+				end
+			
+				char[5] blub()
+				var
+					char[5] result;
+				begin
+					result[0] = 'H';
+					result[1] = 'e';
+					result[2] = 'l';
+					result[3] = 'l';
+					result[4] = 'o';
+					OUT '''';
+					return result;
+				end
+			end
+			");
+		}
 	}
 }

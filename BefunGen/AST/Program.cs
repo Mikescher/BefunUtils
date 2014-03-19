@@ -139,7 +139,7 @@ namespace BefunGen.AST
 
 			#endregion
 
-			int highway_x = MathExt.Max(p.MaxX, 3 + CodePieceStore.BooleanStackFlooder().Width, CodeGenConstants.TMP_FIELD_RETURNVAL.X + maxReturnValWidth); //MaxMethodWidth, TopLane_Left, Space for TempVars
+			int highway_x = MathExt.Max(p.MaxX, 3 + CodePieceStore.BooleanStackFlooder().Width, CodeGenConstants.TMP_ARRFIELD_RETURNVAL.X + maxReturnValWidth); //MaxMethodWidth, TopLane_Left, Space for TempVars
 
 			#region Generate Lanes (Left Lane && Right Lane)
 
@@ -232,8 +232,8 @@ namespace BefunGen.AST
 			p[CodeGenConstants.TMP_FIELD_IO_ARR.X, CodeGenConstants.TMP_FIELD_IO_ARR.Y] = CodeGenOptions.DefaultTempSymbol.copyWithTag(new TemporaryCodeField_Tag());
 			p[CodeGenConstants.TMP_FIELD_OUT_ARR.X, CodeGenConstants.TMP_FIELD_OUT_ARR.Y] = CodeGenOptions.DefaultTempSymbol.copyWithTag(new TemporaryCodeField_Tag());
 			p[CodeGenConstants.TMP_FIELD_JMP_ADDR.X, CodeGenConstants.TMP_FIELD_JMP_ADDR.Y] = CodeGenOptions.DefaultTempSymbol.copyWithTag(new TemporaryCodeField_Tag());
-			p.Fill(CodeGenConstants.TMP_FIELD_RETURNVAL.X, CodeGenConstants.TMP_FIELD_RETURNVAL.Y, 
-				CodeGenConstants.TMP_FIELD_RETURNVAL.X + maxReturnValWidth, CodeGenConstants.TMP_FIELD_RETURNVAL.Y + 1,
+			p.Fill(CodeGenConstants.TMP_ARRFIELD_RETURNVAL.X, CodeGenConstants.TMP_ARRFIELD_RETURNVAL.Y, 
+				CodeGenConstants.TMP_ARRFIELD_RETURNVAL.X + maxReturnValWidth, CodeGenConstants.TMP_ARRFIELD_RETURNVAL.Y + 1,
 				CodeGenOptions.DefaultResultTempSymbol,
 				new TemporaryResultCodeField_Tag(maxReturnValWidth));
 

@@ -347,6 +347,18 @@ namespace BefunGen.AST.CodeGen
 
 		#region Combine
 
+		public static CodePiece CombineHorizontal(CodePiece first, params CodePiece[] other)
+		{
+			CodePiece p = first.copy();
+
+			foreach (CodePiece p_o in other)
+			{
+				p.AppendRight(p_o);
+			}
+
+			return p;
+		}
+
 		public static CodePiece CombineHorizontal(CodePiece left, CodePiece right)
 		{
 			CodePiece c_l = left.copy();

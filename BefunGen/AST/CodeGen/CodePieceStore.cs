@@ -1,4 +1,5 @@
 ﻿using BefunGen.AST.CodeGen.NumberCode;
+using BefunGen.MathExtensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,11 @@ namespace BefunGen.AST.CodeGen
 		public static CodePiece ReadArrayToStack(VarDeclaration_Array v, bool reversed)
 		{
 			return ReadArrayToStack(v.Size, v.CodePositionX, v.CodePositionY, reversed);
+		}
+
+		public static CodePiece ReadArrayToStack(int arrLen, MathExt.Point arr, bool reversed)
+		{
+			return ReadArrayToStack(arrLen, arr.X, arr.Y, reversed);
 		}
 
 		public static CodePiece ReadArrayToStack(int arrLen, int arrX, int arrY, bool reversed)
@@ -122,6 +128,11 @@ namespace BefunGen.AST.CodeGen
 		public static CodePiece WriteArrayFromStack(VarDeclaration_Array v, bool reversed)
 		{
 			return WriteArrayFromStack(v.Size, v.CodePositionX, v.CodePositionY, reversed);
+		}
+
+		public static CodePiece WriteArrayFromStack(int arrLen, MathExt.Point arr, bool reversed)
+		{
+			return WriteArrayFromStack(arrLen, arr.X, arr.Y, reversed);
 		}
 
 		public static CodePiece WriteArrayFromStack(int arrLen, int arrX, int arrY, bool reversed)
@@ -317,10 +328,11 @@ namespace BefunGen.AST.CodeGen
 				return p;
 			}
 		}
-
-		// Normally Arrays are reversed on Stack -> this Method is for the reversed case --> Stack is normal on stack
+	
 		public static CodePiece WriteArrayFromReversedStack(int arrLen, int arrX, int arrY, bool reversed)
 		{
+			// Normally Arrays are reversed on Stack -> this Method is for the reversed case --> Stack is normal on stack
+
 			// Result: Horizontal     [LEFT, 0] IN ... [RIGHT, 0] OUT (or the other way when reversed)
 
 			// Array is !! NOT !! reversed in Stack --> will land normal on Field
@@ -573,6 +585,54 @@ namespace BefunGen.AST.CodeGen
 
 			p.SetAt(0, 0, CodePiece.ParseFromLine(@"$_v#!:-1<\1+1:"));
 			p.SetAt(2, 1, CodePiece.ParseFromLine(@">0\   ^", true));
+
+			return p;
+		}
+
+		public static CodePiece PopMultipleStackValues(int count, bool reversed)
+		{
+			CodePiece p_count = NumberCodeHelper.generateCode(count, reversed);
+
+			CodePiece p = new CodePiece();
+
+			if (reversed)
+			{
+				//   >\$1-v
+				// $_^# !:<{C}
+
+				p.SetAt(2, -1, CodePiece.ParseFromLine(@">\$1-v"));
+				p.SetAt(0, +0, CodePiece.CombineHorizontal(CodePiece.ParseFromLine(@"$_^# !:<"), p_count));
+			}
+			else
+			{
+				// {C}0>-:#v_$
+				//     ^1$\<
+
+				p.SetAt(0, 0, CodePiece.ParseFromLine(@"0>-:#v_$"));
+				p.SetAt(1, 1, CodePiece.ParseFromLine(@"^1$\<"));
+
+				p.AppendLeft(p_count);
+			}
+
+			p.normalizeX();
+
+			return p;
+		}
+
+		public static CodePiece ReadValueFromField(MathExt.Point pos, bool reversed)
+		{
+			CodePiece p = CodePiece.CombineHorizontal(NumberCodeHelper.generateCode(pos.X), NumberCodeHelper.generateCode(pos.Y), new CodePiece(BCHelper.Reflect_Get));
+
+			if (reversed) p.reverseX(false);
+
+			return p;
+		}
+
+		public static CodePiece WriteValueToField(MathExt.Point pos, bool reversed)
+		{
+			CodePiece p = CodePiece.CombineHorizontal(NumberCodeHelper.generateCode(pos.X), NumberCodeHelper.generateCode(pos.Y), new CodePiece(BCHelper.Reflect_Set));
+
+			if (reversed) p.reverseX(false);
 
 			return p;
 		}

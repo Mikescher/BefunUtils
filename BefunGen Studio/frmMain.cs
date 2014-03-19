@@ -341,58 +341,23 @@ namespace BefunGen
 		private void btnExecuteDebug_Click(object sender, EventArgs earg) //TODO Allow '_' in identifier
 		{
 			debugProgram(@"
-			program testprog
-				VAR
-					int i;
-				BEGIN
-
-					OUT ''\r\nSTART\r\n'';
-
-					ma();
-					mb();
-					mc();
-
-					OUT ''\r\nFIN\r\n'';
-
-					QUIT;
-				END
-
-				VOID ma()
-				BEGIN
-				
-					OUT ''A1'';
-					OUT ''A2'';
-					OUT ''A3'';
-					OUT ''\r\n'';
-
-					RETURN;
-
-				END
-
-				VOID mb()
-				BEGIN
-
-					OUT ''B1'';
-					OUT ''B2'';
-					OUT ''B3'';
-					OUT ''\r\n'';
-
-					RETURN;
-
-				END
-
-				VOID mc()
-				BEGIN
-
-					OUT ''C1'';
-					OUT ''C2'';
-					OUT ''C3'';
-					OUT ''\r\n'';
-
-					RETURN;
-
-				END
-			END
+			program example
+				begin
+					out blub();
+				end
+			
+				char[5] blub()
+				var
+					char[5] result;
+				begin
+					result[0] = 'H';
+					result[1] = 'e';
+					result[2] = 'l';
+					result[3] = 'l';
+					result[4] = 'o';
+					return result;
+				end
+			end
 ");
 
 /*

@@ -1743,8 +1743,6 @@ namespace BefunGen.AST
 		public override CodePiece generateCode(bool reversed)
 		{
 			return MethodCall.generateCode(reversed, false);
-			// throw new BGNotImplementedException(); 
-			//TODO Implement
 		}
 	}
 

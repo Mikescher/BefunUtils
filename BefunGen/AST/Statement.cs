@@ -902,7 +902,7 @@ namespace BefunGen.AST
 					}
 					else if (Target.ResultType is BType_Array)
 					{
-						//TODO Pop Size * Stack
+						p.AppendLeft(CodePieceStore.PopMultipleStackValues((Target.ResultType as BType_Array).Size, reversed));
 					}
 					else throw new WTFException();
 				}
@@ -912,8 +912,8 @@ namespace BefunGen.AST
 				}
 				else if (Target.ResultType is BType_Value)
 				{
-					p.AppendLeft(NumberCodeHelper.generateCode(CodeGenConstants.TMP_FIELD_RETURNVAL.X, reversed));
-					p.AppendLeft(NumberCodeHelper.generateCode(CodeGenConstants.TMP_FIELD_RETURNVAL.Y, reversed));
+					p.AppendLeft(NumberCodeHelper.generateCode(CodeGenConstants.TMP_ARRFIELD_RETURNVAL.X, reversed));
+					p.AppendLeft(NumberCodeHelper.generateCode(CodeGenConstants.TMP_ARRFIELD_RETURNVAL.Y, reversed));
 
 					p.AppendLeft(BCHelper.Reflect_Set);
 				}
@@ -921,8 +921,8 @@ namespace BefunGen.AST
 				{
 					p.AppendLeft(CodePieceStore.WriteArrayFromStack((
 						Target.ResultType as BType_Array).Size,
-						CodeGenConstants.TMP_FIELD_RETURNVAL.X,
-						CodeGenConstants.TMP_FIELD_RETURNVAL.Y,
+						CodeGenConstants.TMP_ARRFIELD_RETURNVAL.X,
+						CodeGenConstants.TMP_ARRFIELD_RETURNVAL.Y,
 						reversed));
 				}
 				else throw new WTFException();
@@ -946,8 +946,8 @@ namespace BefunGen.AST
 				}
 				else if (Target.ResultType is BType_Value)
 				{
-					p.AppendLeft(NumberCodeHelper.generateCode(CodeGenConstants.TMP_FIELD_RETURNVAL.X, reversed));
-					p.AppendLeft(NumberCodeHelper.generateCode(CodeGenConstants.TMP_FIELD_RETURNVAL.Y, reversed));
+					p.AppendLeft(NumberCodeHelper.generateCode(CodeGenConstants.TMP_ARRFIELD_RETURNVAL.X, reversed));
+					p.AppendLeft(NumberCodeHelper.generateCode(CodeGenConstants.TMP_ARRFIELD_RETURNVAL.Y, reversed));
 
 					p.AppendLeft(BCHelper.Reflect_Get);
 				}
@@ -955,8 +955,8 @@ namespace BefunGen.AST
 				{
 					p.AppendLeft(CodePieceStore.ReadArrayToStack((
 						Target.ResultType as BType_Array).Size,
-						CodeGenConstants.TMP_FIELD_RETURNVAL.X,
-						CodeGenConstants.TMP_FIELD_RETURNVAL.Y,
+						CodeGenConstants.TMP_ARRFIELD_RETURNVAL.X,
+						CodeGenConstants.TMP_ARRFIELD_RETURNVAL.Y,
 						reversed));
 				}
 				else throw new WTFException();
@@ -1039,7 +1039,8 @@ namespace BefunGen.AST
 					}
 					else if (Target.ResultType is BType_Array)
 					{
-						//TODO Pop Size * Stack
+						p.AppendRight(CodePieceStore.PopMultipleStackValues((Target.ResultType as BType_Array).Size, reversed));
+
 					}
 					else throw new WTFException();
 				} 
@@ -1049,8 +1050,8 @@ namespace BefunGen.AST
 				}
 				else if (Target.ResultType is BType_Value)
 				{
-					p.AppendRight(NumberCodeHelper.generateCode(CodeGenConstants.TMP_FIELD_RETURNVAL.X, reversed));
-					p.AppendRight(NumberCodeHelper.generateCode(CodeGenConstants.TMP_FIELD_RETURNVAL.Y, reversed));
+					p.AppendRight(NumberCodeHelper.generateCode(CodeGenConstants.TMP_ARRFIELD_RETURNVAL.X, reversed));
+					p.AppendRight(NumberCodeHelper.generateCode(CodeGenConstants.TMP_ARRFIELD_RETURNVAL.Y, reversed));
 
 					p.AppendRight(BCHelper.Reflect_Set);
 				}
@@ -1058,8 +1059,8 @@ namespace BefunGen.AST
 				{
 					p.AppendRight(CodePieceStore.WriteArrayFromStack((
 						Target.ResultType as BType_Array).Size, 
-						CodeGenConstants.TMP_FIELD_RETURNVAL.X, 
-						CodeGenConstants.TMP_FIELD_RETURNVAL.Y, 
+						CodeGenConstants.TMP_ARRFIELD_RETURNVAL.X, 
+						CodeGenConstants.TMP_ARRFIELD_RETURNVAL.Y, 
 						reversed));
 				}
 				else throw new WTFException();
@@ -1083,8 +1084,8 @@ namespace BefunGen.AST
 				}
 				else if (Target.ResultType is BType_Value)
 				{
-					p.AppendRight(NumberCodeHelper.generateCode(CodeGenConstants.TMP_FIELD_RETURNVAL.X, reversed));
-					p.AppendRight(NumberCodeHelper.generateCode(CodeGenConstants.TMP_FIELD_RETURNVAL.Y, reversed));
+					p.AppendRight(NumberCodeHelper.generateCode(CodeGenConstants.TMP_ARRFIELD_RETURNVAL.X, reversed));
+					p.AppendRight(NumberCodeHelper.generateCode(CodeGenConstants.TMP_ARRFIELD_RETURNVAL.Y, reversed));
 
 					p.AppendRight(BCHelper.Reflect_Get);
 				}
@@ -1092,8 +1093,8 @@ namespace BefunGen.AST
 				{
 					p.AppendRight(CodePieceStore.ReadArrayToStack((
 						Target.ResultType as BType_Array).Size,
-						CodeGenConstants.TMP_FIELD_RETURNVAL.X,
-						CodeGenConstants.TMP_FIELD_RETURNVAL.Y,
+						CodeGenConstants.TMP_ARRFIELD_RETURNVAL.X,
+						CodeGenConstants.TMP_ARRFIELD_RETURNVAL.Y,
 						reversed));
 				}
 				else throw new WTFException();
@@ -1367,24 +1368,58 @@ namespace BefunGen.AST
 
 		private CodePiece generateCode_Array(bool reversed)
 		{
-			throw new BGNotImplementedException();
+			CodePiece p = new CodePiece();
 
-			//CodePiece p = new CodePiece();
+			BType_Array r_type = ResultType as BType_Array;
 
-			//if (reversed)
-			//{
-			//	#region Reversed
-			//	#endregion
-			//}
-			//else
-			//{
-			//	#region Normal
-			//	#endregion
+			if (reversed)
+			{
+				#region Reversed
 
-			//}
+				p.AppendLeft(Value.generateCode(reversed));
 
-			//p.normalizeX();
-			//return p;
+
+				// Switch ReturnValue (Array)  and  BackJumpAddr
+
+				p.AppendLeft(CodePieceStore.WriteArrayFromStack(r_type.Size, CodeGenConstants.TMP_ARRFIELD_RETURNVAL, reversed));
+				p.AppendLeft(CodePieceStore.WriteValueToField(CodeGenConstants.TMP_FIELD_JMP_ADDR, reversed));
+
+				p.AppendLeft(CodePieceStore.ReadArrayToStack(r_type.Size, CodeGenConstants.TMP_ARRFIELD_RETURNVAL, reversed));
+				p.AppendLeft(CodePieceStore.ReadValueFromField(CodeGenConstants.TMP_FIELD_JMP_ADDR, reversed));
+
+
+				p.AppendLeft(BCHelper.Digit_0); // Right Lane
+
+				p.AppendLeft(BCHelper.PC_Up_tagged(new MethodCall_VerticalExit_Tag(null)));
+
+				#endregion
+			}
+			else
+			{
+				#region Normal
+
+				p.AppendRight(Value.generateCode(reversed));
+
+
+				// Switch ReturnValue (Array)  and  BackJumpAddr
+
+				p.AppendRight(CodePieceStore.WriteArrayFromStack(r_type.Size, CodeGenConstants.TMP_ARRFIELD_RETURNVAL, reversed));
+				p.AppendRight(CodePieceStore.WriteValueToField(CodeGenConstants.TMP_FIELD_JMP_ADDR, reversed));
+
+				p.AppendRight(CodePieceStore.ReadArrayToStack(r_type.Size, CodeGenConstants.TMP_ARRFIELD_RETURNVAL, reversed));
+				p.AppendRight(CodePieceStore.ReadValueFromField(CodeGenConstants.TMP_FIELD_JMP_ADDR, reversed));
+
+
+				p.AppendRight(BCHelper.Digit_0); // Right Lane
+
+				p.AppendRight(BCHelper.PC_Up_tagged(new MethodCall_VerticalExit_Tag(null)));
+
+				#endregion
+
+			}
+
+			p.normalizeX();
+			return p;
 		}
 	}
 
