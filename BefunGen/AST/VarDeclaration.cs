@@ -13,7 +13,7 @@ namespace BefunGen.AST
 		public readonly Literal Initial;
 		public readonly int ID;
 
-		public readonly bool hasUserDefInitValue;
+		public bool hasCompleteUserDefiniedInitialValue;
 		public bool IsConstant = false;
 
 		private int _CodePositionX = -1;
@@ -21,7 +21,8 @@ namespace BefunGen.AST
 		{
 			get
 			{
-				if (IsConstant) throw new ConstantValueChangedException(Position, Identifier);
+				if (IsConstant)
+					throw new ConstantValueChangedException(Position, Identifier);
 
 				if (_CodePositionX < 0)
 					throw new InternalCodeGenException();
@@ -29,11 +30,12 @@ namespace BefunGen.AST
 					return _CodePositionX;
 			}
 
-			set 
+			set
 			{
-				if (IsConstant) throw new ConstantValueChangedException(Position, Identifier);
+				if (IsConstant)
+					throw new ConstantValueChangedException(Position, Identifier);
 
-				_CodePositionX = value; 
+				_CodePositionX = value;
 			}
 		}
 
@@ -42,7 +44,8 @@ namespace BefunGen.AST
 		{
 			get
 			{
-				if (IsConstant) throw new ConstantValueChangedException(Position, Identifier);
+				if (IsConstant)
+					throw new ConstantValueChangedException(Position, Identifier);
 
 				if (_CodePositionY < 0)
 					throw new InternalCodeGenException();
@@ -50,11 +53,12 @@ namespace BefunGen.AST
 					return _CodePositionY;
 			}
 
-			set 
+			set
 			{
-				if (IsConstant) throw new ConstantValueChangedException(Position, Identifier);
+				if (IsConstant)
+					throw new ConstantValueChangedException(Position, Identifier);
 
-				_CodePositionY = value; 
+				_CodePositionY = value;
 			}
 		}
 
@@ -73,12 +77,12 @@ namespace BefunGen.AST
 			if (init == null)
 			{
 				this.Initial = t.getDefaultValue();
-				hasUserDefInitValue = false;
+				hasCompleteUserDefiniedInitialValue = false;
 			}
 			else
 			{
 				this.Initial = init;
-				hasUserDefInitValue = true;
+				hasCompleteUserDefiniedInitialValue = true;
 			}
 		}
 
@@ -118,7 +122,8 @@ namespace BefunGen.AST
 
 		public override CodePiece generateCode(bool reversed)
 		{
-			if (IsConstant) throw new ConstantValueChangedException(Position, Identifier);
+			if (IsConstant)
+				throw new ConstantValueChangedException(Position, Identifier);
 
 			CodePiece p = new CodePiece();
 
@@ -147,7 +152,8 @@ namespace BefunGen.AST
 
 		public override CodePiece generateCode_SetToStackVal(bool reversed)
 		{
-			if (IsConstant) throw new ConstantValueChangedException(Position, Identifier);
+			if (IsConstant)
+				throw new ConstantValueChangedException(Position, Identifier);
 
 			CodePiece p = new CodePiece();
 
@@ -200,12 +206,14 @@ namespace BefunGen.AST
 			else if (LiteralSize < t.Size)
 			{
 				((Literal_Array)Initial).AppendDefaultValues(t.Size - LiteralSize);
+				hasCompleteUserDefiniedInitialValue = false;
 			}
 		}
 
 		public override CodePiece generateCode(bool reversed)
 		{
-			if (IsConstant) throw new ConstantValueChangedException(Position, Identifier);
+			if (IsConstant)
+				throw new ConstantValueChangedException(Position, Identifier);
 
 			Literal_Array value = Initial as Literal_Array;
 
@@ -390,7 +398,8 @@ namespace BefunGen.AST
 
 		public override CodePiece generateCode_SetToStackVal(bool reversed)
 		{
-			if (IsConstant) throw new ConstantValueChangedException(Position, Identifier);
+			if (IsConstant)
+				throw new ConstantValueChangedException(Position, Identifier);
 
 			return CodePieceStore.WriteArrayFromStack(this, reversed);
 		}

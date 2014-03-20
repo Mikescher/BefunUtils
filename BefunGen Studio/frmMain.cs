@@ -398,7 +398,7 @@ end
 			{
 				return;
 			}
-			
+
 			txt = txt.Substring(bstart + 1, bend - bstart - 1);
 			txt = txt.Trim(' ', '\r', '\n', '\t');
 

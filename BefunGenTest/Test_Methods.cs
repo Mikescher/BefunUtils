@@ -1,16 +1,9 @@
-﻿using BefunGen.AST.CodeGen;
-using BefunGen.AST.CodeGen.NumberCode;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace BefunGenTest
 {
 	[TestClass]
-	public class Test_Methods
+	public class Test_Methods //TODO Add TEst Constant / Global / For
 	{
 
 		[TestMethod]
