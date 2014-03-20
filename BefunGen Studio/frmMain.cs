@@ -342,10 +342,13 @@ namespace BefunGen
 		{
 			debugProgram(@"
 program example
+	const
+		int FALSCH := 0;
+		int WAHR   := 1;
 	global
-	 int i;
+		int i;
 	begin
-		i = 0;
+		i = FALSCH;
 		
 		doodle();
 		
@@ -368,7 +371,7 @@ program example
 	 
 	void doodle3() 
 	begin
-		i--;
+		i = i - WAHR;
 	end
 end
 ");

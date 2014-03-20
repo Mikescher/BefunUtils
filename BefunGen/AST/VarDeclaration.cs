@@ -14,19 +14,27 @@ namespace BefunGen.AST
 		public readonly int ID;
 
 		public readonly bool hasUserDefInitValue;
+		public bool IsConstant = false;
 
 		private int _CodePositionX = -1;
 		public int CodePositionX
 		{
 			get
 			{
+				if (IsConstant) throw new ConstantValueChangedException(Position, Identifier);
+
 				if (_CodePositionX < 0)
 					throw new InternalCodeGenException();
 				else
 					return _CodePositionX;
 			}
 
-			set { _CodePositionX = value; }
+			set 
+			{
+				if (IsConstant) throw new ConstantValueChangedException(Position, Identifier);
+
+				_CodePositionX = value; 
+			}
 		}
 
 		private int _CodePositionY = -1;
@@ -34,13 +42,20 @@ namespace BefunGen.AST
 		{
 			get
 			{
+				if (IsConstant) throw new ConstantValueChangedException(Position, Identifier);
+
 				if (_CodePositionY < 0)
 					throw new InternalCodeGenException();
 				else
 					return _CodePositionY;
 			}
 
-			set { _CodePositionY = value; }
+			set 
+			{
+				if (IsConstant) throw new ConstantValueChangedException(Position, Identifier);
+
+				_CodePositionY = value; 
+			}
 		}
 
 		public VarDeclaration(SourceCodePosition pos, BType t, string ident, Literal init)
@@ -103,6 +118,8 @@ namespace BefunGen.AST
 
 		public override CodePiece generateCode(bool reversed)
 		{
+			if (IsConstant) throw new ConstantValueChangedException(Position, Identifier);
+
 			CodePiece p = new CodePiece();
 
 			int varX = CodePositionX;
@@ -130,6 +147,8 @@ namespace BefunGen.AST
 
 		public override CodePiece generateCode_SetToStackVal(bool reversed)
 		{
+			if (IsConstant) throw new ConstantValueChangedException(Position, Identifier);
+
 			CodePiece p = new CodePiece();
 
 			int varX = CodePositionX;
@@ -186,6 +205,8 @@ namespace BefunGen.AST
 
 		public override CodePiece generateCode(bool reversed)
 		{
+			if (IsConstant) throw new ConstantValueChangedException(Position, Identifier);
+
 			Literal_Array value = Initial as Literal_Array;
 
 			if (value.isUniform())
@@ -369,6 +390,8 @@ namespace BefunGen.AST
 
 		public override CodePiece generateCode_SetToStackVal(bool reversed)
 		{
+			if (IsConstant) throw new ConstantValueChangedException(Position, Identifier);
+
 			return CodePieceStore.WriteArrayFromStack(this, reversed);
 		}
 	}

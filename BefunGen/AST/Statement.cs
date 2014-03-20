@@ -80,6 +80,7 @@ namespace BefunGen.AST
 		}
 
 		public abstract void linkVariables(Method owner);
+		public abstract void inlineConstants();
 		public abstract void addressCodePoints();
 		public abstract void linkResultTypes(Method owner);
 		public abstract void linkMethods(Program owner);
@@ -124,6 +125,12 @@ namespace BefunGen.AST
 		{
 			foreach (Statement s in List)
 				s.linkVariables(owner);
+		}
+
+		public override void inlineConstants()
+		{
+			for (int i = 0; i < List.Count; i++)
+				List[i].inlineConstants();
 		}
 
 		public override void addressCodePoints() 
@@ -765,6 +772,12 @@ namespace BefunGen.AST
 				e.linkVariables(owner);
 		}
 
+		public override void inlineConstants()
+		{
+			for (int i = 0; i < CallParameter.Count; i++)
+				CallParameter[i] = CallParameter[i].inlineConstants();
+		}
+
 		public override void addressCodePoints()
 		{
 			_CodePointAddr = CODEPOINT_ADDRESS_COUNTER;
@@ -1158,6 +1171,11 @@ namespace BefunGen.AST
 			//NOP
 		}
 
+		public override void inlineConstants()
+		{
+			//NOP
+		}
+
 		public override void linkMethods(Program owner)
 		{
 			//NOP
@@ -1209,7 +1227,7 @@ namespace BefunGen.AST
 
 		public override void addressCodePoints()
 		{
-			// NOP
+			//NOP
 		}
 
 		public override void linkVariables(Method owner)
@@ -1218,6 +1236,11 @@ namespace BefunGen.AST
 			if (Target == null)
 				throw new UnresolvableReferenceException(TargetIdentifier, Position);
 			TargetIdentifier = null;
+		}
+
+		public override void inlineConstants()
+		{
+			//NOP
 		}
 
 		public override void linkMethods(Program owner)
@@ -1293,6 +1316,11 @@ namespace BefunGen.AST
 		public override void linkVariables(Method owner)
 		{
 			Value.linkVariables(owner);
+		}
+
+		public override void inlineConstants()
+		{
+			Value = Value.inlineConstants();
 		}
 
 		public override void addressCodePoints()
@@ -1479,6 +1507,11 @@ namespace BefunGen.AST
 		public override void linkVariables(Method owner)
 		{
 			Value.linkVariables(owner);
+		}
+
+		public override void inlineConstants()
+		{
+			Value = Value.inlineConstants();
 		}
 
 		public override void addressCodePoints()
@@ -1751,6 +1784,11 @@ namespace BefunGen.AST
 			//NOP
 		}
 
+		public override void inlineConstants()
+		{
+			//NOP
+		}
+
 		public override void addressCodePoints()
 		{
 			//NOP
@@ -1855,6 +1893,11 @@ namespace BefunGen.AST
 		public override void linkVariables(Method owner)
 		{
 			ValueTarget.linkVariables(owner);
+		}
+
+		public override void inlineConstants()
+		{
+			//NOP
 		}
 
 		public override void addressCodePoints()
@@ -2053,6 +2096,11 @@ namespace BefunGen.AST
 			//NOP
 		}
 
+		public override void inlineConstants()
+		{
+			//NOP
+		}
+
 		public override void linkResultTypes(Method owner)
 		{
 			//NOP
@@ -2110,6 +2158,11 @@ namespace BefunGen.AST
 			//NOP
 		}
 
+		public override void inlineConstants()
+		{
+			//NOP
+		}
+
 		public override void linkResultTypes(Method owner)
 		{
 			//NOP
@@ -2158,6 +2211,11 @@ namespace BefunGen.AST
 		public override void linkVariables(Method owner)
 		{
 			Target.linkVariables(owner);
+		}
+
+		public override void inlineConstants()
+		{
+			//NOP
 		}
 
 		public override void addressCodePoints()
@@ -2241,6 +2299,11 @@ namespace BefunGen.AST
 		public override void linkVariables(Method owner)
 		{
 			Target.linkVariables(owner);
+		}
+
+		public override void inlineConstants()
+		{
+			//NOP
 		}
 
 		public override void addressCodePoints()
@@ -2327,6 +2390,11 @@ namespace BefunGen.AST
 		{
 			Target.linkVariables(owner);
 			Expr.linkVariables(owner);
+		}
+
+		public override void inlineConstants()
+		{
+			Expr = Expr.inlineConstants();
 		}
 
 		public override void addressCodePoints()
@@ -2439,7 +2507,7 @@ namespace BefunGen.AST
 	#endregion Operations
 
 	#region Constructs
-	//TODO Do MC-Tags in all Structures ?
+
 	public class Statement_If : Statement
 	{
 		public Expression Condition;
@@ -2472,6 +2540,13 @@ namespace BefunGen.AST
 			Condition.linkVariables(owner);
 			Body.linkVariables(owner);
 			Else.linkVariables(owner);
+		}
+
+		public override void inlineConstants()
+		{
+			Condition = Condition.inlineConstants();
+			Body.inlineConstants();
+			Else.inlineConstants();
 		}
 
 		public override void addressCodePoints()
@@ -2908,6 +2983,12 @@ namespace BefunGen.AST
 			Body.linkVariables(owner);
 		}
 
+		public override void inlineConstants()
+		{
+			Condition = Condition.inlineConstants();
+			Body.inlineConstants();
+		}
+
 		public override void addressCodePoints()
 		{
 			Condition.addressCodePoints();
@@ -3068,6 +3149,12 @@ namespace BefunGen.AST
 		{
 			Condition.linkVariables(owner);
 			Body.linkVariables(owner);
+		}
+
+		public override void inlineConstants()
+		{
+			Condition = Condition.inlineConstants();
+			Body.inlineConstants();
 		}
 
 		public override void addressCodePoints()

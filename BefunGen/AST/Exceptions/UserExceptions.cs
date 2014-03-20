@@ -117,4 +117,10 @@ namespace BefunGen.AST.Exceptions
 		public IllegalIdentifierException(SourceCodePosition pos, string ident)
 			: base("The Identifier " + ident + " is reserved", pos) { }
 	}
+
+	public class ConstantValueChangedException : BefunGenUserException
+	{
+		public ConstantValueChangedException(SourceCodePosition pos, string ident)
+			: base("You cannot change the value of the Constant " + ident, pos) { }
+	}
 }

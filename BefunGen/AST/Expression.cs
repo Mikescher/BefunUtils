@@ -22,6 +22,8 @@ namespace BefunGen.AST
 		public abstract BType getResultType();
 
 		public abstract CodePiece generateCode(bool reversed);
+
+		public abstract Expression inlineConstants();
 	}
 
 	#region Parents
@@ -42,6 +44,14 @@ namespace BefunGen.AST
 		{
 			Left.linkVariables(owner);
 			Right.linkVariables(owner);
+		}
+
+		public override Expression inlineConstants()
+		{
+			Left = Left.inlineConstants();
+			Right = Right.inlineConstants();
+
+			return this;
 		}
 
 		public override void addressCodePoints()
@@ -235,7 +245,7 @@ namespace BefunGen.AST
 
 	public abstract class Expression_Unary : Expression
 	{
-		public readonly Expression Expr;
+		public Expression Expr;
 
 		public Expression_Unary(SourceCodePosition pos, Expression e)
 			: base(pos)
@@ -246,6 +256,13 @@ namespace BefunGen.AST
 		public override void linkVariables(Method owner)
 		{
 			Expr.linkVariables(owner);
+		}
+
+		public override Expression inlineConstants()
+		{
+			Expr = Expr.inlineConstants();
+
+			return this;
 		}
 
 		public override void addressCodePoints()
@@ -322,9 +339,21 @@ namespace BefunGen.AST
 			Identifier = null;
 		}
 
+		public override Expression inlineConstants() //TODO Test Const Arrays - On Stack reversed ?
+		{
+			if (Target.IsConstant)
+			{
+				return new Expression_Literal(Position, Target.Initial);
+			}
+			else
+			{
+				return this;
+			}
+		}
+
 		public override void linkResultTypes(Method owner)
 		{
-			// NOP
+			//NOP
 		}
 
 		public override BType getResultType()
@@ -430,8 +459,8 @@ namespace BefunGen.AST
 
 	public class Expression_DisplayValuePointer : Expression_DirectValuePointer
 	{
-		public readonly Expression Target_X;
-		public readonly Expression Target_Y;
+		public Expression Target_X;
+		public Expression Target_Y;
 
 		public Expression_DisplayValuePointer(SourceCodePosition pos, Expression x, Expression y)
 			: base(pos, "@display")
@@ -441,6 +470,13 @@ namespace BefunGen.AST
 		}
 
 		//TODO IMPLEMENT :: Override neccessary Methods ....
+
+		public override Expression inlineConstants() //TODO Test Const Arrays - On Stack reversed ?
+		{
+			Target_X = Target_X.inlineConstants();
+			Target_Y = Target_Y.inlineConstants();
+			return this;
+		}
 	}
 
 	public class Expression_ArrayValuePointer : Expression_ValuePointer
@@ -474,6 +510,13 @@ namespace BefunGen.AST
 				throw new IndexOperatorNotDefiniedException(Position);
 
 			Identifier = null;
+		}
+
+		public override Expression inlineConstants()
+		{
+			Index = Index.inlineConstants();
+
+			return this;
 		}
 
 		public override void linkResultTypes(Method owner)
@@ -612,6 +655,11 @@ namespace BefunGen.AST
 		public override void linkResultTypes(Method owner)
 		{
 			//NOP
+		}
+
+		public override Expression inlineConstants() //TODO Test Const Arrays - On Stack reversed ?
+		{
+			return this;
 		}
 
 		public override BType getResultType()
@@ -1609,6 +1657,11 @@ namespace BefunGen.AST
 			//NOP
 		}
 
+		public override Expression inlineConstants()
+		{
+			return this;
+		}
+
 		public override void addressCodePoints()
 		{
 			//NOP
@@ -1653,6 +1706,11 @@ namespace BefunGen.AST
 			//NOP
 		}
 
+		public override Expression inlineConstants()
+		{
+			return this;
+		}
+
 		public override void addressCodePoints()
 		{
 			//NOP
@@ -1660,7 +1718,7 @@ namespace BefunGen.AST
 
 		public override void linkResultTypes(Method owner)
 		{
-			// NOP
+			//NOP
 		}
 
 		public override void linkMethods(Program owner)
@@ -1728,6 +1786,13 @@ namespace BefunGen.AST
 		public override void linkVariables(Method owner)
 		{
 			MethodCall.linkVariables(owner);
+		}
+
+		public override Expression inlineConstants()
+		{
+			MethodCall.inlineConstants();
+
+			return this;
 		}
 
 		public override void addressCodePoints()

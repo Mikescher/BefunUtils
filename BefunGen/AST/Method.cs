@@ -64,6 +64,11 @@ namespace BefunGen.AST
 			Body.linkVariables(this);
 		}
 
+		public void inlineConstants()
+		{
+			Body.inlineConstants();
+		}
+
 		public void addressCodePoints()
 		{
 			Body.addressCodePoints();

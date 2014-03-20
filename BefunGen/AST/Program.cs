@@ -42,6 +42,7 @@ namespace BefunGen.AST
 			MethodList.Insert(0, MainMethod);
 
 			MethodList.ForEach(pm => pm.Owner = this);
+			Constants.ForEach(pc => pc.IsConstant = true);
 
 			testConstantsForDefinition();
 			testGlobalVarsForDefinition();
@@ -86,6 +87,7 @@ namespace BefunGen.AST
 			addressMethods();			// Methods get their Address
 			addressCodePoints();		// CodeAdressesTargets get their Address
 			linkVariables();			// Variable-uses get their ID
+			inlineConstants();			// ValuePointer to Constants become Literals
 			linkMethods();				// Methodcalls get their ID   &&   Labels + MethodCalls get their CodePointAddress
 			linkResultTypes();			// Statements get their Result-Type (and implicit casting is added)
 		}
@@ -106,6 +108,14 @@ namespace BefunGen.AST
 		{
 			foreach (Method m in MethodList)
 				m.linkVariables();
+		}
+
+		private void inlineConstants()
+		{
+			if (Constants.Count == 0) return;
+
+			foreach (Method m in MethodList)
+				m.inlineConstants();
 		}
 
 		private void linkMethods()
