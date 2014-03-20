@@ -81,7 +81,7 @@ namespace BefunGen.AST
 	{
 		public BType_Value InternalType { get { return getInternType(); } }
 
-		public int Size;
+		public readonly int Size;
 
 		public BType_Array(SourceCodePosition pos, int sz)
 			: base(pos)

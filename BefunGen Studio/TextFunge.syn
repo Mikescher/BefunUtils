@@ -14,27 +14,32 @@
 		<Keywords>
 			<PatternGroup Name="Keywords" Style="Keyword" CaseSensitive="false">
 				<Patterns>
-					program 
-					end 
 					begin 
-					var 
-					in 
-					out 
-					return 
-					if 
-					then 
-					while 
+					close
+					const
+					display
 					do 
-					repeat 
-					until 
 					else
 					elsif
-					goto 
-					rand 
-					true 
+					end 
 					false
-					close
+					for
+					global
+					goto 
+					if 
+					in 
+					out 
+					program 
 					quit
+					rand 
+					repeat 
+					return
+					stop
+					then 
+					true 
+					until 
+					var 
+					while 
 				</Patterns>
 			</PatternGroup>
 			

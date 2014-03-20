@@ -92,15 +92,10 @@ HexLiteral             = 0x{Hex Digit}+
 ! STATEMENT !
 !############
 
-<OptionalStatement>    ::= <Statement>
+<OptionalSimStatement> ::= <SimpleStatement>
                        |
 
-<Statement>            ::= <Stmt_Quit> ';'
-                       |   <Stmt_Return> ';'
-                       |   <Stmt_Out> ';'
-                       |   <Stmt_In> ';'
-                       |   <Stmt_Inc> ';'
-                       |   <Stmt_Assignment> ';'
+<Statement>            ::= <SimpleStatement> ';'
                        |   'begin' <StatementList> 'end'
                        |   <Stmt_If>
                        |   <Stmt_While>
@@ -108,7 +103,14 @@ HexLiteral             = 0x{Hex Digit}+
                        |   <Stmt_Repeat>
                        |   <Stmt_Goto> ';'
                        |   <Stmt_Label>
-                       |   <Stmt_Call> ';'
+
+<SimpleStatement>      ::= <Stmt_Quit>
+                       |   <Stmt_Return>
+                       |   <Stmt_Out>
+                       |   <Stmt_In>
+                       |   <Stmt_Inc> 
+                       |   <Stmt_Assignment>
+                       |   <Stmt_Call>
 
 <StatementList>        ::= <StatementList> <Statement>
                        |
@@ -144,7 +146,7 @@ HexLiteral             = 0x{Hex Digit}+
 
 <Stmt_While>           ::= 'while' '(' <Expression> ')' 'do' <StatementList> 'end'
 
-<Stmt_For>             ::= 'for' '(' <OptionalStatement> ';' <OptionalExpression> ';' <OptionalStatement> ')' 'do' <StatementList> 'end'
+<Stmt_For>             ::= 'for' '(' <OptionalSimStatement> ';' <OptionalExpression> ';' <OptionalSimStatement> ')' 'do' <StatementList> 'end'
 
 <Stmt_Repeat>          ::= 'repeat' <StatementList> 'until' '(' <Expression> ')'
 

@@ -718,7 +718,7 @@ namespace BefunGen.AST
 
 	public class Statement_MethodCall : Statement, ICodeAddressTarget
 	{
-		public List<Expression> CallParameter;
+		public readonly List<Expression> CallParameter;
 
 		public string Identifier; // Temporary -- before linking;
 		public Method Target;
@@ -1117,7 +1117,7 @@ namespace BefunGen.AST
 
 	public class Statement_Label : Statement, ICodeAddressTarget
 	{
-		public string Identifier;
+		public readonly string Identifier;
 
 		private int _CodePointAddr = -1;
 		public int CodePointAddr
@@ -1135,6 +1135,11 @@ namespace BefunGen.AST
 		public Statement_Label(SourceCodePosition pos, string ident)
 			: base(pos)
 		{
+			if (ASTObject.isKeyword(ident))
+			{
+				throw new IllegalIdentifierException(Position, ident);
+			}
+
 			this.Identifier = ident;
 		}
 
@@ -1188,7 +1193,7 @@ namespace BefunGen.AST
 
 	public class Statement_Goto : Statement
 	{
-		public string TargetIdentifier;
+		public string TargetIdentifier; // Temporary - befor linking
 		public Statement_Label Target;
 
 		public Statement_Goto(SourceCodePosition pos, string id)
@@ -1212,6 +1217,7 @@ namespace BefunGen.AST
 			Target = owner.findLabelByIdentifier(TargetIdentifier);
 			if (Target == null)
 				throw new UnresolvableReferenceException(TargetIdentifier, Position);
+			TargetIdentifier = null;
 		}
 
 		public override void linkMethods(Program owner)
@@ -1727,7 +1733,7 @@ namespace BefunGen.AST
 
 	public class Statement_Out_CharArrLiteral : Statement
 	{
-		public Literal_CharArr Value;
+		public readonly Literal_CharArr Value;
 
 		public Statement_Out_CharArrLiteral(SourceCodePosition pos, Literal_CharArr v)
 			: base(pos)
@@ -1831,7 +1837,7 @@ namespace BefunGen.AST
 	{
 		public enum In_Mode { IN_INT, IN_CHAR, IN_CHAR_ARR, IN_INT_ARR };
 
-		public Expression_ValuePointer ValueTarget;
+		public readonly Expression_ValuePointer ValueTarget;
 
 		public In_Mode Mode;
 
@@ -2136,7 +2142,7 @@ namespace BefunGen.AST
 
 	public class Statement_Inc : Statement
 	{
-		public Expression_ValuePointer Target;
+		public readonly Expression_ValuePointer Target;
 
 		public Statement_Inc(SourceCodePosition pos, Expression_ValuePointer id)
 			: base(pos)
@@ -2219,7 +2225,7 @@ namespace BefunGen.AST
 
 	public class Statement_Dec : Statement
 	{
-		public Expression_ValuePointer Target;
+		public readonly Expression_ValuePointer Target;
 
 		public Statement_Dec(SourceCodePosition pos, Expression_ValuePointer id)
 			: base(pos)
@@ -2302,7 +2308,7 @@ namespace BefunGen.AST
 
 	public class Statement_Assignment : Statement
 	{
-		public Expression_ValuePointer Target;
+		public readonly Expression_ValuePointer Target;
 		public Expression Expr;
 
 		public Statement_Assignment(SourceCodePosition pos, Expression_ValuePointer t, Expression e)
@@ -2437,8 +2443,8 @@ namespace BefunGen.AST
 	public class Statement_If : Statement
 	{
 		public Expression Condition;
-		public Statement_StatementList Body;
-		public Statement Else;
+		public readonly Statement_StatementList Body;
+		public readonly Statement Else;
 
 		public Statement_If(SourceCodePosition pos, Expression c, Statement_StatementList b)
 			: base(pos)
@@ -2882,7 +2888,7 @@ namespace BefunGen.AST
 	public class Statement_While : Statement
 	{
 		public Expression Condition;
-		public Statement_StatementList Body;
+		public readonly Statement_StatementList Body;
 
 		public Statement_While(SourceCodePosition pos, Expression c, Statement_StatementList b)
 			: base(pos)
@@ -3030,12 +3036,21 @@ namespace BefunGen.AST
 				return p;
 			}
 		}
+
+		public static Statement_StatementList GenerateForLoop(SourceCodePosition p, Statement init, Expression cond, Statement op, Statement_StatementList body)
+		{
+			body.List.Add(op);
+
+			Statement_While s_while = new Statement_While(p, cond, body);
+
+			return new Statement_StatementList(p, new List<Statement>() {init, s_while });
+		}
 	}
 
 	public class Statement_RepeatUntil : Statement
 	{
 		public Expression Condition;
-		public Statement_StatementList Body;
+		public readonly Statement_StatementList Body;
 
 		public Statement_RepeatUntil(SourceCodePosition pos, Expression c, Statement_StatementList b)
 			: base(pos)

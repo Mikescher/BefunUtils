@@ -7,6 +7,19 @@ namespace BefunGen.AST
 {
 	public abstract class ASTObject
 	{
+		public static string[] keywords = 
+		{ 
+			"begin", "close", "const", "display", "do", 
+			"else", "elsif", "end", "false", "for", 
+			"global", "goto", "if", "in", "out", 
+			"program", "quit", "rand", "repeat", "return", 
+			"stop", "then", "true", "until", "var", 
+			"while", 
+			
+			"bool", "boolean", "char", "character", "digit", 
+			"int", "integer", "void"
+		};
+
 		public readonly SourceCodePosition Position;
 
 		public ASTObject(SourceCodePosition pos)
@@ -30,5 +43,10 @@ namespace BefunGen.AST
 		}
 
 		public abstract string getDebugString();
+
+		public static bool isKeyword(string s)
+		{
+			return keywords.Contains(s.ToLower());
+		}
 	}
 }

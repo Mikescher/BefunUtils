@@ -12,25 +12,63 @@ namespace BefunGen.AST
 	{
 		//TODO Add global Variables
 		//TODO Add global constants (like #define )
-		//TODO Add For-Loop (-> Convert to While)-> Direct when Gen AST
-		//TODO Identifier dürfen keine Keywords sein -> Keywordlist
+		//TODO Optimize -> StatementList in StatementList --> Include
+		//TODO Optimize -> PreCalculated Expressions (Constants, x * 0, x + 0, x * 1, etc etc)
+		//TODO Optimize -> ArrayValuePointer/DisplayArrayPointer when Indizies Constant -> Direct Link
+		//TODO Optimize -> Remove unreachable Methods
 		public string Identifier;
-		public Method MainMethod;
-		public List<Method> MethodList; // Includes MainStatement (at 0)
+		
+		public readonly Method MainMethod;
+		public readonly List<Method> MethodList; // Includes MainStatement (at 0)
 
-		public Program(SourceCodePosition pos, string id, Method m, List<Method> mlst)
+		public readonly List<VarDeclaration> Constants;
+		public readonly List<VarDeclaration> Variables; // Global Variables
+
+		public readonly int DisplayWidth;
+		public readonly int DisplayHeight; 
+
+		public Program(SourceCodePosition pos, Program_Header hdr, List<VarDeclaration> c, List<VarDeclaration> g, Method m, List<Method> mlst)
 			: base(pos)
 		{
-			this.Identifier = id;
+			this.Identifier = hdr.Identifier;
+			this.Constants = c;
+			this.Variables = g;
 			this.MainMethod = m;
 			this.MethodList = mlst.ToList();
 
+			this.DisplayWidth = hdr.DisplayWidth;
+			this.DisplayHeight = hdr.DisplayHeight;
+
 			MethodList.Insert(0, MainMethod);
+
+			testConstantsForDefinition();
+			testGlobalVarsForDefinition();
 		}
 
 		public override string getDebugString()
 		{
-			return string.Format("#Program ({0})\n[\n{1}\n]", Identifier, indent(getDebugStringForList(MethodList)));
+			return string.Format("#Program [{0}|{1}] ({2})\n[\n#Constants:\n{3}\n#Variables:\n{4}\n#Body:\n{5}\n]",
+				DisplayWidth,
+				DisplayHeight,
+				Identifier,
+				indent(getDebugStringForList(Constants)),
+				indent(getDebugStringForList(Variables)),
+				indent(getDebugStringForList(MethodList))
+				);
+		}
+
+		private void testConstantsForDefinition()
+		{
+			foreach (VarDeclaration v in Constants)
+				if (!v.hasUserDefInitValue)
+					throw new InitConstantException(v.Position, v.Identifier);
+		}
+
+		private void testGlobalVarsForDefinition()
+		{
+			foreach (VarDeclaration v in Variables)
+				if (v.hasUserDefInitValue)
+					throw new InitGlobalVariableException(v.Position, v.Identifier);
 		}
 
 		#region Prepare
@@ -286,23 +324,27 @@ namespace BefunGen.AST
 
 	public class Program_Header : ASTObject // TEMPORARY -- NOT IN RESULTING AST
 	{
-		public string Identifier;
+		public readonly string Identifier;
 
-		public int DisplayWidth;
-		public int DisplayHeight;
+		public readonly int DisplayWidth;
+		public readonly int DisplayHeight;
 
 		public Program_Header(SourceCodePosition pos, string id)
-			: base(pos)
+			: this(pos, id, 0, 0)
 		{
-			this.Identifier = id;
-			DisplayHeight = 0;
-			DisplayWidth = 0;
+			// --
 		}
 
-		public Program_Header(SourceCodePosition pos, string id, int w, int h)
+		public Program_Header(SourceCodePosition pos, string ident, int w, int h)
 			: base(pos)
 		{
-			this.Identifier = id;
+			this.Identifier = ident;
+
+			if (ASTObject.isKeyword(ident))
+			{
+				throw new IllegalIdentifierException(Position, ident);
+			}
+
 			DisplayHeight = w;
 			DisplayWidth = h;
 		}

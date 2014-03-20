@@ -99,4 +99,22 @@ namespace BefunGen.AST.Exceptions
 		public InlineVoidMethodCallException(SourceCodePosition pos)
 			: base("Call of an void-Method inside of a expression", pos) { }
 	}
+
+	public class InitGlobalVariableException : BefunGenUserException
+	{
+		public InitGlobalVariableException(SourceCodePosition pos, string ident)
+			: base("The global variable " + ident + " has an Initializator, this is not possible for global variables", pos) { }
+	}
+
+	public class InitConstantException : BefunGenUserException
+	{
+		public InitConstantException(SourceCodePosition pos, string ident)
+			: base("The Constant " + ident + " has no value", pos) { }
+	}
+
+	public class IllegalIdentifierException : BefunGenUserException
+	{
+		public IllegalIdentifierException(SourceCodePosition pos, string ident)
+			: base("The Identifier " + ident + " is reserved", pos) { }
+	}
 }

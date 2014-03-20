@@ -19,7 +19,7 @@ namespace BefunGen.AST
 			{
 				case ProductionIndex.Program:
 					// <Program> ::= <Program> ::= <Header> <Constants> <GlobalVars> <MainStatements> <MethodList> <Footer>
-					result = new Program(p, ((Program_Header)r.get_Data(0)).Identifier, (Method)r.get_Data(3), ((List_Methods)r.get_Data(4)).List); //TODO
+					result = new Program(p, (Program_Header)r.get_Data(0), ((List_VarDeclarations)r.get_Data(1)).List, ((List_VarDeclarations)r.get_Data(2)).List,	(Method)r.get_Data(3), ((List_Methods)r.get_Data(4)).List);
 					break;
 
 				case ProductionIndex.Header_Program_Identifier:
@@ -29,7 +29,7 @@ namespace BefunGen.AST
 
 				case ProductionIndex.Header_Program_Identifier_Colon_Display_Lbracket_Comma_Rbracket:
 					//  <Header> ::= program Identifier ':' display '[' <Literal_Int> ',' <Literal_Int> ']'
-					result = new Program_Header(p, getStrData(1, r), );
+					result = new Program_Header(p, getStrData(1, r), ((Literal_Int)r.get_Data(5)).Value, ((Literal_Int)r.get_Data(7)).Value);
 					break;
 
 				case ProductionIndex.Constants_Const:
@@ -142,53 +142,18 @@ namespace BefunGen.AST
 					result = createASTDeclarationFromReduction(r, true, p);
 					break;
 
-				case ProductionIndex.Optionalstatement:
-					// <OptionalStatement> ::= <Statement>
+				case ProductionIndex.Optionalsimstatement:
+					// <OptionalSimStatement> ::= <SimpleStatement>
 					result = (Statement)r.get_Data(0);
 					break;
 
-				case ProductionIndex.Optionalstatement2:
-					// <OptionalStatement> ::= 
+				case ProductionIndex.Optionalsimstatement2:
+					// <OptionalSimStatement> ::= 
 					result = new Statement_NOP(p);
 					break;
 
 				case ProductionIndex.Statement_Semi:
-					// <Statement> ::= <Stmt_Quit> ';'
-					result = (Statement)r.get_Data(0);
-					break;
-
-				case ProductionIndex.Statement_Semi2:
-					// <Statement> ::= <Stmt_Return> ';'
-					result = (Statement)r.get_Data(0);
-					break;
-
-				case ProductionIndex.Statement_Semi3:
-					// <Statement> ::= <Stmt_Out> ';'
-					result = (Statement)r.get_Data(0);
-					break;
-
-				case ProductionIndex.Statement_Semi4:
-					// <Statement> ::= <Stmt_In> ';'
-					result = (Statement)r.get_Data(0);
-					break;
-
-				case ProductionIndex.Statement_Semi5:
-					// <Statement> ::= <Stmt_Inc> ';'
-					result = (Statement)r.get_Data(0);
-					break;
-
-				case ProductionIndex.Statement_Semi6:
-					// <Statement> ::= <Stmt_Assignment> ';'
-					result = (Statement)r.get_Data(0);
-					break;
-
-				case ProductionIndex.Statement_Semi7:
-					// <Statement> ::= <Stmt_Goto> ';'
-					result = (Statement)r.get_Data(0);
-					break;
-
-				case ProductionIndex.Statement_Semi8:
-					// <Statement> ::= <Stmt_Call> ';'
+					// <Statement> ::= <Statement> ::= <SimpleStatement> ';'
 					result = (Statement)r.get_Data(0);
 					break;
 
@@ -217,8 +182,48 @@ namespace BefunGen.AST
 					result = (Statement)r.get_Data(0);
 					break;
 
+				case ProductionIndex.Statement_Semi2:
+					// <Statement> ::= <Stmt_Goto> ';'
+					result = (Statement)r.get_Data(0);
+					break;
+
 				case ProductionIndex.Statement5:
 					// <Statement> ::= <Stmt_Label>
+					result = (Statement)r.get_Data(0);
+					break;
+
+				case ProductionIndex.Simplestatement:
+					// <SimpleStatement> ::= <Stmt_Quit>
+					result = (Statement)r.get_Data(0);
+					break;
+
+				case ProductionIndex.Simplestatement2:
+					// <SimpleStatement> ::= <Stmt_Return>
+					result = (Statement)r.get_Data(0);
+					break;
+
+				case ProductionIndex.Simplestatement3:
+					// <SimpleStatement> ::= <Stmt_Out>
+					result = (Statement)r.get_Data(0);
+					break;
+
+				case ProductionIndex.Simplestatement4:
+					// <SimpleStatement> ::= <Stmt_In>
+					result = (Statement)r.get_Data(0);
+					break;
+
+				case ProductionIndex.Simplestatement5:
+					// <SimpleStatement> ::= <Stmt_Inc>
+					result = (Statement)r.get_Data(0);
+					break;
+
+				case ProductionIndex.Simplestatement6:
+					// <SimpleStatement> ::= <Stmt_Assignment>
+					result = (Statement)r.get_Data(0);
+					break;
+
+				case ProductionIndex.Simplestatement7:
+					// <SimpleStatement> ::= <Stmt_Call>
 					result = (Statement)r.get_Data(0);
 					break;
 
@@ -323,8 +328,8 @@ namespace BefunGen.AST
 					break;
 
 				case ProductionIndex.Stmt_for_For_Lparen_Semi_Semi_Rparen_Do_End:
-					// <Stmt_For> ::= for '(' <OptionalStatement> ';' <OptionalExpression> ';' <OptionalStatement> ')' do <StatementList> end
-					result = null; //TODO
+					// <Stmt_For> ::= for '(' <OptionalSimStatement> ';' <OptionalExpression> ';' <OptionalSimStatement> ')' do <StatementList> end
+					result = Statement_While.GenerateForLoop(p, (Statement)r.get_Data(2), (Expression)r.get_Data(4), (Statement)r.get_Data(6), getStmtListAsStatement(p, r, 9));
 					break;
 
 				case ProductionIndex.Stmt_repeat_Repeat_Until_Lparen_Rparen:
@@ -774,14 +779,14 @@ namespace BefunGen.AST
 
 				case ProductionIndex.Valuepointer_Display_Lbracket_Comma_Rbracket:
 					// <ValuePointer> ::= display '[' <Expression> ',' <Expression> ']'
-					result = null; //TODO
+					result = new Expression_DisplayValuePointer(p, (Expression)r.get_Data(2), (Expression)r.get_Data(4));
 					break;
 
 			}  //switch
 
 			if (result == null)
 			{
-				throw new Exception("Reduction not parsed: " + r.Parent);
+				throw new MissingReductionRuleException(r.Parent.ToString());
 			}
 
 			return result;

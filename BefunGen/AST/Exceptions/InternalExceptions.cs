@@ -73,4 +73,10 @@ namespace BefunGen.AST.Exceptions
 		public BGNotImplementedException()
 			: base("Method not yet implemented.") { }
 	}
+
+	public class MissingReductionRuleException : BefunGenInternalException
+	{
+		public MissingReductionRuleException(string r)
+			: base("Reduction Rule for " + r + " is missing.") { }
+	}
 }

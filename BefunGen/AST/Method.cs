@@ -12,12 +12,12 @@ namespace BefunGen.AST
 		private static int _METHODADDRESS_COUNTER = 0;
 		protected static int METHODADDRESS_COUNTER { get { return _METHODADDRESS_COUNTER++; } }
 
-		public BType ResultType;
-		public string Identifier;
-		public List<VarDeclaration> Parameter;
+		public readonly BType ResultType;
+		public readonly string Identifier;
+		public readonly List<VarDeclaration> Parameter;
 
-		public List<VarDeclaration> Variables; // Includes Parameter & Temps
-		public Statement_StatementList Body;
+		public readonly List<VarDeclaration> Variables; // Includes Parameter & Temps
+		public readonly Statement_StatementList Body;
 
 		private int _METHODADDRESS = -1;
 		public int MethodAddr { get { return _METHODADDRESS; } private set { _METHODADDRESS = value; } }
@@ -323,16 +323,21 @@ namespace BefunGen.AST
 
 	public class Method_Header : ASTObject // TEMPORARY -- NOT IN RESULTING AST
 	{
-		public BType ResultType;
-		public string Identifier;
-		public List<VarDeclaration> Parameter;
+		public readonly BType ResultType;
+		public readonly string Identifier;
+		public readonly List<VarDeclaration> Parameter;
 
-		public Method_Header(SourceCodePosition pos, BType t, string id, List<VarDeclaration> p)
+		public Method_Header(SourceCodePosition pos, BType t, string ident, List<VarDeclaration> p)
 			: base(pos)
 		{
 			this.ResultType = t;
-			this.Identifier = id;
+			this.Identifier = ident;
 			this.Parameter = p;
+
+			if (ASTObject.isKeyword(ident))
+			{
+				throw new IllegalIdentifierException(Position, ident);
+			}
 		}
 
 		public override string getDebugString()
@@ -343,8 +348,8 @@ namespace BefunGen.AST
 
 	public class Method_Body : ASTObject // TEMPORARY -- NOT IN RESULTING AST
 	{
-		public List<VarDeclaration> Variables;
-		public Statement_StatementList Body;
+		public readonly List<VarDeclaration> Variables;
+		public readonly Statement_StatementList Body;
 
 		public Method_Body(SourceCodePosition pos, List<VarDeclaration> v, Statement_StatementList b)
 			: base(pos)

@@ -13,6 +13,8 @@ namespace BefunGen.AST
 		public readonly Literal Initial;
 		public readonly int ID;
 
+		public readonly bool hasUserDefInitValue;
+
 		private int _CodePositionX = -1;
 		public int CodePositionX
 		{
@@ -48,13 +50,20 @@ namespace BefunGen.AST
 			this.Identifier = ident;
 			this.ID = V_ID_COUNTER;
 
+			if (ASTObject.isKeyword(ident))
+			{
+				throw new IllegalIdentifierException(Position, ident);
+			}
+
 			if (init == null)
 			{
 				this.Initial = t.getDefaultValue();
+				hasUserDefInitValue = false;
 			}
 			else
 			{
 				this.Initial = init;
+				hasUserDefInitValue = true;
 			}
 		}
 

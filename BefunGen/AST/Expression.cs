@@ -235,7 +235,7 @@ namespace BefunGen.AST
 
 	public abstract class Expression_Unary : Expression
 	{
-		public Expression Expr;
+		public readonly Expression Expr;
 
 		public Expression_Unary(SourceCodePosition pos, Expression e)
 			: base(pos)
@@ -428,9 +428,24 @@ namespace BefunGen.AST
 		}
 	}
 
+	public class Expression_DisplayValuePointer : Expression_DirectValuePointer
+	{
+		public readonly Expression Target_X;
+		public readonly Expression Target_Y;
+
+		public Expression_DisplayValuePointer(SourceCodePosition pos, Expression x, Expression y)
+			: base(pos, "@display")
+		{
+			Target_X = x;
+			Target_Y = y;
+		}
+
+		//TODO IMPLEMENT :: Override neccessary Methods ....
+	}
+
 	public class Expression_ArrayValuePointer : Expression_ValuePointer
 	{
-		public string Identifier;
+		public string Identifier; // Temporary - before linkng
 		public VarDeclaration_Array Target;
 
 		public Expression Index;
@@ -1576,7 +1591,7 @@ namespace BefunGen.AST
 
 	public class Expression_Literal : Expression
 	{
-		public Literal Value;
+		public readonly Literal Value;
 
 		public Expression_Literal(SourceCodePosition pos, Literal l)
 			: base(pos)
@@ -1697,7 +1712,7 @@ namespace BefunGen.AST
 
 	public class Expression_FunctionCall : Expression
 	{
-		public Statement_MethodCall MethodCall;
+		public readonly Statement_MethodCall MethodCall;
 
 		public Expression_FunctionCall(SourceCodePosition pos, Statement_MethodCall mc)
 			: base(pos)
