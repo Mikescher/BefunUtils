@@ -10,8 +10,6 @@ namespace BefunGen.AST
 {
 	public class Program : ASTObject
 	{
-		//TODO Add global Variables
-		//TODO Add global constants (like #define )
 		//TODO Optimize -> StatementList in StatementList --> Include
 		//TODO Optimize -> PreCalculated Expressions (Constants, x * 0, x + 0, x * 1, etc etc)
 		//TODO Optimize -> ArrayValuePointer/DisplayArrayPointer when Indizies Constant -> Direct Link
@@ -41,6 +39,8 @@ namespace BefunGen.AST
 
 			MethodList.Insert(0, MainMethod);
 
+			addPredefConstants();
+
 			MethodList.ForEach(pm => pm.Owner = this);
 			Constants.ForEach(pc => pc.IsConstant = true);
 
@@ -58,6 +58,21 @@ namespace BefunGen.AST
 				indent(getDebugStringForList(Variables)),
 				indent(getDebugStringForList(MethodList))
 				);
+		}
+
+		private void addPredefConstants()
+		{
+			Constants.Insert(0, new VarDeclaration_Value(
+				new SourceCodePosition(), 
+				new BType_Int(new SourceCodePosition()), 
+				"DISPLAY_WIDTH", 
+				new Literal_Int(new SourceCodePosition(), CodeGenOptions.DisplaySize.X)));
+
+			Constants.Insert(0, new VarDeclaration_Value(
+				new SourceCodePosition(),
+				new BType_Int(new SourceCodePosition()),
+				"DISPLAY_HEIGHT",
+				new Literal_Int(new SourceCodePosition(), CodeGenOptions.DisplaySize.Y)));
 		}
 
 		private void testConstantsForDefinition()
@@ -150,16 +165,71 @@ namespace BefunGen.AST
 
 		public CodePiece generateCode()
 		{
+			// v {TEMP..}
+			// 1 v{STACKFLOODER}        <
+			//    {++++++++++++}
+			//    ###############
+			//    ###############
+			//    ##           ##
+			//    ## {DISPLAY} ##
+			//    ##           ##
+			//    ###############
+			//    ###############       |
+			// v                        <
+			// :#.$   {GLOBALVAR}       #
+			// !#.$   {GLOBALVAR}       !
+			// ##.$
+			// >#.$   {METHOD}
+			// |#.$   {++++++}
+			// .##$   {++++++}
+			// .#>$   {METHOD}
+			// .#|$   {++++++}
+			// .#.$   {++++++}
+			// .#.$   {METHOD}
+			// .#.$   {++++++}
+
 			List<Tuple<MathExt.Point, CodePiece>> meth_pieces = new List<Tuple<MathExt.Point, CodePiece>>();
 
 			CodePiece p = new CodePiece();
 
 			int maxReturnValWidth = getMaxReturnValueWidth();
 
-			int lane_start_y = 4;
-
 			int meth_offset_x = 4 + CodeGenConstants.LANE_VERTICAL_MARGIN;
-			int meth_offset_y = lane_start_y + 3; // +3 For the MinY=3 of VerticalLaneTurnout_Dec || bzw +2 for LaneChooser
+
+			CodePiece p_display = generateCode_Display();
+
+			#region Generate Top Lane
+
+			CodePiece p_TopLane = new CodePiece();
+
+			p_TopLane[0, 0] = BCHelper.PC_Down;
+			p_TopLane[0, 1] = BCHelper.Digit_0;
+			p_TopLane[0, 2] = BCHelper.Walkway;
+			p_TopLane[0, 3] = BCHelper.PC_Down;
+
+			p_TopLane[1, 3] = BCHelper.Walkway; // TODO y bottom dynamisch ....
+
+			p_TopLane[2, 1] = BCHelper.PC_Down;
+			p_TopLane[2, 2] = BCHelper.Walkway;
+			p_TopLane[2, 3] = BCHelper.Walkway;
+
+			CodePiece p_flooder = CodePieceStore.BooleanStackFlooder();
+			p_TopLane.SetAt(3, 1, p_flooder);
+
+			p_TopLane[CodeGenConstants.TMP_FIELD_IO_ARR.X, CodeGenConstants.TMP_FIELD_IO_ARR.Y] = CodeGenOptions.DefaultTempSymbol.copyWithTag(new TemporaryCodeField_Tag());
+			p_TopLane[CodeGenConstants.TMP_FIELD_OUT_ARR.X, CodeGenConstants.TMP_FIELD_OUT_ARR.Y] = CodeGenOptions.DefaultTempSymbol.copyWithTag(new TemporaryCodeField_Tag());
+			p_TopLane[CodeGenConstants.TMP_FIELD_JMP_ADDR.X, CodeGenConstants.TMP_FIELD_JMP_ADDR.Y] = CodeGenOptions.DefaultTempSymbol.copyWithTag(new TemporaryCodeField_Tag());
+			p_TopLane.Fill(CodeGenConstants.TMP_ARRFIELD_RETURNVAL.X, CodeGenConstants.TMP_ARRFIELD_RETURNVAL.Y,
+				CodeGenConstants.TMP_ARRFIELD_RETURNVAL.X + maxReturnValWidth, CodeGenConstants.TMP_ARRFIELD_RETURNVAL.Y + 1,
+				CodeGenOptions.DefaultResultTempSymbol,
+				new TemporaryResultCodeField_Tag(maxReturnValWidth));
+
+			p.SetAt(0, 0, p_TopLane);
+
+			#endregion
+
+			int lane_start_y = p.MaxY;
+			int meth_offset_y = p.MaxY; // +3 For the MinY=3 of VerticalLaneTurnout_Dec
 
 			#region Insert VariableSpace
 
@@ -167,9 +237,11 @@ namespace BefunGen.AST
 
 			p.SetAt(meth_offset_x, meth_offset_y, p_vars);
 
+			meth_offset_y += Math.Max(0, p_vars.Height - 3); // -3 For the MinY=3 of VerticalLaneTurnout_Dec
+
 			#endregion
 
-			meth_offset_y += p_vars.Height;
+			meth_offset_y += 3; // +3 For the MinY=3 of VerticalLaneTurnout_Dec
 
 			#region Insert Methods
 
@@ -203,7 +275,20 @@ namespace BefunGen.AST
 
 			#endregion
 
-			int highway_x = MathExt.Max(p.MaxX, 3 + CodePieceStore.BooleanStackFlooder().Width, CodeGenConstants.TMP_ARRFIELD_RETURNVAL.X + maxReturnValWidth); //MaxMethodWidth, TopLane_Left, Space for TempVars
+			int highway_x = p.MaxX; 
+
+			#region Generate Lane Chooser
+
+			p.FillRowWW(3, 3, highway_x);
+			p.FillRowWW(1, 3 + p_flooder.Width, highway_x);
+
+			p[highway_x, 1] = BCHelper.PC_Left;
+			p[highway_x, 2] = BCHelper.If_Vertical;
+			p[highway_x, 3] = BCHelper.PC_Left;
+			p[highway_x, 4] = BCHelper.PC_Jump;
+			p[highway_x, 5] = BCHelper.Not;
+
+			#endregion
 
 			#region Generate Lanes (Left Lane && Right Lane)
 
@@ -256,52 +341,6 @@ namespace BefunGen.AST
 			//######### POP LANE #########
 
 			p.Fill(3, lane_start_y, 4, p.MaxY, BCHelper.Stack_Pop);
-
-			#endregion
-
-			#region Generate Top Lane
-
-			// v
-			// 1 v{STACKFLOODER}        <
-			//                          |
-			// v                        <
-			// .#.$                     #
-			// .#.$                     !
-			// .#.$
-			CodePiece p_TopLane = new CodePiece();
-
-			p_TopLane[0, 0] = BCHelper.PC_Down;
-			p_TopLane[0, 1] = BCHelper.Digit_0;
-			p_TopLane[0, 2] = BCHelper.Walkway;
-			p_TopLane[0, 3] = BCHelper.PC_Down;
-
-			p_TopLane[1, 3] = BCHelper.Walkway;
-
-			p_TopLane[2, 1] = BCHelper.PC_Down;
-			p_TopLane[2, 2] = BCHelper.Walkway;
-			p_TopLane[2, 3] = BCHelper.Walkway;
-
-			p_TopLane.FillRowWW(3, 3, highway_x);
-
-			CodePiece p_flooder = CodePieceStore.BooleanStackFlooder();
-			p_TopLane.SetAt(3, 1, p_flooder);
-			p_TopLane.FillRowWW(1, 3 + p_flooder.Width, highway_x);
-
-			p_TopLane[highway_x, 1] = BCHelper.PC_Left;
-			p_TopLane[highway_x, 2] = BCHelper.If_Vertical;
-			p_TopLane[highway_x, 3] = BCHelper.PC_Left;
-			p_TopLane[highway_x, 4] = BCHelper.PC_Jump;
-			p_TopLane[highway_x, 5] = BCHelper.Not;
-
-			p[CodeGenConstants.TMP_FIELD_IO_ARR.X, CodeGenConstants.TMP_FIELD_IO_ARR.Y] = CodeGenOptions.DefaultTempSymbol.copyWithTag(new TemporaryCodeField_Tag());
-			p[CodeGenConstants.TMP_FIELD_OUT_ARR.X, CodeGenConstants.TMP_FIELD_OUT_ARR.Y] = CodeGenOptions.DefaultTempSymbol.copyWithTag(new TemporaryCodeField_Tag());
-			p[CodeGenConstants.TMP_FIELD_JMP_ADDR.X, CodeGenConstants.TMP_FIELD_JMP_ADDR.Y] = CodeGenOptions.DefaultTempSymbol.copyWithTag(new TemporaryCodeField_Tag());
-			p.Fill(CodeGenConstants.TMP_ARRFIELD_RETURNVAL.X, CodeGenConstants.TMP_ARRFIELD_RETURNVAL.Y,
-				CodeGenConstants.TMP_ARRFIELD_RETURNVAL.X + maxReturnValWidth, CodeGenConstants.TMP_ARRFIELD_RETURNVAL.Y + 1,
-				CodeGenOptions.DefaultResultTempSymbol,
-				new TemporaryResultCodeField_Tag(maxReturnValWidth));
-
-			p.SetAt(0, 0, p_TopLane, true);
 
 			#endregion
 
@@ -377,6 +416,36 @@ namespace BefunGen.AST
 				p.SetAt(paramX, paramY, lit);
 				paramX += lit.Width;
 			}
+
+			return p;
+		}
+
+		private CodePiece generateCode_Display()
+		{
+			MathExt.Point s = CodeGenOptions.DisplaySize;
+
+			int b = CodeGenOptions.DisplayBorderThickness;
+
+			CodePiece p = new CodePiece();
+
+			if (s.Size == 0)
+				return p;
+
+			p.Fill(b, b, s.X + b, s.Y + b, CodeGenOptions.DefaultDisplayValue);
+
+			// 44111111
+			// 44111111
+			// 44    22
+			// 44    22
+			// 44    22
+			// 44    22
+			// 33333322
+			// 33333322
+
+			p.Fill(b,       0,       s.X + 2 * b, b,           CodeGenOptions.DisplayBorder);  // 1
+			p.Fill(s.X + b, b,       s.X + 2 * b, s.Y + 2 * b, CodeGenOptions.DisplayBorder);  // 2
+			p.Fill(0      , s.Y + b, s.X + b,     s.Y + 2 * b, CodeGenOptions.DisplayBorder);  // 3
+			p.Fill(0      , 0      , b,           s.Y + b,     CodeGenOptions.DisplayBorder);  // 4
 
 			return p;
 		}

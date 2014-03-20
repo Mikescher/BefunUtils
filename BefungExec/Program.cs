@@ -210,3 +210,17 @@ namespace BefungExec
 		}
 	}
 }
+
+// TODO Stack_Empty_AV When pausing -> Unpausing (Highspeed):
+
+/*
+v
+"
+d
+"
+                      >:01-*: 9\ 9 % - ++  v
+>1- :        : 0`#v_# ^#>#                #<    v
+                  >9 %  ^
+
+^              ,,+3:+55      . \ ,,," = " .:   \<
+*/

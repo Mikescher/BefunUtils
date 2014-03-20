@@ -6,6 +6,8 @@ namespace BefunGen.MathExtensions
 	{
 		public struct Point
 		{
+			public int Size { get { return X * Y; } }
+
 			public readonly int X;
 			public readonly int Y;
 

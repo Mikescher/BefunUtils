@@ -1,4 +1,5 @@
 ﻿
+using BefunGen.MathExtensions;
 namespace BefunGen.AST.CodeGen
 {
 	public enum NumberRep
@@ -47,6 +48,16 @@ namespace BefunGen.AST.CodeGen
 		public static byte DefaultNumeralValue   = 0;
 		public static char DefaultCharacterValue = ' ';
 		public static bool DefaultBooleanValue   = false;
+
+		// Values for the Display
+		public static BefungeCommand DefaultDisplayValue = BCHelper.chr(' ');
+		public static BefungeCommand DisplayBorder = BCHelper.chr('#');
+		public static MathExt.Point DisplaySize = new MathExt.Point(5, 5);
+		public static int DisplayBorderThickness = 2;
+
+		// If set to true you can't Out-Of-Bounce the Display - Set&Get is put into a modulo Width before
+		// TODO What happens when WIDTH == 0 ? --> AV ?
+		public static bool DisplayModuloAccess = true; //TODO Standard = false
 	}
 
 	//Expressions are Left,0 in ... Right,0 out

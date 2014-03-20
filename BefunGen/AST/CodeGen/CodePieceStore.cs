@@ -1,4 +1,5 @@
 ﻿using BefunGen.AST.CodeGen.NumberCode;
+using BefunGen.AST.Exceptions;
 using BefunGen.MathExtensions;
 using System;
 using System.Collections.Generic;
@@ -635,6 +636,32 @@ namespace BefunGen.AST.CodeGen
 			if (reversed) p.reverseX(false);
 
 			return p;
+		}
+
+		public static CodePiece ModuloRangeLimiter(int range, bool reversed)
+		{
+			throw new BGNotImplementedException();
+
+			CodePiece p = new CodePiece();
+
+			if (reversed)
+			{
+				#region Reversed
+				// v\{R}:*-10:   <
+				// >#<{R}%-++1#v_^#`0:
+				//   ^%{R}     <
+				#endregion
+			}
+			else
+			{
+				#region Normal
+				//       >:01-*:{R}\ v
+				// :0`#v_^#0++-%{R}>#<
+				//     >{R}%       ^
+				#endregion
+			}
+
+			//return p;
 		}
 	}
 }

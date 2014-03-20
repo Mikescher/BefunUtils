@@ -1211,7 +1211,7 @@ namespace BefunGen.AST
 
 	public class Statement_Goto : Statement
 	{
-		public string TargetIdentifier; // Temporary - befor linking
+		public string TargetIdentifier; // Temporary - before linking
 		public Statement_Label Target;
 
 		public Statement_Goto(SourceCodePosition pos, string id)

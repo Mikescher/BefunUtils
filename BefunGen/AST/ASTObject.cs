@@ -15,6 +15,8 @@ namespace BefunGen.AST
 			"program", "quit", "rand", "repeat", "return", 
 			"stop", "then", "true", "until", "var", 
 			"while", 
+
+			"DISPLAY_WIDTH", "DISPLAY_HEIGHT",
 			
 			"bool", "boolean", "char", "character", "digit", 
 			"int", "integer", "void"
