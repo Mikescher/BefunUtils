@@ -517,35 +517,29 @@ namespace BefunGenTest
 		{
 			BFTestHelper.debugMethod("blub()",
 			@"
-			program example
-				begin
-					blub();
-				end
-			
-				void blub()
-				var
-					int i := 10;
-				begin
+			void blub()
+			var
+				int i := 10;
+			begin
 
-					lblstart:
+				lblstart:
 
-					OUT i;
+				OUT i;
 
-					i--;
+				i--;
 
-					IF (i != 0) THEN
-						OUT ''\r\n'';
-						GOTO lblstart
-					ELSE
-						GOTO lblend
-					END
+				IF (i != 0) THEN
+					OUT ''\r\n'';
+					GOTO lblstart;
+				ELSE
+					GOTO lblend;
+				END
 
-					OUT ''WADWAD'';
+				OUT ''WADWAD'';
 
-					lblend:
-					QUIT;
+				lblend:
+				QUIT;
 
-				end
 			end
 			");
 		}

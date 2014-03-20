@@ -32,8 +32,7 @@ namespace BefunGenTest
 			if (tester.StepCount >= (MAX_STEP - 8))
 				Assert.Fail();
 
-			if (tester.Stack.Count > 0)
-				Assert.Fail();
+			Assert.AreEqual(0, tester.Stack.Count);
 
 			if (tester.hadRandomElements())
 			{
@@ -45,8 +44,37 @@ namespace BefunGenTest
 					if (tester.StepCount >= (MAX_STEP - 8))
 						Assert.Fail();
 
-					if (tester.Stack.Count > 0)
+					Assert.AreEqual(0, tester.Stack.Count);
+				}
+			}
+		}
+
+		public static void Test_Output(string prog, string p_out)
+		{
+			CPTester tester = new CPTester(prog);
+
+			tester.run(MAX_STEP);
+
+			if (tester.StepCount >= (MAX_STEP - 8))
+				Assert.Fail();
+
+			Assert.AreEqual(0, tester.Stack.Count);
+
+			Assert.AreEqual(p_out, tester.Output.ToString());
+
+			if (tester.hadRandomElements())
+			{
+				for (int i = 0; i < RAND_RUN_COUNT; i++)
+				{
+					tester = new CPTester(prog);
+					tester.run(MAX_STEP);
+
+					if (tester.StepCount >= (MAX_STEP - 8))
 						Assert.Fail();
+
+					Assert.AreEqual(0, tester.Stack.Count);
+
+					Assert.AreEqual(p_out, tester.Output.ToString());
 				}
 			}
 		}

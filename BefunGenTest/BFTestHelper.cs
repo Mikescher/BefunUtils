@@ -101,7 +101,7 @@ namespace BefunGenTest
 			Program e = parseProgram(prog);
 			CodePiece pc = e.generateCode();
 
-			TestCP_Terminate(pc);
+			TestCP(pc);
 		}
 
 		public static void debugProgram_Terminate(string prog)
@@ -111,7 +111,17 @@ namespace BefunGenTest
 			Program e = parseProgram(prog);
 			CodePiece pc = e.generateCode();
 
-			TestCP(pc);
+			TestCP_Terminate(pc);
+		}
+
+		public static void debugProgram_Output(string p_out, string prog)
+		{
+			prog = prog.Replace(@"''", "\"");
+
+			Program e = parseProgram(prog);
+			CodePiece pc = e.generateCode();
+
+			TestCP_Output(pc, p_out);
 		}
 
 		#endregion
@@ -125,7 +135,12 @@ namespace BefunGenTest
 
 		public static void TestCP_Terminate(CodePiece p)
 		{
-			MultiCPTester.Test_Common(p.ToSimpleString());
+			MultiCPTester.Test_Terminate(p.ToSimpleString());
+		}
+
+		public static void TestCP_Output(CodePiece p, string p_out)
+		{
+			MultiCPTester.Test_Output(p.ToSimpleString(), p_out);
 		}
 
 		#endregion

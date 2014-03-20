@@ -342,25 +342,33 @@ namespace BefunGen
 		{
 			debugProgram(@"
 program example
+	global
+	 int i;
 	begin
-		out euclid(44, 12);
+		i = 0;
+		
+		doodle();
+		
+		OUT i;
 	end
 
-	int euclid(int a, int b) 
+	void doodle() 
 	begin
-		if (a == 0) then
-			return b;
-		else 
-			if (b == 0) then
-				return a;
-			else 
-				if (a > b) then
-					return euclid(a - b, b);
-				else
-					return euclid(a, b - a);
-				end
-			end
-		end
+		i = 10;
+		
+		doodle2();
+	end
+	 
+	void doodle2() 
+	begin
+		i = i * 10;
+		
+		doodle3();
+	end
+	 
+	void doodle3() 
+	begin
+		i--;
 	end
 end
 ");

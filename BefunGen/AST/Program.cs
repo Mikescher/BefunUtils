@@ -41,6 +41,8 @@ namespace BefunGen.AST
 
 			MethodList.Insert(0, MainMethod);
 
+			MethodList.ForEach(pm => pm.Owner = this);
+
 			testConstantsForDefinition();
 			testGlobalVarsForDefinition();
 		}
@@ -148,6 +150,16 @@ namespace BefunGen.AST
 
 			int meth_offset_x = 4 + CodeGenConstants.LANE_VERTICAL_MARGIN;
 			int meth_offset_y = lane_start_y + 3; // +3 For the MinY=3 of VerticalLaneTurnout_Dec || bzw +2 for LaneChooser
+
+			#region Insert VariableSpace
+
+			CodePiece p_vars = generateCode_Variables(meth_offset_x, meth_offset_y);
+
+			p.SetAt(meth_offset_x, meth_offset_y, p_vars);
+
+			#endregion
+
+			meth_offset_y += p_vars.Height;
 
 			#region Insert Methods
 
@@ -304,6 +316,57 @@ namespace BefunGen.AST
 			}
 
 			#endregion
+
+			return p;
+		}
+
+		private CodePiece generateCode_Variables(int mo_x, int mo_y)
+		{
+			CodePiece p = new CodePiece();
+
+			int paramX = 0;
+			int paramY = 0;
+
+			int max_arr = 0;
+			if (Variables.Count(t => t is VarDeclaration_Array) > 0)
+				max_arr = Variables.Where(t => t is VarDeclaration_Array).Select(t => t as VarDeclaration_Array).Max(t => t.Size);
+
+			int maxwidth = Math.Max(max_arr, CodeGenOptions.DefaultVarDeclarationWidth);
+
+			for (int i = 0; i < Variables.Count; i++)
+			{
+				VarDeclaration var = Variables[i];
+
+				CodePiece lit = new CodePiece();
+
+				if (paramX >= maxwidth)
+				{	// Next Line
+					paramX = 0;
+					paramY++;
+				}
+
+				if (paramX > 0 && var is VarDeclaration_Array && (paramX + (var as VarDeclaration_Array).Size) > maxwidth)
+				{	// Next Line
+					paramX = 0;
+					paramY++;
+				}
+
+				if (var is VarDeclaration_Value)
+				{
+					lit[0, 0] = CodeGenOptions.DefaultVarDeclarationSymbol.copyWithTag(new VarDeclaration_Tag(var));
+				}
+				else
+				{
+					int sz = (var as VarDeclaration_Array).Size;
+					lit.Fill(0, 0, sz, 1, CodeGenOptions.DefaultVarDeclarationSymbol, new VarDeclaration_Tag(var));
+				}
+
+				var.CodePositionX = mo_x + paramX;
+				var.CodePositionY = mo_y + paramY;
+
+				p.SetAt(paramX, paramY, lit);
+				paramX += lit.Width;
+			}
 
 			return p;
 		}

@@ -12,6 +12,8 @@ namespace BefunGen.AST
 		private static int _METHODADDRESS_COUNTER = 0;
 		protected static int METHODADDRESS_COUNTER { get { return _METHODADDRESS_COUNTER++; } }
 
+		public Program Owner;
+
 		public readonly BType ResultType;
 		public readonly string Identifier;
 		public readonly List<VarDeclaration> Parameter;
@@ -98,7 +100,12 @@ namespace BefunGen.AST
 
 		public VarDeclaration findVariableByIdentifier(string ident)
 		{
-			return Variables.Count(p => p.Identifier.ToLower() == ident.ToLower()) == 1 ? Variables.Single(p => p.Identifier.ToLower() == ident.ToLower()) : null;
+			List<VarDeclaration> r = Variables.Where(p => p.Identifier.ToLower() == ident.ToLower())
+				.Concat(Owner.Variables.Where(p => p.Identifier.ToLower() == ident.ToLower()))
+				.Concat(Owner.Constants.Where(p => p.Identifier.ToLower() == ident.ToLower()))
+				.ToList();
+
+			return r.Count() == 1 ? r.Single() : null;
 		}
 
 		public Statement_Label findLabelByIdentifier(string ident)

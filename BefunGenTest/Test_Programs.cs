@@ -96,7 +96,7 @@ end
 		[TestMethod]
 		public void codeGenTest_Program_ArrayReturn()
 		{
-			BFTestHelper.debugProgram_Terminate(@"
+			BFTestHelper.debugProgram_Output("Hello", @"
 			program example
 				begin
 					out blub();
@@ -116,10 +116,11 @@ end
 			end
 			");
 		}
-
+		
+		[TestMethod]
 		public void codeGenTest_Program_ArrayReturn_2()
 		{
-			BFTestHelper.debugProgram_Terminate(@"
+			BFTestHelper.debugProgram_Output("Hello", @"
 			program example
 				begin
 					out blub();
@@ -138,6 +139,72 @@ end
 					return result;
 				end
 			end
+			");
+		}
+
+		[TestMethod]
+		public void codeGenTest_Program_Euklid()
+		{
+			BFTestHelper.debugProgram_Output("4", @"
+program example
+	begin
+		out euclid(44, 12);
+	end
+
+	int euclid(int a, int b) 
+	begin
+		if (a == 0) then
+			return b;
+		else 
+			if (b == 0) then
+				return a;
+			else 
+				if (a > b) then
+					return euclid(a - b, b);
+				else
+					return euclid(a, b - a);
+				end
+			end
+		end
+	end
+end
+			");
+		}
+
+		[TestMethod]
+		public void codeGenTest_Program_GlobalVar()
+		{
+			BFTestHelper.debugProgram_Output("99", @"
+program example
+	global
+	 int i;
+	begin
+		i = 0;
+		
+		doodle();
+		
+		OUT i;
+	end
+
+	void doodle() 
+	begin
+		i = 10;
+		
+		doodle2();
+	end
+	 
+	void doodle2() 
+	begin
+		i = i * 10;
+		
+		doodle3();
+	end
+	 
+	void doodle3() 
+	begin
+		i--;
+	end
+end
 			");
 		}
 	}
