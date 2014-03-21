@@ -354,6 +354,8 @@ program example
 	end
 end
 			");
+
+			txtDebug.Text += CodePieceStore.ModuloRangeLimiter(131, false).ToString();
 		}
 
 		private void btnDebugNumberRep_Click(object sender, EventArgs e)
@@ -413,14 +415,14 @@ end
 			}
 			else
 			{
-				try
-				{
+				//try
+				//{
 					txtCode.Text = p.generateCode().ToString();
-				}
-				catch (Exception ex)
-				{
-					txtCode.Text = ex.ToString();
-				}
+				//}
+				//catch (Exception ex)
+				//{
+					//txtCode.Text = ex.ToString();
+				//}
 			}
 		}
 

@@ -107,6 +107,9 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <None Include="app.config" />
+    <None Include="example_MazeGen.tf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="example_00.tf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

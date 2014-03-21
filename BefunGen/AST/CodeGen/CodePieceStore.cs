@@ -642,7 +642,8 @@ namespace BefunGen.AST.CodeGen
 		{
 			CodePiece p = new CodePiece();
 
-			CodePiece p_r = NumberCodeHelper.generateCode(range, reversed);
+			CodePiece p_r     = NumberCodeHelper.generateCode(range, reversed);
+			CodePiece p_r_rev = NumberCodeHelper.generateCode(range, ! reversed);
 
 			if (reversed)
 			{
@@ -651,9 +652,9 @@ namespace BefunGen.AST.CodeGen
 				// >#<{R}%-++1#v_^#`0:
 				//   ^%{R}     <
 
-				CodePiece p_top = CodePiece.ParseFromLineFormatted(@"v\{0}:*-10:", false, p_r);
-				CodePiece p_mid = CodePiece.ParseFromLineFormatted(@">#<{0}%-++1#", false, p_r);
-				CodePiece p_bot = CodePiece.ParseFromLineFormatted(@"^%{0}", false, p_r);
+				CodePiece p_top = CodePiece.CombineHorizontal(CodePiece.ParseFromLine(@"v\"), p_r, CodePiece.ParseFromLine(@":*-10:"));
+				CodePiece p_mid = CodePiece.CombineHorizontal(CodePiece.ParseFromLine(@">#<"), p_r_rev, CodePiece.ParseFromLine(@"%-++1#"));
+				CodePiece p_bot = CodePiece.CombineHorizontal(CodePiece.ParseFromLine(@"^%"), p_r);
 
 				p_top.AddXOffset(0);
 				p_mid.AddXOffset(0);
@@ -690,9 +691,9 @@ namespace BefunGen.AST.CodeGen
 				// :0`#v_^#1++-%{R}>#<
 				//     >{R}%       ^
 
-				CodePiece p_top = CodePiece.ParseFromLineFormatted(@">:01-*:{0}", false, p_r);
-				CodePiece p_mid = CodePiece.ParseFromLineFormatted(@":0`#v_^#1++-%{0}", false, p_r);
-				CodePiece p_bot = CodePiece.ParseFromLineFormatted(@">{0}%", false, p_r);
+				CodePiece p_top = CodePiece.CombineHorizontal( CodePiece.ParseFromLine(@">:01-*:"), p_r );
+				CodePiece p_mid = CodePiece.CombineHorizontal(CodePiece.ParseFromLine(@":0`#v_^#1++-%"), p_r_rev);
+				CodePiece p_bot = CodePiece.CombineHorizontal(new CodePiece(BCHelper.PC_Right), p_r, new CodePiece(BCHelper.Modulo));
 
 				p_top.AddXOffset(6);
 				p_mid.AddXOffset(0);

@@ -1819,7 +1819,7 @@ namespace BefunGen.AST
 			if (Value.Count == 0)
 				return new CodePiece();
 
-			if (reversed) //TODO Use better out code (from Alexio)
+			if (reversed)
 			{
 				// $_>#!,#:<"???"0
 				CodePiece p = new CodePiece();
