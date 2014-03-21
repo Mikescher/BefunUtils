@@ -3,7 +3,7 @@
 namespace BefunGenTest
 {
 	[TestClass]
-	public class Test_Methods //TODO Add TEst Constant / Global / For
+	public class Test_Methods
 	{
 
 		[TestMethod]
@@ -534,6 +534,35 @@ namespace BefunGenTest
 				QUIT;
 
 			end
+			");
+		}
+
+		[TestMethod]
+		public void codeGenTest_Method_SetDisplay()
+		{
+			BFTestHelper.debugMethod_Output("1", "a()",
+			@"
+				void a()
+				begin
+					display[0, 0] = '0';
+					OUT (int)(display[0, 0] == '0');
+				end
+			");
+		}
+
+		[TestMethod]
+		public void codeGenTest_Method_For()
+		{
+			BFTestHelper.debugMethod_Output("ABCDEFGHIJKLMNOPQRSTUVWXYZ", "a()",
+			@"
+				void a()
+				var
+					int i;
+				begin
+					FOR(i = (int)'A'; i <= (int)'Z'; i++) DO
+						OUT (char)i;
+					END
+				end
 			");
 		}
 

@@ -123,4 +123,10 @@ namespace BefunGen.AST.Exceptions
 		public ConstantValueChangedException(SourceCodePosition pos, string ident)
 			: base("You cannot change the value of the Constant " + ident, pos) { }
 	}
+
+	public class EmptyDisplayAccessException : BefunGenUserException
+	{
+		public EmptyDisplayAccessException(SourceCodePosition pos)
+			: base("Trying to access a display with size == 0 ", pos) { }
+	}
 }

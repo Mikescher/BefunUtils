@@ -94,6 +94,19 @@ namespace BefunGenTest
 			TestCP(pc);
 		}
 
+		public static void debugMethod_Output(string o, string call, string meth)
+		{
+			meth = Regex.Replace(meth, @"[\r\n]{1,2}[ \t]+[\r\n]{1,2}", "\r\n");
+			meth = Regex.Replace(meth, @"^[ \t]*[\r\n]{1,2}", "");
+			meth = Regex.Replace(meth, @"[\r\n]{1,2}[ \t]*$", "");
+			meth = meth.Replace(@"''", "\"");
+
+			Program e = parseMethod(call, meth);
+			CodePiece pc = e.generateCode();
+
+			TestCP_Output(pc, o);
+		}
+
 		public static void debugProgram(string prog)
 		{
 			prog = prog.Replace(@"''", "\"");

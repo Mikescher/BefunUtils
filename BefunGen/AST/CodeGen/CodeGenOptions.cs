@@ -55,7 +55,6 @@ namespace BefunGen.AST.CodeGen
 		public static int DisplayBorderThickness = 2;
 
 		// If set to true you can't Out-Of-Bounce the Display - Set&Get is put into a modulo Width before
-		// TODO What happens when WIDTH == 0 ? --> AV ?
 		public static bool DisplayModuloAccess = true; //TODO Standard = false
 	}
 

@@ -339,7 +339,7 @@ namespace BefunGen.AST
 			Identifier = null;
 		}
 
-		public override Expression inlineConstants() //TODO Test Const Arrays - On Stack reversed ?
+		public override Expression inlineConstants()
 		{
 			if (Target.IsConstant)
 			{
@@ -482,11 +482,14 @@ namespace BefunGen.AST
 		{
 			this.Owner = owner.Owner;
 
+			if (Owner.DisplayWidth * Owner.DisplayHeight == 0)
+				throw new EmptyDisplayAccessException(Position);
+
 			Target_X.linkVariables(owner);
 			Target_Y.linkVariables(owner);
 		}
 
-		public override Expression inlineConstants() //TODO Test Const Arrays - On Stack reversed ?
+		public override Expression inlineConstants()
 		{
 			Target_X = Target_X.inlineConstants();
 			Target_Y = Target_Y.inlineConstants();
@@ -631,7 +634,6 @@ namespace BefunGen.AST
 
 			return p;
 		}
-
 	}
 
 	public class Expression_ArrayValuePointer : Expression_ValuePointer
@@ -812,7 +814,7 @@ namespace BefunGen.AST
 			//NOP
 		}
 
-		public override Expression inlineConstants() //TODO Test Const Arrays - On Stack reversed ?
+		public override Expression inlineConstants()
 		{
 			return this;
 		}

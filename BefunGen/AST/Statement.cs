@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace BefunGen.AST
 {
-	public abstract class Statement : ASTObject //TODO GET/SET/DEFINE DISPLAY
+	public abstract class Statement : ASTObject
 	{
 		private static int _CODEPOINT_ADDRESS_COUNTER = 0;
 		protected static int CODEPOINT_ADDRESS_COUNTER { get { return _CODEPOINT_ADDRESS_COUNTER++; } }
@@ -1821,7 +1821,7 @@ namespace BefunGen.AST
 
 			if (reversed) //TODO Use better out code (from Alexio)
 			{
-				// $_ #! #: #,<"???"0
+				// $_>#!,#:<"???"0
 				CodePiece p = new CodePiece();
 
 				p.AppendLeft(BCHelper.Digit_0);
@@ -1829,15 +1829,12 @@ namespace BefunGen.AST
 				p.AppendLeft(Value.generateCode(reversed));
 
 				p.AppendLeft(BCHelper.PC_Left);
-				p.AppendLeft(BCHelper.Out_ASCII);
-				p.AppendLeft(BCHelper.PC_Jump);
-				p.AppendLeft(BCHelper.Walkway);
 				p.AppendLeft(BCHelper.Stack_Dup);
 				p.AppendLeft(BCHelper.PC_Jump);
-				p.AppendLeft(BCHelper.Walkway);
+				p.AppendLeft(BCHelper.Out_ASCII);
 				p.AppendLeft(BCHelper.Not);
 				p.AppendLeft(BCHelper.PC_Jump);
-				p.AppendLeft(BCHelper.Walkway);
+				p.AppendLeft(BCHelper.PC_Right);
 				p.AppendLeft(BCHelper.If_Horizontal);
 				p.AppendLeft(BCHelper.Stack_Pop);
 
@@ -1847,7 +1844,7 @@ namespace BefunGen.AST
 			}
 			else
 			{
-				// 0"???">,# :# _$
+				// 0"???">:#,_$
 				CodePiece p = new CodePiece();
 
 				p.AppendRight(BCHelper.Digit_0);
@@ -1855,12 +1852,9 @@ namespace BefunGen.AST
 				p.AppendRight(Value.generateCode(reversed));
 
 				p.AppendRight(BCHelper.PC_Right);
-				p.AppendRight(BCHelper.Out_ASCII);
-				p.AppendRight(BCHelper.PC_Jump);
-				p.AppendRight(BCHelper.Walkway);
 				p.AppendRight(BCHelper.Stack_Dup);
 				p.AppendRight(BCHelper.PC_Jump);
-				p.AppendRight(BCHelper.Walkway);
+				p.AppendRight(BCHelper.Out_ASCII);
 				p.AppendRight(BCHelper.If_Horizontal);
 				p.AppendRight(BCHelper.Stack_Pop);
 

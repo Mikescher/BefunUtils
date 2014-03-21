@@ -333,45 +333,27 @@ namespace BefunGen
 			catch (Exception e)
 			{
 				txtDebug.Text += e.ToString();
-				//txtDebug.Text += Regex.Replace(e.ToString().Replace(" in ", Environment.NewLine + "      in "), @"in.*BefunGen\\", "in ");
-				//txtDebug.Text += e.ToString().Replace("in", Environment.NewLine + "      in").Replace(@"e:\Eigene Dateien\Dropbox\Eigene EDV\Visual Studio\Projects\BefunGen\BefunGen\", "");
 			}
 		}
 
 		private void btnExecuteDebug_Click(object sender, EventArgs earg)
 		{
 			debugProgram(@"
-program example : display[64, 16]
+program example
 	begin
-		FOR(;;) DO
-			paintR();
+		a();
+	end
+
+	void a()
+	var
+		int i;
+	begin
+		FOR(i = (int)'A'; i <= (int)'Z'; i++) DO
+			OUT (char)i;
 		END
 	end
-
-	void paintR() 
-	var
-	 int x;
-	 int y;
-	begin
-		x = ((((((((int)RAND)*2) + ((int)RAND))*2 + ((int)RAND) ) * 2 + ((int)RAND)*2) + ((int)RAND))*2 + ((int)RAND) ) * 2 + ((int)RAND);
-		y = ((((((((int)RAND)*2) + ((int)RAND))*2 + ((int)RAND) ) * 2 + ((int)RAND)*2) + ((int)RAND))*2 + ((int)RAND) ) * 2 + ((int)RAND);
-
-		OUT x;
-		OUT '','';		
-		OUT y;
-		OUT ''\r\n'';		
-
-		display[x, y] = '#';
-
-		OUT ''\r\n'';
-
-	end
 end
-");
-
-			txtDebug.Text += CodePieceStore.ModuloRangeLimiter(16, true).ToString();
-
-			txtDebug.Text += CodePieceStore.ModuloRangeLimiter(16, false).ToString();
+			");
 		}
 
 		private void btnDebugNumberRep_Click(object sender, EventArgs e)
