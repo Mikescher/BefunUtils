@@ -8,13 +8,13 @@
 PROGRAM MazeGen : DISPLAY[131, 51]
 	CONST
 		CHAR CHR_UNSET := '@';
-		CHAR CHR_WALL  := 'O';
+		CHAR CHR_WALL  := '#';
 		CHAR CHR_FLOOR := ' ';
 		CHAR CHR_PATH  := '+';
 	BEGIN
 		Init();
 		
-		//Create();
+		Create();
 	END
 	 
 	VOID Init()

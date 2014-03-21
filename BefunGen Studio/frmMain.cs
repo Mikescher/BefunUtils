@@ -415,14 +415,14 @@ end
 			}
 			else
 			{
-				//try
-				//{
+				try
+				{
 					txtCode.Text = p.generateCode().ToString();
-				//}
-				//catch (Exception ex)
-				//{
-					//txtCode.Text = ex.ToString();
-				//}
+				}
+				catch (Exception ex)
+				{
+					txtCode.Text = ex.ToString();
+				}
 			}
 		}
 
