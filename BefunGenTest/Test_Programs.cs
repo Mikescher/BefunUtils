@@ -207,5 +207,80 @@ program example
 end
 			");
 		}
+
+		[TestMethod]
+		public void codeGenTest_Program_Constants()
+		{
+			BFTestHelper.debugProgram_Output("99", @"
+program example
+	const
+		int FALSCH := 0;
+		int WAHR   := 1;
+	global
+		int i;
+	begin
+		i = FALSCH;
+		
+		doodle();
+		
+		OUT i;
+	end
+
+	void doodle() 
+	begin
+		i = 10;
+		
+		doodle2();
+	end
+	 
+	void doodle2() 
+	begin
+		i = i * 10;
+		
+		doodle3();
+	end
+	 
+	void doodle3() 
+	begin
+		i = i - WAHR;
+	end
+end
+			");
+		}
+
+		[TestMethod]
+		public void codeGenTest_Program_Modulo_Display_Access()
+		{
+			CodeGenOptions.DisplayModuloAccess = true;
+
+			BFTestHelper.debugProgram(@"
+program example : display[64, 16]
+	begin
+		FOR(;;) DO
+			paintR();
+		END
+	end
+
+	void paintR() 
+	var
+	 int x;
+	 int y;
+	begin
+		x = ((((((((int)RAND)*2) + ((int)RAND))*2 + ((int)RAND) ) * 2 + ((int)RAND)*2) + ((int)RAND))*2 + ((int)RAND) ) * 2 + ((int)RAND);
+		y = ((((((((int)RAND)*2) + ((int)RAND))*2 + ((int)RAND) ) * 2 + ((int)RAND)*2) + ((int)RAND))*2 + ((int)RAND) ) * 2 + ((int)RAND);
+
+		OUT x;
+		OUT '','';		
+		OUT y;
+		OUT ''\r\n'';		
+
+		display[x, y] = '#';
+
+		OUT ''\r\n'';
+
+	end
+end
+");
+		}
 	}
 }

@@ -52,7 +52,6 @@ namespace BefunGen.AST.CodeGen
 		// Values for the Display
 		public static BefungeCommand DefaultDisplayValue = BCHelper.chr(' ');
 		public static BefungeCommand DisplayBorder = BCHelper.chr('#');
-		public static MathExt.Point DisplaySize = new MathExt.Point(5, 5);
 		public static int DisplayBorderThickness = 2;
 
 		// If set to true you can't Out-Of-Bounce the Display - Set&Get is put into a modulo Width before

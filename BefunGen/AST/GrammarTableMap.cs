@@ -604,7 +604,7 @@ namespace BefunGen.AST
 
 				case ProductionIndex.Optionalexpression2:
 					// <OptionalExpression> ::= 
-					result = new Literal_Bool(p, true);
+					result = new Expression_Literal(p, new Literal_Bool(p, true));
 					break;
 
 				case ProductionIndex.Expression:

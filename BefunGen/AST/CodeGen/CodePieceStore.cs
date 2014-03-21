@@ -687,11 +687,11 @@ namespace BefunGen.AST.CodeGen
 			{
 				#region Normal
 				//       >:01-*:{R}\ v
-				// :0`#v_^#0++-%{R}>#<
+				// :0`#v_^#1++-%{R}>#<
 				//     >{R}%       ^
 
 				CodePiece p_top = CodePiece.ParseFromLineFormatted(@">:01-*:{0}", false, p_r);
-				CodePiece p_mid = CodePiece.ParseFromLineFormatted(@":0`#v_^#0++-%{0}", false, p_r);
+				CodePiece p_mid = CodePiece.ParseFromLineFormatted(@":0`#v_^#1++-%{0}", false, p_r);
 				CodePiece p_bot = CodePiece.ParseFromLineFormatted(@">{0}%", false, p_r);
 
 				p_top.AddXOffset(6);

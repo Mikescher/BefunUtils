@@ -10,6 +10,7 @@ namespace BefunGen.AST
 {
 	public class Program : ASTObject
 	{
+		//TODO RAND[n] --> RAND FROM 0 to 4^n
 		//TODO Add Switch Statement
 		//TODO Optimize -> StatementList in StatementList --> Include
 		//TODO Optimize -> PreCalculated Expressions (Constants, x * 0, x + 0, x * 1, etc etc)
@@ -22,6 +23,9 @@ namespace BefunGen.AST
 
 		public readonly List<VarDeclaration> Constants;
 		public readonly List<VarDeclaration> Variables; // Global Variables
+
+		public int DisplayOffsetX;
+		public int DisplayOffsetY;
 
 		public readonly int DisplayWidth;
 		public readonly int DisplayHeight;
@@ -67,13 +71,13 @@ namespace BefunGen.AST
 				new SourceCodePosition(),
 				new BType_Int(new SourceCodePosition()),
 				"DISPLAY_WIDTH",
-				new Literal_Int(new SourceCodePosition(), CodeGenOptions.DisplaySize.X)));
+				new Literal_Int(new SourceCodePosition(), DisplayWidth)));
 
 			Constants.Insert(0, new VarDeclaration_Value(
 				new SourceCodePosition(),
 				new BType_Int(new SourceCodePosition()),
 				"DISPLAY_HEIGHT",
-				new Literal_Int(new SourceCodePosition(), CodeGenOptions.DisplaySize.Y)));
+				new Literal_Int(new SourceCodePosition(), DisplayHeight)));
 		}
 
 		private void testConstantsForDefinition()
@@ -199,7 +203,6 @@ namespace BefunGen.AST
 
 			int meth_offset_x = 4 + CodeGenConstants.LANE_VERTICAL_MARGIN;
 
-
 			#region Generate Top Lane
 
 			CodePiece p_TopLane = new CodePiece();
@@ -220,11 +223,19 @@ namespace BefunGen.AST
 				CodeGenOptions.DefaultResultTempSymbol,
 				new TemporaryResultCodeField_Tag(maxReturnValWidth));
 
+
 			CodePiece p_display = generateCode_Display();
 
-			p_TopLane.SetAt(3, 3, p_display);
+			DisplayOffsetX = 3;
+			DisplayOffsetY = 3;
 
-			int topLane_bottomRow = 3 + p_display.Width;
+			p_TopLane.SetAt(DisplayOffsetX, DisplayOffsetY, p_display);
+
+			int topLane_bottomRow = 3 + p_display.Height;
+
+			DisplayOffsetX += CodeGenOptions.DisplayBorderThickness;
+			DisplayOffsetY += CodeGenOptions.DisplayBorderThickness;
+
 
 			p_TopLane[0, topLane_bottomRow] = BCHelper.PC_Down;
 			p_TopLane[1, topLane_bottomRow] = BCHelper.Walkway;
@@ -432,7 +443,7 @@ namespace BefunGen.AST
 
 		private CodePiece generateCode_Display()
 		{
-			MathExt.Point s = CodeGenOptions.DisplaySize;
+			MathExt.Point s = new MathExt.Point(DisplayWidth, DisplayHeight);
 
 			int b = CodeGenOptions.DisplayBorderThickness;
 
@@ -497,8 +508,8 @@ namespace BefunGen.AST
 				throw new IllegalIdentifierException(Position, ident);
 			}
 
-			DisplayHeight = w;
-			DisplayWidth = h;
+			DisplayWidth = w;
+			DisplayHeight = h;
 		}
 
 		public override string getDebugString()

@@ -459,17 +459,32 @@ namespace BefunGen.AST
 
 	public class Expression_DisplayValuePointer : Expression_DirectValuePointer
 	{
+		private Program Owner;
+
 		public Expression Target_X;
 		public Expression Target_Y;
 
 		public Expression_DisplayValuePointer(SourceCodePosition pos, Expression x, Expression y)
 			: base(pos, "@display")
 		{
+			Target = null;
+
 			Target_X = x;
 			Target_Y = y;
 		}
 
-		//TODO IMPLEMENT :: Override neccessary Methods ....
+		public override string getDebugString()
+		{
+			return string.Format(@"DISPLAY[{0}][{1}]", Target_X.getDebugString(), Target_Y.getDebugString());
+		}
+
+		public override void linkVariables(Method owner)
+		{
+			this.Owner = owner.Owner;
+
+			Target_X.linkVariables(owner);
+			Target_Y.linkVariables(owner);
+		}
 
 		public override Expression inlineConstants() //TODO Test Const Arrays - On Stack reversed ?
 		{
@@ -477,6 +492,146 @@ namespace BefunGen.AST
 			Target_Y = Target_Y.inlineConstants();
 			return this;
 		}
+
+		public override void linkResultTypes(Method owner)
+		{
+			Target_X.linkResultTypes(owner);
+			Target_Y.linkResultTypes(owner);
+		}
+
+		public override BType getResultType()
+		{
+			return new BType_Char(Position);
+		}
+
+		public override CodePiece generateCode(bool reversed)
+		{
+			CodePiece p = generateCodeSingle(reversed);
+
+			if (reversed)
+			{
+				p.AppendLeft(BCHelper.Reflect_Get);
+			}
+			else
+			{
+				p.AppendRight(BCHelper.Reflect_Get);
+			}
+
+			p.normalizeX();
+
+			return p;
+		}
+
+		// Puts X and Y on the stack: [X, Y]
+		public override CodePiece generateCodeSingle(bool reversed)
+		{
+			if (reversed)
+			{
+				return CodePiece.CombineHorizontal(generateCodeSingleY(reversed), generateCodeSingleX(reversed));
+			}
+			else
+			{
+				return CodePiece.CombineHorizontal(generateCodeSingleX(reversed), generateCodeSingleY(reversed));
+			}
+		}
+
+		// Puts X and Y 1 1/2 -times on the stack: [X, X, Y]
+		public override CodePiece generateCodeDoubleX(bool reversed)
+		{
+			CodePiece p = new CodePiece();
+
+			if (reversed)
+			{
+				p.AppendLeft(generateCodeSingleX(reversed));
+				p.AppendLeft(BCHelper.Stack_Dup);
+				p.AppendLeft(generateCodeSingleY(reversed));
+			}
+			else
+			{
+				p.AppendRight(generateCodeSingleX(reversed));
+				p.AppendRight(BCHelper.Stack_Dup);
+				p.AppendRight(generateCodeSingleY(reversed));
+			}
+
+			p.normalizeX();
+
+			return p;
+		}
+
+		/// Puts X on the stack: [X]
+		public CodePiece generateCodeSingleX(bool reversed)
+		{
+			CodePiece p = new CodePiece();
+
+			if (reversed)
+			{
+				#region Reversed
+				//  +{(MODULO)}{TargetX}{OffsetX}
+
+				p.AppendLeft(NumberCodeHelper.generateCode(Owner.DisplayOffsetX));
+				p.AppendLeft(Target_X.generateCode(reversed));
+				if (CodeGenOptions.DisplayModuloAccess)
+					p.AppendLeft(CodePieceStore.ModuloRangeLimiter(Owner.DisplayWidth, reversed));
+				p.AppendLeft(BCHelper.Add);
+
+				#endregion
+			}
+			else
+			{
+				#region Normal
+				//  {OffsetX}{TargetX}{(MODULO)}+
+
+				p.AppendRight(NumberCodeHelper.generateCode(Owner.DisplayOffsetX));
+				p.AppendRight(Target_X.generateCode(reversed));
+				if (CodeGenOptions.DisplayModuloAccess)
+					p.AppendRight(CodePieceStore.ModuloRangeLimiter(Owner.DisplayWidth, reversed));
+				p.AppendRight(BCHelper.Add);
+
+				#endregion
+			}
+
+			p.normalizeX();
+
+			return p;
+		}
+
+		/// Puts Y on the stack: [Y]
+		public override CodePiece generateCodeSingleY(bool reversed)
+		{
+			CodePiece p = new CodePiece();
+
+			if (reversed)
+			{
+				#region Reversed
+				//  +{(MODULO)}{TargetY}{OffsetY}
+
+				p.AppendLeft(NumberCodeHelper.generateCode(Owner.DisplayOffsetY));
+				p.AppendLeft(Target_Y.generateCode(reversed));
+				if (CodeGenOptions.DisplayModuloAccess)
+					p.AppendLeft(CodePieceStore.ModuloRangeLimiter(Owner.DisplayHeight, reversed));
+				p.AppendLeft(BCHelper.Add);
+
+				#endregion
+			}
+			else
+			{
+				#region Normal
+				//  {OffsetY}{TargetY}{(MODULO)}+
+
+				p.AppendRight(NumberCodeHelper.generateCode(Owner.DisplayOffsetY));
+				p.AppendRight(Target_Y.generateCode(reversed));
+				if (CodeGenOptions.DisplayModuloAccess)
+					p.AppendRight(CodePieceStore.ModuloRangeLimiter(Owner.DisplayHeight, reversed));
+				p.AppendRight(BCHelper.Add);
+
+				#endregion
+			}
+
+			p.normalizeX();
+
+			return p;
+		}
+
 	}
 
 	public class Expression_ArrayValuePointer : Expression_ValuePointer
@@ -495,7 +650,7 @@ namespace BefunGen.AST
 
 		public override string getDebugString()
 		{
-			return Target.getShortDebugString();
+			return Target.getShortDebugString() + "[" + Index.getDebugString() + "]";
 		}
 
 		public override void linkVariables(Method owner)

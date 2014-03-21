@@ -338,47 +338,40 @@ namespace BefunGen
 			}
 		}
 
-		private void btnExecuteDebug_Click(object sender, EventArgs earg) //TODO Allow '_' in identifier
+		private void btnExecuteDebug_Click(object sender, EventArgs earg)
 		{
 			debugProgram(@"
-program example
-	const
-		int FALSCH := 0;
-		int WAHR   := 1;
-	global
-		int i;
+program example : display[64, 16]
 	begin
-		i = FALSCH;
-		
-		doodle();
-		
-		OUT i;
+		FOR(;;) DO
+			paintR();
+		END
 	end
 
-	void doodle() 
+	void paintR() 
+	var
+	 int x;
+	 int y;
 	begin
-		i = 10;
-		
-		doodle2();
-	end
-	 
-	void doodle2() 
-	begin
-		i = i * 10;
-		
-		doodle3();
-	end
-	 
-	void doodle3() 
-	begin
-		i = i - WAHR;
+		x = ((((((((int)RAND)*2) + ((int)RAND))*2 + ((int)RAND) ) * 2 + ((int)RAND)*2) + ((int)RAND))*2 + ((int)RAND) ) * 2 + ((int)RAND);
+		y = ((((((((int)RAND)*2) + ((int)RAND))*2 + ((int)RAND) ) * 2 + ((int)RAND)*2) + ((int)RAND))*2 + ((int)RAND) ) * 2 + ((int)RAND);
+
+		OUT x;
+		OUT '','';		
+		OUT y;
+		OUT ''\r\n'';		
+
+		display[x, y] = '#';
+
+		OUT ''\r\n'';
+
 	end
 end
 ");
 
-			txtDebug.Text += CodePieceStore.ModuloRangeLimiter(17, true).ToString();
+			txtDebug.Text += CodePieceStore.ModuloRangeLimiter(16, true).ToString();
 
-			txtDebug.Text += CodePieceStore.ModuloRangeLimiter(17, false).ToString();
+			txtDebug.Text += CodePieceStore.ModuloRangeLimiter(16, false).ToString();
 		}
 
 		private void btnDebugNumberRep_Click(object sender, EventArgs e)
