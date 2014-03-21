@@ -10,6 +10,7 @@ namespace BefunGen.AST
 {
 	public class Program : ASTObject
 	{
+		//TODO Add Switch Statement
 		//TODO Optimize -> StatementList in StatementList --> Include
 		//TODO Optimize -> PreCalculated Expressions (Constants, x * 0, x + 0, x * 1, etc etc)
 		//TODO Optimize -> ArrayValuePointer/DisplayArrayPointer when Indizies Constant -> Direct Link

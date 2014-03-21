@@ -375,6 +375,10 @@ program example
 	end
 end
 ");
+
+			txtDebug.Text += CodePieceStore.ModuloRangeLimiter(17, true).ToString();
+
+			txtDebug.Text += CodePieceStore.ModuloRangeLimiter(17, false).ToString();
 		}
 
 		private void btnDebugNumberRep_Click(object sender, EventArgs e)

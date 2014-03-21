@@ -640,9 +640,9 @@ namespace BefunGen.AST.CodeGen
 
 		public static CodePiece ModuloRangeLimiter(int range, bool reversed)
 		{
-			throw new BGNotImplementedException();
-
 			CodePiece p = new CodePiece();
+
+			CodePiece p_r = NumberCodeHelper.generateCode(range, reversed);
 
 			if (reversed)
 			{
@@ -650,6 +650,37 @@ namespace BefunGen.AST.CodeGen
 				// v\{R}:*-10:   <
 				// >#<{R}%-++1#v_^#`0:
 				//   ^%{R}     <
+
+				CodePiece p_top = CodePiece.ParseFromLineFormatted(@"v\{0}:*-10:", false, p_r);
+				CodePiece p_mid = CodePiece.ParseFromLineFormatted(@">#<{0}%-++1#", false, p_r);
+				CodePiece p_bot = CodePiece.ParseFromLineFormatted(@"^%{0}", false, p_r);
+
+				p_top.AddXOffset(0);
+				p_mid.AddXOffset(0);
+				p_bot.AddXOffset(2);
+
+				int bot_w = Math.Max(p_mid.MaxX, p_bot.MaxX);
+
+				p_mid.FillRowWW(0, p_mid.MaxX, bot_w);
+				p_mid[bot_w + 0, 0] = BCHelper.PC_Down;
+				p_mid[bot_w + 1, 0] = BCHelper.If_Horizontal;
+
+				p_bot.FillRowWW(0, p_bot.MaxX, bot_w);
+				p_bot[bot_w, 0] = BCHelper.PC_Left;
+
+				int top_w = Math.Max(p_top.MaxX, p_mid.MaxX);
+
+				p_top.FillRowWW(0, p_top.MaxX, top_w);
+				p_top.AppendRight(BCHelper.PC_Left);
+
+				p_mid.FillRowWW(0, p_mid.MaxX, top_w);
+				p_mid.AppendRight(CodePiece.ParseFromLine(@"^#`0:"));
+
+
+				p.SetAt(0, -1, p_top);
+				p.SetAt(0, +0, p_mid);
+				p.SetAt(0, +1, p_bot);
+
 				#endregion
 			}
 			else
@@ -658,10 +689,33 @@ namespace BefunGen.AST.CodeGen
 				//       >:01-*:{R}\ v
 				// :0`#v_^#0++-%{R}>#<
 				//     >{R}%       ^
+
+				CodePiece p_top = CodePiece.ParseFromLineFormatted(@">:01-*:{0}", false, p_r);
+				CodePiece p_mid = CodePiece.ParseFromLineFormatted(@":0`#v_^#0++-%{0}", false, p_r);
+				CodePiece p_bot = CodePiece.ParseFromLineFormatted(@">{0}%", false, p_r);
+
+				p_top.AddXOffset(6);
+				p_mid.AddXOffset(0);
+				p_bot.AddXOffset(4);
+
+				int max = MathExt.Max(p_top.MaxX, p_mid.MaxX, p_bot.MaxX);
+
+				p_top.FillRowWW(0, p_top.MaxX, max);
+				p_mid.FillRowWW(0, p_mid.MaxX, max);
+				p_bot.FillRowWW(0, p_bot.MaxX, max);
+
+				p_top.AppendRight(CodePiece.ParseFromLine(@"\ v", true));
+				p_mid.AppendRight(CodePiece.ParseFromLine(@">#<", false));
+				p_bot.AppendRight(CodePiece.ParseFromLine(@"^", false));
+
+				p.SetAt(0, -1, p_top);
+				p.SetAt(0, +0, p_mid);
+				p.SetAt(0, +1, p_bot);
+
 				#endregion
 			}
 
-			//return p;
+			return p;
 		}
 	}
 }

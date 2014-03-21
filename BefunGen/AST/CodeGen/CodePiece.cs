@@ -48,6 +48,11 @@ namespace BefunGen.AST.CodeGen
 			MaxY = 0;
 		}
 
+		public static CodePiece ParseFromLineFormatted(string l, bool interpretSpaceAsWalkway, params CodePiece[] cpparams)
+		{
+			return CodePiece.ParseFromLine(string.Format(l, cpparams.Select(p => p.ToSimpleString()).ToArray()), interpretSpaceAsWalkway);
+		}
+
 		public static CodePiece ParseFromLine(string l, bool interpretSpaceAsWalkway = false)
 		{
 			CodePiece p = new CodePiece();
