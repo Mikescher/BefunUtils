@@ -2,6 +2,9 @@
 using SuperBitBros.OpenGL.OGLMath;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 
 namespace BefungExec.Logic
@@ -48,6 +51,8 @@ namespace BefungExec.Logic
 
 		public string err = null;
 
+		public StringBuilder output = new StringBuilder();
+
 		public BefunProg(int[,] iras)
 		{
 			raster = iras;
@@ -65,7 +70,7 @@ namespace BefungExec.Logic
 
 			paused = RunOptions.INIT_PAUSED;
 
-			curr_lvl_sleeptime = RunOptions.SLEEP_TIME;
+			curr_lvl_sleeptime = RunOptions.SLEEP_TIME_3;
 		}
 
 		public void run()
@@ -219,6 +224,15 @@ namespace BefungExec.Logic
 			}
 		}
 
+		public void Out(string c)
+		{
+			Console.Out.Write(c);
+			lock (output)
+			{
+				output.Append(c);
+			}
+		}
+
 		public void push(bool a)
 		{
 			lock (Stack)
@@ -320,10 +334,10 @@ namespace BefungExec.Logic
 						pop();
 						break;
 					case '.':
-						Console.Out.Write(pop());
+						Out(pop().ToString());
 						break;
 					case ',':
-						Console.Out.Write((char)pop());
+						Out(((char)pop()).ToString());
 						break;
 					case '#':
 						move();
@@ -378,13 +392,13 @@ namespace BefungExec.Logic
 
 		private void decay()
 		{
-			if (RunOptions.DECAY_TIME == 0)
+			if (!RunOptions.SHOW_DECAY)
 			{
 				for (int x = 0; x < Width; x++)
 				{
 					for (int y = 0; y < Height; y++)
 					{
-						decay_raster[x, y] = (PC.X == x && PC.Y == y) ? 1 : 0;
+						decay_raster[x, y] = (PC.X == x && PC.Y == y) ? Environment.TickCount : 0;
 					}
 				}
 			}
@@ -399,7 +413,7 @@ namespace BefungExec.Logic
 
 		public void full_reset(string code)
 		{
-			raster = Program.GetProg(code);
+			raster = GetProg(code);
 			PC = new Vec2i(0, 0);
 			paused = true;
 			doSingleStep = false;
@@ -415,6 +429,37 @@ namespace BefungExec.Logic
 			mode = MODE_RUN;
 			running = true;
 			dimension = new Vec2i(Width, Height);
+
+			output.Clear();
+		}
+
+		private static int GetProgWidth(string pg)
+		{
+			return Regex.Split(pg, @"\r\n").Max(s => s.Length);
+		}
+
+		private static int GetProgHeight(string pg)
+		{
+			return Regex.Split(pg, @"\r\n").Length;
+		}
+
+		public static int[,] GetProg(string pg)
+		{
+			int w, h;
+
+			int[,] prog = new int[w = GetProgWidth(pg), h = GetProgHeight(pg)];
+
+			string[] split = Regex.Split(pg, @"\r\n");
+
+			for (int y = 0; y < h; y++)
+			{
+				for (int x = 0; x < w; x++)
+				{
+					prog[x, y] = (x < split[y].Length) ? split[y][x] : (int)' ';
+				}
+			}
+
+			return prog;
 		}
 	}
 }

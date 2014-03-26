@@ -8,6 +8,7 @@ using SuperBitBros.OpenGL.OGLMath;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -15,6 +16,8 @@ namespace BefungExec.View
 {
 	public partial class MainForm : Form
 	{
+		#region Fields
+
 		private bool loaded_sv = false;
 		private bool loaded_pv = false;
 		private bool loaded { get { return loaded_sv && loaded_pv; } }
@@ -39,6 +42,10 @@ namespace BefungExec.View
 		private Rect2i selection = null;
 		private Stack<Rect2i> zoom = new Stack<Rect2i>();
 
+		#endregion
+
+		#region Konstruktor
+
 		public MainForm(BefunProg bp, string code)
 		{
 			InitializeComponent();
@@ -52,7 +59,24 @@ namespace BefungExec.View
 			if (zoom.Peek() == null || zoom.Peek().bl.X < 0 || zoom.Peek().bl.Y < 0 || zoom.Peek().tr.X > prog.Width || zoom.Peek().tr.Y > prog.Height)
 				zoom.Pop();
 
+
+			syntaxHighlightingToolStripMenuItem.Checked = RunOptions.SYNTAX_HIGHLIGHTING;
+			aSCIIStackToolStripMenuItem.Checked = RunOptions.ASCII_STACK;
+			skipNOPsToolStripMenuItem.Checked = RunOptions.SKIP_NOP;
+			debugModeToolStripMenuItem.Checked = RunOptions.DEBUGRUN;
+			showTrailToolStripMenuItem.Checked = RunOptions.SHOW_DECAY;
+			setSpeed(3, true);
+
 			Application.Idle += Application_Idle;
+		}
+
+		#endregion
+
+		#region Display
+
+		private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
+		{
+			prog.running = false;
 		}
 
 		void Application_Idle(object sender, EventArgs e)
@@ -220,6 +244,8 @@ namespace BefungExec.View
 		}
 
 		#endregion
+
+		#region Render & Update
 
 		private void RenderProgramView()
 		{
@@ -390,7 +416,8 @@ namespace BefungExec.View
 
 		private void updateProgramView()
 		{
-			kb.update();
+			if (ContainsFocus)
+				kb.update();
 
 
 			bool isrun = (prog.mode == BefunProg.MODE_RUN);
@@ -435,20 +462,19 @@ namespace BefungExec.View
 			}
 
 			if (isrun && kb[Keys.D1])
-			{
-				prog.curr_lvl_sleeptime = RunOptions.LOW_SLEEP_TIME;
-			}
+				setSpeed(1, true);
 
 			if (isrun && kb[Keys.D2])
-			{
-				prog.curr_lvl_sleeptime = RunOptions.SLEEP_TIME;
-			}
+				setSpeed(2, true);
 
 			if (isrun && kb[Keys.D3])
-			{
-				prog.curr_lvl_sleeptime = RunOptions.TOP_SLEEP_TIME;
-			}
+				setSpeed(3, true);
 
+			if (isrun && kb[Keys.D4])
+				setSpeed(4, true);
+
+			if (isrun && kb[Keys.D5])
+				setSpeed(5, true);
 			if (isrun && kb[Keys.R])
 			{
 				reset();
@@ -456,12 +482,17 @@ namespace BefungExec.View
 
 			if (isrun && kb[Keys.C])
 			{
-				for (int x = 0; x < prog.Width; x++)
+				resetBPs();
+			}
+		}
+
+		private void resetBPs()
+		{
+			for (int x = 0; x < prog.Width; x++)
+			{
+				for (int y = 0; y < prog.Height; y++)
 				{
-					for (int y = 0; y < prog.Height; y++)
-					{
-						prog.breakpoints[x, y] = false;
-					}
+					prog.breakpoints[x, y] = false;
 				}
 			}
 		}
@@ -496,7 +527,7 @@ namespace BefungExec.View
 				int val = currStack[i];
 
 				string sval;
-				if (val >= 32 && val <= 126)
+				if (RunOptions.ASCII_STACK && val >= 32 && val <= 126)
 					sval = string.Format("{0} <{1}>", val, (char)val);
 				else
 					sval = "" + val;
@@ -514,6 +545,8 @@ namespace BefungExec.View
 
 			#endregion
 		}
+
+		#endregion
 
 		#region Helper
 
@@ -656,6 +689,218 @@ namespace BefungExec.View
 			}
 		}
 
+		private void setSpeed(int i, bool recheck)
+		{
+			switch (i)
+			{
+				case 1:
+					if (prog.curr_lvl_sleeptime != RunOptions.SLEEP_TIME_1)
+						prog.curr_lvl_sleeptime = RunOptions.SLEEP_TIME_1;
+					if (recheck)
+						lowToolStripMenuItem.Checked = true;
+					break;
+				case 2:
+					if (prog.curr_lvl_sleeptime != RunOptions.SLEEP_TIME_2)
+						prog.curr_lvl_sleeptime = RunOptions.SLEEP_TIME_2;
+					if (recheck)
+						middleToolStripMenuItem.Checked = true;
+					break;
+				case 3:
+					if (prog.curr_lvl_sleeptime != RunOptions.SLEEP_TIME_3)
+						prog.curr_lvl_sleeptime = RunOptions.SLEEP_TIME_3;
+					if (recheck)
+						fastToolStripMenuItem.Checked = true;
+					break;
+				case 4:
+					if (prog.curr_lvl_sleeptime != RunOptions.SLEEP_TIME_4)
+						prog.curr_lvl_sleeptime = RunOptions.SLEEP_TIME_4;
+					if (recheck)
+						veryFastToolStripMenuItem.Checked = true;
+					break;
+				case 5:
+					if (prog.curr_lvl_sleeptime != RunOptions.SLEEP_TIME_5)
+						prog.curr_lvl_sleeptime = RunOptions.SLEEP_TIME_5;
+					if (recheck)
+						fullToolStripMenuItem.Checked = true;
+					break;
+			}
+		}
+
 		#endregion
+
+		#endregion
+
+		#region Menubar
+
+		private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			Close();
+		}
+
+		private void resetToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			reset();
+		}
+
+		private void openToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			OpenFileDialog fd = new OpenFileDialog();
+
+			fd.Filter = "Befunge-Program|*.b93;*.b98;*.tfd|Befunge-93|*.b93|Befunge-98|*.b98|TextFunge-Debug-File|*.tfd|All Files|*";
+			fd.FilterIndex = 1;
+
+			if (fd.ShowDialog() == DialogResult.OK)
+			{
+				string c = BefungeFileHelper.LoadTextFile(fd.FileName);
+				if (c != null)
+				{
+					while (zoom.Count > 0)
+						zoom.Pop();
+
+					init_code = c;
+
+					prog.running = false;
+
+					prog = new BefunProg(BefunProg.GetProg(init_code));
+					new Thread(new ThreadStart(prog.run)).Start();
+
+					zoom.Push(new Rect2i(0, 0, prog.Width, prog.Height));
+				}
+			}
+		}
+
+		private void syntaxHighlightingToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
+		{
+			if (!loaded)
+				return;
+
+			RunOptions.SYNTAX_HIGHLIGHTING = syntaxHighlightingToolStripMenuItem.Checked;
+			font = FontRasterSheet.create(RunOptions.SYNTAX_HIGHLIGHTING);
+		}
+
+		private void aSCIIStackToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			RunOptions.ASCII_STACK = aSCIIStackToolStripMenuItem.Checked;
+		}
+
+		private void speedToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
+		{
+			if (lowToolStripMenuItem.Checked)
+				setSpeed(1, false);
+			else if (middleToolStripMenuItem.Checked)
+				setSpeed(2, false);
+			else if (fastToolStripMenuItem.Checked)
+				setSpeed(3, false);
+			else if (veryFastToolStripMenuItem.Checked)
+				setSpeed(4, false);
+			else if (fullToolStripMenuItem.Checked)
+				setSpeed(5, false);
+		}
+
+		private void zoomToInitialToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			while (zoom.Count > 1)
+			{
+				zoom.Pop();
+			}
+
+			zoom.Push(RunOptions.INIT_ZOOM);
+			if (zoom.Peek() == null || zoom.Peek().bl.X < 0 || zoom.Peek().bl.Y < 0 || zoom.Peek().tr.X > prog.Width || zoom.Peek().tr.Y > prog.Height)
+				zoom.Pop();
+		}
+
+		private void zoomOutToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			if (zoom.Count > 1)
+			{
+				zoom.Pop();
+			}
+		}
+
+		#endregion
+
+		private void zoomCompleteOutToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			while (zoom.Count > 1)
+			{
+				zoom.Pop();
+			}
+		}
+
+		private void runToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			if (prog.mode != BefunProg.MODE_RUN)
+				prog.running = !prog.running;
+		}
+
+		private void stepToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			if (prog.mode != BefunProg.MODE_RUN)
+				prog.doSingleStep = true;
+		}
+
+		private void skipNOPsToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			RunOptions.SKIP_NOP = skipNOPsToolStripMenuItem.Checked;
+		}
+
+		private void debugModeToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			RunOptions.DEBUGRUN = debugModeToolStripMenuItem.Checked;
+		}
+
+		private void showTrailToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			RunOptions.SHOW_DECAY = showTrailToolStripMenuItem.Checked;
+		}
+
+		private void removeAllBreakpointsToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			resetBPs();
+		}
+
+		private void showCompleteStackToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			StringBuilder s = new StringBuilder();
+
+			lock (prog.Stack)
+			{
+				currStack.AddRange(prog.Stack);
+			}
+
+			s.AppendLine("Stack<" + currStack.Count + ">");
+
+			s.AppendLine();
+			s.AppendLine();
+
+			for (int i = 0; i < currStack.Count; i++)
+			{
+				int val = currStack[i];
+
+				if (RunOptions.ASCII_STACK && val >= 32 && val <= 126)
+					s.AppendLine(string.Format("{0:0000} <{1}>", val, (char)val));
+				else
+					s.AppendLine(string.Format("{0:0000}", val));
+			}
+
+			new TextDisplayForm("Output", s.ToString()).ShowDialog();
+		}
+
+		private void showCompleteOutputToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			string s;
+
+			lock (prog.output)
+			{
+				s = prog.output.ToString();
+			}
+
+			new TextDisplayForm("Output", s).ShowDialog();
+		}
+
+		private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			//TODO Show About Dialog
+		}
 	}
 }

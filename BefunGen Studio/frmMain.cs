@@ -370,24 +370,11 @@ end
 
 		private void btnRun_Click(object sender, EventArgs e)
 		{
-			string txt = txtCode.Text;
-
-			int bstart = txt.IndexOf('{');
-			int bend = txt.LastIndexOf('}');
-
-			if (!(bend > bstart && bend >= 0 && bstart >= 0))
-			{
-				return;
-			}
-
-			txt = txt.Substring(bstart + 1, bend - bstart - 1);
-			txt = txt.Trim(' ', '\r', '\n', '\t');
-
 			try
 			{
-				string code = txt;
+				string code = txtCode.Text;
 
-				string path = Path.Combine(Application.StartupPath, "code_tmp.b93");
+				string path = Path.Combine(Application.StartupPath, "code_tmp.tfd");
 
 				File.WriteAllText(path, code);
 

@@ -51,6 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommandLineArguments.cs" />
+    <Compile Include="Logic\BefungeFileHelper.cs" />
     <Compile Include="Logic\BefunProg.cs" />
     <Compile Include="Logic\RunOptions.cs" />
     <Compile Include="MathExtensions\MathExt.cs" />
@@ -75,6 +76,15 @@
     <Compile Include="View\OpenGL\OGLMath\Vec2d.cs" />
     <Compile Include="View\OpenGL\OGLMath\Vec2i.cs" />
     <Compile Include="View\OpenGL\OGLTextureSheet.cs" />
+    <Compile Include="View\TextDisplayForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\TextDisplayForm.Designer.cs">
+      <DependentUpon>TextDisplayForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\ToolStripRadioButtonMenuItem.cs">
+      <SubType>Component</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -91,6 +101,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="View\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\TextDisplayForm.resx">
+      <DependentUpon>TextDisplayForm.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -4,7 +4,6 @@ using SuperBitBros.OpenGL.OGLMath;
 using System;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -14,6 +13,7 @@ namespace BefungExec
 	{
 		private static string demo = Properties.Resources.demoProg;
 
+		[STAThread]
 		static void Main(string[] args)
 		{
 			string code;
@@ -34,6 +34,8 @@ namespace BefungExec
 			Console.WriteLine("1:       Debug speed");
 			Console.WriteLine("2:       Normal speed");
 			Console.WriteLine("3:       High speed");
+			Console.WriteLine("4:       Very High speed");
+			Console.WriteLine("5:       Full speed");
 
 			Console.WriteLine();
 			Console.WriteLine();
@@ -49,7 +51,7 @@ namespace BefungExec
 			Console.WriteLine();
 			Console.WriteLine();
 
-			BefunProg bp = new BefunProg(GetProg(code));
+			BefunProg bp = new BefunProg(BefunProg.GetProg(code));
 			new Thread(new ThreadStart(bp.run)).Start();
 
 			//MainView mv = new MainView(bp, code);
@@ -71,12 +73,18 @@ namespace BefungExec
 				Console.WriteLine();
 				Console.WriteLine("pause | no_pause           : Start Interpreter paused");
 				Console.WriteLine("highlight | no_highlight   : Enable Syntax-Highlighting");
+				Console.WriteLine("asciistack | no_asciistack : Enable char display in stack");
 				Console.WriteLine("skipnop | no_skipnop       : Skip NOP's");
 				Console.WriteLine("debug | no_debug           : Activates additional debug-messages");
-				Console.WriteLine("topspeed=?                 : Set the speed (ms) for speed-3");
-				Console.WriteLine("speed=?                    : Set the speed (ms) for speed-2");
-				Console.WriteLine("lowspeed=?                 : Set the speed (ms) for speed-1");
+
+				Console.WriteLine("speed_5=?                  : Set the speed (ms) for speed-5");
+				Console.WriteLine("speed_4=?                  : Set the speed (ms) for speed-4");
+				Console.WriteLine("speed_3=?                  : Set the speed (ms) for speed-3");
+				Console.WriteLine("speed_2=?                  : Set the speed (ms) for speed-2");
+				Console.WriteLine("speed_1=?                  : Set the speed (ms) for speed-1");
+
 				Console.WriteLine("decay=?                    : Time (ms) for the decay effect");
+				Console.WriteLine("dodecay | no_decay         : Show decay trail");
 				Console.WriteLine("zoom=?,?,?,?               : Initial zoom position (x1, y1, x2, y2)");
 				Console.WriteLine("file=?                     : The file to execute");
 				Console.WriteLine();
@@ -98,6 +106,13 @@ namespace BefungExec
 
 			//##############
 
+			if (cmda.IsSet("asciistack"))
+				RunOptions.ASCII_STACK = true;
+			if (cmda.IsSet("no_asciistack"))
+				RunOptions.ASCII_STACK = false;
+
+			//##############
+
 			if (cmda.IsSet("no_skipnop") || cmda.IsSet("executenop"))
 				RunOptions.SKIP_NOP = false;
 			if (cmda.IsSet("skipnop"))
@@ -112,20 +127,23 @@ namespace BefungExec
 
 			//##############
 
-			if (cmda.IsInt("topspeed"))
-			{
-				RunOptions.TOP_SLEEP_TIME = int.Parse(cmda["topspeed"]);
-			}
+			if (cmda.IsSet("no_decay"))
+				RunOptions.SHOW_DECAY = false;
+			if (cmda.IsSet("dodecay"))
+				RunOptions.SHOW_DECAY = true;
 
-			if (cmda.IsInt("speed"))
-			{
-				RunOptions.SLEEP_TIME = int.Parse(cmda["speed"]);
-			}
+			//##############
 
-			if (cmda.IsInt("lowspeed"))
-			{
-				RunOptions.LOW_SLEEP_TIME = int.Parse(cmda["lowspeed"]);
-			}
+			if (cmda.IsInt("speed_1"))
+				RunOptions.SLEEP_TIME_1 = int.Parse(cmda["speed_1"]);
+			if (cmda.IsInt("speed_2"))
+				RunOptions.SLEEP_TIME_2 = int.Parse(cmda["speed_2"]);
+			if (cmda.IsInt("speed_3"))
+				RunOptions.SLEEP_TIME_3 = int.Parse(cmda["speed_3"]);
+			if (cmda.IsInt("speed_4"))
+				RunOptions.SLEEP_TIME_4 = int.Parse(cmda["speed_4"]);
+			if (cmda.IsInt("speed_5"))
+				RunOptions.SLEEP_TIME_5 = int.Parse(cmda["speed_5"]);
 
 			//##############
 
@@ -150,20 +168,7 @@ namespace BefungExec
 
 			//##############
 
-			if (cmda.IsSet("file"))
-			{
-				try
-				{
-					string fn = cmda["file"].Trim('"');
-					code = File.ReadAllText(fn);
-				}
-				catch (Exception e)
-				{
-					Console.Out.WriteLine(e.ToString());
-					code = "";
-				}
-			}
-			else
+			if (!cmda.IsSet("file") || (code = BefungeFileHelper.LoadTextFile(cmda["file"].Trim('"'))) == null)
 			{
 				Console.WriteLine("########## FILE NOT FOUND ##########");
 
@@ -181,35 +186,6 @@ namespace BefungExec
 			Console.WriteLine();
 			return cmda;
 		}
-
-		private static int GetProgWidth(string pg)
-		{
-			return Regex.Split(pg, @"\r\n").Max(s => s.Length);
-		}
-
-		private static int GetProgHeight(string pg)
-		{
-			return Regex.Split(pg, @"\r\n").Length;
-		}
-
-		public static int[,] GetProg(string pg)
-		{
-			int w, h;
-
-			int[,] prog = new int[w = GetProgWidth(pg), h = GetProgHeight(pg)];
-
-			string[] split = Regex.Split(pg, @"\r\n");
-
-			for (int y = 0; y < h; y++)
-			{
-				for (int x = 0; x < w; x++)
-				{
-					prog[x, y] = (x < split[y].Length) ? split[y][x] : (int)' ';
-				}
-			}
-
-			return prog;
-		}
 	}
 }
 
@@ -220,9 +196,9 @@ v
 "
 d
 "
-                      >:01-*: 9\ 9 % - ++  v
+					  >:01-*: 9\ 9 % - ++  v
 >1- :        : 0`#v_# ^#>#                #<    v
-                  >9 %  ^
+				  >9 %  ^
 
 ^              ,,+3:+55      . \ ,,," = " .:   \<
 */

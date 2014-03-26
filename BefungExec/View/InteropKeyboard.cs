@@ -33,6 +33,7 @@ namespace BefungExec.View
 				else
 				{
 					now.Add(k, false);
+					last.Add(k, false);
 					return false;
 				}
 			}
