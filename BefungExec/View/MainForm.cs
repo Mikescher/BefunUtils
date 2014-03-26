@@ -42,6 +42,8 @@ namespace BefungExec.View
 		private Rect2i selection = null;
 		private Stack<Rect2i> zoom = new Stack<Rect2i>();
 
+		private int QFontViewportState = -1; // 0=>glProgram  // 1=>glStack
+
 		#endregion
 
 		#region Konstruktor
@@ -88,7 +90,11 @@ namespace BefungExec.View
 			{
 				glProgramView.MakeCurrent();
 
-				QFont.InvalidateViewport();
+				if (QFontViewportState != 0 && (prog.mode != BefunProg.MODE_RUN || kb.isDown(Keys.Tab))) // Only update when FOnt is rendered
+				{
+					QFont.InvalidateViewport();
+					QFontViewportState = 0;
+				}
 
 				updateProgramView();
 
@@ -100,7 +106,11 @@ namespace BefungExec.View
 			{
 				glStackView.MakeCurrent();
 
-				QFont.InvalidateViewport();
+				if (QFontViewportState != 1)
+				{
+					QFont.InvalidateViewport();
+					QFontViewportState = 1;
+				}
 
 				RenderStackView();
 
@@ -274,42 +284,102 @@ namespace BefungExec.View
 
 			#endregion
 
-			#region PROG
-
-			long now = Environment.TickCount;
-
-			int f_binded = -1;
-			for (int x = zoom.Peek().bl.X; x < zoom.Peek().tr.X; x++)
+			if (h > 6)
 			{
-				for (int y = zoom.Peek().bl.Y; y < zoom.Peek().tr.Y; y++)
+				#region PROG_HQ
+
+				long now = Environment.TickCount;
+
+				int f_binded = -1;
+
+				double p_r = -1;
+				double p_g = -1;
+				double p_b = -1;
+
+				for (int x = zoom.Peek().bl.X; x < zoom.Peek().tr.X; x++)
 				{
-					double decay_perc = (RunOptions.DECAY_TIME != 0) ? (1 - (now - prog.decay_raster[x, y] * 1d) / RunOptions.DECAY_TIME) : (prog.decay_raster[x, y]);
-					decay_perc = Math.Min(1, decay_perc);
-
-					double r = prog.breakpoints[x, y] ? decay_perc : 1;
-					double g = prog.breakpoints[x, y] ? 0 : (1 - decay_perc);
-					double b = prog.breakpoints[x, y] ? (1 - decay_perc) : (1 - decay_perc);
-
-					GL.Color3(r, g, b);
-
-					if (prog.breakpoints[x, y] || decay_perc > 0.25)
+					for (int y = zoom.Peek().bl.Y; y < zoom.Peek().tr.Y; y++)
 					{
-						if (f_binded != 1)
-							bwfont.bind();
-						bwfont.Render(new Rect2d(offx + (x - zoom.Peek().bl.X) * w, offy + ((zoom.Peek().Height - 1) - (y - zoom.Peek().bl.Y)) * h, w, h), -4, prog[x, y]);
-						f_binded = 1;
-					}
-					else
-					{
-						if (f_binded != 2)
-							font.bind();
-						font.Render(new Rect2d(offx + (x - zoom.Peek().bl.X) * w, offy + ((zoom.Peek().Height - 1) - (y - zoom.Peek().bl.Y)) * h, w, h), -4, prog[x, y]);
-						f_binded = 2;
+						double decay_perc = (RunOptions.DECAY_TIME != 0) ? (1 - (now - prog.decay_raster[x, y] * 1d) / RunOptions.DECAY_TIME) : (prog.decay_raster[x, y]);
+						decay_perc = Math.Min(1, decay_perc);
+
+						double r = prog.breakpoints[x, y] ? decay_perc : 1;
+						double g = prog.breakpoints[x, y] ? 0 : (1 - decay_perc);
+						double b = prog.breakpoints[x, y] ? (1 - decay_perc) : (1 - decay_perc);
+
+						if (p_r != r || p_g != g || p_b != b)
+							GL.Color3(p_r = r, p_g = g, p_b = b);
+
+						if (prog.breakpoints[x, y] || decay_perc > 0.25)
+						{
+							if (f_binded != 1)
+								bwfont.bind();
+							bwfont.Render(new Rect2d(offx + (x - zoom.Peek().bl.X) * w, offy + ((zoom.Peek().Height - 1) - (y - zoom.Peek().bl.Y)) * h, w, h), -4, prog[x, y]);
+							f_binded = 1;
+						}
+						else
+						{
+							if (f_binded != 2)
+								font.bind();
+							font.Render(new Rect2d(offx + (x - zoom.Peek().bl.X) * w, offy + ((zoom.Peek().Height - 1) - (y - zoom.Peek().bl.Y)) * h, w, h), -4, prog[x, y]);
+							f_binded = 2;
+						}
 					}
 				}
-			}
 
-			#endregion
+				#endregion
+			}
+			else
+			{
+				#region PROG_LQ
+
+				long now = Environment.TickCount;
+
+				GL.Disable(EnableCap.Texture2D);
+
+				GL.Begin(BeginMode.Quads);
+
+				int last = 0;
+
+				for (int x = zoom.Peek().bl.X; x < zoom.Peek().tr.X; x++)
+				{
+					for (int y = zoom.Peek().bl.Y; y < zoom.Peek().tr.Y; y++)
+					{
+						if (!prog.breakpoints[x, y] && prog.raster[x, y] == ' ')
+							continue;
+
+						double decay_perc = (now - prog.decay_raster[x, y] * 1d) / RunOptions.DECAY_TIME;
+
+						bool docol = true;
+						if (prog.breakpoints[x, y])
+						{
+							GL.Color3(0.0, 0.0, 1.0);
+
+							docol = false;
+						}
+						else if (decay_perc < 0.66)
+						{
+							GL.Color3(1.0, 0.0, 0.0);
+
+							docol = false;
+						}
+						else if (last == prog.raster[x, y])
+						{
+							docol = false;
+						}
+
+						font.RenderLQ(docol, new Rect2d(offx + (x - zoom.Peek().bl.X) * w, offy + ((zoom.Peek().Height - 1) - (y - zoom.Peek().bl.Y)) * h, w, h), -4, prog[x, y]);
+
+						last = prog.raster[x, y];
+					}
+				}
+
+				GL.End();
+
+				GL.Enable(EnableCap.Texture2D);
+
+				#endregion
+			}
 
 			#region SELECTION
 
@@ -486,17 +556,6 @@ namespace BefungExec.View
 			}
 		}
 
-		private void resetBPs()
-		{
-			for (int x = 0; x < prog.Width; x++)
-			{
-				for (int y = 0; y < prog.Height; y++)
-				{
-					prog.breakpoints[x, y] = false;
-				}
-			}
-		}
-
 		private void RenderStackView()
 		{
 			#region INIT
@@ -549,6 +608,17 @@ namespace BefungExec.View
 		#endregion
 
 		#region Helper
+
+		private void resetBPs()
+		{
+			for (int x = 0; x < prog.Width; x++)
+			{
+				for (int y = 0; y < prog.Height; y++)
+				{
+					prog.breakpoints[x, y] = false;
+				}
+			}
+		}
 
 		private void reset()
 		{
@@ -817,8 +887,6 @@ namespace BefungExec.View
 			}
 		}
 
-		#endregion
-
 		private void zoomCompleteOutToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			while (zoom.Count > 1)
@@ -902,5 +970,7 @@ namespace BefungExec.View
 		{
 			//TODO Show About Dialog
 		}
+
+		#endregion
 	}
 }

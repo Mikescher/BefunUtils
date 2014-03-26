@@ -4,7 +4,7 @@
  *
 */
 
-program example
+program example : display[5, 5]
 	var 
 		char[32] name;
 		int i := 0;

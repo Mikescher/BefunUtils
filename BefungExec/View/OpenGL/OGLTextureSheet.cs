@@ -59,6 +59,11 @@ namespace BefungExec.View
 			return GetCoordinates(pos % width, pos / width);
 		}
 
+		public Vec2i GetPosition(int pos)
+		{
+			return new Vec2i(pos % width, pos / width);
+		}
+
 		public void bind()
 		{
 			GL.BindTexture(TextureTarget.Texture2D, GetID());
