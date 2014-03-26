@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Windows.Forms;
 
 namespace BefungExec
 {
@@ -51,7 +52,8 @@ namespace BefungExec
 			BefunProg bp = new BefunProg(GetProg(code));
 			new Thread(new ThreadStart(bp.run)).Start();
 
-			MainView mv = new MainView(bp, code);
+			//MainView mv = new MainView(bp, code);
+			Application.Run(new MainForm(bp, code));
 		}
 
 		private static CommandLineArguments parseParams(string[] args, out string code)
