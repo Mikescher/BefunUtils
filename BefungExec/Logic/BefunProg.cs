@@ -82,9 +82,13 @@ namespace BefungExec.Logic
 			long start = Environment.TickCount;
 			int sleeptime;
 
+			bool paused_cached;
+
 			while (running)
 			{
-				if ((paused && !doSingleStep) || mode != MODE_RUN)
+				paused_cached = paused;
+
+				if ((paused_cached && !doSingleStep) || mode != MODE_RUN)
 				{
 					if (mode == MODE_MOVEANDRUN)
 					{
@@ -109,7 +113,7 @@ namespace BefungExec.Logic
 					calc();
 					debug();
 
-					if (mode == MODE_RUN && (!paused || doSingleStep))
+					if (mode == MODE_RUN && (!paused_cached || doSingleStep))
 					{
 						skipcount = 0;
 						do
@@ -127,7 +131,7 @@ namespace BefungExec.Logic
 								break; // Even when no debug - no infinite loop in this thread
 							}
 						}
-						while (RunOptions.SKIP_NOP && raster[PC.X, PC.Y] == ' ' && !stringmode && (!paused || doSingleStep));
+						while (RunOptions.SKIP_NOP && raster[PC.X, PC.Y] == ' ' && !stringmode && (!paused_cached || doSingleStep));
 
 
 					}
