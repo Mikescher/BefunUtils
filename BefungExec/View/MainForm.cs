@@ -345,10 +345,10 @@ namespace BefungExec.View
 				{
 					for (int y = zoom.Peek().bl.Y; y < zoom.Peek().tr.Y; y++)
 					{
-						if (!prog.breakpoints[x, y] && prog.raster[x, y] == ' ')
-							continue;
-
 						double decay_perc = (now - prog.decay_raster[x, y] * 1d) / RunOptions.DECAY_TIME;
+
+						if (!prog.breakpoints[x, y] && prog.raster[x, y] == ' ' && decay_perc >= 1)
+							continue;
 
 						bool docol = true;
 						if (prog.breakpoints[x, y])
@@ -897,8 +897,8 @@ namespace BefungExec.View
 
 		private void runToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			if (prog.mode != BefunProg.MODE_RUN)
-				prog.running = !prog.running;
+			if (prog.mode == BefunProg.MODE_RUN)
+				prog.paused = !prog.paused;
 		}
 
 		private void stepToolStripMenuItem_Click(object sender, EventArgs e)
