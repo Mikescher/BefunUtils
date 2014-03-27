@@ -294,34 +294,42 @@ namespace BefunGen.AST
 
 				case ProductionIndex.Stmt_modassignment_Pluseq:
 					// <Stmt_ModAssignment> ::= <ValuePointer> '+=' <Expression>
+					result = Expression_Add.CreateAugmentedStatement(p, (Expression_ValuePointer)r.get_Data(0), (Expression)r.get_Data(2));
 					break;
 
 				case ProductionIndex.Stmt_modassignment_Minuseq:
 					// <Stmt_ModAssignment> ::= <ValuePointer> '-=' <Expression>
+					result = Expression_Sub.CreateAugmentedStatement(p, (Expression_ValuePointer)r.get_Data(0), (Expression)r.get_Data(2));
 					break;
 
 				case ProductionIndex.Stmt_modassignment_Timeseq:
 					// <Stmt_ModAssignment> ::= <ValuePointer> '*=' <Expression>
+					result = Expression_Mult.CreateAugmentedStatement(p, (Expression_ValuePointer)r.get_Data(0), (Expression)r.get_Data(2));
 					break;
 
 				case ProductionIndex.Stmt_modassignment_Diveq:
 					// <Stmt_ModAssignment> ::= <ValuePointer> '/=' <Expression>
+					result = Expression_Div.CreateAugmentedStatement(p, (Expression_ValuePointer)r.get_Data(0), (Expression)r.get_Data(2));
 					break;
 
 				case ProductionIndex.Stmt_modassignment_Percenteq:
 					// <Stmt_ModAssignment> ::= <ValuePointer> '%=' <Expression>
+					result = Expression_Mod.CreateAugmentedStatement(p, (Expression_ValuePointer)r.get_Data(0), (Expression)r.get_Data(2));
 					break;
 
 				case ProductionIndex.Stmt_modassignment_Ampeq:
 					// <Stmt_ModAssignment> ::= <ValuePointer> '&=' <Expression>
+					result = Expression_And.CreateAugmentedStatement(p, (Expression_ValuePointer)r.get_Data(0), (Expression)r.get_Data(2));
 					break;
 
 				case ProductionIndex.Stmt_modassignment_Pipeeq:
 					// <Stmt_ModAssignment> ::= <ValuePointer> '|=' <Expression>
+					result = Expression_Or.CreateAugmentedStatement(p, (Expression_ValuePointer)r.get_Data(0), (Expression)r.get_Data(2));
 					break;
 
 				case ProductionIndex.Stmt_modassignment_Careteq:
 					// <Stmt_ModAssignment> ::= <ValuePointer> '^=' <Expression>
+					result = Expression_Xor.CreateAugmentedStatement(p, (Expression_ValuePointer)r.get_Data(0), (Expression)r.get_Data(2));
 					break;
 
 				case ProductionIndex.Stmt_return_Return:

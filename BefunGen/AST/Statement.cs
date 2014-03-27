@@ -788,6 +788,9 @@ namespace BefunGen.AST
 
 		public override void linkMethods(Program owner)
 		{
+			if (Target != null && Identifier == null) // Already linked
+				return;
+
 			Target = owner.findMethodByIdentifier(Identifier) as Method;
 
 			if (Target == null)

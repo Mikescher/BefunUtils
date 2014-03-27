@@ -331,6 +331,9 @@ namespace BefunGen.AST
 
 		public override void linkVariables(Method owner)
 		{
+			if (Target != null && Identifier == null) // Already linked
+				return;
+
 			Target = owner.findVariableByIdentifier(Identifier) as VarDeclaration;
 
 			if (Target == null)
@@ -657,6 +660,9 @@ namespace BefunGen.AST
 
 		public override void linkVariables(Method owner)
 		{
+			if (Target != null && Identifier == null) // Already linked
+				return;
+
 			Index.linkVariables(owner);
 
 			Target = owner.findVariableByIdentifier(Identifier) as VarDeclaration_Array;
@@ -868,6 +874,11 @@ namespace BefunGen.AST
 
 			return p;
 		}
+
+		public static Statement_Assignment CreateAugmentedStatement(SourceCodePosition p, Expression_ValuePointer v, Expression e)
+		{
+			return new Statement_Assignment(p, v, new Expression_Mult(p, v, e));
+		}
 	}
 
 	public class Expression_Div : Expression_BinaryMathOperation
@@ -888,6 +899,11 @@ namespace BefunGen.AST
 			CodePiece p = generateCode_Operands(reversed, BCHelper.Div);
 
 			return p;
+		}
+
+		public static Statement_Assignment CreateAugmentedStatement(SourceCodePosition p, Expression_ValuePointer v, Expression e)
+		{
+			return new Statement_Assignment(p, v, new Expression_Div(p, v, e));
 		}
 	}
 
@@ -910,6 +926,11 @@ namespace BefunGen.AST
 
 			return p;
 		}
+
+		public static Statement_Assignment CreateAugmentedStatement(SourceCodePosition p, Expression_ValuePointer v, Expression e)
+		{
+			return new Statement_Assignment(p, v, new Expression_Mod(p, v, e));
+		}
 	}
 
 	public class Expression_Add : Expression_BinaryMathOperation
@@ -931,6 +952,11 @@ namespace BefunGen.AST
 
 			return p;
 		}
+
+		public static Statement_Assignment CreateAugmentedStatement(SourceCodePosition p, Expression_ValuePointer v, Expression e)
+		{
+			return new Statement_Assignment(p, v, new Expression_Add(p, v, e));
+		}
 	}
 
 	public class Expression_Sub : Expression_BinaryMathOperation
@@ -951,6 +977,11 @@ namespace BefunGen.AST
 			CodePiece p = generateCode_Operands(reversed, BCHelper.Sub);
 
 			return p;
+		}
+
+		public static Statement_Assignment CreateAugmentedStatement(SourceCodePosition p, Expression_ValuePointer v, Expression e)
+		{
+			return new Statement_Assignment(p, v, new Expression_Sub(p, v, e));
 		}
 	}
 
@@ -1052,6 +1083,11 @@ namespace BefunGen.AST
 				return p;
 			}
 		}
+
+		public static Statement_Assignment CreateAugmentedStatement(SourceCodePosition p, Expression_ValuePointer v, Expression e)
+		{
+			return new Statement_Assignment(p, v, new Expression_And(p, v, e));
+		}
 	}
 
 	public class Expression_Or : Expression_BinaryBoolOperation
@@ -1146,6 +1182,11 @@ namespace BefunGen.AST
 
 				return p;
 			}
+		}
+
+		public static Statement_Assignment CreateAugmentedStatement(SourceCodePosition p, Expression_ValuePointer v, Expression e)
+		{
+			return new Statement_Assignment(p, v, new Expression_Or(p, v, e));
 		}
 	}
 
@@ -1254,6 +1295,11 @@ namespace BefunGen.AST
 
 				return p;
 			}
+		}
+
+		public static Statement_Assignment CreateAugmentedStatement(SourceCodePosition p, Expression_ValuePointer v, Expression e)
+		{
+			return new Statement_Assignment(p, v, new Expression_Xor(p, v, e));
 		}
 	}
 
