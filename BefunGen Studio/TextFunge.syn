@@ -40,6 +40,9 @@
 					until 
 					var 
 					while 
+					switch
+					case
+					default
 				</Patterns>
 			</PatternGroup>
 			

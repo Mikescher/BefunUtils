@@ -10,10 +10,10 @@ namespace BefunGen.AST
 {
 	public class Program : ASTObject
 	{
-		//TODO RAND[n] --> RAND FROM 0 to 4^n
-		//TODO Add Switch Statement
-		//TODO Add += -= *= /= %= 
-		//TODO Add << >> ??? (Can implement nicely ?)
+		//TODO [#] Expression Inc / Dec  ==  f[i++]
+		//TODO [#] RAND[n] --> RAND FROM 0 to 4^n
+		//TODO [O] Add Switch Statement
+		//TODO [#] Add += -= *= /= %= 
 		//TODO Optimize -> StatementList in StatementList --> Include
 		//TODO Optimize -> PreCalculated Expressions (Constants, x * 0, x + 0, x * 1, == 0, != 0, etc etc)
 		//TODO Optimize -> ArrayValuePointer/DisplayArrayPointer when Indizies Constant -> Direct Link

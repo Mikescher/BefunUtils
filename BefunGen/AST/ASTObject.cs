@@ -14,7 +14,7 @@ namespace BefunGen.AST
 			"global", "goto", "if", "in", "out", 
 			"program", "quit", "rand", "repeat", "return", 
 			"stop", "then", "true", "until", "var", 
-			"while", 
+			"while", "switch", "case", "default",
 
 			"DISPLAY_WIDTH", "DISPLAY_HEIGHT",
 			

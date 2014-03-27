@@ -103,6 +103,7 @@ HexLiteral             = 0x{Hex Digit}+
                        |   <Stmt_Repeat>
                        |   <Stmt_Goto> ';'
                        |   <Stmt_Label>
+                       |   <Stmt_Switch>
 
 <SimpleStatement>      ::= <Stmt_Quit>
                        |   <Stmt_Return>
@@ -111,6 +112,7 @@ HexLiteral             = 0x{Hex Digit}+
                        |   <Stmt_Inc> 
                        |   <Stmt_Assignment>
                        |   <Stmt_Call>
+                       |   <Stmt_ModAssignment>
 
 <StatementList>        ::= <StatementList> <Statement>
                        |
@@ -126,6 +128,15 @@ HexLiteral             = 0x{Hex Digit}+
 <Stmt_In>              ::= 'in' <ValuePointer>
 
 <Stmt_Assignment>      ::= <ValuePointer> '=' <Expression>
+                        
+<Stmt_ModAssignment>   ::= <ValuePointer> '+=' <Expression>
+                       |   <ValuePointer> '-=' <Expression>
+                       |   <ValuePointer> '*=' <Expression>
+                       |   <ValuePointer> '/=' <Expression>
+                       |   <ValuePointer> '%=' <Expression>
+                       |   <ValuePointer> '&=' <Expression>
+                       |   <ValuePointer> '|=' <Expression>
+                       |   <ValuePointer> '^=' <Expression>
 
 <Stmt_Return>          ::= 'return' <Expression>
                        |   'return'
@@ -138,17 +149,23 @@ HexLiteral             = 0x{Hex Digit}+
 !#################
 
 
-<Stmt_If>              ::= 'if' '(' <Expression> ')' 'then' <StatementList> <Stmt_ElseIfList> 'end'
+<Stmt_If>              ::= 'if' <Expression> 'then' <StatementList> <Stmt_ElseIfList> 'end'
                         
-<Stmt_ElseIfList>      ::= 'elsif' '(' <Expression> ')' 'then' <StatementList> <Stmt_ElseIfList>
+<Stmt_ElseIfList>      ::= 'elsif' <Expression> 'then' <StatementList> <Stmt_ElseIfList>
                        |   'else' <StatementList>
                        |
 
-<Stmt_While>           ::= 'while' '(' <Expression> ')' 'do' <StatementList> 'end'
+<Stmt_While>           ::= 'while' <Expression> 'do' <StatementList> 'end'
 
 <Stmt_For>             ::= 'for' '(' <OptionalSimStatement> ';' <OptionalExpression> ';' <OptionalSimStatement> ')' 'do' <StatementList> 'end'
 
 <Stmt_Repeat>          ::= 'repeat' <StatementList> 'until' '(' <Expression> ')'
+
+<Stmt_Switch>          ::= 'switch' <Expression> 'begin' <Stmt_Switch_CaseList> 'end'
+                        
+<Stmt_Switch_CaseList> ::= 'case' <Value_Literal> ':' <StatementList> 'end' <Stmt_Switch_CaseList>
+                       |   'default' ':' <StatementList> 'end'
+                       |
 
 <Stmt_Goto>            ::= 'goto' Identifier
 
@@ -267,12 +284,19 @@ HexLiteral             = 0x{Hex Digit}+
 
 
 <Value>                ::= <Value_Literal>
-                       |   'rand'
+                       |   <Exp Rand>
                        |   <ValuePointer>
                        |   Identifier '(' <ExpressionList> ')'
                        |   Identifier '(' ')'
                        |   '(' <Expression> ')'
+                       |   <ValuePointer> '++'
+                       |   <ValuePointer> '--'
+                       |   '++' <ValuePointer>
+                       |   '--' <ValuePointer>
                        
+<Exp Rand>             ::= 'rand'
+                       |   'rand' '[' <Expression> ']'
+
 <ExpressionList>       ::= <ExpressionList> ',' <Expression>
                        |  <Expression>
 

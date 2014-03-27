@@ -19,7 +19,7 @@ namespace BefunGen.AST
 			{
 				case ProductionIndex.Program:
 					// <Program> ::= <Program> ::= <Header> <Constants> <GlobalVars> <MainStatements> <MethodList> <Footer>
-					result = new Program(p, (Program_Header)r.get_Data(0), ((List_VarDeclarations)r.get_Data(1)).List, ((List_VarDeclarations)r.get_Data(2)).List,	(Method)r.get_Data(3), ((List_Methods)r.get_Data(4)).List);
+					result = new Program(p, (Program_Header)r.get_Data(0), ((List_VarDeclarations)r.get_Data(1)).List, ((List_VarDeclarations)r.get_Data(2)).List, (Method)r.get_Data(3), ((List_Methods)r.get_Data(4)).List);
 					break;
 
 				case ProductionIndex.Header_Program_Identifier:
@@ -192,6 +192,11 @@ namespace BefunGen.AST
 					result = (Statement)r.get_Data(0);
 					break;
 
+				case ProductionIndex.Statement6:
+					// <Statement> ::= <Stmt_Switch>
+					result = (Statement)r.get_Data(0);
+					break;
+
 				case ProductionIndex.Simplestatement:
 					// <SimpleStatement> ::= <Stmt_Quit>
 					result = (Statement)r.get_Data(0);
@@ -224,6 +229,11 @@ namespace BefunGen.AST
 
 				case ProductionIndex.Simplestatement7:
 					// <SimpleStatement> ::= <Stmt_Call>
+					result = (Statement)r.get_Data(0);
+					break;
+
+				case ProductionIndex.Simplestatement8:
+					// // <SimpleStatement> ::= <Stmt_ModAssignment>
 					result = (Statement)r.get_Data(0);
 					break;
 
@@ -282,6 +292,38 @@ namespace BefunGen.AST
 					result = new Statement_Assignment(p, (Expression_ValuePointer)r.get_Data(0), (Expression)r.get_Data(2));
 					break;
 
+				case ProductionIndex.Stmt_modassignment_Pluseq:
+					// <Stmt_ModAssignment> ::= <ValuePointer> '+=' <Expression>
+					break;
+
+				case ProductionIndex.Stmt_modassignment_Minuseq:
+					// <Stmt_ModAssignment> ::= <ValuePointer> '-=' <Expression>
+					break;
+
+				case ProductionIndex.Stmt_modassignment_Timeseq:
+					// <Stmt_ModAssignment> ::= <ValuePointer> '*=' <Expression>
+					break;
+
+				case ProductionIndex.Stmt_modassignment_Diveq:
+					// <Stmt_ModAssignment> ::= <ValuePointer> '/=' <Expression>
+					break;
+
+				case ProductionIndex.Stmt_modassignment_Percenteq:
+					// <Stmt_ModAssignment> ::= <ValuePointer> '%=' <Expression>
+					break;
+
+				case ProductionIndex.Stmt_modassignment_Ampeq:
+					// <Stmt_ModAssignment> ::= <ValuePointer> '&=' <Expression>
+					break;
+
+				case ProductionIndex.Stmt_modassignment_Pipeeq:
+					// <Stmt_ModAssignment> ::= <ValuePointer> '|=' <Expression>
+					break;
+
+				case ProductionIndex.Stmt_modassignment_Careteq:
+					// <Stmt_ModAssignment> ::= <ValuePointer> '^=' <Expression>
+					break;
+
 				case ProductionIndex.Stmt_return_Return:
 					// <Stmt_Return> ::= return <Expression>
 					result = new Statement_Return(p, (Expression)r.get_Data(1));
@@ -302,14 +344,14 @@ namespace BefunGen.AST
 					result = new Statement_MethodCall(p, getStrData(r));
 					break;
 
-				case ProductionIndex.Stmt_if_If_Lparen_Rparen_Then_End:
-					// <Stmt_If> ::= if '(' <Expression> ')' then <StatementList> <Stmt_ElseIfList> end
-					result = new Statement_If(p, (Expression)r.get_Data(2), getStmtListAsStatement(p, r, 5), (Statement)r.get_Data(6));
+				case ProductionIndex.Stmt_if_If_Then_End:
+					// <Stmt_If> ::= if <Expression> then <StatementList> <Stmt_ElseIfList> end
+					result = new Statement_If(p, (Expression)r.get_Data(1), getStmtListAsStatement(p, r, 3), (Statement)r.get_Data(4));
 					break;
 
-				case ProductionIndex.Stmt_elseiflist_Elsif_Lparen_Rparen_Then:
-					// <Stmt_ElseIfList> ::= elsif '(' <Expression> ')' then <StatementList> <Stmt_ElseIfList>
-					result = new Statement_If(p, (Expression)r.get_Data(2), getStmtListAsStatement(p, r, 5), (Statement)r.get_Data(6));
+				case ProductionIndex.Stmt_elseiflist_Elsif_Then:
+					// <Stmt_ElseIfList> ::= elsif <Expression> then <StatementList> <Stmt_ElseIfList>
+					result = new Statement_If(p, (Expression)r.get_Data(1), getStmtListAsStatement(p, r, 3), (Statement)r.get_Data(4));
 					break;
 
 				case ProductionIndex.Stmt_elseiflist_Else:
@@ -322,9 +364,9 @@ namespace BefunGen.AST
 					result = new Statement_NOP(p);
 					break;
 
-				case ProductionIndex.Stmt_while_While_Lparen_Rparen_Do_End:
-					// <Stmt_While> ::= while '(' <Expression> ')' do <StatementList> end
-					result = new Statement_While(p, (Expression)r.get_Data(2), getStmtListAsStatement(p, r, 5));
+				case ProductionIndex.Stmt_while_While_Do_End:
+					// <Stmt_While> ::= while <Expression> do <StatementList> end
+					result = new Statement_While(p, (Expression)r.get_Data(1), getStmtListAsStatement(p, r, 3));
 					break;
 
 				case ProductionIndex.Stmt_for_For_Lparen_Semi_Semi_Rparen_Do_End:
@@ -335,6 +377,22 @@ namespace BefunGen.AST
 				case ProductionIndex.Stmt_repeat_Repeat_Until_Lparen_Rparen:
 					// <Stmt_Repeat> ::= repeat <StatementList> until '(' <Expression> ')'
 					result = new Statement_RepeatUntil(p, (Expression)r.get_Data(4), getStmtListAsStatement(p, r, 1));
+					break;
+
+				case ProductionIndex.Stmt_switch_Switch_Begin_End:
+					// <Stmt_Switch> ::= switch <Expression> begin <Stmt_Switch_CaseList> end
+					break;
+
+				case ProductionIndex.Stmt_switch_caselist_Case_Colon_End:
+					// <Stmt_Switch_CaseList> ::= case <Value_Literal> ':' <StatementList> end <Stmt_Switch_CaseList>
+					break;
+
+				case ProductionIndex.Stmt_switch_caselist_Default_Colon_End:
+					// <Stmt_Switch_CaseList> ::= default ':' <StatementList> end
+					break;
+
+				case ProductionIndex.Stmt_switch_caselist:
+					// <Stmt_Switch_CaseList> ::= 
 					break;
 
 				case ProductionIndex.Stmt_goto_Goto_Identifier:
@@ -732,12 +790,11 @@ namespace BefunGen.AST
 					result = new Expression_Literal(p, (Literal_Value)r.get_Data(0));
 					break;
 
-				case ProductionIndex.Value_Rand:
-					// <Value> ::= rand
-					result = new Expression_Rand(p);
+				case ProductionIndex.Value2:
+					// <Value> ::= <Exp Rand>
 					break;
 
-				case ProductionIndex.Value2:
+				case ProductionIndex.Value3:
 					// <Value> ::= <ValuePointer>
 					result = (Expression_ValuePointer)r.get_Data(0);
 					break;
@@ -755,6 +812,30 @@ namespace BefunGen.AST
 				case ProductionIndex.Value_Lparen_Rparen:
 					// <Value> ::= '(' <Expression> ')'
 					result = (Expression)r.get_Data(1);
+					break;
+
+				case ProductionIndex.Value_Plusplus:
+					// <Value> ::= <ValuePointer> '++'
+					break;
+
+				case ProductionIndex.Value_Minusminus:
+					// <Value> ::= <ValuePointer> '--'
+					break;
+
+				case ProductionIndex.Value_Plusplus2:
+					// <Value> ::= '++' <ValuePointer>
+					break;
+
+				case ProductionIndex.Value_Minusminus2:
+					// <Value> ::= '--' <ValuePointer>
+					break;
+
+				case ProductionIndex.Exprand_Rand:
+					// <Exp Rand> ::= rand
+					break;
+
+				case ProductionIndex.Exprand_Rand_Lbracket_Rbracket:
+					// <Exp Rand> ::= rand '[' <Expression> ']'
 					break;
 
 				case ProductionIndex.Expressionlist_Comma:
