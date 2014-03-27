@@ -302,6 +302,15 @@ namespace BefunGen.AST
 		public abstract CodePiece generateCodeSingleY(bool reversed);
 	}
 
+	public abstract class Expression_Rand : Expression
+	{
+		public Expression_Rand(SourceCodePosition pos)
+			: base(pos)
+		{
+			//--
+		}
+	}
+
 	#endregion
 
 	#region ValuePointer
@@ -503,6 +512,26 @@ namespace BefunGen.AST
 		{
 			Target_X.linkResultTypes(owner);
 			Target_Y.linkResultTypes(owner);
+
+			BType wanted = new BType_Int(Position);
+			BType present_X = Target_X.getResultType();
+			BType present_Y = Target_Y.getResultType();
+
+			if (present_X != wanted)
+			{
+				if (present_X.isImplicitCastableTo(wanted))
+					Target_X = new Expression_Cast(Position, wanted, Target_X);
+				else
+					throw new ImplicitCastException(Position, present_X, wanted);
+			}
+
+			if (present_Y != wanted)
+			{
+				if (present_Y.isImplicitCastableTo(wanted))
+					Target_Y = new Expression_Cast(Position, wanted, Target_Y);
+				else
+					throw new ImplicitCastException(Position, present_Y, wanted);
+			}
 		}
 
 		public override BType getResultType()
@@ -1891,9 +1920,9 @@ namespace BefunGen.AST
 		}
 	}
 
-	public class Expression_Rand : Expression
+	public class Expression_Boolean_Rand : Expression_Rand
 	{
-		public Expression_Rand(SourceCodePosition pos)
+		public Expression_Boolean_Rand(SourceCodePosition pos)
 			: base(pos)
 		{
 			//--
@@ -1966,6 +1995,92 @@ namespace BefunGen.AST
 			{
 				p.reverseX(true);
 			}
+
+			return p;
+		}
+	}
+
+	public class Expression_Base4_Rand : Expression_Rand
+	{
+		public Expression Exponent;
+
+		public Expression_Base4_Rand(SourceCodePosition pos, Expression exp)
+			: base(pos)
+		{
+			Exponent = exp;
+		}
+
+		public override string getDebugString()
+		{
+			return "#RAND_B4 [" + Exponent.getDebugString() + "]";
+		}
+
+		public override void linkVariables(Method owner)
+		{
+			Exponent.linkVariables(owner);
+		}
+
+		public override Expression inlineConstants()
+		{
+			Exponent = Exponent.inlineConstants();
+			return this;
+		}
+
+		public override void addressCodePoints()
+		{
+			//NOP
+		}
+
+		public override void linkResultTypes(Method owner)
+		{
+			Exponent.linkResultTypes(owner);
+
+			BType wanted = new BType_Int(Position);
+			BType present = Exponent.getResultType();
+
+			if (present != wanted)
+			{
+				if (present.isImplicitCastableTo(wanted))
+					Exponent = new Expression_Cast(Position, wanted, Exponent);
+				else
+					throw new ImplicitCastException(Position, present, wanted);
+			}
+		}
+
+		public override void linkMethods(Program owner)
+		{
+			//NOP
+		}
+
+		public override BType getResultType()
+		{
+			return new BType_Int(Position);
+		}
+
+		public override CodePiece generateCode(bool reversed)
+		{
+			CodePiece p = new CodePiece();
+
+			if (reversed)
+			{
+				#region Reversed
+
+				p.AppendRight(CodePieceStore.Base4DigitJoiner(reversed));
+				p.AppendRight(CodePieceStore.RandomDigitGenerator(Exponent.generateCode(reversed), reversed));
+
+				#endregion
+			}
+			else
+			{
+				#region Normal
+
+				p.AppendRight(CodePieceStore.RandomDigitGenerator(Exponent.generateCode(reversed), reversed));
+				p.AppendRight(CodePieceStore.Base4DigitJoiner(reversed));
+
+				#endregion
+			}
+
+			p.normalizeX();
 
 			return p;
 		}

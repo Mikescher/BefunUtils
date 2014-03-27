@@ -155,8 +155,8 @@ PROGRAM MazeGen : DISPLAY[131, 51]
 	 	ox = ox % DISPLAY_WIDTH;
 	 	oy = oy % DISPLAY_HEIGHT;
 	 
-		FOR (fy = 0; fy < DISPLAY_HEIGHT - 1; fy++) DO
-			FOR (fx = 0; fx < DISPLAY_WIDTH - 1; fx++) DO
+		FOR (fy = 0; fy < DISPLAY_HEIGHT; fy++) DO
+			FOR (fx = 0; fx < DISPLAY_WIDTH; fx++) DO
 				x = (fx + ox) % DISPLAY_WIDTH;
 				y = (fy + oy) % DISPLAY_HEIGHT;
 

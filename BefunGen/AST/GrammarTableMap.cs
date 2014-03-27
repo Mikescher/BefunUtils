@@ -800,6 +800,7 @@ namespace BefunGen.AST
 
 				case ProductionIndex.Value2:
 					// <Value> ::= <Exp Rand>
+					result = (Expression_Rand)r.get_Data(0);
 					break;
 
 				case ProductionIndex.Value3:
@@ -840,10 +841,12 @@ namespace BefunGen.AST
 
 				case ProductionIndex.Exprand_Rand:
 					// <Exp Rand> ::= rand
+					result = new Expression_Boolean_Rand(p);
 					break;
 
 				case ProductionIndex.Exprand_Rand_Lbracket_Rbracket:
 					// <Exp Rand> ::= rand '[' <Expression> ']'
+					result = new Expression_Base4_Rand(p, (Expression)r.get_Data(2));
 					break;
 
 				case ProductionIndex.Expressionlist_Comma:

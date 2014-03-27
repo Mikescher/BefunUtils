@@ -1,15 +1,13 @@
 ﻿using BefunGen.AST.CodeGen.NumberCode;
-using BefunGen.AST.Exceptions;
 using BefunGen.MathExtensions;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace BefunGen.AST.CodeGen
 {
 	public static class CodePieceStore
 	{
+		#region ReadArrayToStack
+
 		public static CodePiece ReadArrayToStack(VarDeclaration_Array v, bool reversed)
 		{
 			return ReadArrayToStack(v.Size, v.CodePositionX, v.CodePositionY, reversed);
@@ -111,8 +109,8 @@ namespace BefunGen.AST.CodeGen
 				p.AppendRight(BCHelper.Stack_Pop);
 
 				p[bot_start, 1] = BCHelper.PC_Up;
-				p[bot_start+1, 1] = BCHelper.Sub;
-				p[bot_start+2, 1] = BCHelper.Digit_1;
+				p[bot_start + 1, 1] = BCHelper.Sub;
+				p[bot_start + 2, 1] = BCHelper.Digit_1;
 				p[bot_end, 1] = BCHelper.PC_Left;
 
 				p.AppendLeft(p_len);
@@ -125,6 +123,10 @@ namespace BefunGen.AST.CodeGen
 				return p;
 			}
 		}
+
+		#endregion
+
+		#region WriteArrayFromStack
 
 		public static CodePiece WriteArrayFromStack(VarDeclaration_Array v, bool reversed)
 		{
@@ -181,9 +183,9 @@ namespace BefunGen.AST.CodeGen
 				p[3, 0] = BCHelper.Sub;
 
 				p.AppendRight(p_len);
-				
+
 				p.AppendRight(BCHelper.Reflect_Set);
-				
+
 				p.AppendRight(p_ary);
 
 				p.AppendRight(BCHelper.Add);
@@ -214,9 +216,9 @@ namespace BefunGen.AST.CodeGen
 					#region Generate_Bottom
 
 					p_bottom.AppendRight(p_tpx_r);
-					
+
 					p_bottom.AppendRight(BCHelper.Stack_Dup);
-					
+
 					p_bottom.AppendRight(p_tpy_r);
 
 					p_bottom.AppendRight(BCHelper.Reflect_Get);
@@ -329,7 +331,7 @@ namespace BefunGen.AST.CodeGen
 				return p;
 			}
 		}
-	
+
 		public static CodePiece WriteArrayFromReversedStack(int arrLen, int arrX, int arrY, bool reversed)
 		{
 			// Normally Arrays are reversed on Stack -> this Method is for the reversed case --> Stack is normal on stack
@@ -520,6 +522,10 @@ namespace BefunGen.AST.CodeGen
 			}
 		}
 
+		#endregion
+
+		#region VerticalLaneTurnout
+
 		public static CodePiece VerticalLaneTurnout_Test()
 		{
 			// #
@@ -576,6 +582,8 @@ namespace BefunGen.AST.CodeGen
 			}
 		}
 
+		#endregion
+
 		public static CodePiece BooleanStackFlooder()
 		{
 			//Stack Flooder ALWAYS reversed (right -> left)
@@ -624,7 +632,8 @@ namespace BefunGen.AST.CodeGen
 		{
 			CodePiece p = CodePiece.CombineHorizontal(NumberCodeHelper.generateCode(pos.X), NumberCodeHelper.generateCode(pos.Y), new CodePiece(BCHelper.Reflect_Get));
 
-			if (reversed) p.reverseX(false);
+			if (reversed)
+				p.reverseX(false);
 
 			return p;
 		}
@@ -633,7 +642,8 @@ namespace BefunGen.AST.CodeGen
 		{
 			CodePiece p = CodePiece.CombineHorizontal(NumberCodeHelper.generateCode(pos.X), NumberCodeHelper.generateCode(pos.Y), new CodePiece(BCHelper.Reflect_Set));
 
-			if (reversed) p.reverseX(false);
+			if (reversed)
+				p.reverseX(false);
 
 			return p;
 		}
@@ -642,8 +652,8 @@ namespace BefunGen.AST.CodeGen
 		{
 			CodePiece p = new CodePiece();
 
-			CodePiece p_r     = NumberCodeHelper.generateCode(range, reversed);
-			CodePiece p_r_rev = NumberCodeHelper.generateCode(range, ! reversed);
+			CodePiece p_r = NumberCodeHelper.generateCode(range, reversed);
+			CodePiece p_r_rev = NumberCodeHelper.generateCode(range, !reversed);
 
 			if (reversed)
 			{
@@ -691,7 +701,7 @@ namespace BefunGen.AST.CodeGen
 				// :0`#v_^#1++-%{R}>#<
 				//     >{R}%       ^
 
-				CodePiece p_top = CodePiece.CombineHorizontal( CodePiece.ParseFromLine(@">:01-*:"), p_r );
+				CodePiece p_top = CodePiece.CombineHorizontal(CodePiece.ParseFromLine(@">:01-*:"), p_r);
 				CodePiece p_mid = CodePiece.CombineHorizontal(CodePiece.ParseFromLine(@":0`#v_^#1++-%"), p_r_rev);
 				CodePiece p_bot = CodePiece.CombineHorizontal(new CodePiece(BCHelper.PC_Right), p_r, new CodePiece(BCHelper.Modulo));
 
@@ -718,5 +728,97 @@ namespace BefunGen.AST.CodeGen
 
 			return p;
 		}
+
+		#region Base4 Random Generator
+
+		public static CodePiece RandomDigitGenerator(CodePiece len, bool reversed)
+		{
+			CodePiece p = new CodePiece();
+
+			if (reversed)
+			{
+				#region Reversed
+				//  >       v<   
+				//  1  v0<  -1   
+				// <|:\<1?v#<|`0:
+				//  |  ^2 < 0$   
+				// ^<  ^3<  ^<   
+				#endregion
+
+				p.SetAt(0, -2, CodePiece.ParseFromLine(@"@>       v<@@@", true, true));
+				p.SetAt(0, -1, CodePiece.ParseFromLine(@"@1@@v0<  -1@@@", true, true));
+				p.SetAt(0, 00, CodePiece.ParseFromLine(@"<|:\<1?v#<|`0:", true, true));
+				p.SetAt(0, +1, CodePiece.ParseFromLine(@" |@@^2 <@0$@@@", true, true));
+				p.SetAt(0, +2, CodePiece.ParseFromLine(@"^<@@^3<@@^<@@@", true, true));
+
+				p.AppendRight(len);
+
+				p.AppendRight(BCHelper.Digit_9);
+
+			}
+			else
+			{
+				#region Normal
+				//    >v       < 
+				//    1-  >0v  1 
+				// :0`|>#v?1>\:|>
+				//    $0 > 2^  | 
+				//    >^  >3^  >^
+
+				p.SetAt(0, -2, CodePiece.ParseFromLine(@"@@@>v       <@", true, true));
+				p.SetAt(0, -1, CodePiece.ParseFromLine(@"@@@1-@@>0v@@1@", true, true));
+				p.SetAt(0, 00, CodePiece.ParseFromLine(@":0`|>#v?1>\:|>", true, true));
+				p.SetAt(0, +1, CodePiece.ParseFromLine(@"@@@$0@> 2^@@|@", true, true));
+				p.SetAt(0, +2, CodePiece.ParseFromLine(@"@@@>^@@>3^@@>^", true, true));
+
+				p.AppendLeft(len);
+
+				p.AppendLeft(BCHelper.Digit_9);
+
+				#endregion
+			}
+
+			p.normalizeX();
+
+			return p;
+		}
+
+		public static CodePiece Base4DigitJoiner(bool reversed)
+		{
+			CodePiece p = new CodePiece();
+
+			if (reversed)
+			{
+				#region Reversed
+				//  v<     
+				// $<|`4:\<				
+				//   >\4*+^
+
+				p.SetAt(0, -1, CodePiece.ParseFromLine(@"@v<@@@@@", true, true));
+				p.SetAt(0, 00, CodePiece.ParseFromLine(@"$<|`4:\<", true, true));
+				p.SetAt(0, +1, CodePiece.ParseFromLine(@"@@>\4*+^", true, true));
+
+				#endregion
+			}
+			else
+			{
+				#region Normal
+				//      >v
+				// >\:4`|>$
+				// ^+*4\<
+
+				p.SetAt(0, -1, CodePiece.ParseFromLine(@"@@@@@>v@", true, true));
+				p.SetAt(0, 00, CodePiece.ParseFromLine(@">\:4`|>$", true, true));
+				p.SetAt(0, +1, CodePiece.ParseFromLine(@"^+*4\<@@", true, true));
+
+				#endregion
+			}
+
+			p.normalizeX();
+
+			return p;
+		}
+
+		#endregion
 	}
 }

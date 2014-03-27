@@ -55,7 +55,7 @@ namespace BefunGen.AST.CodeGen
 		//	return CodePiece.ParseFromLine(string.Format(l, cpparams.Select(p => p.ToSimpleString()).ToArray()), interpretSpaceAsWalkway);
 		//}
 
-		public static CodePiece ParseFromLine(string l, bool interpretSpaceAsWalkway = false)
+		public static CodePiece ParseFromLine(string l, bool interpretSpaceAsWalkway = false, bool interpretAtAsNOP = false)
 		{
 			CodePiece p = new CodePiece();
 
@@ -63,10 +63,34 @@ namespace BefunGen.AST.CodeGen
 			{
 				char c = l[i];
 
-				if (c == ' ' && !interpretSpaceAsWalkway)
-					throw new InternalCodeGenException(); // Space is undefinied: NOP <> Walkway
+				BefungeCommand cmd;
 
-				BefungeCommand cmd = BCHelper.FindCommand(c);
+				if (c == ' ')
+				{
+					if (interpretSpaceAsWalkway)
+					{
+						cmd = BCHelper.Walkway;
+					}
+					else
+					{
+						throw new InternalCodeGenException(); // Space is undefinied: NOP <> Walkway
+					}
+				}
+				else if (c == '@')
+				{
+					if (interpretAtAsNOP)
+					{
+						cmd = BCHelper.Unused;
+					}
+					else
+					{
+						cmd = BCHelper.FindCommand(c);
+					}
+				}
+				else
+				{
+					cmd = BCHelper.FindCommand(c);
+				}
 
 				p[i, 0] = cmd;
 			}

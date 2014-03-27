@@ -4,7 +4,7 @@
  *
 */
 
-program example : display[19, 19]
+program example : display[51, 19]
 	CONST
 		CHAR CHR_UNSET := '@';
 		CHAR CHR_WALL  := '#';
@@ -16,9 +16,14 @@ program example : display[19, 19]
 	begin
 		out "Example Project 00\r\n\r\n";
 		
+		getRandAverage(512);
+		
+		OUT "\r\n";
+
 		//Insert Name
 		name = getInputStr();
 		
+		i = 0;
 		while (i < 32) do
 			out name[i];
 			i++;
@@ -56,6 +61,32 @@ program example : display[19, 19]
 		fizzbuzz();
 
 	end
+
+	void getRandAverage(int SamSize)
+	var
+	 	int i;
+		int rv;
+		int rs;
+	begin
+
+		rs = 0;
+		FOR (i = 0 ; i < SamSize ; i++) DO
+			rv = RAND[4];
+			rs += rv;
+			//OUT rv;
+
+			//OUT "\r\n";
+		END
+
+		
+		OUT "Sum: ";
+		OUT rs;
+		OUT "\r\n";
+
+		OUT "Averag: ";
+		OUT (rs / SamSize);
+		OUT "\r\n";
+	END
 
 	void DoFiber(int max)
 	var
@@ -268,8 +299,8 @@ program example : display[19, 19]
 	 	ox = ox % DISPLAY_WIDTH;
 	 	oy = oy % DISPLAY_HEIGHT;
 	 
-		FOR (fy = 0; fy < DISPLAY_HEIGHT - 1; fy++) DO
-			FOR (fx = 0; fx < DISPLAY_WIDTH - 1; fx++) DO
+		FOR (fy = 0; fy < DISPLAY_HEIGHT; fy++) DO
+			FOR (fx = 0; fx < DISPLAY_WIDTH; fx++) DO
 				x = (fx + ox) % DISPLAY_WIDTH;
 				y = (fy + oy) % DISPLAY_HEIGHT;
 

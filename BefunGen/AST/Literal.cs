@@ -212,7 +212,7 @@ namespace BefunGen.AST
 					p.AppendLeft(NumberCodeHelper.generateCode(val, reversed));
 			}
 
-			p.normalize();
+			p.normalizeX();
 
 			return p;
 		}
@@ -283,7 +283,7 @@ namespace BefunGen.AST
 				}
 			}
 
-			p.normalize();
+			p.normalizeX();
 
 			p.TrimDoubleStringMode();
 
@@ -351,7 +351,7 @@ namespace BefunGen.AST
 				}
 			}
 
-			p.normalize();
+			p.normalizeX();
 
 			return p;
 		}
@@ -417,7 +417,7 @@ namespace BefunGen.AST
 				}
 			}
 
-			p.normalize();
+			p.normalizeX();
 
 			return p;
 		}
