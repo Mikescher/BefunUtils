@@ -25,6 +25,8 @@ namespace BefunGen.AST.CodeGen
 
 		public int Size { get { return Width * Height; } }
 
+		private HashSet<CodeTag> tagCache = new HashSet<CodeTag>();
+
 		private List<List<BefungeCommand>> commandArr = new List<List<BefungeCommand>>();
 
 		public BefungeCommand this[int x, int y] { get { return get(x, y); } set { set(x, y, value); } }
@@ -167,6 +169,9 @@ namespace BefunGen.AST.CodeGen
 				throw new InvalidCodeManipulationException(string.Format("Duplicate Tag in CodePiece : [{0},{1}] = '{2}' = [{3},{4}])", x, y, value.Tag.ToString(), findTag(value.Tag).X, findTag(value.Tag).Y));
 
 			commandArr[x - MinX][y - MinY] = value;
+
+			if (value.hasTag())
+				tagCache.Add(value.Tag);
 		}
 
 		private void forceSet(int x, int y, BefungeCommand value) // Suppresses CodeModificationException
@@ -174,7 +179,15 @@ namespace BefunGen.AST.CodeGen
 			if (!IsIncluded(x, y))
 				expand(x, y);
 
+			BefungeCommand prev = commandArr[x - MinX][y - MinY];
+
+			if (prev.hasTag())
+				tagCache.Remove(prev.Tag);
+
 			commandArr[x - MinX][y - MinY] = value;
+
+			if (value.hasTag())
+				tagCache.Add(value.Tag);
 		}
 
 		private BefungeCommand get(int x, int y)
@@ -231,6 +244,9 @@ namespace BefunGen.AST.CodeGen
 
 		public TagLocation findTag(CodeTag tag)
 		{
+			if (!tagCache.Contains(tag))
+				return null;
+
 			for (int x = MinX; x < MaxX; x++)
 			{
 				for (int y = MinY; y < MaxY; y++)
@@ -245,7 +261,7 @@ namespace BefunGen.AST.CodeGen
 
 		public bool hasTag(CodeTag tag)
 		{
-			return tag != null && findTag(tag) != null;
+			return tag != null && tagCache.Contains(tag);
 		}
 
 		public bool hasActiveTag(params Type[] filter)
@@ -291,6 +307,15 @@ namespace BefunGen.AST.CodeGen
 			BefungeCommand newcmd = new BefungeCommand(cmd.Type, cmd.Param, tag);
 
 			forceSet(x, y, newcmd);
+		}
+
+
+
+		private void recalcTagCache()
+		{
+			tagCache.Clear();
+
+			findAllTags(typeof(CodeTag)).ForEach(p => tagCache.Add(p.Tag));
 		}
 
 		#endregion
@@ -871,6 +896,8 @@ namespace BefunGen.AST.CodeGen
 			commandArr.RemoveAt(abs);
 
 			MaxX = MaxX - 1;
+
+			recalcTagCache();
 		}
 
 		public void RemoveRow(int row)
@@ -883,6 +910,8 @@ namespace BefunGen.AST.CodeGen
 			}
 
 			MaxY = MaxY - 1;
+
+			recalcTagCache();
 		}
 
 		public void reverseX(bool nonpedantic)
@@ -929,6 +958,8 @@ namespace BefunGen.AST.CodeGen
 
 			MaxX = 0;
 			MaxY = 0;
+
+			recalcTagCache();
 		}
 
 		public void AddXOffset(int ox)
