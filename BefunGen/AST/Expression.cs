@@ -311,6 +311,51 @@ namespace BefunGen.AST
 		}
 	}
 
+	public abstract class Expression_Crement : Expression
+	{
+		public Expression_ValuePointer Target;
+
+		public Expression_Crement(SourceCodePosition pos, Expression_ValuePointer v)
+			: base(pos)
+		{
+			Target = v;
+		}
+
+		public override void linkVariables(Method owner)
+		{
+			Target.linkVariables(owner);
+		}
+
+		public override Expression inlineConstants()
+		{
+			Target.inlineConstants();
+			return this;
+		}
+
+		public override void addressCodePoints()
+		{
+			Target.addressCodePoints();
+		}
+
+		public override void linkMethods(Program owner)
+		{
+			Target.linkMethods(owner);
+		}
+
+		public override BType getResultType()
+		{
+			return Target.getResultType();
+		}
+
+		public override void linkResultTypes(Method owner)
+		{
+			Target.linkResultTypes(owner);
+
+			if (!(Target.getResultType() is BType_Int || Target.getResultType() is BType_Digit || Target.getResultType() is BType_Char))
+				throw new ImplicitCastException(Position, Target.getResultType(), new BType_Int(Position), new BType_Digit(Position), new BType_Char(Position));
+		}
+	}
+
 	#endregion
 
 	#region ValuePointer
@@ -1866,6 +1911,210 @@ namespace BefunGen.AST
 	}
 
 	#endregion Unary
+
+	#region Inc/Decrement
+
+	public class Expression_PostIncrement : Expression_Crement
+	{
+		public Expression_PostIncrement(SourceCodePosition pos, Expression_ValuePointer v)
+			: base(pos, v)
+		{
+			//--
+		}
+
+		public override string getDebugString()
+		{
+			return string.Format("{0}++", Target.getDebugString());
+		}
+
+		public override CodePiece generateCode(bool reversed)
+		{
+			CodePiece p = new CodePiece();
+
+			if (reversed)
+			{
+				p.AppendLeft(Target.generateCode(reversed));
+
+				p.AppendLeft(BCHelper.Stack_Dup);
+
+				p.AppendLeft(BCHelper.Digit_1);
+				p.AppendLeft(BCHelper.Add);
+
+				p.AppendLeft(Target.generateCodeSingle(reversed));
+
+				p.AppendLeft(BCHelper.Reflect_Set);
+			}
+			else
+			{
+				p.AppendRight(Target.generateCode(reversed));
+
+				p.AppendRight(BCHelper.Stack_Dup);
+
+				p.AppendRight(BCHelper.Digit_1);
+				p.AppendRight(BCHelper.Add);
+
+				p.AppendRight(Target.generateCodeSingle(reversed));
+
+				p.AppendRight(BCHelper.Reflect_Set);
+			}
+
+			p.normalizeX();
+
+			return p;
+		}
+	}
+
+	public class Expression_PreIncrement : Expression_Crement
+	{
+		public Expression_PreIncrement(SourceCodePosition pos, Expression_ValuePointer v)
+			: base(pos, v)
+		{
+			//--
+		}
+
+		public override string getDebugString()
+		{
+			return string.Format("++{0}", Target.getDebugString());
+		}
+
+		public override CodePiece generateCode(bool reversed)
+		{
+			CodePiece p = new CodePiece();
+
+			if (reversed)
+			{
+				p.AppendLeft(Target.generateCode(reversed));
+
+				p.AppendLeft(BCHelper.Digit_1);
+				p.AppendLeft(BCHelper.Add);
+
+				p.AppendLeft(BCHelper.Stack_Dup);
+
+				p.AppendLeft(Target.generateCodeSingle(reversed));
+
+				p.AppendLeft(BCHelper.Reflect_Set);
+			}
+			else
+			{
+				p.AppendRight(Target.generateCode(reversed));
+
+				p.AppendRight(BCHelper.Digit_1);
+				p.AppendRight(BCHelper.Add);
+
+				p.AppendRight(BCHelper.Stack_Dup);
+
+				p.AppendRight(Target.generateCodeSingle(reversed));
+
+				p.AppendRight(BCHelper.Reflect_Set);
+			}
+
+			p.normalizeX();
+
+			return p;
+		}
+	}
+
+	public class Expression_PostDecrement : Expression_Crement
+	{
+		public Expression_PostDecrement(SourceCodePosition pos, Expression_ValuePointer v)
+			: base(pos, v)
+		{
+			//--
+		}
+
+		public override string getDebugString()
+		{
+			return string.Format("{0}--", Target.getDebugString());
+		}
+
+		public override CodePiece generateCode(bool reversed)
+		{
+			CodePiece p = new CodePiece();
+
+			if (reversed)
+			{
+				p.AppendLeft(Target.generateCode(reversed));
+
+				p.AppendLeft(BCHelper.Stack_Dup);
+
+				p.AppendLeft(BCHelper.Digit_1);
+				p.AppendLeft(BCHelper.Sub);
+
+				p.AppendLeft(Target.generateCodeSingle(reversed));
+
+				p.AppendLeft(BCHelper.Reflect_Set);
+			}
+			else
+			{
+				p.AppendRight(Target.generateCode(reversed));
+
+				p.AppendRight(BCHelper.Stack_Dup);
+
+				p.AppendRight(BCHelper.Digit_1);
+				p.AppendRight(BCHelper.Sub);
+
+				p.AppendRight(Target.generateCodeSingle(reversed));
+
+				p.AppendRight(BCHelper.Reflect_Set);
+			}
+
+			p.normalizeX();
+
+			return p;
+		}
+	}
+
+	public class Expression_PreDecrement : Expression_Crement
+	{
+		public Expression_PreDecrement(SourceCodePosition pos, Expression_ValuePointer v)
+			: base(pos, v)
+		{
+			//--
+		}
+
+		public override string getDebugString()
+		{
+			return string.Format("--{0}", Target.getDebugString());
+		}
+
+		public override CodePiece generateCode(bool reversed)
+		{
+			CodePiece p = new CodePiece();
+
+			if (reversed)
+			{
+				p.AppendLeft(Target.generateCode(reversed));
+
+				p.AppendLeft(BCHelper.Digit_1);
+				p.AppendLeft(BCHelper.Sub);
+
+				p.AppendLeft(BCHelper.Stack_Dup);
+
+				p.AppendLeft(Target.generateCodeSingle(reversed));
+
+				p.AppendLeft(BCHelper.Reflect_Set);
+			}
+			else
+			{
+				p.AppendRight(Target.generateCode(reversed));
+
+				p.AppendRight(BCHelper.Digit_1);
+				p.AppendRight(BCHelper.Sub);
+
+				p.AppendRight(BCHelper.Stack_Dup);
+
+				p.AppendRight(Target.generateCodeSingle(reversed));
+
+				p.AppendRight(BCHelper.Reflect_Set);
+			}
+
+			p.normalizeX();
+
+			return p;
+		}
+	}
+
+	#endregion
 
 	#region Other
 

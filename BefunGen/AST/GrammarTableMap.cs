@@ -829,18 +829,22 @@ namespace BefunGen.AST
 
 				case ProductionIndex.Value_Plusplus:
 					// <Value> ::= <ValuePointer> '++'
+					result = new Expression_PostIncrement(p, (Expression_ValuePointer)r.get_Data(0));
 					break;
 
 				case ProductionIndex.Value_Minusminus:
 					// <Value> ::= <ValuePointer> '--'
+					result = new Expression_PostDecrement(p, (Expression_ValuePointer)r.get_Data(0));
 					break;
 
 				case ProductionIndex.Value_Plusplus2:
 					// <Value> ::= '++' <ValuePointer>
+					result = new Expression_PreIncrement(p, (Expression_ValuePointer)r.get_Data(1));
 					break;
 
 				case ProductionIndex.Value_Minusminus2:
 					// <Value> ::= '--' <ValuePointer>
+					result = new Expression_PreDecrement(p, (Expression_ValuePointer)r.get_Data(1));
 					break;
 
 				case ProductionIndex.Exprand_Rand:

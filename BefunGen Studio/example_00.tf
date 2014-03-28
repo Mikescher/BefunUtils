@@ -25,8 +25,7 @@ program example : display[51, 19]
 		
 		i = 0;
 		while (i < 32) do
-			out name[i];
-			i++;
+			out name[i++];
 		end
 
 		OUT "\r\n";

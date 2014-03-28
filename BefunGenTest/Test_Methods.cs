@@ -566,5 +566,68 @@ namespace BefunGenTest
 			");
 		}
 
+		[TestMethod]
+		public void codeGenTest_PostIncrement()
+		{
+			BFTestHelper.debugMethod_Output("5", "a()",
+			@"
+				void a()
+				var
+					int i;
+				begin
+					i = 5;
+
+					OUT i++;
+				end
+			");
+		}
+
+		[TestMethod]
+		public void codeGenTest_PostDecrement()
+		{
+			BFTestHelper.debugMethod_Output("5", "a()",
+			@"
+				void a()
+				var
+					int i;
+				begin
+					i = 5;
+
+					OUT i--;
+				end
+			");
+		}
+
+		[TestMethod]
+		public void codeGenTest_PreIncrement()
+		{
+			BFTestHelper.debugMethod_Output("6", "a()",
+			@"
+				void a()
+				var
+					int i;
+				begin
+					i = 5;
+
+					OUT ++i;
+				end
+			");
+		}
+
+		[TestMethod]
+		public void codeGenTest_PreDecrement()
+		{
+			BFTestHelper.debugMethod_Output("4", "a()",
+			@"
+				void a()
+				var
+					int i;
+				begin
+					i = 5;
+
+					OUT --i;
+				end
+			");
+		}
 	}
 }
