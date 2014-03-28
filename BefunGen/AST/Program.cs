@@ -10,10 +10,8 @@ namespace BefunGen.AST
 {
 	public class Program : ASTObject
 	{
-		//TODO [#] Expression Inc / Dec  ==  f[i++]
-		//TODO [#] RAND[n] --> RAND FROM 0 to 4^n
+		//TODO [O] Expression Inc / Dec  ==  f[i++]
 		//TODO [O] Add Switch Statement
-		//TODO [#] Add += -= *= /= %= 
 		//TODO Optimize -> StatementList in StatementList --> Include
 		//TODO Optimize -> PreCalculated Expressions (Constants, x * 0, x + 0, x * 1, == 0, != 0, etc etc)
 		//TODO Optimize -> ArrayValuePointer/DisplayArrayPointer when Indizies Constant -> Direct Link
@@ -22,6 +20,7 @@ namespace BefunGen.AST
 		//TODO Optimize -> Remove NOP - Switch Cases
 		//TODO Optimize -> Empty StatementLists => NOP
 		//TODO Optimize -> Remove NOP's in the middle of StatementLists
+		//TODO UserException -> Return in MainStatement
 
 		public string Identifier;
 

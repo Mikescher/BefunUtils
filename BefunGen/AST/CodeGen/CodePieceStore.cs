@@ -820,5 +820,49 @@ namespace BefunGen.AST.CodeGen
 		}
 
 		#endregion
+
+		#region Switch Statement
+
+		public static CodePiece SwitchStatementTester(bool reversed)
+		{
+			//   >1v
+			//   +v<
+			// -:|>\
+			//   +  
+			//   >  
+			CodePiece p = new CodePiece();
+
+			p.SetAt(0, -2, CodePiece.ParseFromLine(@"@@>1v", true, true));
+			p.SetAt(0, -1, CodePiece.ParseFromLine(@"@@+v<", true, true));
+			p.SetAt(0, 00, CodePiece.ParseFromLine(@"-:|>\", true, true));
+			p.SetAt(0, +1, CodePiece.ParseFromLine(@"@@+@@", true, true));
+			p.SetAt(0, +2, CodePiece.ParseFromLine(@"  >  ", true, true));
+
+			if (reversed)
+				p.reverseX(true);
+
+			p.normalizeX();
+			return p;
+		}
+
+		public static CodePiece SwitchLaneTurnout()
+		{
+			// v_v
+			// >v
+
+			CodePiece p = new CodePiece();
+
+			p[0, 0] = BCHelper.PC_Down;
+			p[1, 0] = BCHelper.If_Horizontal;
+			p[2, 0] = BCHelper.PC_Down;
+
+			p[0, 1] = BCHelper.PC_Right;
+			p[1, 1] = BCHelper.PC_Down;
+			p[2, 1] = BCHelper.Walkway;
+
+			return p;
+		}
+
+		#endregion
 	}
 }

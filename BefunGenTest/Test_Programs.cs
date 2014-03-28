@@ -285,7 +285,7 @@ end
 			BFTestHelper.debugProgram_Output("WIN", @"
 program example
 	begin
-		switch (9 * 9 / 9 - 9)
+		switch (9 * 9 / 9 / 9)
 		begin
 			case 1: 
 				OUT ''WIN'';
@@ -303,6 +303,69 @@ program example
 				OUT ''FAIL'';
 			end
 		end
+	end
+end
+");
+		}
+
+		[TestMethod]
+		public void codeGenTest_Program_switch_Common()
+		{
+			CodeGenOptions.DisplayModuloAccess = true;
+
+			BFTestHelper.debugProgram(@"
+program p 
+	begin
+		for (;;) do
+			switch RAND[1]
+			begin
+				case 0:
+					OUT ''0 '';
+				end
+				case 1:
+					OUT ''1 '';
+				end
+				case 2:
+					OUT ''2 '';
+				end
+				case 3:
+					OUT ''3 '';
+				end
+			end
+		end
+
+	end
+end
+");
+		}
+
+		[TestMethod]
+		public void codeGenTest_Program_switch_Common_Reversed()
+		{
+			CodeGenOptions.DisplayModuloAccess = true;
+
+			BFTestHelper.debugProgram(@"
+program p 
+	begin
+		OUT '''';
+		for (;;) do
+			switch RAND[1]
+			begin
+				case 0:
+					OUT ''0 '';
+				end
+				case 1:
+					OUT ''1 '';
+				end
+				case 2:
+					OUT ''2 '';
+				end
+				case 3:
+					OUT ''3 '';
+				end
+			end
+		end
+
 	end
 end
 ");

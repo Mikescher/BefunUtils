@@ -299,9 +299,9 @@ namespace BefunGen.AST.CodeGen
 
 			List<TagLocation> tl = new List<TagLocation>();
 
-			for (int x = MinX; x < MaxX; x++)
+			for (int y = MinY; y < MaxY; y++)
 			{
-				for (int y = MinY; y < MaxY; y++)
+				for (int x = MinX; x < MaxX; x++)
 				{
 					if (this[x, y].hasTag() && (all || filter.Any(f => (this[x, y].Tag.GetType().IsAssignableFrom(f)))))
 						tl.Add(new TagLocation(x, y, this[x, y]));

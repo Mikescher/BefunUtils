@@ -103,6 +103,7 @@ namespace BefunGen
 			//##########
 
 			parseThread = new Thread(work);
+			parseThread.IsBackground = true;
 			parseThread.Start();
 		}
 

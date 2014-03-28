@@ -1,5 +1,4 @@
 ﻿
-using BefunGen.MathExtensions;
 namespace BefunGen.AST.CodeGen
 {
 	public enum NumberRep
@@ -45,9 +44,9 @@ namespace BefunGen.AST.CodeGen
 		public static bool ExtendedBooleanCast = false;
 
 		// Default Values for Init operations
-		public static byte DefaultNumeralValue   = 0;
+		public static byte DefaultNumeralValue = 0;
 		public static char DefaultCharacterValue = ' ';
-		public static bool DefaultBooleanValue   = false;
+		public static bool DefaultBooleanValue = false;
 
 		// Values for the Display
 		public static BefungeCommand DefaultDisplayValue = BCHelper.chr(' ');

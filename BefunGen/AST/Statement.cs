@@ -3488,18 +3488,286 @@ namespace BefunGen.AST
 
 		public override CodePiece generateCode(bool reversed)
 		{
-			throw new BGNotImplementedException();
+			CodePiece p = new CodePiece();
 
 			if (reversed)
 			{
 				#region Reversed
+				//              v1<              v1<              v1<              v1<              
+				//              >v+              >v+              >v+              >v+              
+				//<v$<   {...}  \<|:-  3\3       \<|:-  2\2       \<|:-  1\1       \<|:- 0\0  {V}  0
+				// >v             +                +                +                +              
+				//   ^            <                <                <                <     
+				// v_v
+				// >v 
+				//    ######
+				//   > "0"   v
+				//    ######
+				//^          <
+				// v_v
+				// >v
+				//    ######
+				//   > "1" 
+				//    ######
+				// v_v
+				// >v
+				//    ######
+				//   > "d" 
+				//    ######
+				p = generateCode_Top(reversed);
+
+				List<Statement> stmts = Cases.Select(pp => pp.Body).ToList();
+				stmts.Add(DefaultCase);
+
+				for (int i = 0; i < stmts.Count; i++)
+				{
+					CodePiece p_stmt = stmts[i].generateCode(false);
+
+					CodePiece turnout = CodePieceStore.SwitchLaneTurnout();
+
+					p_stmt.SetAt(p_stmt.MinX - turnout.Width, p_stmt.MinY - turnout.Height, turnout);
+
+					p_stmt.normalizeX();
+
+					p_stmt[2, 0] = BCHelper.PC_Right;
+					p_stmt.FillColWW(2, p_stmt.MinY + 2, 0);
+
+					p_stmt.FillColWW(1, p_stmt.MinY + 2, p_stmt.MaxY);
+
+					p_stmt[p_stmt.MaxX, 0] = BCHelper.PC_Down;
+					p_stmt[p_stmt.MaxX - 1, p_stmt.MaxY] = BCHelper.PC_Left;
+					p_stmt.FillColWW(p_stmt.MaxX - 1, 1, p_stmt.MaxY - 1);
+					p_stmt.FillRowWW(p_stmt.MaxY - 1, 0, p_stmt.MaxX - 1);
+					p_stmt[-1, p_stmt.MaxY - 1] = BCHelper.PC_Up_tagged(new SwitchStmt_Case_Exit());
+
+
+					p.AppendBottom(p_stmt);
+				}
+
+				List<TagLocation> sc_exits = p.findAllActiveCodeTags(typeof(SwitchStmt_Case_Exit)).OrderBy(pp => pp.Y).ToList();
+
+				int lastY = 0;
+
+				foreach (TagLocation exit in sc_exits)
+				{
+					p.CreateColWW(-1, lastY + 1, exit.Y);
+					lastY = exit.Y;
+
+					exit.Tag.deactivate();
+				}
+
+				p[-1, 0] = BCHelper.PC_Left;
+
+				p.normalizeX();
+
 				#endregion
 			}
 			else
 			{
 				#region Normal
+				//               >1v              >1v     
+				//               +v<              +v<     
+				// 0  {V}  0\0 -:|>\       1\1  -:|>\   {...}   v>
+				//               +                +             
+				//               >                >             v
+				//  v                                          $<
+				// v_v
+				// >v 
+				//    ######
+				//   > "0"                                       ^
+				//    ######
+				// v_v
+				// >v
+				//    ######
+				//   > "1"                                       ^
+				//    ######
+				// v_v
+				// >v
+				//    ######
+				//   > "d"                                       ^
+				//    ######
+				p = generateCode_Top(reversed);
+
+				List<Statement> stmts = Cases.Select(pp => pp.Body).ToList();
+				stmts.Add(DefaultCase);
+
+				for (int i = 0; i < stmts.Count; i++)
+				{
+					CodePiece p_stmt = stmts[i].generateCode(false);
+
+					CodePiece turnout = CodePieceStore.SwitchLaneTurnout();
+
+					p_stmt.SetAt(p_stmt.MinX - turnout.Width, p_stmt.MinY - turnout.Height, turnout);
+
+					p_stmt.normalizeX();
+
+					p_stmt[2, 0] = BCHelper.PC_Right;
+					p_stmt.FillColWW(2, p_stmt.MinY + 2, 0);
+
+					p_stmt.FillColWW(1, p_stmt.MinY + 2, p_stmt.MaxY);
+
+					p_stmt[p_stmt.MaxX, 0] = BCHelper.PC_Right_tagged(new SwitchStmt_Case_Exit());
+
+					p.AppendBottom(p_stmt);
+				}
+
+				List<TagLocation> sc_exits = p.findAllActiveCodeTags(typeof(SwitchStmt_Case_Exit)).OrderBy(pp => pp.Y).ToList();
+
+				int rightLaneX = p.MaxX;
+
+				p[rightLaneX, 0] = BCHelper.PC_Right;
+
+				int lastY = 0;
+
+				foreach (TagLocation exit in sc_exits)
+				{
+					p[rightLaneX, exit.Y] = BCHelper.PC_Up;
+					p.CreateRowWW(exit.Y, exit.X + 1, rightLaneX);
+					p.CreateColWW(rightLaneX, lastY + 1, exit.Y);
+					lastY = exit.Y;
+
+					exit.Tag.deactivate();
+				}
+
 				#endregion
 			}
+
+			#region Extend MehodCall-Tags
+
+			List<TagLocation> entries = p.findAllActiveCodeTags(typeof(MethodCall_HorizontalReEntry_Tag));
+			List<TagLocation> exits = p.findAllActiveCodeTags(typeof(MethodCall_HorizontalExit_Tag));
+
+			foreach (TagLocation entry in entries)
+			{
+				MethodCall_HorizontalReEntry_Tag tag_entry = entry.Tag as MethodCall_HorizontalReEntry_Tag;
+
+				p.CreateRowWW(entry.Y, p.MinX, entry.X);
+
+				tag_entry.deactivate();
+
+				p.SetTag(p.MinX, entry.Y, new MethodCall_HorizontalReEntry_Tag(tag_entry.TagParam as ICodeAddressTarget), true);
+			}
+
+			foreach (TagLocation exit in exits)
+			{
+				MethodCall_HorizontalExit_Tag tag_exit = exit.Tag as MethodCall_HorizontalExit_Tag;
+
+				p.CreateRowWW(exit.Y, exit.X + 1, p.MaxX);
+
+				tag_exit.deactivate();
+
+				p.SetTag(p.MaxX - 1, exit.Y, new MethodCall_HorizontalExit_Tag(tag_exit.TagParam), true);
+			}
+
+			#endregion
+
+			p.normalizeX();
+
+			return p;
+		}
+
+		private CodePiece generateCode_Top(bool reversed)
+		{
+			CodePiece p = new CodePiece();
+
+			if (reversed)
+			{
+				#region Reversed
+				//              v1<              v1<              v1<              v1<              
+				//              >v+              >v+              >v+              >v+              
+				// v$<   {...}  \<|:-  3\3       \<|:-  2\2       \<|:-  1\1       \<|:- 0\0  {V}  0
+				// >v             +                +                +                +              
+				//   ^            <                <                <                <              
+
+				p.AppendLeft(BCHelper.Digit_0);
+
+				p.AppendLeft(Condition.generateCode(reversed));
+
+				for (int i = 0; i < Cases.Count; i++)
+				{
+					CodePiece p_sc = new CodePiece();
+
+					Switch_Case sc = Cases[i];
+
+					p_sc.AppendLeft(sc.Value.generateCode(reversed));
+					p_sc.AppendLeft(BCHelper.Stack_Swap);
+					p_sc.AppendLeft(sc.Value.generateCode(reversed));
+
+					p_sc.FillRowWW(2, p_sc.MinX, p_sc.MaxX);
+
+					p_sc.AppendLeft(CodePieceStore.SwitchStatementTester(reversed));
+
+					p.AppendLeft(p_sc);
+				}
+
+				CodePiece p_def = new CodePiece();
+
+				p_def[0, 0] = BCHelper.PC_Down;
+				p_def[0, 1] = BCHelper.PC_Right;
+
+				p_def[1, 0] = BCHelper.Stack_Pop;
+				p_def[1, 1] = BCHelper.PC_Down;
+				p_def[1, 2] = BCHelper.Walkway;
+
+				p_def[2, 0] = BCHelper.PC_Left;
+				p_def[2, 1] = BCHelper.Walkway;
+				p_def[2, 2] = BCHelper.PC_Up;
+
+				p.AppendLeft(p_def);
+
+				#endregion
+			}
+			else
+			{
+				#region Normal
+				//               >1v              >1v              >1v              >1v    
+				//               +v<              +v<              +v<              +v<    
+				// 0  {V}  0\0 -:|>\       1\1  -:|>\       2\2  -:|>\       3\3  -:|>\  {...}   v
+				//               +                +                +                +            
+				//               >                >                >                >            v
+				//  v                                                                           $<
+
+				p.AppendRight(BCHelper.Digit_0);
+
+				p.AppendRight(Condition.generateCode(reversed));
+
+				for (int i = 0; i < Cases.Count; i++)
+				{
+					CodePiece p_sc = new CodePiece();
+
+					Switch_Case sc = Cases[i];
+
+					p_sc.AppendRight(sc.Value.generateCode(reversed));
+					p_sc.AppendRight(BCHelper.Stack_Swap);
+					p_sc.AppendRight(sc.Value.generateCode(reversed));
+
+					p_sc.FillRowWW(2, p_sc.MinX, p_sc.MaxX);
+
+					p_sc.AppendRight(CodePieceStore.SwitchStatementTester(reversed));
+
+					p.AppendRight(p_sc);
+				}
+
+				CodePiece p_def = new CodePiece();
+
+				p_def[0, 0] = BCHelper.PC_Down;
+				p_def[0, 1] = BCHelper.Walkway;
+				p_def[0, 2] = BCHelper.PC_Down;
+				p_def[0, 3] = BCHelper.PC_Left;
+
+				p.AppendRight(p_def);
+
+
+				p[1, 3] = BCHelper.PC_Down;
+				p[p.MaxX - 2, 3] = BCHelper.Stack_Pop;
+
+				p.FillRowWW(3, 2, p.MaxX - 2);
+
+				#endregion
+			}
+
+			p.normalizeX();
+			return p;
 		}
 	}
 
