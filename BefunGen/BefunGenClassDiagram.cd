@@ -1,0 +1,1304 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="BefunGen.AST.ASTObject" Collapsed="true">
+    <Position X="4.75" Y="16.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAIAAAAAAAAgAgBQAAAAAAAAAAAAAAAAAAEAAAAAA=</HashCode>
+      <FileName>AST\ASTObject.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Expression" Collapsed="true">
+    <Position X="13.25" Y="18" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAAAAAAgAAAAACAAAAAAAEIAAEAAAAAAAABA=</HashCode>
+      <FileName>AST\Expression.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Expression_Binary" Collapsed="true">
+    <Position X="15.25" Y="19.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAAAAAAgAAAAAAAAAAAAAEAAACACAAAAAABA=</HashCode>
+      <FileName>AST\Expression.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Expression_BinaryMathOperation" Collapsed="true">
+    <Position X="9.5" Y="22.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAABAAAAAAAAAAAAAAAAAAAAAAAAIAAEAAAAAAAAAA=</HashCode>
+      <FileName>AST\Expression.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Expression_BinaryBoolOperation" Collapsed="true">
+    <Position X="15" Y="22.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAEAAAAAAAAAA=</HashCode>
+      <FileName>AST\Expression.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Expression_Compare" Collapsed="true">
+    <Position X="20" Y="22.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAEAAAAAAAAAA=</HashCode>
+      <FileName>AST\Expression.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Expression_Unary" Collapsed="true">
+    <Position X="37.5" Y="19.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAAAAAAgAAAAAAAAAAAAAEAAACAAAAAAAABA=</HashCode>
+      <FileName>AST\Expression.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Expression_ValuePointer" Collapsed="true">
+    <Position X="23" Y="19.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAAAABAAAAAAAgABAAAAAEAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AST\Expression.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Expression_Rand" Collapsed="true">
+    <Position X="28.25" Y="19.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AST\Expression.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Expression_Crement" Collapsed="true">
+    <Position X="33.75" Y="19.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAAAAAAgAAAAAACAAAAAAEIAAEAAAAAAAABA=</HashCode>
+      <FileName>AST\Expression.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Expression_DirectValuePointer" Collapsed="true">
+    <Position X="24" Y="22" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABAgAAAABiCBAAAACAIAAEAAAUAAAABA=</HashCode>
+      <FileName>AST\Expression.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Expression_DisplayValuePointer" Collapsed="true">
+    <Position X="24" Y="23" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgACAAABABAgAAAAAyABAAAAAAIAAEAAAEAAAABA=</HashCode>
+      <FileName>AST\Expression.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Expression_ArrayValuePointer" Collapsed="true">
+    <Position X="24" Y="21" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABAgAAAAAiCBAAAAAAIAAEAEAUAAAABA=</HashCode>
+      <FileName>AST\Expression.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Expression_VoidValuePointer" Collapsed="true">
+    <Position X="21.5" Y="21" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABAgAAAAAiABAAAAAAIAAEAAAEAAAABA=</HashCode>
+      <FileName>AST\Expression.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Expression_Mult" Collapsed="true">
+    <Position X="8.5" Y="23.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAQACAAAAAAAAAAAAAAAEAAAAAA=</HashCode>
+      <FileName>AST\Expression.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Expression_Div" Collapsed="true">
+    <Position X="11" Y="23.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAQACAAAAAAAAAAAAAAAEAAAAAA=</HashCode>
+      <FileName>AST\Expression.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Expression_Mod" Collapsed="true">
+    <Position X="8.5" Y="24.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAQACAAAAAAAAAAAAAAAEAAAAAA=</HashCode>
+      <FileName>AST\Expression.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Expression_Add" Collapsed="true">
+    <Position X="11" Y="24.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAQACAAAAAAAAAAAAAAAEAAAAAA=</HashCode>
+      <FileName>AST\Expression.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Expression_Sub" Collapsed="true">
+    <Position X="8.5" Y="25.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAQACAAAAAAAAAAAAAAAEAAAAAA=</HashCode>
+      <FileName>AST\Expression.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Expression_And" Collapsed="true">
+    <Position X="14" Y="23.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAQACAAAAAAAAAAAAAAAEAAAAAA=</HashCode>
+      <FileName>AST\Expression.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Expression_Or" Collapsed="true">
+    <Position X="16.25" Y="23.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAQACAAAAAAAAAAAAAAAEAAAAAA=</HashCode>
+      <FileName>AST\Expression.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Expression_Xor" Collapsed="true">
+    <Position X="14" Y="24.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAQACAAAAAAAAAAAAAAAEAAAAAA=</HashCode>
+      <FileName>AST\Expression.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Expression_Equals" Collapsed="true">
+    <Position X="19" Y="23.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAEAAAAAA=</HashCode>
+      <FileName>AST\Expression.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Expression_Unequals" Collapsed="true">
+    <Position X="21.25" Y="23.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAEAAAAAA=</HashCode>
+      <FileName>AST\Expression.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Expression_Greater" Collapsed="true">
+    <Position X="21.25" Y="24.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAEAAAAAA=</HashCode>
+      <FileName>AST\Expression.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Expression_Lesser" Collapsed="true">
+    <Position X="19" Y="24.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAEAAAAAA=</HashCode>
+      <FileName>AST\Expression.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Expression_GreaterEquals" Collapsed="true">
+    <Position X="18.5" Y="25.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAEAAAAAA=</HashCode>
+      <FileName>AST\Expression.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Expression_LesserEquals" Collapsed="true">
+    <Position X="21.25" Y="25.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAEAAAAAA=</HashCode>
+      <FileName>AST\Expression.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Expression_Not" Collapsed="true">
+    <Position X="38.75" Y="21" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAACAAAAAAAAIAAEAAAEAAAAAA=</HashCode>
+      <FileName>AST\Expression.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Expression_Negate" Collapsed="true">
+    <Position X="38.75" Y="23" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAACAAAAAAAAIAAEAAAEAAAAAA=</HashCode>
+      <FileName>AST\Expression.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Expression_Cast" Collapsed="true">
+    <Position X="38.75" Y="22" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAACAAAAAAAAIAAEQAAEAAAAAA=</HashCode>
+      <FileName>AST\Expression.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Expression_PostIncrement" Collapsed="true">
+    <Position X="35" Y="22.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAEAAAAAA=</HashCode>
+      <FileName>AST\Expression.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Expression_PreIncrement" Collapsed="true">
+    <Position X="35" Y="21.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAEAAAAAA=</HashCode>
+      <FileName>AST\Expression.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Expression_PostDecrement" Collapsed="true">
+    <Position X="32.25" Y="22.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAEAAAAAA=</HashCode>
+      <FileName>AST\Expression.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Expression_PreDecrement" Collapsed="true">
+    <Position X="32.25" Y="21.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAEAAAAAA=</HashCode>
+      <FileName>AST\Expression.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Expression_Literal" Collapsed="true">
+    <Position X="12.75" Y="19.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAAAAAAgAAAAACAAAAAAAEIAAEAAgEAAAABA=</HashCode>
+      <FileName>AST\Expression.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Expression_Boolean_Rand" Collapsed="true">
+    <Position X="27" Y="21" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAAAAAAgAAAAACAAAAAAAEIAAEAAAEAAAABA=</HashCode>
+      <FileName>AST\Expression.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Expression_Base4_Rand" Collapsed="true">
+    <Position X="29.25" Y="21" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAAAAAAgAAAAACAAAAAAAEIAAEAAAEAAAABA=</HashCode>
+      <FileName>AST\Expression.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Expression_FunctionCall" Collapsed="true">
+    <Position X="9.75" Y="19.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAIAAAAAgAAAAACAAAAAAAEIAAEAAAEAAAABA=</HashCode>
+      <FileName>AST\Expression.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.GrammarTableMap" Collapsed="true">
+    <Position X="23.5" Y="4" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>FABAAAgAAAAAAAAAAAgAAAAAAAQAAAAACAAAIAAAAAA=</HashCode>
+      <FileName>AST\GrammarTableMap.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.ASTList" Collapsed="true" HideInheritanceLine="true">
+    <Position X="18.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAA=</HashCode>
+      <FileName>AST\Lists.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.List_Expressions" Collapsed="true">
+    <Position X="18.25" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAI=</HashCode>
+      <FileName>AST\Lists.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.List_Statements" Collapsed="true">
+    <Position X="19.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAI=</HashCode>
+      <FileName>AST\Lists.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.List_VarDeclarations" Collapsed="true">
+    <Position X="19.25" Y="4.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAI=</HashCode>
+      <FileName>AST\Lists.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.List_Methods" Collapsed="true">
+    <Position X="19.25" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAI=</HashCode>
+      <FileName>AST\Lists.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.List_Switchs" Collapsed="true">
+    <Position X="19.25" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAI=</HashCode>
+      <FileName>AST\Lists.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.List_LiteralDigits" Collapsed="true">
+    <Position X="19.25" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAI=</HashCode>
+      <FileName>AST\Lists.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.List_LiteralInts" Collapsed="true">
+    <Position X="19.25" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAI=</HashCode>
+      <FileName>AST\Lists.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.List_LiteralChars" Collapsed="true">
+    <Position X="19.25" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAI=</HashCode>
+      <FileName>AST\Lists.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.List_LiteralBools" Collapsed="true">
+    <Position X="19.25" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAI=</HashCode>
+      <FileName>AST\Lists.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Switch_Case" Collapsed="true">
+    <Position X="21.75" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>AST\Lists.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Literal" Collapsed="true">
+    <Position X="54.25" Y="18.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAIAAAAAAAAAA=</HashCode>
+      <FileName>AST\Literal.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Literal_Value" Collapsed="true">
+    <Position X="53.5" Y="20" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AST\Literal.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Literal_Array" Collapsed="true">
+    <Position X="55.25" Y="20" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAQAAAACAQAAAAAAIQAAAAAAAAEAAA=</HashCode>
+      <FileName>AST\Literal.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Literal_Int" Collapsed="true">
+    <Position X="52.5" Y="21" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAABAAACAAAAAAAAAAAIAAgEAAAAAA=</HashCode>
+      <FileName>AST\Literal.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Literal_Char" Collapsed="true">
+    <Position X="52.5" Y="22" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAABAAACAAAAAAAAAAAIAAgEAAAAAA=</HashCode>
+      <FileName>AST\Literal.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Literal_Bool" Collapsed="true">
+    <Position X="52.5" Y="23" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAABAAACAAAAAAAAAAAIAAgEAAAAAA=</HashCode>
+      <FileName>AST\Literal.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Literal_Digit" Collapsed="true">
+    <Position X="52.5" Y="24" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAABAAACAAAAAAAAAAAIAAgEAAAAAA=</HashCode>
+      <FileName>AST\Literal.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Literal_IntArr" Collapsed="true">
+    <Position X="56.25" Y="21" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAQAAAACAAAAAAAAAQAIAAgEAAEAAA=</HashCode>
+      <FileName>AST\Literal.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Literal_CharArr" Collapsed="true">
+    <Position X="56.25" Y="22" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAQAAAACAAAAAAAAAQAIAAgEAAEAAA=</HashCode>
+      <FileName>AST\Literal.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Literal_BoolArr" Collapsed="true">
+    <Position X="56.25" Y="23" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAQAAAACAAAAAAAAAQAIAAgEAAEAAA=</HashCode>
+      <FileName>AST\Literal.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Literal_DigitArr" Collapsed="true">
+    <Position X="56.25" Y="24" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAQAAAACAAAAAAAAAQAIAAgEAAEAAA=</HashCode>
+      <FileName>AST\Literal.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Method" Collapsed="true">
+    <Position X="0.5" Y="23" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CEAAAAHAAAABBhogAAABCAAAABAQEIAAAAQAUIACQBA=</HashCode>
+      <FileName>AST\Method.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Method_Header" Collapsed="true">
+    <Position X="0.5" Y="22" Width="1.5" />
+    <InheritanceLine Type="BefunGen.AST.ASTObject" ManuallyRouted="true">
+      <Path>
+        <Point X="5.5" Y="17.062" />
+        <Point X="5.5" Y="17.625" />
+        <Point X="0.392" Y="17.625" />
+        <Point X="0.392" Y="21.846" />
+        <Point X="1.25" Y="21.846" />
+        <Point X="1.25" Y="22" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAABAQAAAAAAAAUAAAAAA=</HashCode>
+      <FileName>AST\Method.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Method_Body" Collapsed="true">
+    <Position X="0.5" Y="21" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAQAEAAAAAA=</HashCode>
+      <FileName>AST\Method.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Program" Collapsed="true">
+    <Position X="0.5" Y="20" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAwAAAFAAAAAAAgAACAACAAACgAgEYgIAQQAUAAAQFA=</HashCode>
+      <FileName>AST\Program.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Program_Footer" Collapsed="true">
+    <Position X="0.5" Y="19" Width="1.5" />
+    <InheritanceLine Type="BefunGen.AST.ASTObject" ManuallyRouted="true">
+      <Path>
+        <Point X="5.5" Y="17.062" />
+        <Point X="5.5" Y="17.625" />
+        <Point X="1.906" Y="17.625" />
+        <Point X="1.906" Y="18.846" />
+        <Point X="1.25" Y="18.846" />
+        <Point X="1.25" Y="19" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAA=</HashCode>
+      <FileName>AST\Program.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Program_Header" Collapsed="true">
+    <Position X="0.5" Y="18" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAQAAUAAAAAA=</HashCode>
+      <FileName>AST\Program.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Statement" Collapsed="true">
+    <Position X="4.75" Y="18" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAAAABAAAAAAAgAEAABCAAAAAAIEIAAAAEAAIAAABA=</HashCode>
+      <FileName>AST\Statement.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Statement_StatementList" Collapsed="true">
+    <Position X="3.25" Y="21.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAAAAAAgAAAABCAAAAAAAEIAAAAQAEIAAABI=</HashCode>
+      <FileName>AST\Statement.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Statement_MethodCall" Collapsed="true">
+    <Position X="5.75" Y="20.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAAAAgIgAABABCCAAAAAAEIAAAAAAUIAAAFA=</HashCode>
+      <FileName>AST\Statement.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="BefunGen.AST.Statement_Label" Collapsed="true">
+    <Position X="5.75" Y="21.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAAAAAIgAAAABCAAAAAAAEIAAAAAAUIAAAFA=</HashCode>
+      <FileName>AST\Statement.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="BefunGen.AST.Statement_Goto" Collapsed="true">
+    <Position X="5.75" Y="22.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAAAAAAgAAAABCCAAAAAAEIAAAAAAEIAAADA=</HashCode>
+      <FileName>AST\Statement.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Statement_Return" Collapsed="true">
+    <Position X="5.75" Y="23.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAAAAAAgAAIABCAAAABACEIAAAAAgEIAAABA=</HashCode>
+      <FileName>AST\Statement.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Statement_Out" Collapsed="true">
+    <Position X="5.75" Y="24.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAABAAIAAAAgAAAABCAAAAAAAEIAAAAAgEoAQABA=</HashCode>
+      <FileName>AST\Statement.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Statement_Out_CharArrLiteral" Collapsed="true">
+    <Position X="5.75" Y="25.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAAAAAAgAAAABCAAAAAAAEIAAAAAgEIAAABA=</HashCode>
+      <FileName>AST\Statement.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Statement_In" Collapsed="true">
+    <Position X="5.75" Y="26.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAACBAAIAAAAgAAAABCAAAAAAAEIAAAAAAEoAQABA=</HashCode>
+      <FileName>AST\Statement.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Statement_Quit" Collapsed="true">
+    <Position X="5.75" Y="27.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAAAAAAgAAAABCAAAAAAAEIAAAAAAEIAAABA=</HashCode>
+      <FileName>AST\Statement.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Statement_NOP" Collapsed="true">
+    <Position X="5.75" Y="28.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAAAAAAgAAAABCAAAAAAAEIAAAAAAEIAAABA=</HashCode>
+      <FileName>AST\Statement.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Statement_Inc" Collapsed="true">
+    <Position X="5.75" Y="29.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAAAAAAgAAAABCCAAAAAAEIAAAAAAEIAAABA=</HashCode>
+      <FileName>AST\Statement.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Statement_Dec" Collapsed="true">
+    <Position X="5.75" Y="30.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAAAAAAgAAAABCCAAAAAAEIAAAAAAEIAAABA=</HashCode>
+      <FileName>AST\Statement.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Statement_Assignment" Collapsed="true">
+    <Position X="5.75" Y="19.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAAAAAAgAAAABCCAAAAACEIAACAAAEIAAABA=</HashCode>
+      <FileName>AST\Statement.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Statement_If" Collapsed="true">
+    <Position X="3.75" Y="20.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAABAAACAAAgAAIABCAAAAAAAEIAAAAAAEIAAABA=</HashCode>
+      <FileName>AST\Statement.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Statement_While" Collapsed="true">
+    <Position X="3.75" Y="19.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACABAAACAAAgAAAABCAAAAAAAEIAAAAAAEIAAABA=</HashCode>
+      <FileName>AST\Statement.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Statement_RepeatUntil" Collapsed="true">
+    <Position X="3.25" Y="22.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAACAAAgAAAABCAAAAAAAEIAAAAAAEIAAABA=</HashCode>
+      <FileName>AST\Statement.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Statement_Switch" Collapsed="true">
+    <Position X="3.75" Y="23.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAACAAEgAAAABCEAEAAAAEIAAAAAAEIAAABA=</HashCode>
+      <FileName>AST\Statement.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.TextFungeParser" Collapsed="true">
+    <Position X="21.75" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAAAEAAAAAAAACAAAAIACBAAAQAAAAAIAA=</HashCode>
+      <FileName>AST\TextFungeParser.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.BType" Collapsed="true">
+    <Position X="46.5" Y="18.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEABACAkAACEgAAAgABAAAAAAIAAAAAAAAMAAiA=</HashCode>
+      <FileName>AST\Type.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.BType_Value" Collapsed="true">
+    <Position X="47.5" Y="20" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AST\Type.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.BType_Array" Collapsed="true">
+    <Position X="45.5" Y="20" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgACAgAAAAAAAAAAAAIAAAAAAAQAEAAA=</HashCode>
+      <FileName>AST\Type.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.BType_Void" Collapsed="true">
+    <Position X="49.25" Y="20" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAEAACAAAAAAABAAAAAAAAAAAAAEAAAAAA=</HashCode>
+      <FileName>AST\Type.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.BType_Union" Collapsed="true">
+    <Position X="51" Y="20" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAEAACAAAAAAABAAAAAAAAAAAAAEAAAAAA=</HashCode>
+      <FileName>AST\Type.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.BType_Int" Collapsed="true">
+    <Position X="48.5" Y="23.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAEAAAAAAAAAABAAAAAAAAAAAAAEAAAAAA=</HashCode>
+      <FileName>AST\Type.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.BType_Digit" Collapsed="true">
+    <Position X="48.5" Y="24.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAEAAAAAAAAAABAAAAAAAAAAAAAEAAAAAA=</HashCode>
+      <FileName>AST\Type.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.BType_Char" Collapsed="true">
+    <Position X="48.5" Y="21.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAEAAAAAAAAAABAAAAAAAAAAAAAEAAAAAA=</HashCode>
+      <FileName>AST\Type.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.BType_Bool" Collapsed="true">
+    <Position X="48.5" Y="22.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAEAAAAAAAAAABAAAAAAAAAAAAAEAAAAAA=</HashCode>
+      <FileName>AST\Type.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.BType_IntArr" Collapsed="true">
+    <Position X="44.5" Y="21.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAEAAAAAAAAAABAAAAAAAAAAAAAEQAAAAA=</HashCode>
+      <FileName>AST\Type.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.BType_CharArr" Collapsed="true">
+    <Position X="44.5" Y="22.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAEAAAAAAAAAABAAAAAAAAAAAAAEQAAAAA=</HashCode>
+      <FileName>AST\Type.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.BType_DigitArr" Collapsed="true">
+    <Position X="44.5" Y="23.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAEAAAAAAAAAABAAAAAAAAAAAAAEQAAAAA=</HashCode>
+      <FileName>AST\Type.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.BType_BoolArr" Collapsed="true">
+    <Position X="44.5" Y="24.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAEAAAAAAAAAABAAAAAAAAAAAAAEQAAAAA=</HashCode>
+      <FileName>AST\Type.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.VarDeclaration" Collapsed="true">
+    <Position X="42" Y="18.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAgAQEAAAAAgBkAAACACAQAAAAAAQAAAQoAUAAAAAA=</HashCode>
+      <FileName>AST\VarDeclaration.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.VarDeclaration_Value" Collapsed="true">
+    <Position X="40.75" Y="20" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAACACAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AST\VarDeclaration.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.VarDeclaration_Array" Collapsed="true">
+    <Position X="43" Y="20" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIAAACAAgAAAAACACAAAAAAAAAAAAAAAAAAEAAA=</HashCode>
+      <FileName>AST\VarDeclaration.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.CodeGen.BCHelper" Collapsed="true">
+    <Position X="27.75" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BCISgICAwKCUElFgEQP/FAQBACCAvIpCsACECgBQlSU=</HashCode>
+      <FileName>AST\CodeGen\BCHelper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.CodeGen.BefungeCommand" Collapsed="true">
+    <Position X="23.5" Y="1" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAgAAAAAAAAAAAAQAABAAAAEQAFAEAQAAA=</HashCode>
+      <FileName>AST\CodeGen\BefungeCommand.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.CodeGen.CodeGenConstants" Collapsed="true">
+    <Position X="23.5" Y="3.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAAAAAAEAAAAAAAAAIAAACAAgAAAAAAAAAAgA=</HashCode>
+      <FileName>AST\CodeGen\CodeGenConstants.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.CodeGen.CodeGenOptions" Collapsed="true">
+    <Position X="21.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAASAAAIAA4ACAAAAUAgAAIAAAIAAASEAAIACAAAAAA=</HashCode>
+      <FileName>AST\CodeGen\CodeGenOptions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.CodeGen.CodePiece" Collapsed="true">
+    <Position X="21.75" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>sQixgAE0DEDTkQQkCBSBweAFMEbACENBgUAFgAHDAgA=</HashCode>
+      <FileName>AST\CodeGen\CodePiece.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.CodeGen.CodePieceStore" Collapsed="true">
+    <Position X="29.5" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIAIIQAAAAAACAAAAEAAAAEAQAoECAAAAAQAAAA=</HashCode>
+      <FileName>AST\CodeGen\CodePieceStore.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.CodeGen.SourceCodePosition" Collapsed="true">
+    <Position X="25.25" Y="2.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAABAAAAAAAAAAAAAAAAAAAABAAA=</HashCode>
+      <FileName>AST\CodeGen\SourceCodePosition.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.CodeGen.TwoDirectionCodePiece" Collapsed="true">
+    <Position X="31.25" Y="1" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAiAEAAAAAAAAQQAAAAIAgAAAAAAAAAEABA=</HashCode>
+      <FileName>AST\CodeGen\TwoDirectionCodePiece.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.CodeGen.NumberCode.NumberCodeFactory_Base9" Collapsed="true">
+    <Position X="23.75" Y="1.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAACCAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AST\CodeGen\NumberCode\NumberCodeFactory_Base9.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.CodeGen.NumberCode.NumberCodeFactory_Boolean" Collapsed="true">
+    <Position X="26.25" Y="1.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AST\CodeGen\NumberCode\NumberCodeFactory_Boolean.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.CodeGen.NumberCode.NumberCodeFactory_Digit" Collapsed="true">
+    <Position X="28.75" Y="1.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AST\CodeGen\NumberCode\NumberCodeFactory_Digit.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.CodeGen.NumberCode.NumberCodeFactory_Factorization" Collapsed="true">
+    <Position X="31" Y="1.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAIACAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AST\CodeGen\NumberCode\NumberCodeFactory_Factorization.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.CodeGen.NumberCode.NumberCodeFactory_Stringify" Collapsed="true">
+    <Position X="33.75" Y="1.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAQAAAAAAAAAAAAAACAAAAAAAAAAQAAAAAAAAAQA=</HashCode>
+      <FileName>AST\CodeGen\NumberCode\NumberCodeFactory_Stringify.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.CodeGen.NumberCode.NumberCodeFactory_StringmodeChar" Collapsed="true">
+    <Position X="36.25" Y="1.75" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AST\CodeGen\NumberCode\NumberCodeFactory_StringmodeChar.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.CodeGen.NumberCode.NumberCodeHelper" Collapsed="true">
+    <Position X="21.75" Y="1.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>IAAgAAAAAAAAAAAAAAAACAAAAAAAAAACAAAAAAAAAAA=</HashCode>
+      <FileName>AST\CodeGen\NumberCode\NumberCodeHelper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.CodeGen.Tags.CodeTag" Collapsed="true">
+    <Position X="13.5" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAAEAAAAAAAQAEEAAQABAAAAAAAAAgAAAAAAAACAA=</HashCode>
+      <FileName>AST\CodeGen\Tags\CodeTag.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.CodeGen.Tags.MethodCall_HorizontalExit_Tag" Collapsed="true">
+    <Position X="14.5" Y="2.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AST\CodeGen\Tags\MethodCall_HorizontalExit_Tag.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.CodeGen.Tags.MethodCall_HorizontalReEntry_Tag" Collapsed="true">
+    <Position X="14.5" Y="3.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AST\CodeGen\Tags\MethodCall_HorizontalReEntry_Tag.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.CodeGen.Tags.MethodCall_VerticalExit_Tag" Collapsed="true">
+    <Position X="14.5" Y="4.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AST\CodeGen\Tags\MethodCall_VerticalExit_Tag.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.CodeGen.Tags.MethodCall_VerticalReEntry_Tag" Collapsed="true">
+    <Position X="14.5" Y="5.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AST\CodeGen\Tags\MethodCall_VerticalReEntry_Tag.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.CodeGen.Tags.MethodEntry_FullInitialization_Tag" Collapsed="true">
+    <Position X="14.5" Y="6.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AST\CodeGen\Tags\MethodEntry_FullInitialization_Tag.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.CodeGen.Tags.SwitchStmt_Case_Exit" Collapsed="true">
+    <Position X="12.25" Y="3.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AST\CodeGen\Tags\SwitchStmt_Case_Exit.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.CodeGen.Tags.TagLocation" Collapsed="true">
+    <Position X="33.5" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgAAAEAAAABAAAAAAAAAAAAAAAAAAAYAA=</HashCode>
+      <FileName>AST\CodeGen\Tags\TagLocation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.CodeGen.Tags.TemporaryCodeField_Tag" Collapsed="true">
+    <Position X="12" Y="5.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AST\CodeGen\Tags\TemporaryCodeField_Tag.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.CodeGen.Tags.TemporaryResultCodeField_Tag" Collapsed="true">
+    <Position X="11.5" Y="4.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AST\CodeGen\Tags\TemporaryResultCodeField_Tag.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.CodeGen.Tags.VarDeclaration_Tag" Collapsed="true">
+    <Position X="12.25" Y="2.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AST\CodeGen\Tags\VarDeclaration_Tag.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Exceptions.BefunGenException" Collapsed="true">
+    <Position X="5" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AST\Exceptions\BefunGenException.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Exceptions.BefunGenInternalException" Collapsed="true">
+    <Position X="1.75" Y="2.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AST\Exceptions\BefunGenInternalException.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Exceptions.BefunGenUserException" Collapsed="true">
+    <Position X="7.75" Y="2.25" Width="1.75" />
+    <InheritanceLine Type="BefunGen.AST.Exceptions.BefunGenException" FixedFromPoint="true">
+      <Path>
+        <Point X="5.75" Y="1.441" />
+        <Point X="5.75" Y="1.875" />
+        <Point X="8.625" Y="1.875" />
+        <Point X="8.625" Y="2.25" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AST\Exceptions\BefunGenUserException.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Exceptions.AccessTemporaryASTObjectException" Collapsed="true">
+    <Position X="0.75" Y="8.5" Width="2.75" />
+    <InheritanceLine Type="BefunGen.AST.Exceptions.BefunGenInternalException" ManuallyRouted="true">
+      <Path>
+        <Point X="2.75" Y="2.941" />
+        <Point X="2.75" Y="3.34" />
+        <Point X="3.592" Y="3.34" />
+        <Point X="3.592" Y="8.346" />
+        <Point X="2.125" Y="8.346" />
+        <Point X="2.125" Y="8.5" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AST\Exceptions\InternalExceptions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Exceptions.InvalidASTStateException" Collapsed="true">
+    <Position X="3.75" Y="8.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AST\Exceptions\InternalExceptions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Exceptions.InvalidBefungeCommandTypeException" Collapsed="true">
+    <Position X="0.5" Y="9.5" Width="3" />
+    <InheritanceLine Type="BefunGen.AST.Exceptions.BefunGenInternalException" ManuallyRouted="true">
+      <Path>
+        <Point X="2.75" Y="2.941" />
+        <Point X="2.75" Y="3.34" />
+        <Point X="3.562" Y="3.34" />
+        <Point X="3.562" Y="9.346" />
+        <Point X="2" Y="9.346" />
+        <Point X="2" Y="9.5" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AST\Exceptions\InternalExceptions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Exceptions.LexicalErrorException" Collapsed="true">
+    <Position X="1.75" Y="3.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AST\Exceptions\InternalExceptions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Exceptions.NotLoadedErrorException" Collapsed="true">
+    <Position X="3.75" Y="3.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AST\Exceptions\InternalExceptions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Exceptions.InternalErrorException" Collapsed="true">
+    <Position X="1.75" Y="4.5" Width="1.75" />
+    <InheritanceLine Type="BefunGen.AST.Exceptions.BefunGenInternalException" ManuallyRouted="true">
+      <Path>
+        <Point X="2.75" Y="2.941" />
+        <Point X="2.75" Y="3.34" />
+        <Point X="3.608" Y="3.34" />
+        <Point X="3.608" Y="4.346" />
+        <Point X="2.625" Y="4.346" />
+        <Point X="2.625" Y="4.5" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AST\Exceptions\InternalExceptions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Exceptions.CodePieceReverseException" Collapsed="true">
+    <Position X="3.75" Y="4.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AST\Exceptions\InternalExceptions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Exceptions.CommandPathFindingFailureException" Collapsed="true">
+    <Position X="0.75" Y="5.5" Width="2.75" />
+    <InheritanceLine Type="BefunGen.AST.Exceptions.BefunGenInternalException" ManuallyRouted="true">
+      <Path>
+        <Point X="2.75" Y="2.941" />
+        <Point X="2.75" Y="3.34" />
+        <Point X="3.565" Y="3.34" />
+        <Point X="3.565" Y="5.346" />
+        <Point X="2.125" Y="5.346" />
+        <Point X="2.125" Y="5.5" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AST\Exceptions\InternalExceptions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Exceptions.InternalCodeGenException" Collapsed="true">
+    <Position X="3.75" Y="5.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AST\Exceptions\InternalExceptions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Exceptions.InvalidCodeManipulationException" Collapsed="true">
+    <Position X="1" Y="6.5" Width="2.5" />
+    <InheritanceLine Type="BefunGen.AST.Exceptions.BefunGenInternalException" ManuallyRouted="true">
+      <Path>
+        <Point X="2.75" Y="2.941" />
+        <Point X="2.75" Y="3.34" />
+        <Point X="3.59" Y="3.34" />
+        <Point X="3.59" Y="6.346" />
+        <Point X="2.25" Y="6.346" />
+        <Point X="2.25" Y="6.5" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AST\Exceptions\InternalExceptions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Exceptions.WTFException" Collapsed="true">
+    <Position X="3.75" Y="6.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AST\Exceptions\InternalExceptions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Exceptions.BGNotImplementedException" Collapsed="true">
+    <Position X="1.25" Y="7.5" Width="2.25" />
+    <InheritanceLine Type="BefunGen.AST.Exceptions.BefunGenInternalException" ManuallyRouted="true">
+      <Path>
+        <Point X="2.75" Y="2.941" />
+        <Point X="2.75" Y="3.34" />
+        <Point X="3.592" Y="3.34" />
+        <Point X="3.592" Y="7.346" />
+        <Point X="2.375" Y="7.346" />
+        <Point X="2.375" Y="7.5" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AST\Exceptions\InternalExceptions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Exceptions.MissingReductionRuleException" Collapsed="true">
+    <Position X="3.75" Y="7.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AST\Exceptions\InternalExceptions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Exceptions.ArrayLiteralTooBigException" Collapsed="true">
+    <Position X="8.75" Y="6.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AST\Exceptions\UserExceptions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Exceptions.GroupErrorException" Collapsed="true">
+    <Position X="6.75" Y="5.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AST\Exceptions\UserExceptions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Exceptions.ImplicitCastException" Collapsed="true">
+    <Position X="6.75" Y="6.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AST\Exceptions\UserExceptions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Exceptions.IndexOperatorNotDefiniedException" Collapsed="true">
+    <Position X="8.75" Y="12.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AST\Exceptions\UserExceptions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Exceptions.InvalidCompareException" Collapsed="true">
+    <Position X="6.5" Y="3.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AST\Exceptions\UserExceptions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Exceptions.InvalidFormatSpecifierException" Collapsed="true">
+    <Position X="8.75" Y="4.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AST\Exceptions\UserExceptions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Exceptions.NoConditionException" Collapsed="true">
+    <Position X="8.75" Y="8.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AST\Exceptions\UserExceptions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Exceptions.NotAllPathsReturnException" Collapsed="true">
+    <Position X="8.75" Y="9.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AST\Exceptions\UserExceptions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Exceptions.SyntaxErrorException" Collapsed="true">
+    <Position X="6.75" Y="10.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AST\Exceptions\UserExceptions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Exceptions.UnresolvableReferenceException" Collapsed="true">
+    <Position X="8.75" Y="10.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AST\Exceptions\UserExceptions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Exceptions.VoidObjectCallException" Collapsed="true">
+    <Position X="6.5" Y="11.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AST\Exceptions\UserExceptions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Exceptions.WrongParameterCountException" Collapsed="true">
+    <Position X="8.75" Y="11.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AST\Exceptions\UserExceptions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Exceptions.WrongTypeException" Collapsed="true">
+    <Position X="6.75" Y="13.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AST\Exceptions\UserExceptions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Exceptions.ArrayTooSmallException" Collapsed="true">
+    <Position X="6.5" Y="4.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AST\Exceptions\UserExceptions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Exceptions.InlineVoidMethodCallException" Collapsed="true">
+    <Position X="8.75" Y="7.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AST\Exceptions\UserExceptions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Exceptions.InitGlobalVariableException" Collapsed="true">
+    <Position X="6.25" Y="8.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AST\Exceptions\UserExceptions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Exceptions.InitConstantException" Collapsed="true">
+    <Position X="6.75" Y="7.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AST\Exceptions\UserExceptions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Exceptions.IllegalIdentifierException" Collapsed="true">
+    <Position X="6.5" Y="12.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AST\Exceptions\UserExceptions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Exceptions.ConstantValueChangedException" Collapsed="true">
+    <Position X="8.75" Y="3.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AST\Exceptions\UserExceptions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Exceptions.EmptyDisplayAccessException" Collapsed="true">
+    <Position X="8.75" Y="5.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AST\Exceptions\UserExceptions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.AST.Exceptions.DuplicateSwitchCaseException" Collapsed="true">
+    <Position X="6.25" Y="9.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AST\Exceptions\UserExceptions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.MathExtensions.MathExt" Collapsed="true">
+    <Position X="21.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABAAAAAAEAAAAAAAAAABAAAAAAAAAAAAAQA=</HashCode>
+      <FileName>MathExtensions\MathExt.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BefunGen.Properties.Resources" Collapsed="true">
+    <Position X="23.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAABABEAACAQAAAAAAAAAAAAAAAIA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="BefunGen.AST.ICodeAddressTarget" Collapsed="true">
+    <Position X="21.75" Y="4.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AST\Statement.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="BefunGen.AST.SymbolIndex" Collapsed="true">
+    <Position X="27.25" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>3hfMAb5EAeeUgYAgN0EstzETPIQFsu6eNep92g6Da+g=</HashCode>
+      <FileName>AST\GrammarTableSkeleton.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="BefunGen.AST.ProductionIndex" Collapsed="true">
+    <Position X="25.5" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>8g7Bxch6r8d1qCApID73sVIaIvRsOfm+daL6yTmBQnQ=</HashCode>
+      <FileName>AST\GrammarTableSkeleton.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="BefunGen.AST.CodeGen.BefungeCommandType" Collapsed="true">
+    <Position X="25.5" Y="1" Width="2" />
+    <TypeIdentifier>
+      <HashCode>BCIAgIAAQCAEABFgAAAEEAQAACAACAAAsACECgAQBAQ=</HashCode>
+      <FileName>AST\CodeGen\BefungeCommand.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="BefunGen.AST.CodeGen.NumberRep" Collapsed="true">
+    <Position X="25.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQAAAAAIAAAAAAEgAAAAAAgAEAAAAAAACAA=</HashCode>
+      <FileName>AST\CodeGen\CodeGenOptions.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
