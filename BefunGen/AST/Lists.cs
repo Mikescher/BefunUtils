@@ -13,6 +13,11 @@ namespace BefunGen.AST
 			: base(pos)
 		{
 		}
+
+		public override string getDebugString()
+		{
+			throw new AccessTemporaryASTObjectException(Position);
+		}
 	}
 
 	#region Lists
@@ -37,11 +42,6 @@ namespace BefunGen.AST
 			List.Add(e);
 			return this;
 		}
-
-		public override string getDebugString()
-		{
-			throw new AccessTemporaryASTObjectException(Position);
-		}
 	}
 
 	public class List_Statements : ASTList
@@ -63,11 +63,6 @@ namespace BefunGen.AST
 		{
 			List.Add(s);
 			return this;
-		}
-
-		public override string getDebugString()
-		{
-			throw new AccessTemporaryASTObjectException(Position);
 		}
 	}
 
@@ -91,11 +86,6 @@ namespace BefunGen.AST
 			List.Add(d);
 			return this;
 		}
-
-		public override string getDebugString()
-		{
-			throw new AccessTemporaryASTObjectException(Position);
-		}
 	}
 
 	public class List_Methods : ASTList
@@ -118,10 +108,33 @@ namespace BefunGen.AST
 			List.Add(d);
 			return this;
 		}
+	}
 
-		public override string getDebugString()
+	public class List_Switchs : ASTList
+	{
+		public List<Switch_Case> List = new List<Switch_Case>();
+
+		public List_Switchs(SourceCodePosition pos)
+			: base(pos)
 		{
-			throw new AccessTemporaryASTObjectException(Position);
+		}
+
+		public List_Switchs(SourceCodePosition pos, Literal_Value l, Statement s)
+			: base(pos)
+		{
+			List.Add(new Switch_Case(l, s));
+		}
+
+		public List_Switchs Append(Literal_Value l, Statement s)
+		{
+			List.Add(new Switch_Case(l, s));
+			return this;
+		}
+
+		public List_Switchs Prepend(Literal_Value l, Statement s)
+		{
+			List.Insert(0, new Switch_Case(l, s));
+			return this;
 		}
 	}
 
@@ -149,11 +162,6 @@ namespace BefunGen.AST
 			List.Add(e);
 			return this;
 		}
-
-		public override string getDebugString()
-		{
-			throw new AccessTemporaryASTObjectException(Position);
-		}
 	}
 
 	public class List_LiteralInts : ASTList
@@ -175,11 +183,6 @@ namespace BefunGen.AST
 		{
 			List.Add(e);
 			return this;
-		}
-
-		public override string getDebugString()
-		{
-			throw new AccessTemporaryASTObjectException(Position);
 		}
 	}
 
@@ -203,11 +206,6 @@ namespace BefunGen.AST
 			List.Add(e);
 			return this;
 		}
-
-		public override string getDebugString()
-		{
-			throw new AccessTemporaryASTObjectException(Position);
-		}
 	}
 
 	public class List_LiteralBools : ASTList
@@ -230,12 +228,23 @@ namespace BefunGen.AST
 			List.Add(e);
 			return this;
 		}
-
-		public override string getDebugString()
-		{
-			throw new AccessTemporaryASTObjectException(Position);
-		}
 	}
 
 	#endregion Literals Lists
+
+	#region Helper
+
+	public class Switch_Case
+	{
+		public Literal_Value Value;
+		public Statement Body;
+
+		public Switch_Case(Literal_Value v, Statement s)
+		{
+			Value = v;
+			Body = s;
+		}
+	}
+
+	#endregion
 }

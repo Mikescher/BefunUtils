@@ -389,18 +389,22 @@ namespace BefunGen.AST
 
 				case ProductionIndex.Stmt_switch_Switch_Begin_End:
 					// <Stmt_Switch> ::= switch <Expression> begin <Stmt_Switch_CaseList> end
+					result = new Statement_Switch(p, (Expression)r.get_Data(1), (List_Switchs)r.get_Data(3));
 					break;
 
 				case ProductionIndex.Stmt_switch_caselist_Case_Colon_End:
 					// <Stmt_Switch_CaseList> ::= case <Value_Literal> ':' <StatementList> end <Stmt_Switch_CaseList>
+					result = ((List_Switchs)r.get_Data(5)).Prepend((Literal_Value)r.get_Data(1), getStmtListAsStatement(p, r, 3));
 					break;
 
 				case ProductionIndex.Stmt_switch_caselist_Default_Colon_End:
 					// <Stmt_Switch_CaseList> ::= default ':' <StatementList> end
+					result = new List_Switchs(p, null, getStmtListAsStatement(p, r, 2));
 					break;
 
 				case ProductionIndex.Stmt_switch_caselist:
 					// <Stmt_Switch_CaseList> ::= 
+					result = new List_Switchs(p);
 					break;
 
 				case ProductionIndex.Stmt_goto_Goto_Identifier:

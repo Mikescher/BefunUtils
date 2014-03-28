@@ -1,11 +1,4 @@
-﻿using BefunGen.AST.CodeGen;
-using BefunGen.AST.CodeGen.NumberCode;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace BefunGenTest
 {
@@ -41,6 +34,18 @@ namespace BefunGenTest
 		public void codeGenTest_Statement_Out_Empty()
 		{
 			BFTestHelper.debugStatement("OUT '''';");
+		}
+
+		[TestMethod]
+		public void codeGenTest_Statement_For_NoCall()
+		{
+			BFTestHelper.debugStatement("FOR(;FALSE;) DO END");
+		}
+
+		[TestMethod]
+		public void codeGenTest_Statement_While_NoCall()
+		{
+			BFTestHelper.debugStatement("WHILE(FALSE) DO END");
 		}
 
 	}

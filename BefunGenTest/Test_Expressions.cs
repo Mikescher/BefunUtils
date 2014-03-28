@@ -1,11 +1,4 @@
-﻿using BefunGen.AST.CodeGen;
-using BefunGen.AST.CodeGen.NumberCode;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace BefunGenTest
 {
@@ -53,6 +46,24 @@ namespace BefunGenTest
 		public void codeGenTest_Expr_bool_or()
 		{
 			BFTestHelper.debugExpression("bool", "true || false");
+		}
+
+		[TestMethod]
+		public void codeGenTest_Expr_b4_rand()
+		{
+			BFTestHelper.debugExpression("int", "RAND[4]");
+		}
+
+		[TestMethod]
+		public void codeGenTest_Expr_b4_rand_rec()
+		{
+			BFTestHelper.debugExpression("int", "RAND[RAND[4]+1]");
+		}
+
+		[TestMethod]
+		public void codeGenTest_Expr_b4_rand_negative()
+		{
+			BFTestHelper.debugExpression("int", "RAND[-4]");
 		}
 	}
 }

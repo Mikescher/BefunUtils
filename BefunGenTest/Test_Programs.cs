@@ -1,11 +1,5 @@
 ﻿using BefunGen.AST.CodeGen;
-using BefunGen.AST.CodeGen.NumberCode;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BefunGenTest
 {
@@ -116,7 +110,7 @@ end
 			end
 			");
 		}
-		
+
 		[TestMethod]
 		public void codeGenTest_Program_ArrayReturn_2()
 		{
@@ -278,6 +272,37 @@ program example : display[64, 16]
 
 		OUT ''\r\n'';
 
+	end
+end
+");
+		}
+
+		[TestMethod]
+		public void codeGenTest_Program_switch_Access()
+		{
+			CodeGenOptions.DisplayModuloAccess = true;
+
+			BFTestHelper.debugProgram_Output("WIN", @"
+program example
+	begin
+		switch (9 * 9 / 9 - 9)
+		begin
+			case 1: 
+				OUT ''WIN'';
+			end
+			case 4:
+				OUT ''FAIL'';
+			end
+			case 0:
+				OUT ''FAIL'';
+			end
+			case -9:
+				OUT ''FAIL'';
+			end
+			case 111:
+				OUT ''FAIL'';
+			end
+		end
 	end
 end
 ");

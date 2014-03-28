@@ -133,7 +133,7 @@ namespace BefunGen.AST
 				List[i].inlineConstants();
 		}
 
-		public override void addressCodePoints() 
+		public override void addressCodePoints()
 		{
 			for (int i = 0; i < List.Count; i++)
 			{
@@ -920,7 +920,8 @@ namespace BefunGen.AST
 					{
 						p.AppendLeft(CodePieceStore.PopMultipleStackValues((Target.ResultType as BType_Array).Size, reversed));
 					}
-					else throw new WTFException();
+					else
+						throw new WTFException();
 				}
 				else if (Target.ResultType is BType_Void)
 				{
@@ -941,7 +942,8 @@ namespace BefunGen.AST
 						CodeGenConstants.TMP_ARRFIELD_RETURNVAL.Y,
 						reversed));
 				}
-				else throw new WTFException();
+				else
+					throw new WTFException();
 
 				// Restore Variables
 
@@ -975,7 +977,8 @@ namespace BefunGen.AST
 						CodeGenConstants.TMP_ARRFIELD_RETURNVAL.Y,
 						reversed));
 				}
-				else throw new WTFException();
+				else
+					throw new WTFException();
 
 				#endregion
 
@@ -1024,7 +1027,7 @@ namespace BefunGen.AST
 
 				// Put TargetAdress on Stack
 
-				p.AppendRight(NumberCodeHelper.generateCode(Target.MethodAddr ,reversed));
+				p.AppendRight(NumberCodeHelper.generateCode(Target.MethodAddr, reversed));
 
 				// Put Lane Switch on Stack
 
@@ -1034,8 +1037,8 @@ namespace BefunGen.AST
 
 				// ######## JUMPS ########
 
-				p.AppendRight( BCHelper.PC_Up_tagged(new MethodCall_VerticalExit_Tag(Target)) );
-				p.AppendRight( BCHelper.PC_Right_tagged(new MethodCall_VerticalReEntry_Tag(this)) );
+				p.AppendRight(BCHelper.PC_Up_tagged(new MethodCall_VerticalExit_Tag(Target)));
+				p.AppendRight(BCHelper.PC_Right_tagged(new MethodCall_VerticalReEntry_Tag(this)));
 
 				// ######## AFTER ENTRY::JUMP-BACK ########
 
@@ -1058,8 +1061,9 @@ namespace BefunGen.AST
 						p.AppendRight(CodePieceStore.PopMultipleStackValues((Target.ResultType as BType_Array).Size, reversed));
 
 					}
-					else throw new WTFException();
-				} 
+					else
+						throw new WTFException();
+				}
 				else if (Target.ResultType is BType_Void)
 				{
 					p.AppendRight(BCHelper.Stack_Pop); // Nobody cares about the result ...
@@ -1074,12 +1078,13 @@ namespace BefunGen.AST
 				else if (Target.ResultType is BType_Array)
 				{
 					p.AppendRight(CodePieceStore.WriteArrayFromStack((
-						Target.ResultType as BType_Array).Size, 
-						CodeGenConstants.TMP_ARRFIELD_RETURNVAL.X, 
-						CodeGenConstants.TMP_ARRFIELD_RETURNVAL.Y, 
+						Target.ResultType as BType_Array).Size,
+						CodeGenConstants.TMP_ARRFIELD_RETURNVAL.X,
+						CodeGenConstants.TMP_ARRFIELD_RETURNVAL.Y,
 						reversed));
 				}
-				else throw new WTFException();
+				else
+					throw new WTFException();
 
 				// Restore Variables
 
@@ -1113,7 +1118,8 @@ namespace BefunGen.AST
 						CodeGenConstants.TMP_ARRFIELD_RETURNVAL.Y,
 						reversed));
 				}
-				else throw new WTFException();
+				else
+					throw new WTFException();
 
 				#endregion
 
@@ -1378,7 +1384,8 @@ namespace BefunGen.AST
 			{
 				return generateCode_Array(reversed);
 			}
-			else throw new WTFException();
+			else
+				throw new WTFException();
 		}
 
 		private CodePiece generateCode_Void(bool reversed)
@@ -1387,7 +1394,8 @@ namespace BefunGen.AST
 
 			p.AppendRight(BCHelper.PC_Up_tagged(new MethodCall_VerticalExit_Tag()));
 
-			if (reversed) p.reverseX(false);
+			if (reversed)
+				p.reverseX(false);
 
 			return p;
 
@@ -1395,7 +1403,7 @@ namespace BefunGen.AST
 
 		private CodePiece generateCode_Value(bool reversed)
 		{
-			CodePiece p = new CodePiece(); 
+			CodePiece p = new CodePiece();
 
 			if (reversed)
 			{
@@ -2585,7 +2593,13 @@ namespace BefunGen.AST
 
 		public override Statement_Label findLabelByIdentifier(string ident)
 		{
-			return null;
+			Statement_Label l_body = Body.findLabelByIdentifier(ident);
+			Statement_Label l_else = Else.findLabelByIdentifier(ident);
+
+			if (l_body != null && l_else != null)
+				return null;
+
+			return l_body ?? l_else;
 		}
 
 		public override CodePiece generateCode(bool reversed)
@@ -3022,7 +3036,7 @@ namespace BefunGen.AST
 
 		public override Statement_Label findLabelByIdentifier(string ident)
 		{
-			return null;
+			return Body.findLabelByIdentifier(ident);
 		}
 
 		public override CodePiece generateCode(bool reversed)
@@ -3121,7 +3135,7 @@ namespace BefunGen.AST
 
 			Statement_While s_while = new Statement_While(p, cond, body);
 
-			return new Statement_StatementList(p, new List<Statement>() {init, s_while });
+			return new Statement_StatementList(p, new List<Statement>() { init, s_while });
 		}
 	}
 
@@ -3190,7 +3204,7 @@ namespace BefunGen.AST
 
 		public override Statement_Label findLabelByIdentifier(string ident)
 		{
-			return null;
+			return Body.findLabelByIdentifier(ident);
 		}
 
 		public override CodePiece generateCode(bool reversed)
@@ -3304,6 +3318,191 @@ namespace BefunGen.AST
 			}
 		}
 	}
+
+	public class Statement_Switch : Statement
+	{
+		public Expression Condition;
+		public List<Switch_Case> Cases;
+		public Statement DefaultCase;
+
+		public Statement_Switch(SourceCodePosition pos, Expression c, List_Switchs lst)
+			: base(pos)
+		{
+			this.Condition = c;
+
+			Cases = lst.List.Where(p => p.Value != null).ToList();
+
+			if (lst.List.Count(p => p.Value == null) == 1)
+			{
+				DefaultCase = lst.List.Single(p => p.Value == null).Body;
+			}
+			else
+			{
+				DefaultCase = new Statement_NOP(pos);
+			}
+		}
+
+		public override string getDebugString() // Whoop Whoop - I can do it in one line
+		{
+			return
+				string.Format("#SWITCH ({0}){1}{2}",
+					Condition.getDebugString(),
+					Environment.NewLine,
+					indent(
+						String.Join(
+							Environment.NewLine + Environment.NewLine,
+							Cases.Select(p =>
+								p.Value.getDebugString() +
+								":" +
+								Environment.NewLine +
+								indent(
+									p.Body.getDebugString()
+								)
+							)
+						) +
+						Environment.NewLine +
+						"default:" +
+						Environment.NewLine +
+						indent(
+							DefaultCase.getDebugString()
+						)
+					)
+				);
+		}
+
+		public override void linkVariables(Method owner)
+		{
+			Condition.linkVariables(owner);
+
+			foreach (Switch_Case sc in Cases)
+			{
+				sc.Body.linkVariables(owner);
+			}
+
+			DefaultCase.linkVariables(owner);
+		}
+
+		public override void inlineConstants()
+		{
+			Condition = Condition.inlineConstants();
+
+			foreach (Switch_Case sc in Cases)
+			{
+				sc.Body.inlineConstants();
+			}
+
+			DefaultCase.inlineConstants();
+		}
+
+		public override void addressCodePoints()
+		{
+			Condition.addressCodePoints();
+
+			foreach (Switch_Case sc in Cases)
+			{
+				sc.Body.addressCodePoints();
+			}
+
+			DefaultCase.addressCodePoints();
+		}
+
+		public override void linkMethods(Program owner)
+		{
+			Condition.linkMethods(owner);
+
+			foreach (Switch_Case sc in Cases)
+			{
+				sc.Body.linkMethods(owner);
+			}
+
+			DefaultCase.linkMethods(owner);
+		}
+
+		public override void linkResultTypes(Method owner)
+		{
+			Condition.linkResultTypes(owner);
+
+			foreach (Switch_Case sc in Cases)
+			{
+				sc.Body.linkResultTypes(owner);
+			}
+
+			DefaultCase.linkResultTypes(owner);
+
+			// Test for correct Types: //
+			//#########################//
+
+			BType expected = Condition.getResultType();
+
+			foreach (Switch_Case sc in Cases)
+			{
+				BType present = sc.Value.getBType();
+
+				if (present != expected)
+					throw new WrongTypeException(sc.Value.Position, present, expected);
+			}
+
+			// Test for duplicate Cases: //
+			//###########################//
+
+			foreach (Switch_Case sc in Cases)
+			{
+				if (Cases.Where(p => p != sc).Any(p => p.Value.ValueEquals(sc.Value)))
+				{
+					throw new DuplicateSwitchCaseException(sc.Value.Position, sc.Value);
+				}
+			}
+		}
+
+		public override bool allPathsReturn()
+		{
+			bool result = true;
+
+			foreach (Switch_Case sc in Cases)
+			{
+				result &= sc.Body.allPathsReturn();
+			}
+
+			result &= DefaultCase.allPathsReturn();
+
+			return result; // Its possible that the Body isnt executed at all
+		}
+
+		public override Statement_Label findLabelByIdentifier(string ident)
+		{
+			Statement_Label result = null;
+
+			result = DefaultCase.findLabelByIdentifier(ident);
+
+			foreach (Switch_Case sc in Cases)
+			{
+				Statement_Label found = sc.Body.findLabelByIdentifier(ident);
+				if (found != null && result != null)
+					return null;
+				if (found != null && result == null)
+					result = found;
+			}
+
+			return result;
+		}
+
+		public override CodePiece generateCode(bool reversed)
+		{
+			throw new BGNotImplementedException();
+
+			if (reversed)
+			{
+				#region Reversed
+				#endregion
+			}
+			else
+			{
+				#region Normal
+				#endregion
+			}
+		}
+	}
+
 
 	#endregion Constructs
 }

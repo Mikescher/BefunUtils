@@ -18,6 +18,11 @@ namespace BefunGen.AST
 		//TODO Optimize -> PreCalculated Expressions (Constants, x * 0, x + 0, x * 1, == 0, != 0, etc etc)
 		//TODO Optimize -> ArrayValuePointer/DisplayArrayPointer when Indizies Constant -> Direct Link
 		//TODO Optimize -> Remove unreachable Methods
+		//TODO Optimize -> Remove unused global/local variables (not params)
+		//TODO Optimize -> Remove NOP - Switch Cases
+		//TODO Optimize -> Empty StatementLists => NOP
+		//TODO Optimize -> Remove NOP's in the middle of StatementLists
+
 		public string Identifier;
 
 		public readonly Method MainMethod;

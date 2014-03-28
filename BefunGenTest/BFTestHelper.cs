@@ -1,9 +1,6 @@
 ﻿using BefunGen.AST;
 using BefunGen.AST.CodeGen;
-using BefunGen.AST.CodeGen.NumberCode;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
 namespace BefunGenTest
@@ -14,9 +11,20 @@ namespace BefunGenTest
 
 		#region Parsing
 
-		public static Program parseExpression(string type, string expr)
+		public static Program parseExpression_lr(string type, string expr)
 		{
 			string txt = String.Format("program b var {0} a; begin a = {1}; QUIT; end end", type, expr);
+			BefunGen.AST.Program p = GParser.generateAST(txt);
+
+			if (p == null)
+				throw new Exception(GParser.FailMessage);
+
+			return p;
+		}
+
+		public static Program parseExpression_rl(string type, string expr)
+		{
+			string txt = String.Format("program b var {0} a; begin OUT \"\"; a = {1}; QUIT; end end", type, expr);
 			BefunGen.AST.Program p = GParser.generateAST(txt);
 
 			if (p == null)
@@ -38,7 +46,7 @@ namespace BefunGenTest
 
 		public static Program parseMethod(string call, string meth)
 		{
-			string txt = String.Format("program b begin {0}; end {1} end", call, meth);
+			string txt = String.Format("program b : display[4,4] begin {0}; end {1} end", call, meth);
 			BefunGen.AST.Program p = GParser.generateAST(txt);
 
 			if (p == null)
@@ -65,10 +73,14 @@ namespace BefunGenTest
 		{
 			expr = expr.Replace(@"''", "\"");
 
-			Program e = parseExpression(type, expr);
-			CodePiece pc = e.generateCode();
+			Program e_lr = parseExpression_lr(type, expr);
+			Program e_rl = parseExpression_rl(type, expr);
 
-			TestCP(pc);
+			CodePiece pc_lr = e_lr.generateCode();
+			CodePiece pc_rl = e_rl.generateCode();
+
+			TestCP(pc_lr);
+			TestCP(pc_rl);
 		}
 
 		public static void debugStatement(string stmt)

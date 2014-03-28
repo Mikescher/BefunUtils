@@ -129,4 +129,10 @@ namespace BefunGen.AST.Exceptions
 		public EmptyDisplayAccessException(SourceCodePosition pos)
 			: base("Trying to access a display with size == 0 ", pos) { }
 	}
+
+	public class DuplicateSwitchCaseException : BefunGenUserException
+	{
+		public DuplicateSwitchCaseException(SourceCodePosition pos, Literal_Value val)
+			: base(String.Format("There are more than one Case with the same Value ({0}) in the Switch Statement ", val.getDebugString()), pos) { }
+	}
 }

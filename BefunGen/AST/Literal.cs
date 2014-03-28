@@ -27,6 +27,8 @@ namespace BefunGen.AST
 		{
 			//--
 		}
+
+		public abstract bool ValueEquals(Literal_Value o);
 	}
 
 	public abstract class Literal_Array : Literal
@@ -81,6 +83,11 @@ namespace BefunGen.AST
 		{
 			return NumberCodeHelper.generateCode(Value, reversed);
 		}
+
+		public override bool ValueEquals(Literal_Value o)
+		{
+			return (o is Literal_Int) && (o as Literal_Int).Value == this.Value;
+		}
 	}
 
 	public class Literal_Char : Literal_Value
@@ -106,6 +113,11 @@ namespace BefunGen.AST
 		public override CodePiece generateCode(bool reversed)
 		{
 			return NumberCodeFactory_StringmodeChar.generateCode(Value, reversed) ?? NumberCodeHelper.generateCode(Value, reversed);
+		}
+
+		public override bool ValueEquals(Literal_Value o)
+		{
+			return (o is Literal_Char) && (o as Literal_Char).Value == this.Value;
 		}
 	}
 
@@ -133,6 +145,11 @@ namespace BefunGen.AST
 		{
 			return NumberCodeFactory_Boolean.generateCode(Value);
 		}
+
+		public override bool ValueEquals(Literal_Value o)
+		{
+			return (o is Literal_Bool) && (o as Literal_Bool).Value == this.Value;
+		}
 	}
 
 	public class Literal_Digit : Literal_Value
@@ -158,6 +175,11 @@ namespace BefunGen.AST
 		public override CodePiece generateCode(bool reversed)
 		{
 			return NumberCodeFactory_Digit.generateCode(Value);
+		}
+
+		public override bool ValueEquals(Literal_Value o)
+		{
+			return (o is Literal_Digit) && (o as Literal_Digit).Value == this.Value;
 		}
 	}
 
