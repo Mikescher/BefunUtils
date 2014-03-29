@@ -10,8 +10,6 @@ namespace BefunGen.AST
 {
 	public class Program : ASTObject
 	{
-		//TODO [O] Expression Inc / Dec  ==  f[i++]
-		//TODO [O] Add Switch Statement
 		//TODO Optimize -> StatementList in StatementList --> Include
 		//TODO Optimize -> PreCalculated Expressions (Constants, x * 0, x + 0, x * 1, == 0, != 0, etc etc)
 		//TODO Optimize -> ArrayValuePointer/DisplayArrayPointer when Indizies Constant -> Direct Link
