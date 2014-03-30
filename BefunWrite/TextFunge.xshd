@@ -1,0 +1,87 @@
+﻿<?xml version="1.0"?>
+<SyntaxDefinition name="TextFunge" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
+  <Color name="Comment" foreground="Green" />
+  <Color name="String" foreground="Blue" />
+  <Color name="Char" foreground="Red" />
+  <Color name="Digit" foreground="DarkBlue" />
+  
+  <!-- This is the main ruleset. -->
+  <RuleSet ignoreCase="true">
+    <Span color="Comment" begin="//" />
+    <Span color="Comment" multiline="true" begin="/\*" end="\*/" />
+    
+    <Span color="String">
+      <Begin>"</Begin>
+      <End>"</End>
+      <RuleSet>
+        <!-- nested span for escape sequences -->
+        <Span begin="\\" end="." />
+      </RuleSet>
+    </Span>
+
+    <Span color="Char">
+      <Begin>'</Begin>
+      <End>'</End>
+      <RuleSet>
+        <!-- nested span for escape sequences -->
+        <Span begin="\\" end="." />
+      </RuleSet>
+    </Span>
+    
+    <Keywords fontWeight="bold" foreground="Blue">
+      <Word>if</Word>
+      <Word>else</Word>
+      <Word>begin</Word>
+      <Word>close</Word>
+      <Word>const</Word>
+      <Word>display</Word>
+      <Word>do</Word>
+      <Word>else</Word>
+      <Word>elsif</Word>
+      <Word>end</Word>
+      <Word>false</Word>
+      <Word>for</Word>
+      <Word>global</Word>
+      <Word>goto</Word>
+      <Word>if</Word>
+      <Word>in</Word>
+      <Word>out</Word>
+      <Word>program</Word>
+      <Word>quit</Word>
+      <Word>rand</Word>
+      <Word>repeat</Word>
+      <Word>return</Word>
+      <Word>stop</Word>
+      <Word>then</Word>
+      <Word>true</Word>
+      <Word>until</Word>
+      <Word>var</Word>
+      <Word>while</Word>
+      <Word>switch</Word>
+      <Word>case</Word>
+      <Word>default</Word>
+      
+      <Word>bool</Word>
+      <Word>boolean</Word>
+      <Word>char</Word>
+      <Word>character</Word>
+      <Word>digit</Word>
+      <Word>int</Word>
+      <Word>integer</Word>
+      <Word>void</Word>
+    </Keywords>
+
+    <Rule color="Digit">
+      \b0[xX][0-9a-fA-F]+
+    </Rule>
+    
+    <Rule color="Digit">
+      \b[+-]?[0-9]+
+    </Rule>
+    
+    <Rule color="Digit">
+      \b\#[0-9]
+    </Rule>
+    
+  </RuleSet>
+</SyntaxDefinition>

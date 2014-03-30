@@ -102,6 +102,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="example.tf" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -111,6 +112,30 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="TextFunge.xshd">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="icons\disk-rename.png" />
+    <Resource Include="icons\disk-return.png" />
+    <Resource Include="icons\document.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="icons\control-stop-square.png" />
+    <Resource Include="icons\control.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="icons\folder-open.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="icons\arrow-circle-225-left.png" />
+    <Resource Include="icons\arrow-circle-315.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="icons\box.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

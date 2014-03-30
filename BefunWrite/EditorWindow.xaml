@@ -3,9 +3,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:avEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
         xmlns:avDock="http://schemas.xceed.com/wpf/xaml/avalondock"
-        Title="BefunWrite" Height="350" Width="525">
+        Title="BefunWrite" Height="650" Width="1000">
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
@@ -19,7 +20,60 @@
             <MenuItem Header="Help"/>
         </Menu>
 
-        <avDock:DockingManager Grid.Row="1" x:Name="dockingManager">
+        <StackPanel Orientation="Horizontal" Grid.Row="1" >
+            <Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
+                <Image Source="icons/arrow-circle-225-left.png" />
+            </Button>
+            <Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
+                <Image Source="icons/arrow-circle-315.png" />
+            </Button>
+
+            <Rectangle VerticalAlignment="Stretch" Width="1" Margin="2" Stroke="LightGray" />
+
+            <Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
+                <Image Source="icons/folder-open.png"/>
+            </Button>
+
+            <Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
+                <Image Source="icons/document.png"/>
+            </Button>
+            <Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
+                <Image Source="icons/disk-return.png" />
+            </Button>
+            <Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
+                <Image Source="icons/disk-rename.png" />
+            </Button>
+
+            <Rectangle VerticalAlignment="Stretch" Width="1" Margin="2" Stroke="LightGray" />
+
+            <Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="icons/control.png" />
+                    <TextBlock Text="Start" />
+                </StackPanel>
+            </Button>
+            
+            <ComboBox SelectedIndex="0">
+                <ComboBoxItem Content="Debug" />
+                <ComboBoxItem Content="Release" />
+            </ComboBox>
+            
+            <Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
+                <Image Source="icons/control-stop-square.png" />
+            </Button>
+
+            <Rectangle VerticalAlignment="Stretch" Width="1" Margin="2" Stroke="LightGray" />
+
+            <Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="icons/box.png" />
+                    <TextBlock Text="Build" />
+                </StackPanel>
+            </Button>
+
+        </StackPanel>
+        
+        <avDock:DockingManager Grid.Row="2" x:Name="dockingManager">
             <avDock:DockingManager.Theme>
                 <avDock:AeroTheme/>
             </avDock:DockingManager.Theme>
@@ -28,10 +82,10 @@
                 <avDock:LayoutPanel Orientation="Horizontal">
                     <avDock:LayoutDocumentPane>
                         <avDock:LayoutAnchorable Title="Code Editor">
-                            <avEdit:TextEditor Grid.Row="1" x:Name="codeEditor" FontFamily="Consolas" SyntaxHighlighting="C#" FontSize="10pt"/>
+                            <avEdit:TextEditor Grid.Row="1" x:Name="codeEditor" FontFamily="Consolas" FontSize="10pt"/>
                         </avDock:LayoutAnchorable>
                     </avDock:LayoutDocumentPane>
-                    <avDock:LayoutAnchorablePane DockWidth="150">
+                    <avDock:LayoutAnchorablePane DockWidth="250">
                         <avDock:LayoutAnchorable Title="Program Explorer">
                             <TreeView/>
                         </avDock:LayoutAnchorable>

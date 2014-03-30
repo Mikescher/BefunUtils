@@ -1,17 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ICSharpCode.AvalonEdit.Highlighting;
+using ICSharpCode.AvalonEdit.Highlighting.Xshd;
+using System.IO;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using System.Xml;
 
 namespace BefunWrite
 {
@@ -23,6 +14,33 @@ namespace BefunWrite
 		public MainWindow()
 		{
 			InitializeComponent();
+
+			Init();
+		}
+
+		private void Init()
+		{
+			using (XmlReader reader = new XmlTextReader(new StringReader(Properties.Resources.TextFunge)))
+			{
+				IHighlightingDefinition customHighlighting = HighlightingLoader.Load(reader, HighlightingManager.Instance);
+				codeEditor.SyntaxHighlighting = customHighlighting;
+			}
+
+			codeEditor.ShowLineNumbers = true;
+			codeEditor.Options.CutCopyWholeLine = true;
+			codeEditor.Options.ShowTabs = true;
+
+			codeEditor.Text = Properties.Resources.example;
 		}
 	}
 }
+
+
+//TODO Check Licenses:
+// AvalonEdit
+// AvalonDock
+// GOLDTools
+// OpenTK
+// QuickFont
+// SyntaxBox (?)
+// Fugue Icon Set
