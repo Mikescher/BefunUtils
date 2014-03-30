@@ -1765,7 +1765,7 @@ namespace BefunGen.AST
 
 		public override string getDebugString()
 		{
-			return string.Format("(! {1})", Expr.getDebugString());
+			return string.Format("(! {0})", Expr.getDebugString());
 		}
 
 		public override void linkResultTypes(Method owner)
