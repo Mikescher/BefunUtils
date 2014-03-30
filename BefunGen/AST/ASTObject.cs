@@ -22,6 +22,8 @@ namespace BefunGen.AST
 
 		public readonly SourceCodePosition Position;
 
+		public static CodeGenOptions CGO = new CodeGenOptions();
+
 		public ASTObject(SourceCodePosition pos)
 		{
 			this.Position = pos;

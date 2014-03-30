@@ -22,7 +22,7 @@ namespace BefunGen.AST.CodeGen.NumberCode
 		{
 			CodePiece p;
 
-			if (CodeGenOptions.NumberLiteralRepresentation == NumberRep.Best)
+			if (ASTObject.CGO.NumberLiteralRepresentation == NumberRep.Best)
 			{
 				List<Tuple<NumberRep, CodePiece>> representations = generateAllCode(Value, true);
 
@@ -39,42 +39,42 @@ namespace BefunGen.AST.CodeGen.NumberCode
 					}
 				}
 			}
-			else if (CodeGenOptions.NumberLiteralRepresentation == NumberRep.StringmodeChar)
+			else if (ASTObject.CGO.NumberLiteralRepresentation == NumberRep.StringmodeChar)
 			{
 				p = NumberCodeFactory_StringmodeChar.generateCode(Value);
 				lastRep = NumberRep.StringmodeChar;
 
 				return p;
 			}
-			else if (CodeGenOptions.NumberLiteralRepresentation == NumberRep.Base9)
+			else if (ASTObject.CGO.NumberLiteralRepresentation == NumberRep.Base9)
 			{
 				p = NumberCodeFactory_Base9.generateCode(Value);
 				lastRep = NumberRep.Base9;
 
 				return p;
 			}
-			else if (CodeGenOptions.NumberLiteralRepresentation == NumberRep.Factorization)
+			else if (ASTObject.CGO.NumberLiteralRepresentation == NumberRep.Factorization)
 			{
 				p = NumberCodeFactory_Factorization.generateCode(Value);
 				lastRep = NumberRep.Factorization;
 
 				return p;
 			}
-			else if (CodeGenOptions.NumberLiteralRepresentation == NumberRep.Stringify)
+			else if (ASTObject.CGO.NumberLiteralRepresentation == NumberRep.Stringify)
 			{
 				p = NumberCodeFactory_Stringify.generateCode(Value);
 				lastRep = NumberRep.Stringify;
 
 				return p;
 			}
-			else if (CodeGenOptions.NumberLiteralRepresentation == NumberRep.Digit)
+			else if (ASTObject.CGO.NumberLiteralRepresentation == NumberRep.Digit)
 			{
 				p = NumberCodeFactory_Digit.generateCode(Value);
 				lastRep = NumberRep.Digit;
 
 				return p;
 			}
-			else if (CodeGenOptions.NumberLiteralRepresentation == NumberRep.Boolean)
+			else if (ASTObject.CGO.NumberLiteralRepresentation == NumberRep.Boolean)
 			{
 				p = NumberCodeFactory_Boolean.generateCode(Value);
 				lastRep = NumberRep.Boolean;

@@ -548,7 +548,7 @@ namespace BefunGen.AST.CodeGen
 			right = right.copy();
 
 			CodePiece compress_conn;
-			if (CodeGenOptions.CompressHorizontalCombining && (compress_conn = doCompressHorizontally(this, right)) != null)
+			if (ASTObject.CGO.CompressHorizontalCombining && (compress_conn = doCompressHorizontally(this, right)) != null)
 			{
 				this.RemoveColumn(this.MaxX - 1);
 				right.RemoveColumn(right.MinX);
@@ -592,7 +592,7 @@ namespace BefunGen.AST.CodeGen
 			left = left.copy();
 
 			CodePiece compress_conn;
-			if (CodeGenOptions.CompressHorizontalCombining && (compress_conn = doCompressHorizontally(left, this)) != null)
+			if (ASTObject.CGO.CompressHorizontalCombining && (compress_conn = doCompressHorizontally(left, this)) != null)
 			{
 				this.RemoveColumn(this.MinX);
 				left.RemoveColumn(left.MaxX - 1);
@@ -637,7 +637,7 @@ namespace BefunGen.AST.CodeGen
 			bot = bot.copy();
 
 			CodePiece compress_conn;
-			if (CodeGenOptions.CompressVerticalCombining && (compress_conn = doCompressVertically(this, bot)) != null)
+			if (ASTObject.CGO.CompressVerticalCombining && (compress_conn = doCompressVertically(this, bot)) != null)
 			{
 				this.RemoveRow(this.MaxY - 1);
 				bot.RemoveRow(bot.MinY);
@@ -681,7 +681,7 @@ namespace BefunGen.AST.CodeGen
 			top = top.copy();
 
 			CodePiece compress_conn;
-			if (CodeGenOptions.CompressVerticalCombining && (compress_conn = doCompressVertically(top, this)) != null)
+			if (ASTObject.CGO.CompressVerticalCombining && (compress_conn = doCompressVertically(top, this)) != null)
 			{
 				this.RemoveRow(this.MinY);
 				top.RemoveRow(top.MaxY - 1);

@@ -157,7 +157,7 @@ namespace BefunGen.AST
 			if (Variables.Count(t => t is VarDeclaration_Array) > 0)
 				max_arr = Variables.Where(t => t is VarDeclaration_Array).Select(t => t as VarDeclaration_Array).Max(t => t.Size);
 
-			int maxwidth = Math.Max(max_arr, CodeGenOptions.DefaultVarDeclarationWidth);
+			int maxwidth = Math.Max(max_arr, CGO.DefaultVarDeclarationWidth);
 
 			for (int i = 0; i < Variables.Count; i++)
 			{
@@ -179,12 +179,12 @@ namespace BefunGen.AST
 
 				if (var is VarDeclaration_Value)
 				{
-					lit[0, 0] = CodeGenOptions.DefaultVarDeclarationSymbol.copyWithTag(new VarDeclaration_Tag(var));
+					lit[0, 0] = CGO.DefaultVarDeclarationSymbol.copyWithTag(new VarDeclaration_Tag(var));
 				}
 				else
 				{
 					int sz = (var as VarDeclaration_Array).Size;
-					lit.Fill(0, 0, sz, 1, CodeGenOptions.DefaultVarDeclarationSymbol, new VarDeclaration_Tag(var));
+					lit.Fill(0, 0, sz, 1, CGO.DefaultVarDeclarationSymbol, new VarDeclaration_Tag(var));
 				}
 
 				var.CodePositionX = mo_x + paramX;

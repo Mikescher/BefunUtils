@@ -219,7 +219,7 @@ namespace BefunGen.AST
 
 		protected override void AppendDefaultValue()
 		{
-			Value.Add(CodeGenOptions.DefaultNumeralValue);
+			Value.Add(CGO.DefaultNumeralValue);
 		}
 
 		public override CodePiece generateCode(bool reversed)
@@ -283,7 +283,7 @@ namespace BefunGen.AST
 
 		protected override void AppendDefaultValue()
 		{
-			Value.Add(CodeGenOptions.DefaultCharacterValue);
+			Value.Add(CGO.DefaultCharacterValue);
 		}
 
 		public override CodePiece generateCode(bool reversed)
@@ -350,7 +350,7 @@ namespace BefunGen.AST
 
 		protected override void AppendDefaultValue()
 		{
-			Value.Add(CodeGenOptions.DefaultBooleanValue);
+			Value.Add(CGO.DefaultBooleanValue);
 		}
 
 		public override CodePiece generateCode(bool reversed)
@@ -416,7 +416,7 @@ namespace BefunGen.AST
 
 		protected override void AppendDefaultValue()
 		{
-			Value.Add(CodeGenOptions.DefaultNumeralValue);
+			Value.Add(CGO.DefaultNumeralValue);
 		}
 
 		public override CodePiece generateCode(bool reversed)

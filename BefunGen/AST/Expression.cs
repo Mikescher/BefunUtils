@@ -120,7 +120,7 @@ namespace BefunGen.AST
 				MathExt.Swap(ref cp_l, ref cp_r); // In Reverse Mode l & r are reversed and then they are reversed added
 			}
 
-			if (CodeGenOptions.StripDoubleStringmodeToogle)
+			if (CGO.StripDoubleStringmodeToogle)
 			{
 				if (cp_l.lastColumnIsSingle() && cp_r.firstColumnIsSingle() && cp_l[cp_l.MaxX - 1, 0].Type == BefungeCommandType.Stringmode && cp_r[0, 0].Type == BefungeCommandType.Stringmode)
 				{
@@ -1874,7 +1874,7 @@ namespace BefunGen.AST
 
 		public override CodePiece generateCode(bool reversed)
 		{
-			if (CodeGenOptions.ExtendedBooleanCast && Type.GetType() == typeof(BType_Bool))
+			if (CGO.ExtendedBooleanCast && Type.GetType() == typeof(BType_Bool))
 			{
 				CodePiece p = Expr.generateCode(reversed);
 

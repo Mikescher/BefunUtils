@@ -197,7 +197,7 @@ namespace BefunGen.AST
 
 		public override Literal getDefaultValue()
 		{
-			return new Literal_Int(new SourceCodePosition(), CodeGenOptions.DefaultNumeralValue);
+			return new Literal_Int(new SourceCodePosition(), CGO.DefaultNumeralValue);
 		}
 
 		public override bool isImplicitCastableTo(BType other)
@@ -226,7 +226,7 @@ namespace BefunGen.AST
 
 		public override Literal getDefaultValue()
 		{
-			return new Literal_Digit(new SourceCodePosition(), CodeGenOptions.DefaultNumeralValue);
+			return new Literal_Digit(new SourceCodePosition(), CGO.DefaultNumeralValue);
 		}
 
 		public override bool isImplicitCastableTo(BType other)
@@ -255,7 +255,7 @@ namespace BefunGen.AST
 
 		public override Literal getDefaultValue()
 		{
-			return new Literal_Char(new SourceCodePosition(), CodeGenOptions.DefaultCharacterValue);
+			return new Literal_Char(new SourceCodePosition(), CGO.DefaultCharacterValue);
 		}
 
 		public override bool isImplicitCastableTo(BType other)
@@ -284,7 +284,7 @@ namespace BefunGen.AST
 
 		public override Literal getDefaultValue()
 		{
-			return new Literal_Bool(new SourceCodePosition(), CodeGenOptions.DefaultBooleanValue);
+			return new Literal_Bool(new SourceCodePosition(), CGO.DefaultBooleanValue);
 		}
 
 		public override bool isImplicitCastableTo(BType other)
@@ -316,7 +316,7 @@ namespace BefunGen.AST
 
 		public override Literal getDefaultValue()
 		{
-			return new Literal_IntArr(new SourceCodePosition(), Enumerable.Repeat((int)CodeGenOptions.DefaultNumeralValue, Size).ToList());
+			return new Literal_IntArr(new SourceCodePosition(), Enumerable.Repeat((int)CGO.DefaultNumeralValue, Size).ToList());
 		}
 
 		public override bool isImplicitCastableTo(BType other)
@@ -349,7 +349,7 @@ namespace BefunGen.AST
 
 		public override Literal getDefaultValue()
 		{
-			return new Literal_CharArr(new SourceCodePosition(), Enumerable.Repeat(CodeGenOptions.DefaultCharacterValue, Size).ToList());
+			return new Literal_CharArr(new SourceCodePosition(), Enumerable.Repeat(CGO.DefaultCharacterValue, Size).ToList());
 		}
 
 		public override bool isImplicitCastableTo(BType other)
@@ -382,7 +382,7 @@ namespace BefunGen.AST
 
 		public override Literal getDefaultValue()
 		{
-			return new Literal_DigitArr(new SourceCodePosition(), Enumerable.Repeat(CodeGenOptions.DefaultNumeralValue, Size).ToList());
+			return new Literal_DigitArr(new SourceCodePosition(), Enumerable.Repeat(CGO.DefaultNumeralValue, Size).ToList());
 		}
 
 		public override bool isImplicitCastableTo(BType other)
@@ -415,7 +415,7 @@ namespace BefunGen.AST
 
 		public override Literal getDefaultValue()
 		{
-			return new Literal_BoolArr(new SourceCodePosition(), Enumerable.Repeat(CodeGenOptions.DefaultBooleanValue, Size).ToList());
+			return new Literal_BoolArr(new SourceCodePosition(), Enumerable.Repeat(CGO.DefaultBooleanValue, Size).ToList());
 		}
 
 		public override bool isImplicitCastableTo(BType other)

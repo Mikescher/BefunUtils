@@ -81,7 +81,7 @@ namespace BefunGen.AST.CodeGen
 			switch (Type)
 			{
 				case BefungeCommandType.NOP:
-					return CodeGenOptions.SetNOPCellsToCustom ? CodeGenOptions.CustomNOPSymbol : ' ';
+					return ASTObject.CGO.SetNOPCellsToCustom ? ASTObject.CGO.CustomNOPSymbol : ' ';
 
 				case BefungeCommandType.Walkway:
 					return ' ';

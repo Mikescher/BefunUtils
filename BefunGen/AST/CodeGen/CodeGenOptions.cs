@@ -12,46 +12,46 @@ namespace BefunGen.AST.CodeGen
 		Best
 	}
 
-	public static class CodeGenOptions
+	public class CodeGenOptions
 	{
 		// Defines how Number Literals get represented
-		public static NumberRep NumberLiteralRepresentation = NumberRep.Best;
+		public NumberRep NumberLiteralRepresentation = NumberRep.Best;
 
 		// Removes 2x Stringmodetoogle after each other from Expression (eg "" )
-		public static bool StripDoubleStringmodeToogle = true;
+		public bool StripDoubleStringmodeToogle = true;
 
 		// Every NOP-Command is displayed as an Exit-Command
-		public static bool SetNOPCellsToCustom = true;
-		public static char CustomNOPSymbol = (char)164;//'@'; //'\u00F8';
+		public bool SetNOPCellsToCustom = true;
+		public char CustomNOPSymbol = (char)164;//'@'; //'\u00F8';
 
 		// When combining two CodePieces try to combine the two connecting columns/rows to a single one
-		public static bool CompressHorizontalCombining = true;
-		public static bool CompressVerticalCombining = true;
+		public bool CompressHorizontalCombining = true;
+		public bool CompressVerticalCombining = true;
 
 		// The aimed width of variable declarations - this is only estimated, long arrays can extend the width
-		public static int DefaultVarDeclarationWidth = 16;
+		public int DefaultVarDeclarationWidth = 16;
 
 		// The Value of reserved for variable fields before initialization 
-		public static BefungeCommand DefaultVarDeclarationSymbol = BCHelper.chr('V');
+		public BefungeCommand DefaultVarDeclarationSymbol = BCHelper.chr('V');
 
 		// The Value of reserved for temp_field before initialization 
-		public static BefungeCommand DefaultTempSymbol = BCHelper.chr('T');
+		public BefungeCommand DefaultTempSymbol = BCHelper.chr('T');
 
 		// The Value of reserved for temp_field_returnval before initialization 
-		public static BefungeCommand DefaultResultTempSymbol = BCHelper.chr('R');
+		public BefungeCommand DefaultResultTempSymbol = BCHelper.chr('R');
 
 		// When hard casting to bool force the value to be '0' or '1'
-		public static bool ExtendedBooleanCast = false;
+		public bool ExtendedBooleanCast = false;
 
 		// Default Values for Init operations
-		public static byte DefaultNumeralValue = 0;
-		public static char DefaultCharacterValue = ' ';
-		public static bool DefaultBooleanValue = false;
+		public byte DefaultNumeralValue = 0;
+		public char DefaultCharacterValue = ' ';
+		public bool DefaultBooleanValue = false;
 
 		// Values for the Display
-		public static BefungeCommand DefaultDisplayValue = BCHelper.chr(' ');
-		public static BefungeCommand DisplayBorder = BCHelper.chr('#');
-		public static int DisplayBorderThickness = 2;
+		public BefungeCommand DefaultDisplayValue = BCHelper.chr(' ');
+		public BefungeCommand DisplayBorder = BCHelper.chr('#');
+		public int DisplayBorderThickness = 2;
 
 		// If set to true you can't Out-Of-Bounce the Display - Set&Get is put into a modulo Width before
 		public static bool DisplayModuloAccess = true; //TODO Standard = false
