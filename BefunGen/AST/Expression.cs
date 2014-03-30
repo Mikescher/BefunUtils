@@ -650,7 +650,7 @@ namespace BefunGen.AST
 
 				p.AppendLeft(NumberCodeHelper.generateCode(Owner.DisplayOffsetX));
 				p.AppendLeft(Target_X.generateCode(reversed));
-				if (CodeGenOptions.DisplayModuloAccess)
+				if (CGO.DisplayModuloAccess)
 					p.AppendLeft(CodePieceStore.ModuloRangeLimiter(Owner.DisplayWidth, reversed));
 				p.AppendLeft(BCHelper.Add);
 
@@ -663,7 +663,7 @@ namespace BefunGen.AST
 
 				p.AppendRight(NumberCodeHelper.generateCode(Owner.DisplayOffsetX));
 				p.AppendRight(Target_X.generateCode(reversed));
-				if (CodeGenOptions.DisplayModuloAccess)
+				if (CGO.DisplayModuloAccess)
 					p.AppendRight(CodePieceStore.ModuloRangeLimiter(Owner.DisplayWidth, reversed));
 				p.AppendRight(BCHelper.Add);
 
@@ -687,7 +687,7 @@ namespace BefunGen.AST
 
 				p.AppendLeft(NumberCodeHelper.generateCode(Owner.DisplayOffsetY));
 				p.AppendLeft(Target_Y.generateCode(reversed));
-				if (CodeGenOptions.DisplayModuloAccess)
+				if (CGO.DisplayModuloAccess)
 					p.AppendLeft(CodePieceStore.ModuloRangeLimiter(Owner.DisplayHeight, reversed));
 				p.AppendLeft(BCHelper.Add);
 
@@ -700,7 +700,7 @@ namespace BefunGen.AST
 
 				p.AppendRight(NumberCodeHelper.generateCode(Owner.DisplayOffsetY));
 				p.AppendRight(Target_Y.generateCode(reversed));
-				if (CodeGenOptions.DisplayModuloAccess)
+				if (CGO.DisplayModuloAccess)
 					p.AppendRight(CodePieceStore.ModuloRangeLimiter(Owner.DisplayHeight, reversed));
 				p.AppendRight(BCHelper.Add);
 

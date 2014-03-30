@@ -37,6 +37,9 @@
     <Reference Include="ICSharpCode.AvalonEdit">
       <HintPath>..\packages\AvalonEdit.4.4.0.9727\lib\Net40\ICSharpCode.AvalonEdit.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -71,6 +74,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="TextFungeProject.cs" />
+    <Compile Include="TextFungeProjectWrapper.cs" />
     <Page Include="EditorWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -136,6 +141,16 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="icons\box.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BefunGen\BefunGen.csproj">
+      <Project>{1ff871b2-5334-487a-bb1b-da8245c8083f}</Project>
+      <Name>BefunGen</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BefungExec\BefungExec.csproj">
+      <Project>{9cffc63f-6f1b-44a8-b330-5367bc23bc0e}</Project>
+      <Name>BefungExec</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

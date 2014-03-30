@@ -1,9 +1,24 @@
-﻿<Window x:Class="BefunWrite.MainWindow"
+﻿<Window x:Class="BefunWrite.EditorWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:avEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
         xmlns:avDock="http://schemas.xceed.com/wpf/xaml/avalondock"
         Title="BefunWrite" Height="650" Width="1000">
+
+    <Window.CommandBindings>
+        <CommandBinding Command="Save" Executed="SaveExecuted" />
+        <CommandBinding Command="SaveAs" Executed="SaveAsExecuted" />
+        <CommandBinding Command="Open" Executed="OpenExecuted" />
+        <CommandBinding Command="New" Executed="NewExecuted" />
+    </Window.CommandBindings>
+
+    <Window.InputBindings>
+        <KeyBinding Command="Save" Key="S" Modifiers="Control" />
+        <KeyBinding Command="SaveAs" Key="S" Modifiers="Control+Shift" />
+        <KeyBinding Command="Open" Key="O" Modifiers="Control" />
+        <KeyBinding Command="New" Key="N" Modifiers="Control" />
+    </Window.InputBindings>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -12,7 +27,15 @@
         </Grid.RowDefinitions>
 
         <Menu Grid.Row="0" VerticalAlignment="Top">
-            <MenuItem Header="File"/>
+            <MenuItem Header="File">
+                <MenuItem Header="New" Command="New"/>
+                <MenuItem Header="Open" Command="Open"/>
+                <Separator/>
+                <MenuItem Header="Save" Command="Save"/>
+                <MenuItem Header="Save As" Command="SaveAs"/>
+                <Separator/>
+                <MenuItem Header="Exit"/>
+            </MenuItem>
             <MenuItem Header="Edit"/>
             <MenuItem Header="View"/>
             <MenuItem Header="Run"/>
@@ -30,17 +53,16 @@
 
             <Rectangle VerticalAlignment="Stretch" Width="1" Margin="2" Stroke="LightGray" />
 
-            <Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
+            <Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Command="Open">
                 <Image Source="icons/folder-open.png"/>
             </Button>
-
-            <Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
+            <Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Command="New">
                 <Image Source="icons/document.png"/>
             </Button>
-            <Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
+            <Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Command="Save">
                 <Image Source="icons/disk-return.png" />
             </Button>
-            <Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
+            <Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Command="SaveAs">
                 <Image Source="icons/disk-rename.png" />
             </Button>
 
@@ -53,9 +75,7 @@
                 </StackPanel>
             </Button>
             
-            <ComboBox SelectedIndex="0">
-                <ComboBoxItem Content="Debug" />
-                <ComboBoxItem Content="Release" />
+            <ComboBox MinWidth="75" x:Name="cbxConfiguration" SelectionChanged="cbxConfiguration_SelectionChanged">
             </ComboBox>
             
             <Button Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
@@ -81,8 +101,8 @@
             <avDock:LayoutRoot>
                 <avDock:LayoutPanel Orientation="Horizontal">
                     <avDock:LayoutDocumentPane>
-                        <avDock:LayoutAnchorable Title="Code Editor">
-                            <avEdit:TextEditor Grid.Row="1" x:Name="codeEditor" FontFamily="Consolas" FontSize="10pt"/>
+                        <avDock:LayoutAnchorable Title="Code Editor" x:Name="dockCodeEditor">
+                            <avEdit:TextEditor Grid.Row="1" x:Name="codeEditor" FontFamily="Consolas" FontSize="10pt" TextChanged="codeEditor_TextChanged"/>
                         </avDock:LayoutAnchorable>
                     </avDock:LayoutDocumentPane>
                     <avDock:LayoutAnchorablePane DockWidth="250">

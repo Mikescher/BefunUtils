@@ -15,46 +15,114 @@ namespace BefunGen.AST.CodeGen
 	public class CodeGenOptions
 	{
 		// Defines how Number Literals get represented
-		public NumberRep NumberLiteralRepresentation = NumberRep.Best;
+		public NumberRep NumberLiteralRepresentation;
 
 		// Removes 2x Stringmodetoogle after each other from Expression (eg "" )
-		public bool StripDoubleStringmodeToogle = true;
+		public bool StripDoubleStringmodeToogle;
 
 		// Every NOP-Command is displayed as an Exit-Command
-		public bool SetNOPCellsToCustom = true;
-		public char CustomNOPSymbol = (char)164;//'@'; //'\u00F8';
+		public bool SetNOPCellsToCustom;
+		public char CustomNOPSymbol;
 
 		// When combining two CodePieces try to combine the two connecting columns/rows to a single one
-		public bool CompressHorizontalCombining = true;
-		public bool CompressVerticalCombining = true;
+		public bool CompressHorizontalCombining;
+		public bool CompressVerticalCombining;
 
 		// The aimed width of variable declarations - this is only estimated, long arrays can extend the width
-		public int DefaultVarDeclarationWidth = 16;
+		public int DefaultVarDeclarationWidth;
 
 		// The Value of reserved for variable fields before initialization 
-		public BefungeCommand DefaultVarDeclarationSymbol = BCHelper.chr('V');
+		public BefungeCommand DefaultVarDeclarationSymbol;
 
 		// The Value of reserved for temp_field before initialization 
-		public BefungeCommand DefaultTempSymbol = BCHelper.chr('T');
+		public BefungeCommand DefaultTempSymbol;
 
 		// The Value of reserved for temp_field_returnval before initialization 
-		public BefungeCommand DefaultResultTempSymbol = BCHelper.chr('R');
+		public BefungeCommand DefaultResultTempSymbol;
 
 		// When hard casting to bool force the value to be '0' or '1'
-		public bool ExtendedBooleanCast = false;
+		public bool ExtendedBooleanCast;
 
 		// Default Values for Init operations
-		public byte DefaultNumeralValue = 0;
-		public char DefaultCharacterValue = ' ';
-		public bool DefaultBooleanValue = false;
+		public byte DefaultNumeralValue;
+		public char DefaultCharacterValue;
+		public bool DefaultBooleanValue;
 
 		// Values for the Display
-		public BefungeCommand DefaultDisplayValue = BCHelper.chr(' ');
-		public BefungeCommand DisplayBorder = BCHelper.chr('#');
-		public int DisplayBorderThickness = 2;
+		public BefungeCommand DefaultDisplayValue;
+		public BefungeCommand DisplayBorder;
+		public int DisplayBorderThickness;
 
 		// If set to true you can't Out-Of-Bounce the Display - Set&Get is put into a modulo Width before
-		public static bool DisplayModuloAccess = true; //TODO Standard = false
+		public bool DisplayModuloAccess;
+
+		public static CodeGenOptions getCGO_Debug()
+		{
+			CodeGenOptions c = new CodeGenOptions();
+
+			c.NumberLiteralRepresentation = NumberRep.Best;
+			c.StripDoubleStringmodeToogle = true;
+
+			c.SetNOPCellsToCustom = true;
+			c.CustomNOPSymbol = (char)164;
+
+			c.CompressHorizontalCombining = true;
+			c.CompressVerticalCombining = true;
+
+			c.DefaultVarDeclarationWidth = 16;
+
+			c.DefaultVarDeclarationSymbol = BCHelper.chr('V');
+			c.DefaultTempSymbol = BCHelper.chr('R');
+			c.DefaultResultTempSymbol = BCHelper.chr('T');
+
+			c.ExtendedBooleanCast = false;
+
+			c.DefaultNumeralValue = 0;
+			c.DefaultCharacterValue = ' ';
+			c.DefaultBooleanValue = false;
+
+			c.DefaultDisplayValue = BCHelper.chr(' ');
+			c.DisplayBorder = BCHelper.chr('#');
+			c.DisplayBorderThickness = 1;
+
+			c.DisplayModuloAccess = false;
+
+			return c;
+		}
+
+		public static CodeGenOptions getCGO_Release()
+		{
+			CodeGenOptions c = new CodeGenOptions();
+
+			c.NumberLiteralRepresentation = NumberRep.Best;
+			c.StripDoubleStringmodeToogle = true;
+
+			c.SetNOPCellsToCustom = false;
+			c.CustomNOPSymbol = '@';
+
+			c.CompressHorizontalCombining = true;
+			c.CompressVerticalCombining = true;
+
+			c.DefaultVarDeclarationWidth = 16;
+
+			c.DefaultVarDeclarationSymbol = BCHelper.chr(' ');
+			c.DefaultTempSymbol = BCHelper.chr(' ');
+			c.DefaultResultTempSymbol = BCHelper.chr(' ');
+
+			c.ExtendedBooleanCast = false;
+
+			c.DefaultNumeralValue = 0;
+			c.DefaultCharacterValue = ' ';
+			c.DefaultBooleanValue = false;
+
+			c.DefaultDisplayValue = BCHelper.chr(' ');
+			c.DisplayBorder = BCHelper.chr('#');
+			c.DisplayBorderThickness = 1;
+
+			c.DisplayModuloAccess = false;
+
+			return c;
+		}
 	}
 
 	//Expressions are Left,0 in ... Right,0 out

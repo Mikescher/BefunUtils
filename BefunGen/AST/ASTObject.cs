@@ -22,7 +22,7 @@ namespace BefunGen.AST
 
 		public readonly SourceCodePosition Position;
 
-		public static CodeGenOptions CGO = new CodeGenOptions();
+		public static CodeGenOptions CGO = CodeGenOptions.getCGO_Debug();
 
 		public ASTObject(SourceCodePosition pos)
 		{

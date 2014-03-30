@@ -1,5 +1,6 @@
 ﻿using BefunGen.AST.CodeGen.Tags;
 using BefunGen.AST.Exceptions;
+using Newtonsoft.Json;
 using System;
 
 namespace BefunGen.AST.CodeGen
@@ -64,6 +65,7 @@ namespace BefunGen.AST.CodeGen
 			//--
 		}
 
+		[JsonConstructor]
 		public BefungeCommand(BefungeCommandType _t, int _p, CodeTag _g)
 		{
 			Type = _t;
