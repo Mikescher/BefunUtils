@@ -14,17 +14,18 @@ namespace BefunWrite
 	/// </summary>
 	public partial class EditorWindow : Window
 	{
-		private TextFungeProjectWrapper project = null;
+		private TextFungeProjectWrapper project = null; // Is Set in constructor
 
 		private bool supressComboBoxChangedEvent = false;
 
 		public EditorWindow()
 		{
+			project = TextFungeProjectWrapper.CreateNew();
+
 			InitializeComponent();
 
 			Init();
 
-			project = TextFungeProjectWrapper.CreateNew();
 			codeEditor.Text = Properties.Resources.example;
 		}
 
@@ -42,6 +43,8 @@ namespace BefunWrite
 		}
 
 		#region Command Events
+
+		#region New
 
 		private void NewExecuted(object sender, ExecutedRoutedEventArgs e)
 		{
@@ -65,6 +68,17 @@ namespace BefunWrite
 			updateUI();
 		}
 
+		private void NewEnabled(object sender, CanExecuteRoutedEventArgs e)
+		{
+			e.CanExecute = true;
+
+			e.Handled = true;
+		}
+
+		#endregion
+
+		#region Save
+
 		private void SaveExecuted(object sender, ExecutedRoutedEventArgs e)
 		{
 			if (DoSave(false))
@@ -73,6 +87,17 @@ namespace BefunWrite
 			}
 		}
 
+		private void SaveEnabled(object sender, CanExecuteRoutedEventArgs e)
+		{
+			e.CanExecute = project.isDirty();
+
+			e.Handled = true;
+		}
+
+		#endregion
+
+		#region Save As
+
 		private void SaveAsExecuted(object sender, ExecutedRoutedEventArgs e)
 		{
 			if (DoSave(true))
@@ -80,6 +105,17 @@ namespace BefunWrite
 				updateUI();
 			}
 		}
+
+		private void SaveAsEnabled(object sender, CanExecuteRoutedEventArgs e)
+		{
+			e.CanExecute = true;
+
+			e.Handled = true;
+		}
+
+		#endregion
+
+		#region Open
 
 		private void OpenExecuted(object sender, ExecutedRoutedEventArgs e)
 		{
@@ -100,6 +136,63 @@ namespace BefunWrite
 
 			DoOpen();
 		}
+
+		private void OpenEnabled(object sender, CanExecuteRoutedEventArgs e)
+		{
+			e.CanExecute = true;
+
+			e.Handled = true;
+		}
+
+		#endregion
+
+		#region Build
+
+		private void BuildExecuted(object sender, ExecutedRoutedEventArgs e)
+		{
+			//
+		}
+
+		private void BuildEnabled(object sender, CanExecuteRoutedEventArgs e)
+		{
+			e.CanExecute = true;
+
+			e.Handled = true;
+		}
+
+		#endregion
+
+		#region Start
+
+		private void StartExecuted(object sender, ExecutedRoutedEventArgs e)
+		{
+			//
+		}
+
+		private void StartEnabled(object sender, CanExecuteRoutedEventArgs e)
+		{
+			e.CanExecute = true;
+
+			e.Handled = true;
+		}
+
+		#endregion
+
+		#region Stop
+
+		private void StopExecuted(object sender, ExecutedRoutedEventArgs e)
+		{
+			//
+		}
+
+		private void StopEnabled(object sender, CanExecuteRoutedEventArgs e)
+		{
+			e.CanExecute = true;
+
+			e.Handled = true;
+		}
+
+		#endregion
 
 		#endregion
 

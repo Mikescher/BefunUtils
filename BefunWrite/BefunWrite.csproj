@@ -74,8 +74,23 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\SimpleToolbarButton.xaml.cs">
+      <DependentUpon>SimpleToolbarButton.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SimpleToolbarSeparator.xaml.cs">
+      <DependentUpon>SimpleToolbarSeparator.xaml</DependentUpon>
+    </Compile>
     <Compile Include="TextFungeProject.cs" />
     <Compile Include="TextFungeProjectWrapper.cs" />
+    <Compile Include="CustomCMDs.cs" />
+    <Page Include="Controls\SimpleToolbarButton.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\SimpleToolbarSeparator.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="EditorWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

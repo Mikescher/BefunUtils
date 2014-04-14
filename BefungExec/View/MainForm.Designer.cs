@@ -39,32 +39,33 @@
 			this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.displayToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.syntaxHighlightingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.showTrailToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.aSCIIStackToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripSeparator();
-			this.zoomToInitialToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.zoomOutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.zoomCompleteOutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.zoomToInitialToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.simulationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.runToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.stepToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
+			this.skipNOPsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripSeparator();
 			this.speedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.lowToolStripMenuItem = new BefungExec.View.ToolStripRadioButtonMenuItem();
+			this.middleToolStripMenuItem = new BefungExec.View.ToolStripRadioButtonMenuItem();
+			this.fastToolStripMenuItem = new BefungExec.View.ToolStripRadioButtonMenuItem();
+			this.veryFastToolStripMenuItem = new BefungExec.View.ToolStripRadioButtonMenuItem();
+			this.fullToolStripMenuItem = new BefungExec.View.ToolStripRadioButtonMenuItem();
 			this.debugToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.debugModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
 			this.removeAllBreakpointsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.showCompleteStackToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.showCompleteOutputToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripSeparator();
-			this.skipNOPsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.zoomCompleteOutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.showTrailToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.lowToolStripMenuItem = new BefungExec.View.ToolStripRadioButtonMenuItem();
-			this.middleToolStripMenuItem = new BefungExec.View.ToolStripRadioButtonMenuItem();
-			this.fastToolStripMenuItem = new BefungExec.View.ToolStripRadioButtonMenuItem();
-			this.veryFastToolStripMenuItem = new BefungExec.View.ToolStripRadioButtonMenuItem();
-			this.fullToolStripMenuItem = new BefungExec.View.ToolStripRadioButtonMenuItem();
+			this.showCurrentStateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.tableLayoutPanel1.SuspendLayout();
 			this.menuStrip1.SuspendLayout();
 			this.SuspendLayout();
@@ -186,6 +187,14 @@
 			this.syntaxHighlightingToolStripMenuItem.Text = "Syntax Highlighting";
 			this.syntaxHighlightingToolStripMenuItem.CheckedChanged += new System.EventHandler(this.syntaxHighlightingToolStripMenuItem_CheckedChanged);
 			// 
+			// showTrailToolStripMenuItem
+			// 
+			this.showTrailToolStripMenuItem.CheckOnClick = true;
+			this.showTrailToolStripMenuItem.Name = "showTrailToolStripMenuItem";
+			this.showTrailToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.showTrailToolStripMenuItem.Text = "Show Trail";
+			this.showTrailToolStripMenuItem.Click += new System.EventHandler(this.showTrailToolStripMenuItem_Click);
+			// 
 			// aSCIIStackToolStripMenuItem
 			// 
 			this.aSCIIStackToolStripMenuItem.CheckOnClick = true;
@@ -199,19 +208,26 @@
 			this.toolStripMenuItem4.Name = "toolStripMenuItem4";
 			this.toolStripMenuItem4.Size = new System.Drawing.Size(177, 6);
 			// 
-			// zoomToInitialToolStripMenuItem
-			// 
-			this.zoomToInitialToolStripMenuItem.Name = "zoomToInitialToolStripMenuItem";
-			this.zoomToInitialToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-			this.zoomToInitialToolStripMenuItem.Text = "Zoom to Initial";
-			this.zoomToInitialToolStripMenuItem.Click += new System.EventHandler(this.zoomToInitialToolStripMenuItem_Click);
-			// 
 			// zoomOutToolStripMenuItem
 			// 
 			this.zoomOutToolStripMenuItem.Name = "zoomOutToolStripMenuItem";
 			this.zoomOutToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
 			this.zoomOutToolStripMenuItem.Text = "Zoom out";
 			this.zoomOutToolStripMenuItem.Click += new System.EventHandler(this.zoomOutToolStripMenuItem_Click);
+			// 
+			// zoomCompleteOutToolStripMenuItem
+			// 
+			this.zoomCompleteOutToolStripMenuItem.Name = "zoomCompleteOutToolStripMenuItem";
+			this.zoomCompleteOutToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.zoomCompleteOutToolStripMenuItem.Text = "Zoom complete out";
+			this.zoomCompleteOutToolStripMenuItem.Click += new System.EventHandler(this.zoomCompleteOutToolStripMenuItem_Click);
+			// 
+			// zoomToInitialToolStripMenuItem
+			// 
+			this.zoomToInitialToolStripMenuItem.Name = "zoomToInitialToolStripMenuItem";
+			this.zoomToInitialToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.zoomToInitialToolStripMenuItem.Text = "Zoom to Initial";
+			this.zoomToInitialToolStripMenuItem.Click += new System.EventHandler(this.zoomToInitialToolStripMenuItem_Click);
 			// 
 			// simulationToolStripMenuItem
 			// 
@@ -245,6 +261,19 @@
 			this.toolStripMenuItem1.Name = "toolStripMenuItem1";
 			this.toolStripMenuItem1.Size = new System.Drawing.Size(129, 6);
 			// 
+			// skipNOPsToolStripMenuItem
+			// 
+			this.skipNOPsToolStripMenuItem.CheckOnClick = true;
+			this.skipNOPsToolStripMenuItem.Name = "skipNOPsToolStripMenuItem";
+			this.skipNOPsToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
+			this.skipNOPsToolStripMenuItem.Text = "Skip NOP\'s";
+			this.skipNOPsToolStripMenuItem.Click += new System.EventHandler(this.skipNOPsToolStripMenuItem_Click);
+			// 
+			// toolStripMenuItem5
+			// 
+			this.toolStripMenuItem5.Name = "toolStripMenuItem5";
+			this.toolStripMenuItem5.Size = new System.Drawing.Size(129, 6);
+			// 
 			// speedToolStripMenuItem
 			// 
 			this.speedToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -256,95 +285,6 @@
 			this.speedToolStripMenuItem.Name = "speedToolStripMenuItem";
 			this.speedToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
 			this.speedToolStripMenuItem.Text = "Speed";
-			// 
-			// debugToolStripMenuItem
-			// 
-			this.debugToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.debugModeToolStripMenuItem,
-            this.toolStripMenuItem2,
-            this.removeAllBreakpointsToolStripMenuItem,
-            this.showCompleteStackToolStripMenuItem,
-            this.showCompleteOutputToolStripMenuItem});
-			this.debugToolStripMenuItem.Name = "debugToolStripMenuItem";
-			this.debugToolStripMenuItem.Size = new System.Drawing.Size(54, 20);
-			this.debugToolStripMenuItem.Text = "Debug";
-			// 
-			// debugModeToolStripMenuItem
-			// 
-			this.debugModeToolStripMenuItem.CheckOnClick = true;
-			this.debugModeToolStripMenuItem.Name = "debugModeToolStripMenuItem";
-			this.debugModeToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
-			this.debugModeToolStripMenuItem.Text = "Debug Mode";
-			this.debugModeToolStripMenuItem.Click += new System.EventHandler(this.debugModeToolStripMenuItem_Click);
-			// 
-			// toolStripMenuItem2
-			// 
-			this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-			this.toolStripMenuItem2.Size = new System.Drawing.Size(194, 6);
-			// 
-			// removeAllBreakpointsToolStripMenuItem
-			// 
-			this.removeAllBreakpointsToolStripMenuItem.Name = "removeAllBreakpointsToolStripMenuItem";
-			this.removeAllBreakpointsToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
-			this.removeAllBreakpointsToolStripMenuItem.Text = "Remove all Breakpoints";
-			this.removeAllBreakpointsToolStripMenuItem.Click += new System.EventHandler(this.removeAllBreakpointsToolStripMenuItem_Click);
-			// 
-			// showCompleteStackToolStripMenuItem
-			// 
-			this.showCompleteStackToolStripMenuItem.Name = "showCompleteStackToolStripMenuItem";
-			this.showCompleteStackToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
-			this.showCompleteStackToolStripMenuItem.Text = "Show complete Stack";
-			this.showCompleteStackToolStripMenuItem.Click += new System.EventHandler(this.showCompleteStackToolStripMenuItem_Click);
-			// 
-			// showCompleteOutputToolStripMenuItem
-			// 
-			this.showCompleteOutputToolStripMenuItem.Name = "showCompleteOutputToolStripMenuItem";
-			this.showCompleteOutputToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
-			this.showCompleteOutputToolStripMenuItem.Text = "Show complete Output";
-			this.showCompleteOutputToolStripMenuItem.Click += new System.EventHandler(this.showCompleteOutputToolStripMenuItem_Click);
-			// 
-			// toolStripMenuItem5
-			// 
-			this.toolStripMenuItem5.Name = "toolStripMenuItem5";
-			this.toolStripMenuItem5.Size = new System.Drawing.Size(129, 6);
-			// 
-			// skipNOPsToolStripMenuItem
-			// 
-			this.skipNOPsToolStripMenuItem.CheckOnClick = true;
-			this.skipNOPsToolStripMenuItem.Name = "skipNOPsToolStripMenuItem";
-			this.skipNOPsToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
-			this.skipNOPsToolStripMenuItem.Text = "Skip NOP\'s";
-			this.skipNOPsToolStripMenuItem.Click += new System.EventHandler(this.skipNOPsToolStripMenuItem_Click);
-			// 
-			// zoomCompleteOutToolStripMenuItem
-			// 
-			this.zoomCompleteOutToolStripMenuItem.Name = "zoomCompleteOutToolStripMenuItem";
-			this.zoomCompleteOutToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-			this.zoomCompleteOutToolStripMenuItem.Text = "Zoom complete out";
-			this.zoomCompleteOutToolStripMenuItem.Click += new System.EventHandler(this.zoomCompleteOutToolStripMenuItem_Click);
-			// 
-			// showTrailToolStripMenuItem
-			// 
-			this.showTrailToolStripMenuItem.CheckOnClick = true;
-			this.showTrailToolStripMenuItem.Name = "showTrailToolStripMenuItem";
-			this.showTrailToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-			this.showTrailToolStripMenuItem.Text = "Show Trail";
-			this.showTrailToolStripMenuItem.Click += new System.EventHandler(this.showTrailToolStripMenuItem_Click);
-			// 
-			// helpToolStripMenuItem
-			// 
-			this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.aboutToolStripMenuItem});
-			this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-			this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
-			this.helpToolStripMenuItem.Text = "Help";
-			// 
-			// aboutToolStripMenuItem
-			// 
-			this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-			this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-			this.aboutToolStripMenuItem.Text = "About ...";
-			this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
 			// 
 			// lowToolStripMenuItem
 			// 
@@ -385,6 +325,75 @@
 			this.fullToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
 			this.fullToolStripMenuItem.Text = "Full";
 			this.fullToolStripMenuItem.CheckedChanged += new System.EventHandler(this.speedToolStripMenuItem_CheckedChanged);
+			// 
+			// debugToolStripMenuItem
+			// 
+			this.debugToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.debugModeToolStripMenuItem,
+            this.toolStripMenuItem2,
+            this.removeAllBreakpointsToolStripMenuItem,
+            this.showCompleteStackToolStripMenuItem,
+            this.showCompleteOutputToolStripMenuItem,
+            this.showCurrentStateToolStripMenuItem});
+			this.debugToolStripMenuItem.Name = "debugToolStripMenuItem";
+			this.debugToolStripMenuItem.Size = new System.Drawing.Size(54, 20);
+			this.debugToolStripMenuItem.Text = "Debug";
+			// 
+			// debugModeToolStripMenuItem
+			// 
+			this.debugModeToolStripMenuItem.CheckOnClick = true;
+			this.debugModeToolStripMenuItem.Name = "debugModeToolStripMenuItem";
+			this.debugModeToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
+			this.debugModeToolStripMenuItem.Text = "Debug Mode";
+			this.debugModeToolStripMenuItem.Click += new System.EventHandler(this.debugModeToolStripMenuItem_Click);
+			// 
+			// toolStripMenuItem2
+			// 
+			this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+			this.toolStripMenuItem2.Size = new System.Drawing.Size(194, 6);
+			// 
+			// removeAllBreakpointsToolStripMenuItem
+			// 
+			this.removeAllBreakpointsToolStripMenuItem.Name = "removeAllBreakpointsToolStripMenuItem";
+			this.removeAllBreakpointsToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
+			this.removeAllBreakpointsToolStripMenuItem.Text = "Remove all Breakpoints";
+			this.removeAllBreakpointsToolStripMenuItem.Click += new System.EventHandler(this.removeAllBreakpointsToolStripMenuItem_Click);
+			// 
+			// showCompleteStackToolStripMenuItem
+			// 
+			this.showCompleteStackToolStripMenuItem.Name = "showCompleteStackToolStripMenuItem";
+			this.showCompleteStackToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
+			this.showCompleteStackToolStripMenuItem.Text = "Show complete Stack";
+			this.showCompleteStackToolStripMenuItem.Click += new System.EventHandler(this.showCompleteStackToolStripMenuItem_Click);
+			// 
+			// showCompleteOutputToolStripMenuItem
+			// 
+			this.showCompleteOutputToolStripMenuItem.Name = "showCompleteOutputToolStripMenuItem";
+			this.showCompleteOutputToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
+			this.showCompleteOutputToolStripMenuItem.Text = "Show complete Output";
+			this.showCompleteOutputToolStripMenuItem.Click += new System.EventHandler(this.showCompleteOutputToolStripMenuItem_Click);
+			// 
+			// helpToolStripMenuItem
+			// 
+			this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.aboutToolStripMenuItem});
+			this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+			this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+			this.helpToolStripMenuItem.Text = "Help";
+			// 
+			// aboutToolStripMenuItem
+			// 
+			this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
+			this.aboutToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
+			this.aboutToolStripMenuItem.Text = "About ...";
+			this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
+			// 
+			// showCurrentStateToolStripMenuItem
+			// 
+			this.showCurrentStateToolStripMenuItem.Name = "showCurrentStateToolStripMenuItem";
+			this.showCurrentStateToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
+			this.showCurrentStateToolStripMenuItem.Text = "Show current State";
+			this.showCurrentStateToolStripMenuItem.Click += new System.EventHandler(this.showCurrentStateToolStripMenuItem_Click);
 			// 
 			// MainForm
 			// 
@@ -445,5 +454,6 @@
 		private System.Windows.Forms.ToolStripMenuItem showTrailToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem showCurrentStateToolStripMenuItem;
 	}
 }

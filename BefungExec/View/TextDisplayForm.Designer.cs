@@ -35,6 +35,7 @@
 			// 
 			this.textBox1.BackColor = System.Drawing.Color.White;
 			this.textBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.textBox1.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.textBox1.Location = new System.Drawing.Point(5, 5);
 			this.textBox1.Multiline = true;
 			this.textBox1.Name = "textBox1";
@@ -42,6 +43,7 @@
 			this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
 			this.textBox1.Size = new System.Drawing.Size(554, 413);
 			this.textBox1.TabIndex = 0;
+			this.textBox1.WordWrap = false;
 			// 
 			// TextDisplayForm
 			// 

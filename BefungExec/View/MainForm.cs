@@ -966,6 +966,27 @@ namespace BefungExec.View
 			new TextDisplayForm("Output", s).ShowDialog();
 		}
 
+		private void showCurrentStateToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			StringBuilder s = new StringBuilder();
+
+			for (int y = 0; y < prog.Height; y++)
+			{
+				for (int x = 0; x < prog.Width; x++)
+				{
+					int chr = prog.raster[x, y];
+
+					if (chr < ' ' || chr > '~')
+						chr = ' ';
+
+					s.Append((char)chr);
+				}
+				s.Append(Environment.NewLine);
+			}
+
+			new TextDisplayForm("Program", s.ToString()).ShowDialog();
+		}
+
 		private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			//TODO Show About Dialog

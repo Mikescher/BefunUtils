@@ -3,7 +3,7 @@
   <Class Name="BefunGen.AST.ASTObject" Collapsed="true">
     <Position X="4.75" Y="16.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AACAIAAAAAAAAgAgBQAAAAAAAAAAAAAAAAAAEAAAAAA=</HashCode>
+      <HashCode>AACBIAAAAAAAAgAgBQAAAAAAAAAAAAAAAAAAEAAAAAA=</HashCode>
       <FileName>AST\ASTObject.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -478,8 +478,8 @@
       <Path>
         <Point X="5.5" Y="17.062" />
         <Point X="5.5" Y="17.625" />
-        <Point X="1.906" Y="17.625" />
-        <Point X="1.906" Y="18.846" />
+        <Point X="0.416" Y="17.625" />
+        <Point X="0.416" Y="18.846" />
         <Point X="1.25" Y="18.846" />
         <Point X="1.25" Y="19" />
       </Path>
@@ -767,7 +767,7 @@
   <Class Name="BefunGen.AST.CodeGen.CodeGenOptions" Collapsed="true">
     <Position X="21.75" Y="3.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAASAAAIAA4ACAAAAUAgAAIAAAIAAASEAAIACAAAAAA=</HashCode>
+      <HashCode>AAASAAAIAA4ACEAAAUAgAAIAAAIAAASEAAIACAAAAAA=</HashCode>
       <FileName>AST\CodeGen\CodeGenOptions.cs</FileName>
     </TypeIdentifier>
   </Class>
