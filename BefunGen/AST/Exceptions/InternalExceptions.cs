@@ -1,4 +1,5 @@
 ﻿using BefunGen.AST.CodeGen;
+using System;
 
 namespace BefunGen.AST.Exceptions
 {
@@ -78,5 +79,11 @@ namespace BefunGen.AST.Exceptions
 	{
 		public MissingReductionRuleException(string r)
 			: base("Reduction Rule for " + r + " is missing.") { }
+	}
+
+	public class NativeException : BefunGenInternalException
+	{
+		public NativeException(Exception e)
+			: base("Native Exception:" + e.ToString()) { }
 	}
 }

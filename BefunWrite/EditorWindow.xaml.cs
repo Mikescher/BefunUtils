@@ -1,11 +1,17 @@
-﻿using BefunWrite.Dialogs;
+﻿using BefunGen.AST;
+using BefunGen.AST.Exceptions;
+using BefunWrite.Controls;
+using BefunWrite.Dialogs;
 using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using Microsoft.Win32;
 using System;
+using System.Diagnostics;
 using System.IO;
+using System.Threading;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Threading;
 using System.Xml;
 
 namespace BefunWrite
@@ -15,9 +21,20 @@ namespace BefunWrite
 	/// </summary>
 	public partial class EditorWindow : Window
 	{
+		private const int PARSE_WAIT_TIME = 666; // Minimal Time (in ms) without Button Press for Parsing
+
 		private TextFungeProjectWrapper project = null; // Is Set in constructor
 
+		private IconBarMargin IconBar;
+
 		private bool supressComboBoxChangedEvent = false;
+
+		private Thread parseThread;
+		private bool parseThreadRunning = true;
+
+		private TextFungeParser Parser;
+
+		#region Konstruktor & Init
 
 		public EditorWindow()
 		{
@@ -41,7 +58,21 @@ namespace BefunWrite
 			codeEditor.ShowLineNumbers = true;
 			codeEditor.Options.CutCopyWholeLine = true;
 			codeEditor.Options.ShowTabs = true;
+
+			codeEditor.TextArea.LeftMargins.Insert(0, IconBar = new IconBarMargin(codeEditor));
+
+			//######################
+
+			parseThread = new Thread(work);
+			parseThread.IsBackground = true;
+			parseThread.Start();
+
+			//######################
+
+			Parser = new TextFungeParser();
 		}
+
+		#endregion
 
 		#region Command Events
 
@@ -241,7 +272,33 @@ namespace BefunWrite
 			updateUI();
 		}
 
+		private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+		{
+			if (project.isDirty())
+			{
+				MessageBoxResult r = MessageBox.Show("There are unsaved changes. Save now ?", "Unsaved changes", MessageBoxButton.YesNoCancel, MessageBoxImage.Information);
+
+				switch (r)
+				{
+					case MessageBoxResult.Yes:
+						if (!DoSave(false))
+							e.Cancel = true;
+						break;
+					case MessageBoxResult.Cancel:
+						e.Cancel = true;
+						break;
+				}
+			}
+		}
+
+		private void Window_Closed(object sender, EventArgs e)
+		{
+			parseThreadRunning = false;
+		}
+
 		#endregion
+
+		#region Load & Save
 
 		private bool DoSave(bool savenew)
 		{
@@ -322,6 +379,10 @@ namespace BefunWrite
 			}
 		}
 
+		#endregion
+
+		#region UpdateUI
+
 		private void updateUI()
 		{
 			supressComboBoxChangedEvent = true;
@@ -338,6 +399,72 @@ namespace BefunWrite
 
 			dockCodeEditor.Title = (String.IsNullOrWhiteSpace(project.ProjectConfig.SourceCodePath) ? "New" : Path.GetFileName(project.ProjectConfig.SourceCodePath)) + (project.isDirty() ? "*" : "");
 		}
+
+		#endregion
+
+		#region Background Parsing
+
+		private string getTSCode()
+		{
+			string t = "<>";
+			System.Windows.Application.Current.Dispatcher.Invoke(DispatcherPriority.Normal, (ThreadStart)delegate { t = codeEditor.Text; });
+			return t;
+		}
+
+		private void work()
+		{
+			string currentTxt = null;
+
+			while (parseThreadRunning)
+			{
+				string newtxt = getTSCode();
+
+				if (newtxt != currentTxt)
+				{
+					bool hasChangedAgain = true;
+					while (hasChangedAgain)
+					{
+						Thread.Sleep(PARSE_WAIT_TIME);
+						string newnewtxt = getTSCode();
+						hasChangedAgain = (newnewtxt != newtxt);
+						newtxt = newnewtxt;
+					}
+
+					DoThreadedErrorParse(newtxt);
+
+					currentTxt = newtxt;
+				}
+				else
+				{
+					Thread.Sleep(100);
+				}
+			}
+		}
+
+		private void DoThreadedErrorParse(string code)
+		{
+			Debug.WriteLine("DoThreadedErrorParse(..)");
+
+			BefunGenException error;
+
+			if (Parser.TryParse(code, out error))
+			{
+				System.Windows.Application.Current.Dispatcher.Invoke(DispatcherPriority.Normal, (ThreadStart)delegate
+				{
+					IconBar.SetError(-1, "");
+				});
+			}
+			else
+			{
+				System.Windows.Application.Current.Dispatcher.Invoke(DispatcherPriority.Normal, (ThreadStart)delegate
+				{
+					IconBar.SetError(error.Position.Line, error.ToPopupString());
+				});
+			}
+		}
+
+		#endregion
+
 	}
 }
 

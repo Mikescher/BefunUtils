@@ -5,7 +5,7 @@
         xmlns:ctrls="clr-namespace:BefunWrite.Controls"
         xmlns:avEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
         xmlns:avDock="http://schemas.xceed.com/wpf/xaml/avalondock"
-        Title="BefunWrite" Height="650" Width="1000">
+        Title="BefunWrite" Height="650" Width="1000" Closing="Window_Closing" Closed="Window_Closed">
 
     <Window.CommandBindings>
         <CommandBinding Command="Save"                            Executed="SaveExecuted"            CanExecute="SaveEnabled"            />

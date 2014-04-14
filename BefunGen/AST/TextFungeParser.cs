@@ -32,6 +32,8 @@ namespace BefunGen.AST
 
 		public Program generateAST(string txt)
 		{
+			FailMessage = "";
+
 			ParseTime = Environment.TickCount;
 
 			Program result = null;
@@ -74,9 +76,61 @@ namespace BefunGen.AST
 			return result;
 		}
 
+		public bool TryParse(string txt, out BefunGenException err)
+		{
+			FailMessage = "";
+
+			ParseTime = Environment.TickCount;
+
+			Program result = null;
+
+			try
+			{
+				result = (Program)parse(txt);
+			}
+			catch (BefunGenException e)
+			{
+				err = e;
+				return false;
+			}
+			catch (Exception e)
+			{
+				err = new NativeException(e);
+				return false;
+			}
+
+			if (result == null)
+			{
+				err = new WTFException();
+				return false;
+			}
+
+			try
+			{
+				result.prepare();
+			}
+			catch (BefunGenException e)
+			{
+				err = e;
+				return false;
+			}
+			catch (Exception e)
+			{
+				err = new NativeException(e);
+				return false;
+			}
+
+			ParseTime = Environment.TickCount - ParseTime;
+
+			err = null;
+			return true;
+		}
+
 		private object parse(string txt)
 		{
 			object result = null;
+
+			txt = txt.Replace("\r\n", "\n") + "\n";
 
 			parser.Open(ref txt);
 			parser.TrimReductions = false;

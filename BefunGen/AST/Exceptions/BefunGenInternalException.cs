@@ -1,8 +1,4 @@
 ﻿using BefunGen.AST.CodeGen;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace BefunGen.AST.Exceptions
 {
@@ -16,6 +12,11 @@ namespace BefunGen.AST.Exceptions
 		public BefunGenInternalException(string msg)
 			: base("INTERNAL", msg)
 		{
+		}
+
+		public override string ToPopupString()
+		{
+			return "[Internal Exception] " + this.GetType().Name + "\r\n    > " + BefMessage;
 		}
 	}
 }

@@ -87,6 +87,7 @@
     <Compile Include="Controls\CharSpinner.xaml.cs">
       <DependentUpon>CharSpinner.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\IconBarMargin.cs" />
     <Compile Include="Controls\SimpleToolbarButton.xaml.cs">
       <DependentUpon>SimpleToolbarButton.xaml</DependentUpon>
     </Compile>
@@ -192,6 +193,9 @@
       <Project>{9cffc63f-6f1b-44a8-b330-5367bc23bc0e}</Project>
       <Name>BefungExec</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="icons\exclamation-diamond-frame.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
