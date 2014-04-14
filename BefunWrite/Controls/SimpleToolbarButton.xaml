@@ -3,16 +3,17 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BefunWrite.Controls" 
              mc:Ignorable="d">
-    
+
     <UserControl.Resources>
         <Style TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
         </Style>
     </UserControl.Resources>
-    
+
     <Button Name ="btn" Command="Save">
         <StackPanel Orientation="Horizontal" >
-            <Image Name="img"/>
+            <local:AutoGreyableImage x:Name="img"/>
             <TextBlock Name="txt" Margin="5, 0, 0, 0"/>
         </StackPanel>
     </Button>
