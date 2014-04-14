@@ -1,4 +1,5 @@
-﻿using ICSharpCode.AvalonEdit.Highlighting;
+﻿using BefunWrite.Dialogs;
+using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using Microsoft.Win32;
 using System;
@@ -194,6 +195,26 @@ namespace BefunWrite
 
 		#endregion
 
+		#region ShowRunConfig
+
+		private void ShowRunConfigExecuted(object sender, ExecutedRoutedEventArgs e)
+		{
+			RunConfigurationManager rcm = new RunConfigurationManager(project);
+
+			rcm.ShowDialog();
+
+			updateUI();
+		}
+
+		private void ShowRunConfigEnabled(object sender, CanExecuteRoutedEventArgs e)
+		{
+			e.CanExecute = true;
+
+			e.Handled = true;
+		}
+
+		#endregion
+
 		#endregion
 
 		#region Events
@@ -295,6 +316,9 @@ namespace BefunWrite
 				project = pw;
 
 				updateUI();
+				pw.ClearDirty();
+				updateUI();
+
 			}
 		}
 
@@ -326,3 +350,4 @@ namespace BefunWrite
 // QuickFont
 // SyntaxBox (?)
 // Fugue Icon Set
+// TwoColumnGrid (http://www.codeproject.com/Articles/238307/A-Two-Column-Grid-for-WPF)

@@ -60,7 +60,7 @@ namespace BefunGen.AST.CodeGen
 		{
 			CodeGenOptions c = new CodeGenOptions();
 
-			c.NumberLiteralRepresentation = NumberRep.Best;
+			c.NumberLiteralRepresentation = NumberRep.Base9;
 			c.StripDoubleStringmodeToogle = true;
 
 			c.SetNOPCellsToCustom = true;
@@ -122,6 +122,44 @@ namespace BefunGen.AST.CodeGen
 			c.DisplayModuloAccess = false;
 
 			return c;
+		}
+
+		public static int NumberRepToUINumber(NumberRep r)
+		{
+			switch (r)
+			{
+				case NumberRep.StringmodeChar:
+					return -4;
+				case NumberRep.Stringify:
+					return -3;
+				case NumberRep.Digit:
+					return -2;
+				case NumberRep.Boolean:
+					return -1;
+				case NumberRep.Base9:
+					return 0;
+				case NumberRep.Factorization:
+					return 1;
+				case NumberRep.Best:
+					return 2;
+				default:
+					return int.MinValue;
+			}
+		}
+
+		public static NumberRep UINumberToNumberRep(int r, NumberRep def)
+		{
+			switch (r)
+			{
+				case 0:
+					return NumberRep.Base9;
+				case 1:
+					return NumberRep.Factorization;
+				case 2:
+					return NumberRep.Best;
+				default:
+					return def;
+			}
 		}
 	}
 

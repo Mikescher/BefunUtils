@@ -136,5 +136,11 @@ namespace BefunWrite
 		{
 			Sourcecode_isDirty = true;
 		}
+
+		public void ClearDirty()
+		{
+			Sourcecode_isDirty = false;
+			Project_isDirty = false;
+		}
 	}
 }

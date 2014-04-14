@@ -1,0 +1,100 @@
+﻿<Window x:Class="BefunWrite.Dialogs.RunConfigurationManager"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ctrls="clr-namespace:BefunWrite.Controls"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        Title="RunConfigurationManager" Height="300" Width="450">
+    <Grid Background="LightGray">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="35"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="35"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Left" Margin="0" >
+            <ComboBox x:Name="cbxConfigs" Width="150" Margin="5" SelectionChanged="ComboBox_SelectionChanged"/>
+            <Button Content="New" Padding="10, 0" Margin="5" Click="New_Click"/>
+            <Button Content="Delete" Padding="10, 0" Margin="5" Click="Delete_Click"/>
+        </StackPanel>
+
+        <Border Grid.Row="1" Background="White">
+            <ScrollViewer Padding="5, 10">
+                <ctrls:TwoColumnGrid RowSpacing="5" ColumnSpacing="5">
+                    <Label Content="Configuration Name" />
+                    <TextBox x:Name="V_ConfigName" VerticalAlignment="Center"/>
+
+                    <Rectangle Height="10"/>
+                    <Rectangle Height="10"/>
+
+                    <Label Content="Numberliteral Representation" />
+                    <ComboBox x:Name="V_NumberLiteralRepresentation" VerticalAlignment="Center">
+                        <ComboBoxItem Content="Base9"/>
+                        <ComboBoxItem Content="Factorization"/>
+                        <ComboBoxItem Content="Best"/>
+                    </ComboBox>
+
+                    <Label Content="Optimize Double StringmodeToogle" />
+                    <CheckBox x:Name="V_StripDoubleStringmodeToogle" VerticalAlignment="Center"/>
+
+                    <Label Content="Set NOP-Cells to Special Char" />
+                    <CheckBox x:Name="V_SetNOPCellsToCustom" VerticalAlignment="Center"/>
+
+                    <Label Content="Custom NOP Char" />
+                    <ctrls:CharSpinner x:Name="V_CustomNOPSymbol" VerticalAlignment="Center"/>
+
+                    <Label Content="Horizontal Compression" />
+                    <CheckBox x:Name="V_CompressHorizontalCombining" VerticalAlignment="Center" />
+
+                    <Label Content="Vertical Compression" />
+                    <CheckBox x:Name="V_CompressVerticalCombining" VerticalAlignment="Center" />
+
+                    <Label Content="Minimum VarDeclaration Width" />
+                    <xctk:IntegerUpDown x:Name="V_DefaultVarDeclarationWidth" VerticalAlignment="Center" Minimum="0" Value="0"/>
+
+                    <Label Content="Default VarDeclaration Char" />
+                    <ctrls:CharSpinner x:Name="V_DefaultVarDeclarationSymbol" VerticalAlignment="Center"/>
+
+                    <Label Content="Default TempDeclaration Char" />
+                    <ctrls:CharSpinner x:Name="V_DefaultTempSymbol" VerticalAlignment="Center"/>
+
+                    <Label Content="Default TempResult Char" />
+                    <ctrls:CharSpinner x:Name="V_DefaultResultTempSymbol" VerticalAlignment="Center"/>
+
+                    <Label Content="Safe Boolean Cast" />
+                    <CheckBox x:Name="V_ExtendedBooleanCast" VerticalAlignment="Center"/>
+
+                    <Label Content="Default local Numbervariable Value" />
+                    <xctk:IntegerUpDown x:Name="V_DefaultNumeralValue" VerticalAlignment="Center" Minimum="0" Maximum="255" Value="0"/>
+
+                    <Label Content="Default local Charactervariable Value" />
+                    <ctrls:CharSpinner x:Name="V_DefaultCharacterValue" VerticalAlignment="Center"/>
+
+                    <Label Content="Default local Booleanvariable Value" />
+                    <CheckBox x:Name="V_DefaultBooleanValue" VerticalAlignment="Center"/>
+
+                    <Label Content="Initial Display Char" />
+                    <ctrls:CharSpinner x:Name="V_DefaultDisplayValue" VerticalAlignment="Center"/>
+
+                    <Label Content="Display Border Value" />
+                    <ctrls:CharSpinner x:Name="V_DisplayBorder" VerticalAlignment="Center"/>
+
+                    <Label Content="Display Borderthickness" />
+                    <xctk:IntegerUpDown x:Name="V_DisplayBorderThickness" VerticalAlignment="Center" Minimum="0" Value="0"/>
+
+                    <Label Content="Preven Overflow in Display Access" />
+                    <CheckBox x:Name="V_DisplayModuloAccess" VerticalAlignment="Center"/>
+                    
+                    
+                    <Rectangle />
+                    <Button Content="Save" Click="Save_Click"/>
+                    
+                </ctrls:TwoColumnGrid>
+            </ScrollViewer>
+        </Border>
+        
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="5">
+            <Button Content="Close" Width="80" Click="Close_Click"/>
+        </StackPanel>
+
+    </Grid>
+</Window>

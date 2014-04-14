@@ -1,0 +1,18 @@
+﻿<UserControl
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:local="clr-namespace:BefunWrite.Controls" x:Class="BefunWrite.Controls.CharSpinner"
+             mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <local:UIntToDispCharConverter x:Key="UIntToDispCharConverter"/>
+    </UserControl.Resources>
+
+    <xctk:ButtonSpinner Spin="ButtonSpinner_Spin">
+        <TextBox Text="{Binding Value, Converter={StaticResource UIntToDispCharConverter}, RelativeSource={RelativeSource AncestorType=UserControl}}" HorizontalContentAlignment="Right" MinWidth="60"/>
+    </xctk:ButtonSpinner>
+
+</UserControl>

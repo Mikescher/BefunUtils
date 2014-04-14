@@ -8,21 +8,22 @@
         Title="BefunWrite" Height="650" Width="1000">
 
     <Window.CommandBindings>
-        <CommandBinding Command="Save"                   Executed="SaveExecuted"   CanExecute="SaveEnabled"   />
-        <CommandBinding Command="SaveAs"                 Executed="SaveAsExecuted" CanExecute="SaveAsEnabled" />
-        <CommandBinding Command="Open"                   Executed="OpenExecuted"   CanExecute="OpenEnabled"   />
-        <CommandBinding Command="New"                    Executed="NewExecuted"    CanExecute="NewEnabled"    />
-        <CommandBinding Command="self:CustomCMDs.Build"  Executed="BuildExecuted"  CanExecute="BuildEnabled"  />
-        <CommandBinding Command="self:CustomCMDs.Start"  Executed="StartExecuted"  CanExecute="StartEnabled"  />
-        <CommandBinding Command="self:CustomCMDs.Stop"   Executed="StopExecuted"   CanExecute="StopEnabled"   />
+        <CommandBinding Command="Save"                            Executed="SaveExecuted"            CanExecute="SaveEnabled"            />
+        <CommandBinding Command="SaveAs"                          Executed="SaveAsExecuted"          CanExecute="SaveAsEnabled"          />
+        <CommandBinding Command="Open"                            Executed="OpenExecuted"            CanExecute="OpenEnabled"            />
+        <CommandBinding Command="New"                             Executed="NewExecuted"             CanExecute="NewEnabled"             />
+        <CommandBinding Command="self:CustomCMDs.Build"           Executed="BuildExecuted"           CanExecute="BuildEnabled"           />
+        <CommandBinding Command="self:CustomCMDs.Start"           Executed="StartExecuted"           CanExecute="StartEnabled"           />
+        <CommandBinding Command="self:CustomCMDs.Stop"            Executed="StopExecuted"            CanExecute="StopEnabled"            />
+        <CommandBinding Command="self:CustomCMDs.ShowRunConfig"   Executed="ShowRunConfigExecuted"   CanExecute="ShowRunConfigEnabled"   />
     </Window.CommandBindings>
 
     <Window.InputBindings>
-        <KeyBinding Command="Save" Key="S" Modifiers="Control" />
-        <KeyBinding Command="SaveAs" Key="S" Modifiers="Control+Shift" />
-        <KeyBinding Command="Open" Key="O" Modifiers="Control" />
-        <KeyBinding Command="New" Key="N" Modifiers="Control" />
-        <KeyBinding Command="self:CustomCMDs.Start" Key="F7"  />
+        <KeyBinding Command="Save"                  Key="S"  Modifiers="Control"       />
+        <KeyBinding Command="SaveAs"                Key="S"  Modifiers="Control+Shift" />
+        <KeyBinding Command="Open"                  Key="O"  Modifiers="Control"       />
+        <KeyBinding Command="New"                   Key="N"  Modifiers="Control"       />
+        <KeyBinding Command="self:CustomCMDs.Start" Key="F7"                           />
     </Window.InputBindings>
 
     <Grid>
@@ -44,7 +45,9 @@
             </MenuItem>
             <MenuItem Header="Edit"/>
             <MenuItem Header="View"/>
-            <MenuItem Header="Run"/>
+            <MenuItem Header="Run">
+                <MenuItem Header="Configuration Manager" Command="self:CustomCMDs.ShowRunConfig"/>
+            </MenuItem>
             <MenuItem Header="Tools"/>
             <MenuItem Header="Help"/>
         </Menu>

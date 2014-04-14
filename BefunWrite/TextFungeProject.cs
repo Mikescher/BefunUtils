@@ -14,6 +14,9 @@ namespace BefunWrite
 		}
 	}
 
+	/// <summary>
+	/// The Class that represents the JSON Config File
+	/// </summary>
 	public class TextFungeProject
 	{
 		public string SourceCodePath = "";
