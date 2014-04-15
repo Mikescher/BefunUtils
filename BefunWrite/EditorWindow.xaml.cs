@@ -461,6 +461,7 @@ namespace BefunWrite
 			{
 				System.Windows.Application.Current.Dispatcher.Invoke(DispatcherPriority.Normal, (ThreadStart)delegate
 				{
+					txtErrorList.Text = "";
 					IconBar.SetError(-1, "");
 				});
 			}
@@ -468,6 +469,7 @@ namespace BefunWrite
 			{
 				System.Windows.Application.Current.Dispatcher.Invoke(DispatcherPriority.Normal, (ThreadStart)delegate
 				{
+					txtErrorList.Text = error.getWellFormattedString();
 					IconBar.SetError(error.Position.Line, error.ToPopupString());
 				});
 

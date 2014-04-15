@@ -101,8 +101,10 @@
                             <avDock:LayoutAnchorable Title="Output">
                                 <TextBox/>
                             </avDock:LayoutAnchorable>
-                            <avDock:LayoutAnchorable Title="ErrorList">
-                                <List/>
+                            <avDock:LayoutAnchorable Title="ErrorList" AutoHideHeight="150">
+                                <ScrollViewer>
+                                    <TextBox x:Name="txtErrorList" IsReadOnly="True" Foreground="Red"/>
+                                </ScrollViewer>
                             </avDock:LayoutAnchorable>
                         </avDock:LayoutAnchorGroup>
                     </avDock:LayoutAnchorSide>
