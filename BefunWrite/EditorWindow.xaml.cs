@@ -6,8 +6,10 @@ using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using Microsoft.Win32;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Windows;
 using System.Windows.Input;
@@ -59,7 +61,7 @@ namespace BefunWrite
 			codeEditor.Options.CutCopyWholeLine = true;
 			codeEditor.Options.ShowTabs = true;
 
-			codeEditor.TextArea.LeftMargins.Insert(0, IconBar = new IconBarMargin(codeEditor));
+			codeEditor.TextArea.LeftMargins.Insert(0, IconBar = new IconBarMargin(this, codeEditor));
 
 			//######################
 
@@ -203,7 +205,14 @@ namespace BefunWrite
 
 		private void StartEnabled(object sender, CanExecuteRoutedEventArgs e)
 		{
-			e.CanExecute = true;
+			bool result = true;
+
+			e.CanExecute = result;
+
+			if (cbxConfiguration != null)
+			{
+				cbxConfiguration.IsEnabled = result;
+			}
 
 			e.Handled = true;
 		}
@@ -446,8 +455,9 @@ namespace BefunWrite
 			Debug.WriteLine("DoThreadedErrorParse(..)");
 
 			BefunGenException error;
+			Program program;
 
-			if (Parser.TryParse(code, out error))
+			if (Parser.TryParse(code, out error, out program))
 			{
 				System.Windows.Application.Current.Dispatcher.Invoke(DispatcherPriority.Normal, (ThreadStart)delegate
 				{
@@ -460,7 +470,81 @@ namespace BefunWrite
 				{
 					IconBar.SetError(error.Position.Line, error.ToPopupString());
 				});
+
 			}
+
+			System.Windows.Application.Current.Dispatcher.Invoke(DispatcherPriority.Normal, (ThreadStart)delegate
+			{
+				PopulateSourceTree(program);
+			});
+		}
+
+		private void PopulateSourceTree(Program p)
+		{
+			ClickableTreeViewItem root;
+
+			if (p == null)
+			{
+				root = new ClickableTreeViewItem(IconBar, "<Error>", null, false);
+			}
+			else
+			{
+				root = new ClickableTreeViewItem(IconBar, p.getWellFormattedHeader(), null, true);
+
+				if (p.Variables.Count > 0)
+				{
+					ClickableTreeViewItem globVars = new ClickableTreeViewItem(IconBar, String.Format("Global Variables ({0})", p.Variables.Count), null, true);
+					globVars.Header = "Global Variables";
+					globVars.IsExpanded = true;
+					{
+						foreach (VarDeclaration v in p.Variables)
+						{
+							globVars.Items.Add(new ClickableTreeViewItem(IconBar, v.getWellFormattedDecalaration(), v.Position, true));
+						}
+					}
+					root.Items.Add(globVars);
+				}
+
+				if (p.Constants.Count > 0)
+				{
+					ClickableTreeViewItem constants = new ClickableTreeViewItem(IconBar, String.Format("Constants ({0})", p.Constants.Count), null, true);
+					{
+						foreach (VarDeclaration v in p.Constants)
+						{
+							constants.Items.Add(new ClickableTreeViewItem(IconBar, String.Format("{0} = {1}", v.getWellFormattedDecalaration(), v.Initial.getDebugString()), v.Position, true));
+						}
+					}
+					root.Items.Add(constants);
+				}
+
+				ClickableTreeViewItem methods = new ClickableTreeViewItem(IconBar, String.Format("Methods ({0})", p.MethodList.Count), null, true);
+				{
+					foreach (Method v in p.MethodList)
+					{
+						ClickableTreeViewItem meth = new ClickableTreeViewItem(IconBar, v.getWellFormattedHeader(), v == p.MainMethod ? p.Position : v.Position, false);
+						{
+							List<VarDeclaration> vars = v.Variables.Where(pp => !v.Parameter.Contains(pp)).ToList();
+
+							if (vars.Count > 0)
+							{
+								ClickableTreeViewItem varitem = new ClickableTreeViewItem(IconBar, "Variables", null, true);
+								{
+									foreach (VarDeclaration vv in vars)
+									{
+										varitem.Items.Add(new ClickableTreeViewItem(IconBar, vv.getWellFormattedDecalaration(), vv.Position, true));
+									}
+								}
+								meth.Items.Add(varitem);
+							}
+						}
+						methods.Items.Add(meth);
+					}
+				}
+				root.Items.Add(methods);
+			}
+
+			sourceTreeView.Items.Clear();
+			sourceTreeView.Items.Add(root);
 		}
 
 		#endregion

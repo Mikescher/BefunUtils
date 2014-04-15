@@ -106,10 +106,16 @@ namespace BefunGen.AST.Exceptions
 			: base("The global variable " + ident + " has an Initializator, this is not possible for global variables", pos) { }
 	}
 
-	public class InitConstantException : BefunGenUserException
+	public class NoValueInitConstantException : BefunGenUserException
 	{
-		public InitConstantException(SourceCodePosition pos, string ident)
+		public NoValueInitConstantException(SourceCodePosition pos, string ident)
 			: base("The Constant " + ident + " has no value", pos) { }
+	}
+
+	public class UndefiniedValueInitConstantException : BefunGenUserException
+	{
+		public UndefiniedValueInitConstantException(SourceCodePosition pos, string ident)
+			: base("The Constant " + ident + " has no well defined value", pos) { }
 	}
 
 	public class IllegalIdentifierException : BefunGenUserException

@@ -91,7 +91,7 @@
                     </avDock:LayoutDocumentPane>
                     <avDock:LayoutAnchorablePane DockWidth="250">
                         <avDock:LayoutAnchorable Title="Program Explorer">
-                            <TreeView/>
+                            <TreeView x:Name="sourceTreeView"/>
                         </avDock:LayoutAnchorable>
                     </avDock:LayoutAnchorablePane>
                 </avDock:LayoutPanel>

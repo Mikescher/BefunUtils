@@ -84,6 +84,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\ClickableTreeViewItem.cs" />
     <Compile Include="Controls\CharSpinner.xaml.cs">
       <DependentUpon>CharSpinner.xaml</DependentUpon>
     </Compile>

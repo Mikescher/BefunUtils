@@ -28,6 +28,7 @@ namespace BefunGen.AST
 		public readonly List<VarDeclaration> Constants;
 		public readonly List<VarDeclaration> Variables; // Global Variables
 
+		public bool HasDisplay { get { return DisplayHeight * DisplayWidth > 0; } }
 		public int DisplayOffsetX;
 		public int DisplayOffsetY;
 
@@ -35,7 +36,7 @@ namespace BefunGen.AST
 		public readonly int DisplayHeight;
 
 		public Program(SourceCodePosition pos, Program_Header hdr, List<VarDeclaration> c, List<VarDeclaration> g, Method m, List<Method> mlst)
-			: base(pos)
+			: base(hdr.Position)
 		{
 			this.Identifier = hdr.Identifier;
 			this.Constants = c;
@@ -69,6 +70,18 @@ namespace BefunGen.AST
 				);
 		}
 
+		public string getWellFormattedHeader()
+		{
+			if (HasDisplay)
+			{
+				return string.Format("{0} : display [{1}, {2}]", Identifier, DisplayWidth, DisplayHeight);
+			}
+			else
+			{
+				return Identifier;
+			}
+		}
+
 		private void addPredefConstants()
 		{
 			Constants.Insert(0, new VarDeclaration_Value(
@@ -88,14 +101,14 @@ namespace BefunGen.AST
 		{
 			foreach (VarDeclaration v in Constants)
 				if (!v.hasCompleteUserDefiniedInitialValue)
-					throw new InitConstantException(v.Position, v.Identifier);
+					throw new UndefiniedValueInitConstantException(v.Position, v.Identifier);
 		}
 
 		private void testGlobalVarsForDefinition()
 		{
 			foreach (VarDeclaration v in Variables)
 				if (v.hasCompleteUserDefiniedInitialValue)
-					throw new InitGlobalVariableException(v.Position, v.Identifier);
+					throw new UndefiniedValueInitConstantException(v.Position, v.Identifier);
 		}
 
 		#region Prepare
@@ -512,8 +525,16 @@ namespace BefunGen.AST
 				throw new IllegalIdentifierException(Position, ident);
 			}
 
-			DisplayWidth = w;
-			DisplayHeight = h;
+			if (w * h == 0)
+			{
+				DisplayWidth = 0;
+				DisplayHeight = 0;
+			}
+			else
+			{
+				DisplayWidth = w;
+				DisplayHeight = h;
+			}
 		}
 
 		public override string getDebugString()

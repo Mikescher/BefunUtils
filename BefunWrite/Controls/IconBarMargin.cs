@@ -1,4 +1,5 @@
-﻿using ICSharpCode.AvalonEdit;
+﻿using BefunGen.AST.CodeGen;
+using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.Editing;
 using ICSharpCode.AvalonEdit.Rendering;
 using ICSharpCode.AvalonEdit.Utils;
@@ -25,10 +26,12 @@ namespace BefunWrite.Controls
 		readonly MouseHoverLogic hoverLogic;
 
 		private ICSharpCode.AvalonEdit.TextEditor Editor;
+		private EditorWindow DependencyOwner;
 
-		public IconBarMargin(ICSharpCode.AvalonEdit.TextEditor _editor)
+		public IconBarMargin(EditorWindow _owner, ICSharpCode.AvalonEdit.TextEditor _editor)
 		{
 			this.Editor = _editor;
+			DependencyOwner = _owner;
 
 			BitmapImage b;
 
@@ -136,6 +139,21 @@ namespace BefunWrite.Controls
 					double visualTop = this.TextView.GetVisualTopByDocumentLine(top);
 
 					Editor.ScrollToVerticalOffset(visualTop);
+				}
+				catch
+				{
+					// Do nothing - can't scroll properly
+				}
+			}
+		}
+
+		public void MakePositionVisible(SourceCodePosition pos)
+		{
+			if (this.TextView != null)
+			{
+				try
+				{
+					Editor.ScrollTo(pos.Line, pos.Column);
 				}
 				catch
 				{

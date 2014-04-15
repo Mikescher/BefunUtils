@@ -25,7 +25,7 @@ namespace BefunGen.AST
 		public int MethodAddr { get { return _METHODADDRESS; } private set { _METHODADDRESS = value; } }
 
 		public Method(SourceCodePosition pos, Method_Header h, Method_Body b)
-			: this(pos, h.ResultType, h.Identifier, h.Parameter, b.Variables, b.Body)
+			: this(h.Position, h.ResultType, h.Identifier, h.Parameter, b.Variables, b.Body)
 		{
 			//--
 		}
@@ -52,6 +52,11 @@ namespace BefunGen.AST
 				indent(getDebugStringForList(Parameter)),
 				indent(getDebugStringForList(Variables.Where(p => !Parameter.Contains(p)).ToList())),
 				indent(Body.getDebugString()));
+		}
+
+		public string getWellFormattedHeader()
+		{
+			return string.Format("{0} {1}({2});", ResultType, Identifier, string.Join(", ", Parameter.Select(p => p.getWellFormattedDecalaration())));
 		}
 
 		public void createCodeAddress()
@@ -91,8 +96,8 @@ namespace BefunGen.AST
 				if (isMain)
 				{
 					Body.List.Add(new Statement_Quit(Position));
-				} 
-				else 	if (ResultType is BType_Void)
+				}
+				else if (ResultType is BType_Void)
 				{
 					Body.List.Add(new Statement_Return(Position));
 				}

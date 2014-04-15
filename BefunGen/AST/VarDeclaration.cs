@@ -91,6 +91,11 @@ namespace BefunGen.AST
 			return string.Format("{0} {{{1}}} ::= {2}", Type.getDebugString(), ID, Initial == null ? "NULL" : Initial.getDebugString());
 		}
 
+		public string getWellFormattedDecalaration()
+		{
+			return string.Format("{0} {1}", Type.getDebugString(), Identifier);
+		}
+
 		public string getShortDebugString()
 		{
 			return string.Format("{{{0}}}", ID);

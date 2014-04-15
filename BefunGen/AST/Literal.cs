@@ -1,6 +1,9 @@
 ﻿using BefunGen.AST.CodeGen;
 using BefunGen.AST.CodeGen.NumberCode;
+using System.CodeDom;
+using System.CodeDom.Compiler;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace BefunGen.AST
@@ -13,9 +16,34 @@ namespace BefunGen.AST
 			//--
 		}
 
+		protected string EscapeChar(char input)
+		{
+			using (var writer = new StringWriter())
+			{
+				using (var provider = CodeDomProvider.CreateProvider("CSharp"))
+				{
+					provider.GenerateCodeFromExpression(new CodePrimitiveExpression(input), writer, null);
+					return writer.ToString();
+				}
+			}
+		}
+
+		protected string EscapeString(string input)
+		{
+			using (var writer = new StringWriter())
+			{
+				using (var provider = CodeDomProvider.CreateProvider("CSharp"))
+				{
+					provider.GenerateCodeFromExpression(new CodePrimitiveExpression(input), writer, null);
+					return writer.ToString();
+				}
+			}
+		}
+
 		public abstract BType getBType();
 
 		public abstract CodePiece generateCode(bool reversed);
+
 	}
 
 	#region Parents
@@ -102,7 +130,7 @@ namespace BefunGen.AST
 
 		public override string getDebugString()
 		{
-			return Value.ToString();
+			return EscapeChar(Value);
 		}
 
 		public override BType getBType()
@@ -263,7 +291,7 @@ namespace BefunGen.AST
 
 		public override string getDebugString()
 		{
-			return "{" + string.Join(",", Value.Select(p => p.ToString())) + "}";
+			return EscapeString(string.Join("", Value));
 		}
 
 		protected override int getCount()

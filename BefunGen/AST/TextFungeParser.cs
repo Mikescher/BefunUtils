@@ -76,7 +76,7 @@ namespace BefunGen.AST
 			return result;
 		}
 
-		public bool TryParse(string txt, out BefunGenException err)
+		public bool TryParse(string txt, out BefunGenException err, out Program prog)
 		{
 			FailMessage = "";
 
@@ -91,17 +91,20 @@ namespace BefunGen.AST
 			catch (BefunGenException e)
 			{
 				err = e;
+				prog = null;
 				return false;
 			}
 			catch (Exception e)
 			{
 				err = new NativeException(e);
+				prog = null;
 				return false;
 			}
 
 			if (result == null)
 			{
 				err = new WTFException();
+				prog = null;
 				return false;
 			}
 
@@ -112,17 +115,20 @@ namespace BefunGen.AST
 			catch (BefunGenException e)
 			{
 				err = e;
+				prog = null;
 				return false;
 			}
 			catch (Exception e)
 			{
 				err = new NativeException(e);
+				prog = null;
 				return false;
 			}
 
 			ParseTime = Environment.TickCount - ParseTime;
 
 			err = null;
+			prog = result;
 			return true;
 		}
 
