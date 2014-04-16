@@ -2,6 +2,7 @@
 using BefunGen.AST.Exceptions;
 using BefunWrite.Controls;
 using BefunWrite.Dialogs;
+using BefunWrite.Helper;
 using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using Microsoft.Win32;
@@ -33,6 +34,7 @@ namespace BefunWrite
 
 		private Thread parseThread;
 		private bool parseThreadRunning = true;
+		private bool hasErrors = true;
 
 		private TextFungeParser Parser;
 
@@ -89,7 +91,7 @@ namespace BefunWrite
 				switch (r)
 				{
 					case MessageBoxResult.Yes:
-						if (!DoSave(false))
+						if (!project.TrySave())
 							return;
 						break;
 					case MessageBoxResult.Cancel:
@@ -115,7 +117,7 @@ namespace BefunWrite
 
 		private void SaveExecuted(object sender, ExecutedRoutedEventArgs e)
 		{
-			if (DoSave(false))
+			if (project.TrySave())
 			{
 				updateUI();
 			}
@@ -134,7 +136,7 @@ namespace BefunWrite
 
 		private void SaveAsExecuted(object sender, ExecutedRoutedEventArgs e)
 		{
-			if (DoSave(true))
+			if (project.TrySave(true))
 			{
 				updateUI();
 			}
@@ -160,7 +162,7 @@ namespace BefunWrite
 				switch (r)
 				{
 					case MessageBoxResult.Yes:
-						if (!DoSave(false))
+						if (!project.TrySave())
 							return;
 						break;
 					case MessageBoxResult.Cancel:
@@ -184,12 +186,57 @@ namespace BefunWrite
 
 		private void BuildExecuted(object sender, ExecutedRoutedEventArgs e)
 		{
-			//
+			if (!project.TrySave())
+				return;
+
+			//#############################################
+
+			string buildDir = Path.Combine(Path.GetDirectoryName(project.ProjectConfigPath), "build-" + project.GetProjectName(), DirectoryHelper.PrepareStringAsPath(project.SelectedConfig.Name));
+
+			string filename;
+			if (project.SelectedConfig.IsDebug)
+				filename = DirectoryHelper.PrepareStringAsPath(project.SelectedConfig.Name) + ".tfd";
+			else
+				filename = DirectoryHelper.PrepareStringAsPath(project.SelectedConfig.Name) + ".b98";
+
+			string target = Path.Combine(buildDir, filename);
+
+			Directory.CreateDirectory(buildDir);
+
+			//#############################################
+
+			string code;
+			try
+			{
+				code = Parser.generateCode(codeEditor.Text, project.SelectedConfig.IsDebug);
+			}
+			catch (BefunGenException ex)
+			{
+				MessageBox.Show(ex.ToString(), ">> BefunGen Error <<", MessageBoxButton.OK, MessageBoxImage.Error);
+				return;
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show(ex.ToString(), ">> Internal Error <<", MessageBoxButton.OK, MessageBoxImage.Error);
+				return;
+			}
+
+			//#############################################
+
+			try
+			{
+				File.WriteAllText(target, code);
+			}
+			catch (IOException ex)
+			{
+				MessageBox.Show(ex.ToString(), ">> Filesystem Error <<", MessageBoxButton.OK, MessageBoxImage.Error);
+				return;
+			}
 		}
 
 		private void BuildEnabled(object sender, CanExecuteRoutedEventArgs e)
 		{
-			e.CanExecute = true;
+			e.CanExecute = !hasErrors;
 
 			e.Handled = true;
 		}
@@ -205,7 +252,7 @@ namespace BefunWrite
 
 		private void StartEnabled(object sender, CanExecuteRoutedEventArgs e)
 		{
-			bool result = true;
+			bool result = !hasErrors;
 
 			e.CanExecute = result;
 
@@ -290,7 +337,7 @@ namespace BefunWrite
 				switch (r)
 				{
 					case MessageBoxResult.Yes:
-						if (!DoSave(false))
+						if (!project.TrySave())
 							e.Cancel = true;
 						break;
 					case MessageBoxResult.Cancel:
@@ -307,54 +354,7 @@ namespace BefunWrite
 
 		#endregion
 
-		#region Load & Save
-
-		private bool DoSave(bool savenew)
-		{
-			if (savenew || String.IsNullOrWhiteSpace(project.ProjectConfigPath))
-			{
-				SaveFileDialog sfd = new SaveFileDialog();
-				sfd.AddExtension = true;
-				sfd.DefaultExt = ".tfp";
-				sfd.Filter = "TextFungeProject (.tfp)|*.tfp";
-
-				if (sfd.ShowDialog().GetValueOrDefault(false))
-				{
-					if (File.Exists(sfd.FileName))
-					{
-						if (MessageBox.Show("File already Exists. Override ?", "File exists", MessageBoxButton.YesNo, MessageBoxImage.Exclamation) != MessageBoxResult.Yes)
-						{
-							return false;
-						}
-					}
-
-					project.ProjectConfigPath = sfd.FileName;
-				}
-				else
-				{
-					return false;
-				}
-			}
-
-			if (savenew || String.IsNullOrWhiteSpace(project.ProjectConfig.SourceCodePath))
-			{
-				string prev = project.ProjectConfig.SourceCodePath;
-
-				string relativepath = Path.GetFileNameWithoutExtension(project.ProjectConfigPath) + ".tf";
-				project.ProjectConfig.SourceCodePath = relativepath;
-
-				if (File.Exists(project.getAbsoluteSourceCodePath()))
-				{
-					if (MessageBox.Show(String.Format("File '{0}' already Exists. Override ?", Path.GetFileName(project.getAbsoluteSourceCodePath())), "File exists", MessageBoxButton.YesNo, MessageBoxImage.Exclamation) != MessageBoxResult.Yes)
-					{
-						project.ProjectConfig.SourceCodePath = prev;
-						return false;
-					}
-				}
-			}
-
-			return project.TrySave();
-		}
+		#region Loading
 
 		private void DoOpen()
 		{
@@ -463,6 +463,7 @@ namespace BefunWrite
 				{
 					txtErrorList.Text = "";
 					IconBar.SetError(-1, "");
+					hasErrors = false;
 				});
 			}
 			else
@@ -471,6 +472,7 @@ namespace BefunWrite
 				{
 					txtErrorList.Text = error.getWellFormattedString();
 					IconBar.SetError(error.Position.Line, error.ToPopupString());
+					hasErrors = true;
 				});
 
 			}

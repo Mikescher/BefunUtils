@@ -7,6 +7,7 @@ namespace BefunWrite
 	{
 		public string Name;
 		public CodeGenOptions Options;
+		public bool IsDebug;
 
 		public override string ToString()
 		{

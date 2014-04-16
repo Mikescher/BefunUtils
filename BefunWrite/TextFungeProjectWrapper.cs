@@ -1,8 +1,10 @@
 ﻿using BefunGen.AST.CodeGen;
+using Microsoft.Win32;
 using Newtonsoft.Json;
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Windows;
 
 namespace BefunWrite
@@ -14,6 +16,8 @@ namespace BefunWrite
 
 		public string ProjectConfigPath;
 		public TextFungeProject ProjectConfig;
+
+		public ProjectCodeGenOptions SelectedConfig { get { return ProjectConfig.Configurations.ElementAtOrDefault(ProjectConfig.SelectedConfiguration); } }
 
 		public string Sourcecode;
 
@@ -37,11 +41,13 @@ namespace BefunWrite
 			w.ProjectConfig.Configurations.Add(new ProjectCodeGenOptions
 			{
 				Name = "Debug",
+				IsDebug = true,
 				Options = CodeGenOptions.getCGO_Debug()
 			});
 			w.ProjectConfig.Configurations.Add(new ProjectCodeGenOptions
 			{
 				Name = "Release",
+				IsDebug = false,
 				Options = CodeGenOptions.getCGO_Release()
 			});
 
@@ -79,17 +85,32 @@ namespace BefunWrite
 			return Path.GetFullPath(Path.Combine(Path.GetDirectoryName(ProjectConfigPath), ProjectConfig.SourceCodePath));
 		}
 
-		public bool TrySave()
+		public string GetProjectName()
+		{
+			if (String.IsNullOrWhiteSpace(ProjectConfigPath))
+			{
+				return "";
+			}
+			else
+			{
+				return Path.GetFileNameWithoutExtension(ProjectConfigPath);
+			}
+		}
+
+		public bool TrySave(bool forcenew = false)
 		{
 			try
 			{
+
+				bool s_p = true;
 				if (Project_isDirty)
-					Save_projectfile();
+					s_p = Save_projectfile(forcenew);
 
+				bool s_s = true;
 				if (Sourcecode_isDirty)
-					Save_sourcecode();
+					s_s = Save_sourcecode(forcenew);
 
-				return true;
+				return s_p && s_s;
 			}
 			catch (IOException)
 			{
@@ -100,25 +121,80 @@ namespace BefunWrite
 
 		}
 
-		public void Save_projectfile()
+		public bool Save_projectfile(bool forcenew = false)
 		{
-			if (!string.IsNullOrWhiteSpace(ProjectConfigPath))
+			if (!string.IsNullOrWhiteSpace(ProjectConfigPath) && !forcenew)
 			{
 				string json = JsonConvert.SerializeObject(ProjectConfig, Formatting.Indented);
 
 				File.WriteAllText(ProjectConfigPath, json);
 
 				Project_isDirty = false;
+
+				return true;
+			}
+			else
+			{
+				SaveFileDialog sfd = new SaveFileDialog();
+				sfd.AddExtension = true;
+				sfd.DefaultExt = ".tfp";
+				sfd.Filter = "TextFungeProject (.tfp)|*.tfp";
+
+				if (sfd.ShowDialog().GetValueOrDefault(false))
+				{
+					if (File.Exists(sfd.FileName))
+					{
+						if (MessageBox.Show("File already Exists. Override ?", "File exists", MessageBoxButton.YesNo, MessageBoxImage.Exclamation) != MessageBoxResult.Yes)
+						{
+							return false;
+						}
+					}
+
+					ProjectConfigPath = sfd.FileName;
+
+					string json = JsonConvert.SerializeObject(ProjectConfig, Formatting.Indented);
+					File.WriteAllText(ProjectConfigPath, json);
+					Project_isDirty = false;
+
+					return true;
+				}
+				else
+				{
+					return false;
+				}
 			}
 		}
 
-		public void Save_sourcecode()
+		public bool Save_sourcecode(bool forcenew = false)
 		{
-			if (!string.IsNullOrWhiteSpace(getAbsoluteSourceCodePath()))
+			if (!string.IsNullOrWhiteSpace(getAbsoluteSourceCodePath()) && !forcenew)
 			{
 				File.WriteAllText(getAbsoluteSourceCodePath(), Sourcecode);
 
 				Sourcecode_isDirty = false;
+
+				return true;
+			}
+			else
+			{
+				string prev = ProjectConfig.SourceCodePath;
+
+				string relativepath = Path.GetFileNameWithoutExtension(ProjectConfigPath) + ".tf";
+				ProjectConfig.SourceCodePath = relativepath;
+
+				if (File.Exists(getAbsoluteSourceCodePath()))
+				{
+					if (MessageBox.Show(String.Format("File '{0}' already Exists. Override ?", Path.GetFileName(getAbsoluteSourceCodePath())), "File exists", MessageBoxButton.YesNo, MessageBoxImage.Exclamation) != MessageBoxResult.Yes)
+					{
+						ProjectConfig.SourceCodePath = prev;
+						return false;
+					}
+				}
+
+				File.WriteAllText(getAbsoluteSourceCodePath(), Sourcecode);
+				Sourcecode_isDirty = false;
+
+				return true;
 			}
 		}
 

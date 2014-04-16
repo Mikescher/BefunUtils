@@ -23,6 +23,9 @@
                     <Label Content="Configuration Name" />
                     <TextBox x:Name="V_ConfigName" VerticalAlignment="Center"/>
 
+                    <Label Content="Debugging Configuration" />
+                    <CheckBox x:Name="V_IsDebug" VerticalAlignment="Center"/>
+                    
                     <Rectangle Height="10"/>
                     <Rectangle Height="10"/>
 

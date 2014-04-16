@@ -99,6 +99,7 @@
     <Compile Include="Dialogs\RunConfigurationManager.xaml.cs">
       <DependentUpon>RunConfigurationManager.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Helper\DirectoryHelper.cs" />
     <Compile Include="Helper\MathHelper.cs" />
     <Compile Include="TextFungeProject.cs" />
     <Compile Include="TextFungeProjectWrapper.cs" />

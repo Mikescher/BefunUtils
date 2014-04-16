@@ -94,6 +94,7 @@ namespace BefunWrite.Dialogs
 			ProjectCodeGenOptions o = project.ProjectConfig.Configurations[si];
 
 			V_ConfigName.Text = o.Name;
+			V_IsDebug.IsChecked = o.IsDebug;
 
 
 			V_NumberLiteralRepresentation.SelectedIndex = CodeGenOptions.NumberRepToUINumber(o.Options.NumberLiteralRepresentation);
@@ -140,6 +141,7 @@ namespace BefunWrite.Dialogs
 			ProjectCodeGenOptions o = project.ProjectConfig.Configurations[si];
 
 			o.Name = V_ConfigName.Text;
+			o.IsDebug = V_IsDebug.IsChecked.Value;
 
 
 			o.Options.NumberLiteralRepresentation = CodeGenOptions.UINumberToNumberRep(V_NumberLiteralRepresentation.SelectedIndex, NumberRep.Best);
