@@ -17,6 +17,7 @@ namespace BefunWrite
 		public string ProjectConfigPath;
 		public TextFungeProject ProjectConfig;
 
+		public bool HasConfigSelected { get { return ProjectConfig.Configurations.ElementAtOrDefault(ProjectConfig.SelectedConfiguration) != null; } }
 		public ProjectCodeGenOptions SelectedConfig { get { return ProjectConfig.Configurations.ElementAtOrDefault(ProjectConfig.SelectedConfiguration); } }
 
 		public string Sourcecode;
@@ -41,13 +42,13 @@ namespace BefunWrite
 			w.ProjectConfig.Configurations.Add(new ProjectCodeGenOptions
 			{
 				Name = "Debug",
-				IsDebug = true,
-				Options = CodeGenOptions.getCGO_Debug()
+				ExecSettings = BefunExecSettings.getBES_Debug(),
+				Options = CodeGenOptions.getCGO_Debug(),
 			});
 			w.ProjectConfig.Configurations.Add(new ProjectCodeGenOptions
 			{
 				Name = "Release",
-				IsDebug = false,
+				ExecSettings = BefunExecSettings.getBES_Release(),
 				Options = CodeGenOptions.getCGO_Release()
 			});
 

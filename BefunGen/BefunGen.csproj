@@ -64,6 +64,7 @@
     <Compile Include="AST\CodeGen\CodePieceStore.cs" />
     <Compile Include="AST\CodeGen\NumberCode\NumberCodeFactory_StringmodeChar.cs" />
     <Compile Include="AST\CodeGen\Tags\CodeTag.cs" />
+    <Compile Include="AST\CodeGen\Tags\Display_TopLeft_Tag.cs" />
     <Compile Include="AST\CodeGen\Tags\SwitchStmt_Case_Exit.cs" />
     <Compile Include="AST\CodeGen\Tags\TemporaryResultCodeField_Tag.cs" />
     <Compile Include="AST\CodeGen\Tags\TemporaryCodeField_Tag.cs" />

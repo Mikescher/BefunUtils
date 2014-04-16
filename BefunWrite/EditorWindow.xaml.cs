@@ -1,4 +1,6 @@
 ﻿using BefunGen.AST;
+using BefunGen.AST.CodeGen;
+using BefunGen.AST.CodeGen.Tags;
 using BefunGen.AST.Exceptions;
 using BefunWrite.Controls;
 using BefunWrite.Dialogs;
@@ -189,12 +191,18 @@ namespace BefunWrite
 			if (!project.TrySave())
 				return;
 
+			if (!project.HasConfigSelected)
+			{
+				MessageBox.Show("No Config selected", ">> Error <<", MessageBoxButton.OK, MessageBoxImage.Error);
+				return;
+			}
+
 			//#############################################
 
 			string buildDir = Path.Combine(Path.GetDirectoryName(project.ProjectConfigPath), "build-" + project.GetProjectName(), DirectoryHelper.PrepareStringAsPath(project.SelectedConfig.Name));
 
 			string filename;
-			if (project.SelectedConfig.IsDebug)
+			if (project.SelectedConfig.ExecSettings.IsDebug)
 				filename = DirectoryHelper.PrepareStringAsPath(project.SelectedConfig.Name) + ".tfd";
 			else
 				filename = DirectoryHelper.PrepareStringAsPath(project.SelectedConfig.Name) + ".b98";
@@ -208,7 +216,10 @@ namespace BefunWrite
 			string code;
 			try
 			{
-				code = Parser.generateCode(codeEditor.Text, project.SelectedConfig.IsDebug);
+				ASTObject.CGO = project.SelectedConfig.Options;
+
+				Program tmp;
+				code = Parser.generateCode(codeEditor.Text, project.SelectedConfig.ExecSettings.IsDebug);
 			}
 			catch (BefunGenException ex)
 			{
@@ -247,7 +258,118 @@ namespace BefunWrite
 
 		private void StartExecuted(object sender, ExecutedRoutedEventArgs e)
 		{
-			//
+			if (!project.HasConfigSelected)
+			{
+				MessageBox.Show("No Config selected", ">> Error <<", MessageBoxButton.OK, MessageBoxImage.Error);
+				return;
+			}
+
+			//#############################################
+
+			string target;
+			if (project.SelectedConfig.ExecSettings.IsDebug)
+				target = System.IO.Path.GetTempPath() + Guid.NewGuid().ToString("B") + ".tfd";
+			else
+				target = System.IO.Path.GetTempPath() + Guid.NewGuid().ToString("B") + ".b98";
+
+			string code;
+			Program prog;
+			CodePiece cpiece;
+			try
+			{
+				ASTObject.CGO = project.SelectedConfig.Options;
+
+				code = Parser.generateCode(codeEditor.Text, project.SelectedConfig.ExecSettings.IsDebug, out prog, out cpiece);
+			}
+			catch (BefunGenException ex)
+			{
+				MessageBox.Show(ex.ToString(), ">> BefunGen Error <<", MessageBoxButton.OK, MessageBoxImage.Error);
+				return;
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show(ex.ToString(), ">> Internal Error <<", MessageBoxButton.OK, MessageBoxImage.Error);
+				return;
+			}
+
+			//#############################################
+
+			try
+			{
+				File.WriteAllText(target, code);
+			}
+			catch (IOException ex)
+			{
+				MessageBox.Show(ex.ToString(), ">> Filesystem Error <<", MessageBoxButton.OK, MessageBoxImage.Error);
+				return;
+			}
+
+			//#############################################
+
+			ProcessStartInfo start = new ProcessStartInfo();
+
+			start.Arguments = "";
+			start.Arguments += String.Format("-file=\"{0}\"", target) + " ";
+
+			if (project.SelectedConfig.ExecSettings.IsDebug)
+				start.Arguments += "-debug" + " ";
+			else
+				start.Arguments += "-no_debug" + " ";
+
+			if (project.SelectedConfig.ExecSettings.startPaused)
+				start.Arguments += "-pause" + " ";
+			else
+				start.Arguments += "-no_pause" + " ";
+
+			if (project.SelectedConfig.ExecSettings.syntaxHighlight)
+				start.Arguments += "-highlight" + " ";
+			else
+				start.Arguments += "-no_highlight" + " ";
+
+			if (project.SelectedConfig.ExecSettings.asciistack)
+				start.Arguments += "-asciistack" + " ";
+			else
+				start.Arguments += "-no_asciistack" + " ";
+
+			if (project.SelectedConfig.ExecSettings.skipnop)
+				start.Arguments += "-skipnop" + " ";
+			else
+				start.Arguments += "-no_skipnop" + " ";
+
+			start.Arguments += "-speed=" + project.SelectedConfig.ExecSettings.initialSpeedIndex + " ";
+
+			start.Arguments += "-speed_1=" + project.SelectedConfig.ExecSettings.simuSpeeds[0] + " ";
+			start.Arguments += "-speed_2=" + project.SelectedConfig.ExecSettings.simuSpeeds[1] + " ";
+			start.Arguments += "-speed_3=" + project.SelectedConfig.ExecSettings.simuSpeeds[2] + " ";
+			start.Arguments += "-speed_4=" + project.SelectedConfig.ExecSettings.simuSpeeds[3] + " ";
+			start.Arguments += "-speed_5=" + project.SelectedConfig.ExecSettings.simuSpeeds[4] + " ";
+
+			start.Arguments += "-decay=" + project.SelectedConfig.ExecSettings.decaytime + " ";
+
+			if (project.SelectedConfig.ExecSettings.dodecay)
+				start.Arguments += "-dodecay" + " ";
+			else
+				start.Arguments += "-no_dodecay" + " ";
+
+			if (project.SelectedConfig.ExecSettings.zoomToDisplay && prog.HasDisplay)
+			{
+				TagLocation tagloc = cpiece.findTagSingle(typeof(Display_TopLeft_Tag));
+				Display_TopLeft_Tag tag = tagloc.Tag as Display_TopLeft_Tag;
+
+				start.Arguments += "-zoom=" + tagloc.X + "," + tagloc.Y + "," + (tagloc.X + tag.Width) + "," + (tagloc.Y + tag.Height) + " ";
+			}
+
+			start.FileName = "BefungExec.exe";
+
+			try
+			{
+				Process.Start(start);
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show(ex.ToString(), ">> Excecution Error <<", MessageBoxButton.OK, MessageBoxImage.Error);
+				return;
+			}
 		}
 
 		private void StartEnabled(object sender, CanExecuteRoutedEventArgs e)

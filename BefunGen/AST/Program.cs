@@ -469,7 +469,8 @@ namespace BefunGen.AST
 			if (s.Size == 0)
 				return p;
 
-			p.Fill(b, b, s.X + b, s.Y + b, CGO.DefaultDisplayValue);
+			// NOP => Walkway, because Tags
+			p.Fill(b, b, s.X + b, s.Y + b, BCHelper.Walkway);
 
 			// 44111111
 			// 44111111
@@ -484,6 +485,8 @@ namespace BefunGen.AST
 			p.Fill(s.X + b, b, s.X + 2 * b, s.Y + 2 * b, CGO.DisplayBorder);		// 2
 			p.Fill(0, s.Y + b, s.X + b, s.Y + 2 * b, CGO.DisplayBorder);			// 3
 			p.Fill(0, 0, b, s.Y + b, CGO.DisplayBorder);							// 4
+
+			p.SetTag(0, 0, new Display_TopLeft_Tag(this, DisplayWidth + 2 * b, DisplayHeight + 2 * b));
 
 			return p;
 		}

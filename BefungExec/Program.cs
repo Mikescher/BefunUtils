@@ -16,6 +16,8 @@ namespace BefungExec
 		[STAThread]
 		static void Main(string[] args)
 		{
+			args.ToList().ForEach(Console.WriteLine);
+
 			string code;
 
 			parseParams(args, out code);
@@ -23,7 +25,7 @@ namespace BefungExec
 			Console.WriteLine();
 			Console.WriteLine();
 
-			Console.WriteLine("########## KEYS ##########");
+			Console.WriteLine("########## KEYS ##########"); //TODO + - Zoom 
 			Console.WriteLine();
 			Console.WriteLine("Space:   Pause | Resume");
 			Console.WriteLine("Right:   Step Forward");
@@ -77,6 +79,8 @@ namespace BefungExec
 				Console.WriteLine("skipnop | no_skipnop       : Skip NOP's");
 				Console.WriteLine("debug | no_debug           : Activates additional debug-messages");
 
+				Console.WriteLine("speed=?                    : Set the initial speed (index)");
+
 				Console.WriteLine("speed_5=?                  : Set the speed (ms) for speed-5");
 				Console.WriteLine("speed_4=?                  : Set the speed (ms) for speed-4");
 				Console.WriteLine("speed_3=?                  : Set the speed (ms) for speed-3");
@@ -85,7 +89,7 @@ namespace BefungExec
 
 				Console.WriteLine("decay=?                    : Time (ms) for the decay effect");
 				Console.WriteLine("dodecay | no_decay         : Show decay trail");
-				Console.WriteLine("zoom=?,?,?,?               : Initial zoom position (x1, y1, x2, y2)");
+				Console.WriteLine("zoom=?;?;?;?               : Initial zoom position (x1, y1, x2, y2)");
 				Console.WriteLine("file=?                     : The file to execute");
 				Console.WriteLine();
 			}
@@ -131,6 +135,11 @@ namespace BefungExec
 				RunOptions.SHOW_DECAY = false;
 			if (cmda.IsSet("dodecay"))
 				RunOptions.SHOW_DECAY = true;
+
+			//##############
+
+			if (cmda.IsInt("speed"))
+				RunOptions.INIT_SPEED = int.Parse(cmda["speed"]);
 
 			//##############
 

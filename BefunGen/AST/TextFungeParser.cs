@@ -31,16 +31,23 @@ namespace BefunGen.AST
 
 		public string generateCode(string txt, bool debug)
 		{
-			Program p = generateAST(txt) as Program;
+			Program p;
+			CodePiece c;
+			return generateCode(txt, debug, out p, out c);
+		}
 
-			CodePiece cp = p.generateCode();
+		public string generateCode(string txt, bool debug, out Program p, out CodePiece cp)
+		{
+			p = generateAST(txt) as Program;
+
+			cp = p.generateCode();
 
 			string result;
 
 			if (debug)
-				result = cp.ToSimpleString();
-			else
 				result = cp.ToString();
+			else
+				result = cp.ToSimpleString();
 
 			return result;
 		}

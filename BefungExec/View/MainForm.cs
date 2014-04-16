@@ -67,7 +67,7 @@ namespace BefungExec.View
 			skipNOPsToolStripMenuItem.Checked = RunOptions.SKIP_NOP;
 			debugModeToolStripMenuItem.Checked = RunOptions.DEBUGRUN;
 			showTrailToolStripMenuItem.Checked = RunOptions.SHOW_DECAY;
-			setSpeed(3, true);
+			setSpeed(RunOptions.INIT_SPEED, true);
 
 			Application.Idle += Application_Idle;
 		}

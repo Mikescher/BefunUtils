@@ -72,7 +72,7 @@ namespace BefungExec.Logic
 
 			paused = RunOptions.INIT_PAUSED;
 
-			curr_lvl_sleeptime = RunOptions.SLEEP_TIME_3;
+			curr_lvl_sleeptime = RunOptions.GetSleep(RunOptions.INIT_SPEED);
 		}
 
 		public void run()
@@ -458,7 +458,7 @@ namespace BefungExec.Logic
 
 			int[,] prog = new int[w = GetProgWidth(pg), h = GetProgHeight(pg)];
 
-			string[] split = Regex.Split(pg, @"\r\n");
+			string[] split = Regex.Split(pg, Environment.NewLine);
 
 			for (int y = 0; y < h; y++)
 			{
