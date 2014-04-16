@@ -61,7 +61,7 @@ namespace BefunGen
 				else
 				{
 					txtParseTree.Text = MyParser.FailMessage + Environment.NewLine + "CGT failed to load";
-					txtAST.Text = GParser.FailMessage + Environment.NewLine + "CGT failed to load";
+					txtAST.Text = MyParser.FailMessage + Environment.NewLine + "CGT failed to load";
 				}
 			}
 			catch (GOLD.ParserException ex)
@@ -134,11 +134,10 @@ namespace BefunGen
 				trimtree = refout2;
 				log += (string.Format("Trimmed Reduction Tree: {0}ms\r\n", MyParser.Time));
 
-				BefunGen.AST.Program p = GParser.generateAST(txt);
-				if (p == null)
-					asttree = GParser.FailMessage;
-				else
+				try
 				{
+					BefunGen.AST.Program p = GParser.generateAST(txt);
+
 					log += (string.Format("AST-Gen: {0}ms\r\n", MyParser.Time));
 
 					long gdst = Environment.TickCount;
@@ -148,6 +147,10 @@ namespace BefunGen
 					asttree = debug;
 
 					log += (string.Format("AST-DebugOut: {0}ms\r\n", gdst));
+				}
+				catch (Exception e)
+				{
+					asttree = e.ToString();
 				}
 
 				grammar = GParser.getGrammarDefinition();
@@ -215,10 +218,9 @@ namespace BefunGen
 		private Expression parseExpression(string expr)
 		{
 			string txt = String.Format("program b var  bool a; begin a = (bool)({0}); end end", expr);
+
 			BefunGen.AST.Program p = GParser.generateAST(txt);
 
-			if (p == null)
-				throw new Exception(GParser.FailMessage);
 
 			return ((Expression_Cast)((Statement_Assignment)((Statement_StatementList)p.MainMethod.Body).List[0]).Expr).Expr;
 		}
@@ -228,8 +230,6 @@ namespace BefunGen
 			string txt = String.Format("program b var  bool a; begin {0} end end", stmt);
 			BefunGen.AST.Program p = GParser.generateAST(txt);
 
-			if (p == null)
-				throw new Exception(GParser.FailMessage);
 
 			return ((Statement_StatementList)p.MainMethod.Body).List[0];
 		}
@@ -239,18 +239,12 @@ namespace BefunGen
 			string txt = String.Format("program b begin end {0} end", meth);
 			BefunGen.AST.Program p = GParser.generateAST(txt);
 
-			if (p == null)
-				throw new Exception(GParser.FailMessage);
-
 			return p.MethodList[1];
 		}
 
 		private BefunGen.AST.Program parseProgram(string prog)
 		{
 			BefunGen.AST.Program p = GParser.generateAST(prog);
-
-			if (p == null)
-				throw new Exception(GParser.FailMessage);
 
 			return p;
 		}
@@ -396,13 +390,10 @@ end
 
 		private void btnGen_Click(object sender, EventArgs e)
 		{
-			BefunGen.AST.Program p = GParser.generateAST(txtSource.Document.Text);
-			if (p == null)
+			try
 			{
-				txtCode.Text = GParser.FailMessage;
-			}
-			else
-			{
+				BefunGen.AST.Program p = GParser.generateAST(txtSource.Document.Text);
+
 				try
 				{
 					txtCode.Text = p.generateCode().ToString();
@@ -411,6 +402,11 @@ end
 				{
 					txtCode.Text = ex.ToString();
 				}
+
+			}
+			catch (Exception e2)
+			{
+				txtCode.Text = e2.ToString();
 			}
 		}
 

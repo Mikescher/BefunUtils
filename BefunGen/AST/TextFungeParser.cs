@@ -10,7 +10,6 @@ namespace BefunGen.AST
 	{
 		private GOLD.Parser parser;
 
-		public string FailMessage { get; private set; }
 		public long ParseTime { get; private set; }
 
 		public TextFungeParser()
@@ -30,46 +29,34 @@ namespace BefunGen.AST
 			return loadTables(new BinaryReader(new FileStream(p, FileMode.Open)));
 		}
 
+		public string generateCode(string txt, bool debug)
+		{
+			Program p = generateAST(txt) as Program;
+
+			CodePiece cp = p.generateCode();
+
+			string result;
+
+			if (debug)
+				result = cp.ToSimpleString();
+			else
+				result = cp.ToString();
+
+			return result;
+		}
+
 		public Program generateAST(string txt)
 		{
-			FailMessage = "";
-
 			ParseTime = Environment.TickCount;
 
 			Program result = null;
 
-			try
-			{
-				result = (Program)parse(txt);
-			}
-			catch (BefunGenException e)
-			{
-				FailMessage = e.ToString();
-				return null;
-			}
-			catch (Exception e)
-			{
-				FailMessage = "FATAL EXCEPTION:\r\n" + e.ToString();
-				return null;
-			}
+			result = (Program)parse(txt);
 
 			if (result == null)
-				return null;
+				throw new Exception("Result == null");
 
-			try
-			{
-				result.prepare();
-			}
-			catch (BefunGenException e)
-			{
-				FailMessage = e.ToString();
-				return null;
-			}
-			catch (Exception e)
-			{
-				FailMessage = "FATAL EXCEPTION:\r\n" + e.ToString();
-				return null;
-			}
+			result.prepare();
 
 			ParseTime = Environment.TickCount - ParseTime;
 
@@ -78,8 +65,6 @@ namespace BefunGen.AST
 
 		public bool TryParse(string txt, out BefunGenException err, out Program prog)
 		{
-			FailMessage = "";
-
 			ParseTime = Environment.TickCount;
 
 			Program result = null;
@@ -134,43 +119,46 @@ namespace BefunGen.AST
 
 		private object parse(string txt)
 		{
-			object result = null;
-
-			txt = txt.Replace("\r\n", "\n") + "\n";
-
-			parser.Open(ref txt);
-			parser.TrimReductions = false;
-
-			bool done = false;
-			while (!done)
+			lock (this)
 			{
-				GOLD.ParseMessage response = parser.Parse();
+				object result = null;
 
-				switch (response)
+				txt = txt.Replace("\r\n", "\n") + "\n";
+
+				parser.Open(ref txt);
+				parser.TrimReductions = false;
+
+				bool done = false;
+				while (!done)
 				{
-					case GOLD.ParseMessage.LexicalError:
-					case GOLD.ParseMessage.SyntaxError:
-					case GOLD.ParseMessage.InternalError:
-					case GOLD.ParseMessage.NotLoadedError:
-					case GOLD.ParseMessage.GroupError:
-						fail(response);
-						break;
+					GOLD.ParseMessage response = parser.Parse();
 
-					case GOLD.ParseMessage.Reduction: // Reduction
-						parser.CurrentReduction = GrammarTableMap.CreateNewASTObject(parser.CurrentReduction as GOLD.Reduction, parser.CurrentPosition());
-						break;
+					switch (response)
+					{
+						case GOLD.ParseMessage.LexicalError:
+						case GOLD.ParseMessage.SyntaxError:
+						case GOLD.ParseMessage.InternalError:
+						case GOLD.ParseMessage.NotLoadedError:
+						case GOLD.ParseMessage.GroupError:
+							fail(response);
+							break;
 
-					case GOLD.ParseMessage.Accept: //Accepted!
-						result = parser.CurrentReduction;
-						done = true;
-						break;
+						case GOLD.ParseMessage.Reduction: // Reduction
+							parser.CurrentReduction = GrammarTableMap.CreateNewASTObject(parser.CurrentReduction as GOLD.Reduction, parser.CurrentPosition());
+							break;
 
-					case GOLD.ParseMessage.TokenRead: //You don't have to do anything here.
-						break;
+						case GOLD.ParseMessage.Accept: //Accepted!
+							result = parser.CurrentReduction;
+							done = true;
+							break;
+
+						case GOLD.ParseMessage.TokenRead: //You don't have to do anything here.
+							break;
+					}
 				}
-			}
 
-			return result;
+				return result;
+			}
 		}
 
 		private void fail(GOLD.ParseMessage msg)
