@@ -7,11 +7,10 @@
              mc:Ignorable="d">
 
     <UserControl.Resources>
-        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
-        </Style>
+        <ResourceDictionary Source="SimpleToolbarButtonTheme.xaml"/>
     </UserControl.Resources>
 
-    <Button Name ="btn" Command="Save">
+    <Button Name ="btn" Command="Save" Margin="1, 0">
         <StackPanel Orientation="Horizontal" >
             <local:AutoGreyableImage x:Name="img"/>
             <TextBlock Name="txt" Margin="5, 0, 0, 0"/>

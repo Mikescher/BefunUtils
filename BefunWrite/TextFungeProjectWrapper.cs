@@ -177,6 +177,9 @@ namespace BefunWrite
 			}
 			else
 			{
+				if (string.IsNullOrWhiteSpace(ProjectConfigPath))
+					return false;
+
 				string prev = ProjectConfig.SourceCodePath;
 
 				string relativepath = Path.GetFileNameWithoutExtension(ProjectConfigPath) + ".tf";
