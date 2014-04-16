@@ -1,13 +1,8 @@
-﻿using BefunGen.AST.CodeGen;
-using BefunGen.AST.CodeGen.NumberCode;
+﻿using BefunGen.AST;
+using BefunGen.AST.CodeGen;
 using BefunGen.AST.CodeGen.Tags;
 using BefunGen.AST.Exceptions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BefunGenTest
 {
@@ -84,7 +79,8 @@ namespace BefunGenTest
 		[TestMethod]
 		public void CodePieceTest_Replace()
 		{
-			CodePiece p = CodePiece.ParseFromLine("  ", true); ;
+			CodePiece p = CodePiece.ParseFromLine("  ", true);
+			;
 
 			p.SetTag(1, 0, new TemporaryCodeField_Tag());
 
@@ -156,8 +152,8 @@ namespace BefunGenTest
 		[TestMethod]
 		public void CodePieceTest_CompressHorizontal()
 		{
-			CodeGenOptions.CompressHorizontalCombining = true;
-			
+			ASTObject.CGO.CompressHorizontalCombining = true;
+
 			CodePiece p1 = new CodePiece();
 
 			p1[0, 0] = BCHelper.Add;

@@ -1,4 +1,4 @@
-﻿using BefunGen.AST.CodeGen;
+﻿using BefunGen.AST;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace BefunGenTest
@@ -245,7 +245,7 @@ end
 		[TestMethod]
 		public void codeGenTest_Program_Modulo_Display_Access()
 		{
-			CodeGenOptions.DisplayModuloAccess = true;
+			ASTObject.CGO.DisplayModuloAccess = true;
 
 			BFTestHelper.debugProgram(@"
 program example : display[64, 16]
@@ -280,7 +280,7 @@ end
 		[TestMethod]
 		public void codeGenTest_Program_switch_Access()
 		{
-			CodeGenOptions.DisplayModuloAccess = true;
+			ASTObject.CGO.DisplayModuloAccess = true;
 
 			BFTestHelper.debugProgram_Output("WIN", @"
 program example
@@ -311,7 +311,7 @@ end
 		[TestMethod]
 		public void codeGenTest_Program_switch_Common()
 		{
-			CodeGenOptions.DisplayModuloAccess = true;
+			ASTObject.CGO.DisplayModuloAccess = true;
 
 			BFTestHelper.debugProgram(@"
 program p 
@@ -342,7 +342,7 @@ end
 		[TestMethod]
 		public void codeGenTest_Program_switch_Common_Reversed()
 		{
-			CodeGenOptions.DisplayModuloAccess = true;
+			ASTObject.CGO.DisplayModuloAccess = true;
 
 			BFTestHelper.debugProgram(@"
 program p 

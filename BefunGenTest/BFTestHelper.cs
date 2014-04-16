@@ -16,9 +16,6 @@ namespace BefunGenTest
 			string txt = String.Format("program b var {0} a; begin a = {1}; QUIT; end end", type, expr);
 			BefunGen.AST.Program p = GParser.generateAST(txt);
 
-			if (p == null)
-				throw new Exception(GParser.FailMessage);
-
 			return p;
 		}
 
@@ -26,9 +23,6 @@ namespace BefunGenTest
 		{
 			string txt = String.Format("program b var {0} a; begin OUT \"\"; a = {1}; QUIT; end end", type, expr);
 			BefunGen.AST.Program p = GParser.generateAST(txt);
-
-			if (p == null)
-				throw new Exception(GParser.FailMessage);
 
 			return p;
 		}
@@ -38,9 +32,6 @@ namespace BefunGenTest
 			string txt = String.Format("program b var  bool a; begin {0} QUIT; end end", stmt);
 			BefunGen.AST.Program p = GParser.generateAST(txt);
 
-			if (p == null)
-				throw new Exception(GParser.FailMessage);
-
 			return p;
 		}
 
@@ -49,18 +40,12 @@ namespace BefunGenTest
 			string txt = String.Format("program b : display[4,4] begin {0}; end {1} end", call, meth);
 			BefunGen.AST.Program p = GParser.generateAST(txt);
 
-			if (p == null)
-				throw new Exception(GParser.FailMessage);
-
 			return p;
 		}
 
 		public static Program parseProgram(string meth)
 		{
 			BefunGen.AST.Program p = GParser.generateAST(meth);
-
-			if (p == null)
-				throw new Exception(GParser.FailMessage);
 
 			return p;
 		}
