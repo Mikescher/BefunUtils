@@ -473,7 +473,11 @@ namespace BefungExec.View
 			#region DEBUG
 
 			if (kb.isDown(Keys.Tab))
-				RenderFont(glProgramView.Height, new Vec2d(0f, 0f), String.Format("FPS: {0} || SPEED: {1}", (int)fps.Frequency, getFreqFormatted()), -1, DebugFont, true);
+			{
+				RenderFont(glProgramView.Height, new Vec2d(0f, 00f), String.Format("FPS: {0}", (int)fps.Frequency), -1, DebugFont, true);
+				RenderFont(glProgramView.Height, new Vec2d(0f, 20f), String.Format("SPEED: {0}", getFreqFormatted()), -1, DebugFont, true);
+				RenderFont(glProgramView.Height, new Vec2d(0f, 40f), String.Format("STEPS: {0}", prog.StepCount), -1, DebugFont, true);
+			}
 
 			#endregion
 

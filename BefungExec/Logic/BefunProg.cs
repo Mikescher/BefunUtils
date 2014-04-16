@@ -9,7 +9,7 @@ using System.Threading;
 
 namespace BefungExec.Logic
 {
-	public class BefunProg
+	public class BefunProg //Todo Add StepCounter (since Reset -> Until Stop)
 	{
 		private static int[,] randDelta = { { 1, 0 }, { 0, -1 }, { -1, 0 }, { 0, 1 } };
 
@@ -23,6 +23,8 @@ namespace BefungExec.Logic
 		public int[,] raster;
 		public long[,] decay_raster;
 		public bool[,] breakpoints;
+
+		public int StepCount = 0;
 
 		public int Width { get { return raster.GetLength(0); } }
 		public int Height { get { return raster.GetLength(1); } }
@@ -377,6 +379,8 @@ namespace BefungExec.Logic
 						break;
 				}
 			}
+
+			StepCount++;
 		}
 
 		public void move()
@@ -433,6 +437,7 @@ namespace BefungExec.Logic
 			mode = MODE_RUN;
 			running = true;
 			dimension = new Vec2i(Width, Height);
+			StepCount = 0;
 
 			output.Clear();
 		}
