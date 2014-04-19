@@ -218,7 +218,6 @@ namespace BefunWrite
 			{
 				ASTObject.CGO = project.SelectedConfig.Options;
 
-				Program tmp;
 				code = Parser.generateCode(codeEditor.Text, project.SelectedConfig.ExecSettings.IsDebug);
 			}
 			catch (BefunGenException ex)
@@ -506,7 +505,6 @@ namespace BefunWrite
 				updateUI();
 				pw.ClearDirty();
 				updateUI();
-
 			}
 		}
 

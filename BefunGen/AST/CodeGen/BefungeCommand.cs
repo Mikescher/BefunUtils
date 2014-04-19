@@ -71,11 +71,6 @@ namespace BefunGen.AST.CodeGen
 			Type = _t;
 			Param = _p;
 			Tag = _g;
-
-			if (Tag != null && Type == BefungeCommandType.NOP)
-			{
-				throw new ArgumentException(); // NOP's dürfen keine Tags haben ...
-			}
 		}
 
 		public char getCommandCode()

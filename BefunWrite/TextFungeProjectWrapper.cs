@@ -111,7 +111,11 @@ namespace BefunWrite
 				if (Sourcecode_isDirty)
 					s_s = Save_sourcecode(forcenew);
 
-				return s_p && s_s;
+				bool s_p2 = true;
+				if (Project_isDirty) // save_SC Could make Projectfile dirty
+					s_p = Save_projectfile(forcenew);
+
+				return s_p && s_s && s_p2;
 			}
 			catch (IOException)
 			{
@@ -155,7 +159,8 @@ namespace BefunWrite
 
 					string json = JsonConvert.SerializeObject(ProjectConfig, Formatting.Indented);
 					File.WriteAllText(ProjectConfigPath, json);
-					Project_isDirty = false;
+
+					DirtyProject();
 
 					return true;
 				}
@@ -197,6 +202,8 @@ namespace BefunWrite
 
 				File.WriteAllText(getAbsoluteSourceCodePath(), Sourcecode);
 				Sourcecode_isDirty = false;
+
+				Project_isDirty = true;
 
 				return true;
 			}
