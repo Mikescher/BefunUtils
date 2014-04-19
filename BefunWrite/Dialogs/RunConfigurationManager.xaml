@@ -32,14 +32,14 @@
         <Border Grid.Row="1" Background="White">
             <ScrollViewer Padding="5, 10">
                 <StackPanel Orientation="Vertical">
-                    <Expander Header="General">
+                    <Expander Header="General" IsExpanded="True">
                         <ctrls:TwoColumnGrid RowSpacing="5" ColumnSpacing="5" >
                             <Label Content="Name" />
                             <TextBox x:Name="V_ConfigName" VerticalAlignment="Center"/>
                         </ctrls:TwoColumnGrid>
                     </Expander>
 
-                    <Expander Header="Execution">
+                    <Expander Header="Execution" IsExpanded="True">
                         <ctrls:TwoColumnGrid RowSpacing="5" ColumnSpacing="5">
                             <Label Content="Debugging Enabled" />
                             <CheckBox x:Name="V_EX_IsDebug" VerticalAlignment="Center"/>
@@ -85,7 +85,7 @@
                         </ctrls:TwoColumnGrid>
                     </Expander>
 
-                    <Expander Header="Code Generation">
+                    <Expander Header="Code Generation" IsExpanded="True">
                         <ctrls:TwoColumnGrid RowSpacing="5" ColumnSpacing="5">
                             <Label Content="Numberliteral Representation" />
                             <ComboBox x:Name="V_NumberLiteralRepresentation" VerticalAlignment="Center">

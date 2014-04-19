@@ -14,7 +14,7 @@ using System.Windows.Forms;
 
 namespace BefungExec.View
 {
-	public partial class MainForm : Form
+	public partial class MainForm : Form //TODO Add CharInput & Output Edit (beneath Stack) --> Show Output and grab Char input from there
 	{
 		#region Fields
 

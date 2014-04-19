@@ -12,7 +12,7 @@
     </UserControl.Resources>
 
     <xctk:ButtonSpinner Spin="ButtonSpinner_Spin">
-        <TextBox Text="{Binding Value, Converter={StaticResource UIntToDispCharConverter}, RelativeSource={RelativeSource AncestorType=UserControl}}" HorizontalContentAlignment="Right" MinWidth="60"/>
+        <TextBox Text="{Binding Value, Converter={StaticResource UIntToDispCharConverter}, RelativeSource={RelativeSource AncestorType=UserControl}, FallbackValue=??}" HorizontalContentAlignment="Right" MinWidth="60"/>
     </xctk:ButtonSpinner>
 
 </UserControl>
