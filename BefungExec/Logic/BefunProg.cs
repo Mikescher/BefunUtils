@@ -1,6 +1,7 @@
 ﻿using BefungExec.View;
 using SuperBitBros.OpenGL.OGLMath;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -46,6 +47,8 @@ namespace BefungExec.Logic
 		public const int MODE_IN_CHAR = 2;
 		public const int MODE_MOVEANDRUN = 3;
 
+		public ConcurrentQueue<char> InputCharacters = new ConcurrentQueue<char>();
+
 		public int curr_lvl_sleeptime;
 
 		public bool reset_freeze_request = false;
@@ -54,6 +57,7 @@ namespace BefungExec.Logic
 		public string err = null;
 
 		public StringBuilder output = new StringBuilder();
+		public int simpleOutputHash = 0;
 
 		public BefunProg(int[,] iras)
 		{
@@ -92,7 +96,16 @@ namespace BefungExec.Logic
 
 				if ((paused_cached && !doSingleStep) || mode != MODE_RUN)
 				{
-					if (mode == MODE_MOVEANDRUN)
+					if (mode == MODE_IN_CHAR && InputCharacters.Count > 0)
+					{
+						char deqv;
+						if (InputCharacters.TryDequeue(out deqv))
+						{
+							push(deqv);
+							mode = MODE_MOVEANDRUN;
+						}
+					}
+					else if (mode == MODE_MOVEANDRUN)
 					{
 						move();
 						mode = MODE_RUN;
@@ -232,11 +245,14 @@ namespace BefungExec.Logic
 
 		public void Out(string c)
 		{
+			c = c.Replace("\0", "");
+
 			Console.Out.Write(c);
 			lock (output)
 			{
 				output.Append(c);
 			}
+			simpleOutputHash++;
 		}
 
 		public void push(bool a)
@@ -438,6 +454,8 @@ namespace BefungExec.Logic
 			running = true;
 			dimension = new Vec2i(Width, Height);
 			StepCount = 0;
+
+			InputCharacters = new ConcurrentQueue<char>();
 
 			output.Clear();
 		}

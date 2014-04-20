@@ -39,6 +39,8 @@ namespace BefungExec.View
 
 		private string currInput = "";
 
+		private int currOutputHash = -1;
+
 		private Rect2i selection = null;
 		private Stack<Rect2i> zoom = new Stack<Rect2i>();
 
@@ -463,9 +465,15 @@ namespace BefungExec.View
 			}
 			lastInput = null;
 
+			// SHOW QUEQUE
+
+			char[] chr_queque = prog.InputCharacters.ToArray();
+
+			edInputQueque.Text = string.Join("", chr_queque);
+
 			#endregion
 
-			#region Output
+			#region OUTPUT
 
 			int progOHash = prog.simpleOutputHash;
 
@@ -504,7 +512,7 @@ namespace BefungExec.View
 
 		private void updateProgramView()
 		{
-			if (ContainsFocus)
+			if (glProgramView.ContainsFocus)
 				kb.update();
 
 
@@ -1011,5 +1019,16 @@ namespace BefungExec.View
 		}
 
 		#endregion
+
+		private void btnAddInput_Click(object sender, EventArgs e)
+		{
+			string s = edInput.Text;
+			edInput.Text = "";
+
+			foreach (char c in s)
+			{
+				prog.InputCharacters.Enqueue(c);
+			}
+		}
 	}
 }
