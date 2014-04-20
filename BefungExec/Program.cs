@@ -16,7 +16,9 @@ namespace BefungExec
 		[STAThread]
 		static void Main(string[] args)
 		{
-			args.ToList().ForEach(Console.WriteLine);
+			Application.EnableVisualStyles();
+
+			//args.ToList().ForEach(Console.WriteLine);
 
 			string code;
 

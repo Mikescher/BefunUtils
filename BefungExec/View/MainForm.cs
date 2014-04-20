@@ -434,12 +434,7 @@ namespace BefungExec.View
 					}
 					if (prog.mode == BefunProg.MODE_IN_CHAR && currInput.Length == 0)
 					{
-						currInput += lastInput;
-
-						prog.push(currInput[0]);
-						currInput = "";
-						lastInput = null;
-						prog.mode = BefunProg.MODE_MOVEANDRUN;
+						// WAIT
 					}
 				}
 
@@ -467,6 +462,25 @@ namespace BefungExec.View
 				currInput = "";
 			}
 			lastInput = null;
+
+			#endregion
+
+			#region Output
+
+			int progOHash = prog.simpleOutputHash;
+
+			if (progOHash != currOutputHash)
+			{
+				currOutputHash = progOHash;
+
+				String s;
+				lock (prog.output)
+				{
+					s = prog.output.ToString();
+				}
+
+				edOutput.Text = s;
+			}
 
 			#endregion
 

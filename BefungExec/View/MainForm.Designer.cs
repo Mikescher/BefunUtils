@@ -30,7 +30,13 @@
 		{
 			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
 			this.glProgramView = new OpenTK.GLControl();
+			this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
 			this.glStackView = new OpenTK.GLControl();
+			this.edInputQueque = new System.Windows.Forms.TextBox();
+			this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+			this.edInput = new System.Windows.Forms.TextBox();
+			this.btnAddInput = new System.Windows.Forms.Button();
+			this.edOutput = new System.Windows.Forms.RichTextBox();
 			this.menuStrip1 = new System.Windows.Forms.MenuStrip();
 			this.fIleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -63,10 +69,12 @@
 			this.removeAllBreakpointsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.showCompleteStackToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.showCompleteOutputToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.showCurrentStateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.showCurrentStateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.tableLayoutPanel1.SuspendLayout();
+			this.tableLayoutPanel2.SuspendLayout();
+			this.flowLayoutPanel1.SuspendLayout();
 			this.menuStrip1.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -76,12 +84,13 @@
 			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 250F));
 			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this.tableLayoutPanel1.Controls.Add(this.glProgramView, 1, 0);
-			this.tableLayoutPanel1.Controls.Add(this.glStackView, 0, 0);
+			this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel2, 0, 0);
 			this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 24);
 			this.tableLayoutPanel1.Name = "tableLayoutPanel1";
 			this.tableLayoutPanel1.RowCount = 1;
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 627F));
 			this.tableLayoutPanel1.Size = new System.Drawing.Size(882, 627);
 			this.tableLayoutPanel1.TabIndex = 0;
 			// 
@@ -102,17 +111,81 @@
 			this.glProgramView.MouseUp += new System.Windows.Forms.MouseEventHandler(this.glProgramView_MouseUp);
 			this.glProgramView.Resize += new System.EventHandler(this.glProgramView_Resize);
 			// 
+			// tableLayoutPanel2
+			// 
+			this.tableLayoutPanel2.ColumnCount = 1;
+			this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.tableLayoutPanel2.Controls.Add(this.glStackView, 0, 0);
+			this.tableLayoutPanel2.Controls.Add(this.edInputQueque, 0, 1);
+			this.tableLayoutPanel2.Controls.Add(this.flowLayoutPanel1, 0, 2);
+			this.tableLayoutPanel2.Controls.Add(this.edOutput, 0, 3);
+			this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 3);
+			this.tableLayoutPanel2.Name = "tableLayoutPanel2";
+			this.tableLayoutPanel2.RowCount = 4;
+			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
+			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 140F));
+			this.tableLayoutPanel2.Size = new System.Drawing.Size(244, 621);
+			this.tableLayoutPanel2.TabIndex = 2;
+			// 
 			// glStackView
 			// 
 			this.glStackView.BackColor = System.Drawing.Color.Black;
 			this.glStackView.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.glStackView.Location = new System.Drawing.Point(3, 3);
 			this.glStackView.Name = "glStackView";
-			this.glStackView.Size = new System.Drawing.Size(244, 621);
+			this.glStackView.Size = new System.Drawing.Size(238, 409);
 			this.glStackView.TabIndex = 1;
 			this.glStackView.VSync = false;
 			this.glStackView.Load += new System.EventHandler(this.glStackView_Load);
 			this.glStackView.Resize += new System.EventHandler(this.glStackView_Resize);
+			// 
+			// edInputQueque
+			// 
+			this.edInputQueque.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.edInputQueque.Location = new System.Drawing.Point(3, 418);
+			this.edInputQueque.Name = "edInputQueque";
+			this.edInputQueque.ReadOnly = true;
+			this.edInputQueque.Size = new System.Drawing.Size(238, 20);
+			this.edInputQueque.TabIndex = 4;
+			// 
+			// flowLayoutPanel1
+			// 
+			this.flowLayoutPanel1.Controls.Add(this.edInput);
+			this.flowLayoutPanel1.Controls.Add(this.btnAddInput);
+			this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 444);
+			this.flowLayoutPanel1.Name = "flowLayoutPanel1";
+			this.flowLayoutPanel1.Size = new System.Drawing.Size(238, 34);
+			this.flowLayoutPanel1.TabIndex = 5;
+			this.flowLayoutPanel1.WrapContents = false;
+			// 
+			// edInput
+			// 
+			this.edInput.Location = new System.Drawing.Point(3, 3);
+			this.edInput.Name = "edInput";
+			this.edInput.Size = new System.Drawing.Size(169, 20);
+			this.edInput.TabIndex = 0;
+			// 
+			// btnAddInput
+			// 
+			this.btnAddInput.Location = new System.Drawing.Point(178, 3);
+			this.btnAddInput.Name = "btnAddInput";
+			this.btnAddInput.Size = new System.Drawing.Size(54, 23);
+			this.btnAddInput.TabIndex = 1;
+			this.btnAddInput.Text = "Input";
+			this.btnAddInput.UseVisualStyleBackColor = true;
+			// 
+			// edOutput
+			// 
+			this.edOutput.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.edOutput.Location = new System.Drawing.Point(3, 484);
+			this.edOutput.Name = "edOutput";
+			this.edOutput.Size = new System.Drawing.Size(238, 134);
+			this.edOutput.TabIndex = 6;
+			this.edOutput.Text = "";
 			// 
 			// menuStrip1
 			// 
@@ -373,6 +446,13 @@
 			this.showCompleteOutputToolStripMenuItem.Text = "Show complete Output";
 			this.showCompleteOutputToolStripMenuItem.Click += new System.EventHandler(this.showCompleteOutputToolStripMenuItem_Click);
 			// 
+			// showCurrentStateToolStripMenuItem
+			// 
+			this.showCurrentStateToolStripMenuItem.Name = "showCurrentStateToolStripMenuItem";
+			this.showCurrentStateToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
+			this.showCurrentStateToolStripMenuItem.Text = "Show current State";
+			this.showCurrentStateToolStripMenuItem.Click += new System.EventHandler(this.showCurrentStateToolStripMenuItem_Click);
+			// 
 			// helpToolStripMenuItem
 			// 
 			this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -388,13 +468,6 @@
 			this.aboutToolStripMenuItem.Text = "About ...";
 			this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
 			// 
-			// showCurrentStateToolStripMenuItem
-			// 
-			this.showCurrentStateToolStripMenuItem.Name = "showCurrentStateToolStripMenuItem";
-			this.showCurrentStateToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
-			this.showCurrentStateToolStripMenuItem.Text = "Show current State";
-			this.showCurrentStateToolStripMenuItem.Click += new System.EventHandler(this.showCurrentStateToolStripMenuItem_Click);
-			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -408,6 +481,10 @@
 			this.Text = "BefungExec";
 			this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainForm_FormClosed);
 			this.tableLayoutPanel1.ResumeLayout(false);
+			this.tableLayoutPanel2.ResumeLayout(false);
+			this.tableLayoutPanel2.PerformLayout();
+			this.flowLayoutPanel1.ResumeLayout(false);
+			this.flowLayoutPanel1.PerformLayout();
 			this.menuStrip1.ResumeLayout(false);
 			this.menuStrip1.PerformLayout();
 			this.ResumeLayout(false);
@@ -455,5 +532,11 @@
 		private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem showCurrentStateToolStripMenuItem;
+		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
+		private System.Windows.Forms.TextBox edInputQueque;
+		private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
+		private System.Windows.Forms.TextBox edInput;
+		private System.Windows.Forms.Button btnAddInput;
+		private System.Windows.Forms.RichTextBox edOutput;
 	}
 }
