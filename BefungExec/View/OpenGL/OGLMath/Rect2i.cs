@@ -5,8 +5,8 @@ namespace BefungExec.View.OpenGL.OGLMath
 	public class Rect2i
 	{
 		private Vec2i position; // bottomLeft
-		public int Width { get; private set; }
-		public int Height { get; private set; }
+		public int Width { get; set; }
+		public int Height { get; set; }
 
 		public Vec2i tl { get { return new Vec2i(position.X, position.Y + Height); } }
 

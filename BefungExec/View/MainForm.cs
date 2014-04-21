@@ -64,7 +64,6 @@ namespace BefungExec.View
 			if (zoom.Peek() == null || zoom.Peek().bl.X < 0 || zoom.Peek().bl.Y < 0 || zoom.Peek().tr.X > prog.Width || zoom.Peek().tr.Y > prog.Height)
 				zoom.Pop();
 
-
 			syntaxHighlightingToolStripMenuItem.Checked = RunOptions.SYNTAX_HIGHLIGHTING;
 			aSCIIStackToolStripMenuItem.Checked = RunOptions.ASCII_STACK;
 			skipNOPsToolStripMenuItem.Checked = RunOptions.SKIP_NOP;
@@ -77,11 +76,16 @@ namespace BefungExec.View
 
 		#endregion
 
-		#region Display
+		#region Display & FormEvents
 
 		private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
 		{
 			prog.running = false;
+		}
+
+		private void MainForm_Load(object sender, EventArgs e)
+		{
+			this.ActiveControl = glProgramView;
 		}
 
 		void Application_Idle(object sender, EventArgs e)
@@ -93,7 +97,7 @@ namespace BefungExec.View
 			{
 				glProgramView.MakeCurrent();
 
-				if (QFontViewportState != 0 && (prog.mode != BefunProg.MODE_RUN || kb.isDown(Keys.Tab))) // Only update when FOnt is rendered
+				if (QFontViewportState != 0 && (prog.mode != BefunProg.MODE_RUN || kb.isDown(Keys.Tab))) // Only update when Font is rendered
 				{
 					QFont.InvalidateViewport();
 					QFontViewportState = 0;
@@ -248,7 +252,7 @@ namespace BefungExec.View
 				if (selection.Width == 1 && selection.Height == 1)
 				{
 					prog.breakpoints[selection.bl.X, selection.bl.Y] = !prog.breakpoints[selection.bl.X, selection.bl.Y];
-				} 
+				}
 				else if (Math.Abs(selection.Width) > 0 && Math.Abs(selection.Height) > 0)
 				{
 					if (selection != zoom.Peek())
@@ -265,11 +269,21 @@ namespace BefungExec.View
 			lastInput = e.KeyChar;
 		}
 
+		private void glProgramView_MouseWheel(object sender, System.Windows.Forms.MouseEventArgs e)
+		{
+			for (int i = 0; i < Math.Abs(e.Delta); i += 120)
+			{
+				if (e.Delta > 0)
+					zoomIn();
+				else if (e.Delta < 0)
+					zoomOut();
+			}
+		}
+
 		#endregion
 
 		#region Render & Update
 
-		//TODO Fix Selection (BR -> TL)
 		private void RenderProgramView()
 		{
 			#region INIT
@@ -277,7 +291,7 @@ namespace BefungExec.View
 			fps.Inc();
 
 			GL.Clear(ClearBufferMask.ColorBufferBit);
-			GL.ClearColor(Color.White);
+			GL.ClearColor(Color.FromArgb(244, 244, 244));
 
 			GL.MatrixMode(MatrixMode.Projection);
 			GL.LoadIdentity();
@@ -526,7 +540,6 @@ namespace BefungExec.View
 			if (glProgramView.ContainsFocus)
 				kb.update();
 
-
 			bool isrun = (prog.mode == BefunProg.MODE_RUN);
 
 			if (isrun && kb[Keys.Escape])
@@ -546,11 +559,8 @@ namespace BefungExec.View
 				prog.paused = !prog.paused;
 			}
 
-			if (kb[Keys.Back])
-			{
-				if (currInput.Length > 0)
-					currInput = currInput.Substring(0, currInput.Length - 1);
-			}
+			if (kb[Keys.Back] && currInput.Length > 0)
+				currInput = currInput.Substring(0, currInput.Length - 1);
 
 			if (kb[Keys.Enter])
 			{
@@ -564,9 +574,7 @@ namespace BefungExec.View
 			}
 
 			if (isrun && kb[Keys.Right])
-			{
 				prog.doSingleStep = true;
-			}
 
 			if (isrun && kb[Keys.D1])
 				setSpeed(1, true);
@@ -582,15 +590,18 @@ namespace BefungExec.View
 
 			if (isrun && kb[Keys.D5])
 				setSpeed(5, true);
+
 			if (isrun && kb[Keys.R])
-			{
 				reset();
-			}
 
 			if (isrun && kb[Keys.C])
-			{
 				resetBPs();
-			}
+
+			if (isrun && kb[Keys.O])
+				zoomIn();
+
+			if (isrun && kb[Keys.L])
+				zoomOut();
 		}
 
 		private void RenderStackView()
@@ -844,6 +855,84 @@ namespace BefungExec.View
 
 				selection = new Rect2i(new Vec2i(l, b), new Vec2i(r + 1, t + 1));
 			}
+		}
+
+		private void zoomIn()
+		{
+			Rect2i z = new Rect2i(zoom.Peek());
+
+			int dx = z.Width / 10;
+			int dy = z.Height / 10;
+
+			if (dx == 0)
+				dx = 1;
+
+			if (dy == 0)
+				dy = 1;
+
+			if (z.Width > 2 * dx)
+			{
+				z.TrimHorizontal(dx);
+			}
+			else
+			{
+				int trim1 = z.Width / 2;
+				int trim2 = (z.Width - trim1) - 1;
+
+				z.TrimEast(trim1);
+				z.TrimWest(trim2);
+			}
+
+			if (z.Height > 2 * dy)
+			{
+				z.TrimVertical(dy);
+			}
+			else
+			{
+				int trim1 = z.Height / 2;
+				int trim2 = (z.Height - trim1) - 1;
+
+				z.TrimNorth(trim1);
+				z.TrimSouth(trim2);
+			}
+
+			if (zoom.Count > 1)
+				zoom.Pop();
+			zoom.Push(z);
+		}
+
+		private void zoomOut()
+		{
+			Rect2i z = new Rect2i(zoom.Peek());
+
+			int dx = z.Width / 10;
+			int dy = z.Height / 10;
+
+			if (dx == 0)
+				dx = 1;
+
+			if (dy == 0)
+				dy = 1;
+
+			z.TrimHorizontal(-dx);
+			z.TrimVertical(-dy);
+
+			if (z.bl.X < 0)
+				z.TrimWest(-z.bl.X);
+
+			if (z.bl.Y < 0)
+				z.TrimSouth(-z.bl.Y);
+
+			if (z.Width > prog.Width)
+				z.Width = prog.Width;
+
+			if (z.tr.Y > prog.Height)
+				z.Height = prog.Height;
+
+
+			if (zoom.Count > 1)
+				zoom.Pop();
+			zoom.Push(z);
 		}
 
 		#endregion
