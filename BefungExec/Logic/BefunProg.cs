@@ -462,12 +462,12 @@ namespace BefungExec.Logic
 
 		private static int GetProgWidth(string pg)
 		{
-			return Regex.Split(pg, @"\r\n").Max(s => s.Length);
+			return pg.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None).Max(s => s.Length);
 		}
 
 		private static int GetProgHeight(string pg)
 		{
-			return Regex.Split(pg, @"\r\n").Length;
+			return pg.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None).Length;
 		}
 
 		public static int[,] GetProg(string pg)
@@ -476,7 +476,7 @@ namespace BefungExec.Logic
 
 			int[,] prog = new int[w = GetProgWidth(pg), h = GetProgHeight(pg)];
 
-			string[] split = Regex.Split(pg, Environment.NewLine);
+			string[] split = pg.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
 
 			for (int y = 0; y < h; y++)
 			{

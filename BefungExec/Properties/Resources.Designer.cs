@@ -61,22 +61,35 @@ namespace BefungExec.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &quot;omed a s&quot;v
-        ///          &quot;                       &gt;v&lt;
+        ///   Looks up a localized string similar to 0&quot;.omed s&quot;v
+        ///          &quot;                       &gt;v
         ///          i                        8
         ///                                   4
-        ///          s             &gt;       &gt; ^*^         &lt;
+        ///          s             &gt;       &gt; ^*
         ///          i    &gt;99+0g1+#^_77+0g#^_188+0p099+0p&gt;  v
-        ///          h    ^        &lt;         &lt;#            &lt;
+        ///          h    ^        &lt;          #            &lt;
         ///          T    &gt;88+0g1+#^_66+0g#^_088+0p01-99+0p^
         ///          &quot;    ^        &lt;         &lt;#             #&lt;
         ///&gt;         v    &gt;99+0g1-#^_77+0g8-#^_01-88+0p099+0p^
         ///|   &gt;#:&gt;#,&lt;    ^        &lt;         &lt;#            &lt;2
-        ///               &gt;88+0g1- [rest of string was truncated]&quot;;.
+        ///               &gt;88+0g1-#^_66+0g8-#^_088+0p199+ [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string demoProg {
             get {
                 return ResourceManager.GetString("demoProg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License
+        ///
+        ///http://creativecommons.org/licenses/by-nc-sa/4.0/
+        ///
+        ///By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (&quot;Public License&quot;). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string license {
+            get {
+                return ResourceManager.GetString("license", resourceCulture);
             }
         }
         

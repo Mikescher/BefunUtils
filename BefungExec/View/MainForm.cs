@@ -14,7 +14,7 @@ using System.Windows.Forms;
 
 namespace BefungExec.View
 {
-	public partial class MainForm : Form //TODO Add CharInput & Output Edit (beneath Stack) --> Show Output and grab Char input from there
+	public partial class MainForm : Form
 	{
 		#region Fields
 
@@ -259,6 +259,7 @@ namespace BefungExec.View
 
 		#region Render & Update
 
+		//TODO Fix Selection (BR -> TL)
 		private void RenderProgramView()
 		{
 			#region INIT
@@ -1015,10 +1016,12 @@ namespace BefungExec.View
 
 		private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			//TODO Show About Dialog
+			(new AboutForm()).ShowDialog();
 		}
 
 		#endregion
+
+		#region Controls
 
 		private void btnAddInput_Click(object sender, EventArgs e)
 		{
@@ -1030,5 +1033,7 @@ namespace BefungExec.View
 				prog.InputCharacters.Enqueue(c);
 			}
 		}
+
+		#endregion
 	}
 }
