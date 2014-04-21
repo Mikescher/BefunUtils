@@ -1,5 +1,6 @@
 ﻿using System;
-namespace SuperBitBros.OpenGL.OGLMath
+
+namespace BefungExec.View.OpenGL.OGLMath
 {
 	public class Rect2i
 	{

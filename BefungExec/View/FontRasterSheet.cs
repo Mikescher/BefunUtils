@@ -1,6 +1,6 @@
 ﻿using BefungExec.Properties;
+using BefungExec.View.OpenGL.OGLMath;
 using OpenTK.Graphics.OpenGL;
-using SuperBitBros.OpenGL.OGLMath;
 using System.Drawing;
 
 namespace BefungExec.View.OpenGL

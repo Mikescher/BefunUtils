@@ -1,5 +1,5 @@
-﻿using OpenTK.Graphics.OpenGL;
-using SuperBitBros.OpenGL.OGLMath;
+﻿using BefungExec.View.OpenGL.OGLMath;
+using OpenTK.Graphics.OpenGL;
 using System;
 using System.Drawing;
 using System.Drawing.Imaging;

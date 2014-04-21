@@ -1,10 +1,10 @@
 ﻿using BefungExec.Logic;
 using BefungExec.View.OpenGL;
+using BefungExec.View.OpenGL.OGLMath;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using QuickFont;
-using SuperBitBros.OpenGL.OGLMath;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -41,6 +41,7 @@ namespace BefungExec.View
 
 		private int currOutputHash = -1;
 
+		private Vec2i selectionStart = null;
 		private Rect2i selection = null;
 		private Stack<Rect2i> zoom = new Stack<Rect2i>();
 
@@ -122,6 +123,8 @@ namespace BefungExec.View
 			glStackView.Invalidate();
 		}
 
+		#endregion
+
 		#region Events
 
 		private void glStackView_Load(object sender, EventArgs e)
@@ -202,9 +205,16 @@ namespace BefungExec.View
 			int selx, sely;
 			getPointInProgram(e.X, e.Y, out selx, out sely);
 
+
 			if (selx != -1 && sely != -1)
 			{
-				selection = new Rect2i(selx, sely, 1, 1);
+				selectionStart = new Vec2i(selx, sely);
+
+				updateSelectionCalculation(selx, sely);
+			}
+			else
+			{
+				selectionStart = null;
 			}
 		}
 
@@ -214,17 +224,12 @@ namespace BefungExec.View
 				selection = null;
 
 
-			if (selection != null)
+			if (selectionStart != null)
 			{
-				selection.normalize();
-
 				int selx, sely;
 				getPointInProgram(e.X, e.Y, out selx, out sely);
 
-				if (selx == -1 && sely == -1)
-					return;
-
-				selection = new Rect2i(selection.bl, new Vec2i(selx + 1, sely + 1));
+				updateSelectionCalculation(selx, sely);
 			}
 		}
 
@@ -233,20 +238,25 @@ namespace BefungExec.View
 			if (e.Button != MouseButtons.Left)
 				selection = null;
 
-			if (selection != null)
+			if (selectionStart != null)
 			{
-				if (Math.Abs(selection.Width) > 1 && Math.Abs(selection.Height) > 1)
+				int selx, sely;
+				getPointInProgram(e.X, e.Y, out selx, out sely);
+
+				updateSelectionCalculation(selx, sely);
+
+				if (selection.Width == 1 && selection.Height == 1)
 				{
-					selection.normalize();
+					prog.breakpoints[selection.bl.X, selection.bl.Y] = !prog.breakpoints[selection.bl.X, selection.bl.Y];
+				} 
+				else if (Math.Abs(selection.Width) > 0 && Math.Abs(selection.Height) > 0)
+				{
 					if (selection != zoom.Peek())
 						zoom.Push(selection);
 				}
-				else if (selection.Width == 1 && selection.Height == 1)
-				{
-					prog.breakpoints[selection.bl.X, selection.bl.Y] = !prog.breakpoints[selection.bl.X, selection.bl.Y];
-				}
 			}
 
+			selectionStart = null;
 			selection = null;
 		}
 
@@ -823,7 +833,18 @@ namespace BefungExec.View
 			}
 		}
 
-		#endregion
+		private void updateSelectionCalculation(int mouseX, int mouseY)
+		{
+			if (mouseX != -1 && mouseY != -1)
+			{
+				int l = Math.Min(mouseX, selectionStart.X);
+				int r = Math.Max(mouseX, selectionStart.X);
+				int b = Math.Min(mouseY, selectionStart.Y);
+				int t = Math.Max(mouseY, selectionStart.Y);
+
+				selection = new Rect2i(new Vec2i(l, b), new Vec2i(r + 1, t + 1));
+			}
+		}
 
 		#endregion
 

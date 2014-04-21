@@ -1,16 +1,15 @@
 ﻿using BefungExec.View;
-using SuperBitBros.OpenGL.OGLMath;
+using BefungExec.View.OpenGL.OGLMath;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading;
 
 namespace BefungExec.Logic
 {
-	public class BefunProg //Todo Add StepCounter (since Reset -> Until Stop)
+	public class BefunProg
 	{
 		private static int[,] randDelta = { { 1, 0 }, { 0, -1 }, { -1, 0 }, { 0, 1 } };
 

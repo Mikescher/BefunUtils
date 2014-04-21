@@ -1,6 +1,6 @@
 ﻿using BefungExec.Logic;
 using BefungExec.View;
-using SuperBitBros.OpenGL.OGLMath;
+using BefungExec.View.OpenGL.OGLMath;
 using System;
 using System.IO;
 using System.Linq;
@@ -40,6 +40,8 @@ namespace BefungExec
 			Console.WriteLine("3:       High speed");
 			Console.WriteLine("4:       Very High speed");
 			Console.WriteLine("5:       Full speed");
+			//Console.WriteLine("+:       Zoom In");
+			//Console.WriteLine("-:       Zoom Out");
 
 			Console.WriteLine();
 			Console.WriteLine();

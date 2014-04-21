@@ -1,4 +1,4 @@
-﻿using SuperBitBros.OpenGL.OGLMath;
+﻿using BefungExec.View.OpenGL.OGLMath;
 
 namespace BefungExec.Logic
 {

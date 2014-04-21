@@ -1,7 +1,7 @@
 ﻿using OpenTK;
 using System;
 
-namespace SuperBitBros.OpenGL.OGLMath
+namespace BefungExec.View.OpenGL.OGLMath
 {
 	public class Vec2i
 	{
