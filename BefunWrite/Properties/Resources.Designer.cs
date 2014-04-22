@@ -73,15 +73,18 @@ namespace BefunWrite.Properties {
         ///		CHAR CHR_WALL  := &apos;#&apos;;
         ///		CHAR CHR_FLOOR := &apos; &apos;;
         ///		CHAR CHR_PATH  := &apos;+&apos;;
+        ///		CHAR[22] TEST := &quot;Example Project 00\r\n\r\n&quot;;
+        ///	GLOBAl
+        ///		int glubul;
         ///	var 
         ///		char[32] name;
         ///		int i := 0;
         ///	begin
-        ///		out &quot;&quot;Example Project 00\r\n\r\n&quot;&quot;;
+        ///		out &quot;Example Project 00\r\n\r\n&quot;;
         ///		
         ///		getRandAverage(512);
         ///		
-        ///		OUT &quot;&quot;\r\n&quot;&quot;;
+        ///		OUT &quot;\r\n&quot;;
         ///
         ///		//Insert Name
         ///		name = getInputStr();
@@ -89,17 +92,24 @@ namespace BefunWrite.Properties {
         ///		i = 0;
         ///		while (i &lt; 32) do
         ///			out name[i++];
-        ///		end
-        ///
-        ///		OUT &quot;&quot;\r\n&quot;&quot;;
-        ///		
-        ///		// Print Fibbonacci
-        ///		
-        ///		if (name[0] = [rest of string was truncated]&quot;;.
+        ///		 [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string example {
             get {
                 return ResourceManager.GetString("example", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License
+        ///
+        ///http://creativecommons.org/licenses/by-nc-sa/4.0/
+        ///
+        ///By exercising the Licensed Rights (defined below), You accept and agree to be bound by the terms and conditions of this Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License (&quot;Public License&quot;). To the extent this Public License may be interpreted as a contract, You are granted the Licensed Rights in consideration of Your acceptance of [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string license {
+            get {
+                return ResourceManager.GetString("license", resourceCulture);
             }
         }
         

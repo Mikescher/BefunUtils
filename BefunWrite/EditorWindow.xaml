@@ -8,6 +8,8 @@
         Title="BefunWrite" Height="650" Width="1000" Closing="Window_Closing" Closed="Window_Closed">
 
     <Window.CommandBindings>
+        <CommandBinding Command="Undo"                            Executed="UndoExecuted"            CanExecute="UndoEnabled"            />
+        <CommandBinding Command="Redo"                            Executed="RedoExecuted"            CanExecute="RedoEnabled"            />
         <CommandBinding Command="Save"                            Executed="SaveExecuted"            CanExecute="SaveEnabled"            />
         <CommandBinding Command="SaveAs"                          Executed="SaveAsExecuted"          CanExecute="SaveAsEnabled"          />
         <CommandBinding Command="Open"                            Executed="OpenExecuted"            CanExecute="OpenEnabled"            />
@@ -16,6 +18,7 @@
         <CommandBinding Command="self:CustomCMDs.Start"           Executed="StartExecuted"           CanExecute="StartEnabled"           />
         <CommandBinding Command="self:CustomCMDs.Stop"            Executed="StopExecuted"            CanExecute="StopEnabled"            />
         <CommandBinding Command="self:CustomCMDs.ShowRunConfig"   Executed="ShowRunConfigExecuted"   CanExecute="ShowRunConfigEnabled"   />
+        <CommandBinding Command="self:CustomCMDs.AboutHelp"       Executed="AboutHelpExecuted"       CanExecute="AboutHelpEnabled"   />
     </Window.CommandBindings>
 
     <Window.InputBindings>
@@ -43,20 +46,29 @@
                 <Separator/>
                 <MenuItem Header="Exit"/>
             </MenuItem>
-            <MenuItem Header="Edit"/>
-            <MenuItem Header="View"/>
+            <MenuItem Header="Edit">
+                <MenuItem Header="Undo" Command="Undo" />
+                <MenuItem Header="Redo" Command="Redo" />
+                <Separator/>
+            </MenuItem>
             <MenuItem Header="Run">
+                <MenuItem Header="Build" Command="self:CustomCMDs.Build"/>
+                <Separator/>
+                <MenuItem Header="Start" Command="self:CustomCMDs.Start"/>
+                <MenuItem Header="Stop" Command="self:CustomCMDs.Stop"/>
+                <Separator/>
                 <MenuItem Header="Configuration Manager" Command="self:CustomCMDs.ShowRunConfig"/>
             </MenuItem>
-            <MenuItem Header="Tools"/>
-            <MenuItem Header="Help"/>
+            <MenuItem Header="Help">
+                <MenuItem Header="About..." Command="self:CustomCMDs.AboutHelp"/>
+            </MenuItem>
         </Menu>
 
         <StackPanel Orientation="Horizontal" Grid.Row="1" >
 
-            <ctrls:SimpleToolbarButton BText="" BSource="icons/arrow-circle-225-left.png" />
+            <ctrls:SimpleToolbarButton BText="" BSource="icons/arrow-circle-225-left.png" BCommand="Undo"/>
 
-            <ctrls:SimpleToolbarButton BText="" BSource="icons/arrow-circle-315.png" />
+            <ctrls:SimpleToolbarButton BText="" BSource="icons/arrow-circle-315.png" BCommand="Redo"/>
 
             <ctrls:SimpleToolbarSeparator />
 

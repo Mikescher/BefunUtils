@@ -40,6 +40,8 @@ namespace BefunWrite
 
 		private TextFungeParser Parser;
 
+		private Process ExecProc = null;
+
 		#region Konstruktor & Init
 
 		public EditorWindow()
@@ -51,6 +53,11 @@ namespace BefunWrite
 			Init();
 
 			codeEditor.Text = Properties.Resources.example;
+
+			DispatcherTimer itimer = new DispatcherTimer(DispatcherPriority.ApplicationIdle);
+			itimer.Interval = TimeSpan.FromMilliseconds(500);
+			itimer.Tick += (s, e) => CommandManager.InvalidateRequerySuggested();
+			itimer.Start();
 		}
 
 		private void Init()
@@ -81,6 +88,38 @@ namespace BefunWrite
 		#endregion
 
 		#region Command Events
+
+		#region Undo
+
+		private void UndoExecuted(object sender, ExecutedRoutedEventArgs e)
+		{
+			codeEditor.Undo();
+		}
+
+		private void UndoEnabled(object sender, CanExecuteRoutedEventArgs e)
+		{
+			e.CanExecute = codeEditor != null && codeEditor.CanUndo;
+
+			e.Handled = true;
+		}
+
+		#endregion
+
+		#region Redo
+
+		private void RedoExecuted(object sender, ExecutedRoutedEventArgs e)
+		{
+			codeEditor.Redo();
+		}
+
+		private void RedoEnabled(object sender, CanExecuteRoutedEventArgs e)
+		{
+			e.CanExecute = codeEditor != null && codeEditor.CanRedo;
+
+			e.Handled = true;
+		}
+
+		#endregion
 
 		#region New
 
@@ -362,7 +401,7 @@ namespace BefunWrite
 
 			try
 			{
-				Process.Start(start);
+				ExecProc = Process.Start(start);
 			}
 			catch (Exception ex)
 			{
@@ -391,12 +430,13 @@ namespace BefunWrite
 
 		private void StopExecuted(object sender, ExecutedRoutedEventArgs e)
 		{
-			//
+			if (ExecProc != null && !ExecProc.HasExited)
+				ExecProc.CloseMainWindow();
 		}
 
 		private void StopEnabled(object sender, CanExecuteRoutedEventArgs e)
 		{
-			e.CanExecute = true;
+			e.CanExecute = ExecProc != null && !ExecProc.HasExited;
 
 			e.Handled = true;
 		}
@@ -415,6 +455,22 @@ namespace BefunWrite
 		}
 
 		private void ShowRunConfigEnabled(object sender, CanExecuteRoutedEventArgs e)
+		{
+			e.CanExecute = true;
+
+			e.Handled = true;
+		}
+
+		#endregion
+
+		#region AboutHelp
+
+		private void AboutHelpExecuted(object sender, ExecutedRoutedEventArgs e)
+		{
+			(new AboutDialog(this)).ShowDialog();
+		}
+
+		private void AboutHelpEnabled(object sender, CanExecuteRoutedEventArgs e)
 		{
 			e.CanExecute = true;
 

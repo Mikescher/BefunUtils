@@ -96,6 +96,9 @@
       <DependentUpon>SimpleToolbarSeparator.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\TwoColumnGrid.cs" />
+    <Compile Include="Dialogs\AboutDialog.xaml.cs">
+      <DependentUpon>AboutDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\RunConfigurationManager.xaml.cs">
       <DependentUpon>RunConfigurationManager.xaml</DependentUpon>
     </Compile>
@@ -119,6 +122,10 @@
     <Page Include="Controls\SimpleToolbarSeparator.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Dialogs\AboutDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Dialogs\RunConfigurationManager.xaml">
       <SubType>Designer</SubType>
@@ -202,6 +209,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="icons\exclamation-diamond-frame.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="license.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

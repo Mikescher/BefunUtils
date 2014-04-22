@@ -62,7 +62,7 @@ namespace BefunGen.AST
 			}
 		}
 
-		public VarDeclaration(SourceCodePosition pos, BType t, string ident, Literal init) //TODO Test Literal Type is matching (curretntly '' CHAR CHR_UNSET := true; '' is possible)
+		public VarDeclaration(SourceCodePosition pos, BType t, string ident, Literal init)
 			: base(pos)
 		{
 			this.Type = t;
