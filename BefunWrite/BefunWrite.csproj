@@ -33,6 +33,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>icon_BefunWrite.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="ICSharpCode.AvalonEdit">
       <HintPath>..\packages\AvalonEdit.4.4.0.9727\lib\Net40\ICSharpCode.AvalonEdit.dll</HintPath>
@@ -212,6 +215,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="license.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="icons\icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="icon_BefunWrite.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

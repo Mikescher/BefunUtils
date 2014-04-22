@@ -32,6 +32,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>icon_BefunExec.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="OpenTK, Version=1.0.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL" />
@@ -97,6 +100,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\demoProg.txt" />
+    <Content Include="icon.ico" />
+    <Content Include="icon_BefunExec.ico" />
     <Content Include="Resources\license.txt" />
     <Content Include="Resources\raster.bmp" />
   </ItemGroup>

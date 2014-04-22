@@ -1,7 +1,7 @@
 ﻿<Window x:Class="BefunWrite.Dialogs.AboutDialog"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="About BefunWrite" Height="500" Width="500" WindowStartupLocation="CenterOwner" ResizeMode="NoResize">
+        Title="About BefunWrite" Height="600" Width="500" WindowStartupLocation="CenterOwner" ResizeMode="NoResize" Icon="/BefunWrite;component/icon.ico">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -9,7 +9,10 @@
             <RowDefinition Height="1*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <Label Grid.Row="0" Content="BefunWrite 1.0" FontWeight="Bold" FontSize="30" FontFamily="Microsoft Sans Serif" Margin="5, 5, 5, 0"/>
+        <StackPanel Margin="5,5,5,0" Orientation="Horizontal">
+            <Image Source="/BefunWrite;component/icons/icon.png" Height="44"/>
+            <Label Content="BefunWrite 1.0" FontWeight="Bold" FontSize="30" FontFamily="Microsoft Sans Serif" Height="44"/>
+        </StackPanel>
         <Label Grid.Row="0" Content="(c) 2014" FontSize="10" FontFamily="Microsoft Sans Serif" Margin="5" VerticalAlignment="Top" HorizontalAlignment="Right"/>
         <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="20, 0, 0, 0">
             <Label Content="by Mike Schwörer" FontSize="12" FontFamily="Microsoft Sans Serif" FontStyle="Italic"/>
@@ -18,7 +21,35 @@
         <ScrollViewer Grid.Row="2" Margin="5, 0" >
             <TextBox x:Name="licenseBox" AcceptsReturn="True" TextWrapping="Wrap" IsReadOnly="True" />
         </ScrollViewer>
-        <Button Grid.Row="3" Content="OK" HorizontalAlignment="Right" Margin="5" Padding="20, 0" Click="Button_Click"/>
+        <Button Grid.Row="3" Content="OK" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="5" Padding="30, 2" Click="Button_Click"/>
+
+        <StackPanel Grid.Row="3" HorizontalAlignment="Left" Margin="5">
+            <Label FontSize="12" Foreground="Blue" FontFamily="Microsoft Sans Serif" Cursor="Hand" MouseDown="Label_MouseDown_1">
+                <Underline>
+                    <Run Text="AvalonEdit"/>
+                </Underline>
+            </Label>
+            <Label FontSize="12" Foreground="Blue" FontFamily="Microsoft Sans Serif" Cursor="Hand" MouseDown="Label_MouseDown_2">
+                <Underline>
+                    <Run Text="Extended WPF Toolkit"/>
+                </Underline>
+            </Label>
+            <Label FontSize="12" Foreground="Blue" FontFamily="Microsoft Sans Serif" Cursor="Hand" MouseDown="Label_MouseDown_3">
+                <Underline>
+                    <Run Text="GOLD Parsing System"/>
+                </Underline>
+            </Label>
+            <Label FontSize="12" Foreground="Blue" FontFamily="Microsoft Sans Serif" Cursor="Hand" MouseDown="Label_MouseDown_4">
+                <Underline>
+                    <Run Text="Fugue Icon Set"/>
+                </Underline>
+            </Label>
+            <Label FontSize="12" Foreground="Blue" FontFamily="Microsoft Sans Serif" Cursor="Hand" MouseDown="Label_MouseDown_5">
+                <Underline>
+                    <Run Text="WPF TwoColumnGrid"/>
+                </Underline>
+            </Label>
+        </StackPanel>
 
     </Grid>
 </Window>

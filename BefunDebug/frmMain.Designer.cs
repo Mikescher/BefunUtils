@@ -29,6 +29,7 @@
 		private void InitializeComponent()
 		{
 			this.components = new System.ComponentModel.Container();
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
 			this.btnLoad = new System.Windows.Forms.Button();
 			this.txtTableFile = new System.Windows.Forms.TextBox();
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
@@ -525,6 +526,7 @@
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(692, 542);
 			this.Controls.Add(this.tableLayoutPanel2);
+			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.Name = "frmMain";
 			this.Text = "Draw Parse Tree";
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMain_FormClosing);

@@ -26,5 +26,30 @@ namespace BefunWrite.Dialogs
 		{
 			Process.Start(@"http://www.mikescher.de");
 		}
+
+		private void Label_MouseDown_1(object sender, System.Windows.Input.MouseButtonEventArgs e)
+		{
+			Process.Start(@"http://avalonedit.net/");
+		}
+
+		private void Label_MouseDown_2(object sender, System.Windows.Input.MouseButtonEventArgs e)
+		{
+			Process.Start(@"https://wpftoolkit.codeplex.com/");
+		}
+
+		private void Label_MouseDown_3(object sender, System.Windows.Input.MouseButtonEventArgs e)
+		{
+			Process.Start(@"http://goldparser.org/");
+		}
+
+		private void Label_MouseDown_4(object sender, System.Windows.Input.MouseButtonEventArgs e)
+		{
+			Process.Start(@"http://p.yusukekamiyamane.com/");
+		}
+
+		private void Label_MouseDown_5(object sender, System.Windows.Input.MouseButtonEventArgs e)
+		{
+			Process.Start(@"http://www.codeproject.com/Articles/238307/A-Two-Column-Grid-for-WPF");
+		}
 	}
 }
