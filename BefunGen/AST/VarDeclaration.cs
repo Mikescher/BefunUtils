@@ -123,6 +123,8 @@ namespace BefunGen.AST
 		public VarDeclaration_Value(SourceCodePosition pos, BType_Value t, string id, Literal_Value v)
 			: base(pos, t, id, v)
 		{
+			if (!v.getBType().isImplicitCastableTo(t))
+				throw new ImplicitCastException(pos, v.getBType(), t);
 		}
 
 		public override CodePiece generateCode(bool reversed)
@@ -203,6 +205,9 @@ namespace BefunGen.AST
 			: base(pos, t, id, v)
 		{
 			int LiteralSize = ((Literal_Array)Initial).Count;
+
+			if (!v.getBType().isImplicitCastableTo(t))
+				throw new ImplicitCastException(pos, v.getBType(), t);
 
 			if (LiteralSize > t.Size)
 			{
