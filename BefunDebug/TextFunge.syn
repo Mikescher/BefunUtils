@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Language Name="Syntaxfile template" Startblock="Code">
+<FileTypes>
+	<FileType Extension=".tf" Name="TextFunge"/>
+</FileTypes>
+
+	<Block Name="Code" Style="Code" IsMultiline="true">
+		<Bracket Start="begin" End="end" Style="Keyword" />
+		<Bracket Start="if" End="end" Style="Keyword"/>
+		<Bracket Start="(" End=")" Style="Code"/>
+		<Bracket Start="[" End="]" Style="Code"/>
+		<Bracket Start="{" End="}" Style="Code"/>
+		<!-- Keywords that can exist inside this block -->
+		<Keywords>
+			<PatternGroup Name="Keywords" Style="Keyword" CaseSensitive="false">
+				<Patterns>
+					begin 
+					close
+					const
+					display
+					do 
+					else
+					elsif
+					end 
+					false
+					for
+					global
+					goto 
+					if 
+					in 
+					out 
+					program 
+					quit
+					rand 
+					repeat 
+					return
+					stop
+					then 
+					true 
+					until 
+					var 
+					while 
+					switch
+					case
+					default
+				</Patterns>
+			</PatternGroup>
+			
+			<PatternGroup Name="Types" Style="Keyword" CaseSensitive="false">
+				<Patterns>
+					int 
+					integer 
+					char 
+					character 
+					digit 
+					bool 
+					boolean 
+					void
+				</Patterns>
+			</PatternGroup>
+			
+			<PatternGroup Name="Numbers" Style="Number">
+				<Pattern Text="([0-9]+)" IsComplex="true" />
+			</PatternGroup>
+		</Keywords>
+
+
+		<!-- Operators that can exist inside this block -->
+		<Operators>
+			<PatternGroup name="Operators" Style="Operators">
+				<Pattern Text="!" />
+				<Pattern Text="%" />
+				<Pattern Text="*" />
+				<Pattern Text="/" />
+				<Pattern Text="+" />
+				<Pattern Text="-" />
+				<Pattern Text="=" />
+				<Pattern Text="|" />
+				<Pattern Text="&gt;=" />
+				<Pattern Text="&lt;=" />
+				<Pattern Text=":=" />
+			</PatternGroup>
+		</Operators>
+		<!-- Blocks that can exist inside this block -->
+		<ChildBlocks>
+			<Child Name="Multiline Comment" />
+			<Child Name="Singleline Comment" />
+			<Child Name="String" />
+			<Child Name="Char" />
+			<Child Name="Code" />
+		</ChildBlocks>
+	</Block>
+
+	<Block Name="Multiline Comment" Style="Comment"  IsMultiline="true">
+		<Scope Start="/*" End="*/" Style="Comment" Text="/*...*/"/>
+	</Block>
+	<Block Name="Singleline Comment" Style="Comment"  IsMultiline="false">
+		<Scope Start="//" End="" Style="Comment" />
+	</Block>
+	<Block Name="String" Style="String" IsMultiline="false">
+		<Scope Start="&quot;" End="&quot;" EscapeChar="\" Style="String" />
+	</Block>
+
+	<Block Name="Char" Style="String" EscapeChar="" IsMultiline="false">
+		<Scope Start="'" End="'"  EscapeChar="\" Style="String" />
+	</Block>
+
+	<Style Name="Code" ForeColor="" BackColor="" Bold="false" Italic="false" Underline="false" />
+	<Style Name="Scope" ForeColor="" BackColor="" Bold="false" Italic="false" Underline="false" />
+	<Style Name="Comment" ForeColor="Green" BackColor="" Bold="false" Italic="false" Underline="false" />
+	<Style Name="String" ForeColor="Darkred" BackColor="" Bold="true" Italic="false" Underline="false" />
+	<Style Name="Number" ForeColor="Teal" BackColor="" Bold="true" Italic="false" Underline="false" />
+	<Style Name="Keyword" ForeColor="Blue" BackColor="" Bold="true" Italic="false" Underline="false" />
+	<Style Name="Operators" ForeColor="Red" BackColor="" Bold="false" Italic="false" Underline="false" />
+</Language>
