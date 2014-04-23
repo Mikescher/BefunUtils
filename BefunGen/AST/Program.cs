@@ -11,7 +11,6 @@ namespace BefunGen.AST
 	public class Program : ASTObject
 	{
 		//TODO Optimize -> StatementList in StatementList --> Include
-		//TODO Optimize -> PreCalculated Expressions (Constants, x * 0, x + 0, x * 1, == 0, != 0, etc etc)
 		//TODO Optimize -> ArrayValuePointer/DisplayArrayPointer when Indizies Constant -> Direct Link
 		//TODO Optimize -> Remove unreachable Methods
 		//TODO Optimize -> Remove unused global/local variables (not params)
@@ -123,7 +122,8 @@ namespace BefunGen.AST
 			addressMethods();			// Methods get their Address
 			addressCodePoints();		// CodeAdressesTargets get their Address
 			linkVariables();			// Variable-uses get their ID
-			inlineConstants();			// ValuePointer to Constants become Literals
+			inlineConstants();			// ValuePointer to Constants become Literals {{CODE-MANIPULATION}}
+			evaluateExpressions();		// Simplify Expressions if possible {{CODE-MANIPULATION}}
 			linkMethods();				// Methodcalls get their ID   &&   Labels + MethodCalls get their CodePointAddress
 			linkResultTypes();			// Statements get their Result-Type (and implicit casting is added)
 		}
@@ -173,6 +173,15 @@ namespace BefunGen.AST
 				m.forceMethodReturn(m == MainMethod);
 
 			MainMethod.raiseErrorOnReturnStatement();
+		}
+
+		private void evaluateExpressions()
+		{
+			if (!CGO.CompileTimeEvaluateExpressions)
+				return; // It's disabled
+
+			foreach (Method m in MethodList)
+				m.evaluateExpressions();
 		}
 
 		#endregion

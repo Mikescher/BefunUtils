@@ -144,6 +144,9 @@
 
                             <Label Content="Preven Overflow in Display Access" />
                             <CheckBox x:Name="V_DisplayModuloAccess" VerticalAlignment="Center"/>
+
+                            <Label Content="Optimize Static Expressions" />
+                            <CheckBox x:Name="V_CompileTimeEvaluateExpressions" VerticalAlignment="Center"/>
                         </ctrls:TwoColumnGrid>
                     </Expander>
                     

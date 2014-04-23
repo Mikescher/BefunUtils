@@ -142,6 +142,8 @@ namespace BefunWrite.Dialogs
 
 			V_DisplayModuloAccess.IsChecked = o.Options.DisplayModuloAccess;
 
+			V_CompileTimeEvaluateExpressions.IsChecked = o.Options.CompileTimeEvaluateExpressions;
+
 			return true;
 		}
 
@@ -206,6 +208,7 @@ namespace BefunWrite.Dialogs
 
 			o.Options.DisplayModuloAccess = V_DisplayModuloAccess.IsChecked.Value;
 
+			o.Options.CompileTimeEvaluateExpressions = V_CompileTimeEvaluateExpressions.IsChecked.Value;
 
 			project.DirtyProject();
 

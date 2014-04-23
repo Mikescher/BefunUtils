@@ -57,6 +57,8 @@ namespace BefunGen.AST
 		}
 
 		public abstract bool ValueEquals(Literal_Value o);
+
+		public abstract int GetValueAsInt();
 	}
 
 	public abstract class Literal_Array : Literal
@@ -116,6 +118,11 @@ namespace BefunGen.AST
 		{
 			return (o is Literal_Int) && (o as Literal_Int).Value == this.Value;
 		}
+
+		public override int GetValueAsInt()
+		{
+			return Value;
+		}
 	}
 
 	public class Literal_Char : Literal_Value
@@ -146,6 +153,11 @@ namespace BefunGen.AST
 		public override bool ValueEquals(Literal_Value o)
 		{
 			return (o is Literal_Char) && (o as Literal_Char).Value == this.Value;
+		}
+
+		public override int GetValueAsInt()
+		{
+			return Value;
 		}
 	}
 
@@ -178,6 +190,11 @@ namespace BefunGen.AST
 		{
 			return (o is Literal_Bool) && (o as Literal_Bool).Value == this.Value;
 		}
+
+		public override int GetValueAsInt()
+		{
+			return Value ? 1 : 0;
+		}
 	}
 
 	public class Literal_Digit : Literal_Value
@@ -208,6 +225,11 @@ namespace BefunGen.AST
 		public override bool ValueEquals(Literal_Value o)
 		{
 			return (o is Literal_Digit) && (o as Literal_Digit).Value == this.Value;
+		}
+
+		public override int GetValueAsInt()
+		{
+			return Value;
 		}
 	}
 

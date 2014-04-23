@@ -56,6 +56,18 @@ namespace BefunGen.AST.CodeGen
 		// If set to true you can't Out-Of-Bounce the Display - Set&Get is put into a modulo Width before
 		public bool DisplayModuloAccess;
 
+		// Calculate/Optimize Expressions at CompileTime
+		public bool CompileTimeEvaluateExpressions; //TODO Add to BefunWrite Config
+		/* EvaluateExpression - Optimizations:
+		 * 
+		 * RAND[0]  --> 0
+		 * 1 * EXPR --> EXPR
+		 * 0 * EXPR --> 0
+		 * 0 [+,-] EXPR --> EXPR
+		 * LITERAL [+,*,-,/] LITERAL --> LITERAL
+		 * LITERAL [==,!=,>,<,>=,<=] LITERAL --> BOOL
+		*/
+
 		public static CodeGenOptions getCGO_Debug()
 		{
 			CodeGenOptions c = new CodeGenOptions();
@@ -86,6 +98,8 @@ namespace BefunGen.AST.CodeGen
 			c.DisplayBorderThickness = 1;
 
 			c.DisplayModuloAccess = false;
+
+			c.CompileTimeEvaluateExpressions = true;
 
 			return c;
 		}
@@ -120,6 +134,8 @@ namespace BefunGen.AST.CodeGen
 			c.DisplayBorderThickness = 1;
 
 			c.DisplayModuloAccess = false;
+
+			c.CompileTimeEvaluateExpressions = true;
 
 			return c;
 		}

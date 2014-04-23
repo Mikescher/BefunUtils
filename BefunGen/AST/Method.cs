@@ -117,6 +117,11 @@ namespace BefunGen.AST
 			}
 		}
 
+		public void evaluateExpressions()
+		{
+			Body.evaluateExpressions();
+		}
+
 		public VarDeclaration findVariableByIdentifier(string ident)
 		{
 			List<VarDeclaration> r = Variables.Where(p => p.Identifier.ToLower() == ident.ToLower())

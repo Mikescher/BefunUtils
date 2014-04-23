@@ -86,6 +86,7 @@ namespace BefunGen.AST
 		public abstract void linkMethods(Program owner);
 		public abstract bool allPathsReturn();
 		public abstract Statement_Return hasReturnStatement();
+		public abstract void evaluateExpressions();
 
 		public abstract Statement_Label findLabelByIdentifier(string ident);
 
@@ -191,6 +192,12 @@ namespace BefunGen.AST
 					return r;
 			}
 			return null;
+		}
+
+		public override void evaluateExpressions()
+		{
+			foreach (Statement s in List)
+				s.evaluateExpressions();
 		}
 
 		public override CodePiece generateCode(bool reversed)
@@ -844,6 +851,14 @@ namespace BefunGen.AST
 			return null;
 		}
 
+		public override void evaluateExpressions()
+		{
+			for (int i = 0; i < CallParameter.Count; i++)
+			{
+				CallParameter[i] = CallParameter[i].evaluateExpressions();
+			}
+		}
+
 		public override Statement_Label findLabelByIdentifier(string ident)
 		{
 			return null;
@@ -1217,6 +1232,11 @@ namespace BefunGen.AST
 			return false;
 		}
 
+		public override void evaluateExpressions()
+		{
+			//NOP
+		}
+
 		public override Statement_Return hasReturnStatement()
 		{
 			return null;
@@ -1297,6 +1317,11 @@ namespace BefunGen.AST
 		public override Statement_Label findLabelByIdentifier(string ident)
 		{
 			return null;
+		}
+
+		public override void evaluateExpressions()
+		{
+			//NOP
 		}
 
 		public override CodePiece generateCode(bool reversed)
@@ -1390,6 +1415,11 @@ namespace BefunGen.AST
 		public override bool allPathsReturn()
 		{
 			return true;
+		}
+
+		public override void evaluateExpressions()
+		{
+			Value = Value.evaluateExpressions();
 		}
 
 		public override Statement_Return hasReturnStatement()
@@ -1622,6 +1652,11 @@ namespace BefunGen.AST
 		public override Statement_Return hasReturnStatement()
 		{
 			return null;
+		}
+
+		public override void evaluateExpressions()
+		{
+			Value = Value.evaluateExpressions();
 		}
 
 		public override Statement_Label findLabelByIdentifier(string ident)
@@ -1857,6 +1892,11 @@ namespace BefunGen.AST
 			return false;
 		}
 
+		public override void evaluateExpressions()
+		{
+			//NOP
+		}
+
 		public override Statement_Return hasReturnStatement()
 		{
 			return null;
@@ -1998,6 +2038,11 @@ namespace BefunGen.AST
 		public override Statement_Return hasReturnStatement()
 		{
 			return null;
+		}
+
+		public override void evaluateExpressions()
+		{
+			//NOP
 		}
 
 		public override Statement_Label findLabelByIdentifier(string ident)
@@ -2178,6 +2223,11 @@ namespace BefunGen.AST
 			return null;
 		}
 
+		public override void evaluateExpressions()
+		{
+			//NOP
+		}
+
 		public override Statement_Label findLabelByIdentifier(string ident)
 		{
 			return null;
@@ -2238,6 +2288,11 @@ namespace BefunGen.AST
 		public override Statement_Return hasReturnStatement()
 		{
 			return null;
+		}
+
+		public override void evaluateExpressions()
+		{
+			//NOP
 		}
 
 		public override Statement_Label findLabelByIdentifier(string ident)
@@ -2310,6 +2365,11 @@ namespace BefunGen.AST
 		public override Statement_Return hasReturnStatement()
 		{
 			return null;
+		}
+
+		public override void evaluateExpressions()
+		{
+			//NOP
 		}
 
 		public override Statement_Label findLabelByIdentifier(string ident)
@@ -2403,6 +2463,11 @@ namespace BefunGen.AST
 		public override Statement_Return hasReturnStatement()
 		{
 			return null;
+		}
+
+		public override void evaluateExpressions()
+		{
+			//NOP
 		}
 
 		public override Statement_Label findLabelByIdentifier(string ident)
@@ -2506,6 +2571,11 @@ namespace BefunGen.AST
 		public override Statement_Return hasReturnStatement()
 		{
 			return null;
+		}
+
+		public override void evaluateExpressions()
+		{
+			Expr = Expr.evaluateExpressions();
 		}
 
 		public override Statement_Label findLabelByIdentifier(string ident)
@@ -2666,6 +2736,15 @@ namespace BefunGen.AST
 		public override Statement_Return hasReturnStatement()
 		{
 			return Body.hasReturnStatement() ?? Else.hasReturnStatement();
+		}
+
+		public override void evaluateExpressions()
+		{
+			Condition = Condition.evaluateExpressions();
+
+			Body.evaluateExpressions();
+
+			Else.evaluateExpressions();
 		}
 
 		public override Statement_Label findLabelByIdentifier(string ident)
@@ -3116,6 +3195,13 @@ namespace BefunGen.AST
 			return Body.hasReturnStatement();
 		}
 
+		public override void evaluateExpressions()
+		{
+			Condition = Condition.evaluateExpressions();
+
+			Body.evaluateExpressions();
+		}
+
 		public override Statement_Label findLabelByIdentifier(string ident)
 		{
 			return Body.findLabelByIdentifier(ident);
@@ -3287,6 +3373,13 @@ namespace BefunGen.AST
 		public override Statement_Return hasReturnStatement()
 		{
 			return Body.hasReturnStatement();
+		}
+
+		public override void evaluateExpressions()
+		{
+			Condition = Condition.evaluateExpressions();
+
+			Body.evaluateExpressions();
 		}
 
 		public override Statement_Label findLabelByIdentifier(string ident)
@@ -3564,6 +3657,14 @@ namespace BefunGen.AST
 					return r;
 			}
 			return null;
+		}
+
+		public override void evaluateExpressions()
+		{
+			Condition = Condition.evaluateExpressions();
+
+			foreach (Switch_Case sc in Cases)
+				sc.Body.evaluateExpressions();
 		}
 
 		public override Statement_Label findLabelByIdentifier(string ident)

@@ -14,16 +14,33 @@ namespace BefunGen.AST
 			//--
 		}
 
+		public int? GetValueLiteral_Value()
+		{
+			if (this is Expression_Literal && (this as Expression_Literal).Value is Literal_Value)
+				return ((this as Expression_Literal).Value as Literal_Value).GetValueAsInt();
+			else
+				return null;
+		}
+
+		public bool? GetValueLiteral_Bool_Value()
+		{
+			if (this is Expression_Literal && (this as Expression_Literal).Value is Literal_Bool)
+				return ((this as Expression_Literal).Value as Literal_Bool).Value;
+			else
+				return null;
+		}
+
 		public abstract void linkVariables(Method owner);
 		public abstract void linkResultTypes(Method owner);
 		public abstract void linkMethods(Program owner);
 		public abstract void addressCodePoints();
 
+		public abstract Expression inlineConstants();
+		public abstract Expression evaluateExpressions();
+
 		public abstract BType getResultType();
 
 		public abstract CodePiece generateCode(bool reversed);
-
-		public abstract Expression inlineConstants();
 	}
 
 	#region Parents
@@ -64,6 +81,12 @@ namespace BefunGen.AST
 		{
 			Left.linkMethods(owner);
 			Right.linkMethods(owner);
+		}
+
+		public void evaluateSubExpressions()
+		{
+			Left = Left.evaluateExpressions();
+			Right = Right.evaluateExpressions();
 		}
 	}
 
@@ -274,6 +297,11 @@ namespace BefunGen.AST
 		{
 			Expr.linkMethods(owner);
 		}
+
+		public void evaluateSubExpressions()
+		{
+			Expr = Expr.evaluateExpressions();
+		}
 	}
 
 	public abstract class Expression_ValuePointer : Expression
@@ -319,6 +347,11 @@ namespace BefunGen.AST
 			: base(pos)
 		{
 			Target = v;
+		}
+
+		public override Expression evaluateExpressions()
+		{
+			return this;
 		}
 
 		public override void linkVariables(Method owner)
@@ -432,6 +465,11 @@ namespace BefunGen.AST
 			{
 				throw new WTFException();
 			}
+		}
+
+		public override Expression evaluateExpressions()
+		{
+			return this;
 		}
 
 		private CodePiece generateCode_Value(bool reversed)
@@ -577,6 +615,14 @@ namespace BefunGen.AST
 				else
 					throw new ImplicitCastException(Position, present_Y, wanted);
 			}
+		}
+
+		public override Expression evaluateExpressions()
+		{
+			Target_X = Target_X.evaluateExpressions();
+			Target_Y = Target_Y.evaluateExpressions();
+
+			return this;
 		}
 
 		public override BType getResultType()
@@ -772,6 +818,12 @@ namespace BefunGen.AST
 			}
 		}
 
+		public override Expression evaluateExpressions()
+		{
+			Index = Index.evaluateExpressions();
+			return this;
+		}
+
 		public override BType getResultType()
 		{
 			return Target.InternalType;
@@ -899,6 +951,11 @@ namespace BefunGen.AST
 			return this;
 		}
 
+		public override Expression evaluateExpressions()
+		{
+			return this;
+		}
+
 		public override BType getResultType()
 		{
 			return new BType_Void(Position);
@@ -937,6 +994,39 @@ namespace BefunGen.AST
 			//--
 		}
 
+		public override Expression evaluateExpressions()
+		{
+			evaluateSubExpressions();
+
+			int? l = Left.GetValueLiteral_Value();
+			int? r = Right.GetValueLiteral_Value();
+
+			if (l == 0)
+			{
+				return Left; // Left == 0
+			}
+			else if (r == 0)
+			{
+				return Right; // Right == 0
+			}
+			else if (l == 1)
+			{
+				return Right;
+			}
+			else if (r == 1)
+			{
+				return Left;
+			}
+			else if (l.HasValue && r.HasValue)
+			{
+				return new Expression_Literal(Left.Position, new Literal_Int(Left.Position, l.Value * r.Value));
+			}
+			else
+			{
+				return this;
+			}
+		}
+
 		public override string getDebugString()
 		{
 			return string.Format("({0} * {1})", Left.getDebugString(), Right.getDebugString());
@@ -961,6 +1051,31 @@ namespace BefunGen.AST
 			: base(pos, l, r)
 		{
 			//--
+		}
+
+		public override Expression evaluateExpressions()
+		{
+			evaluateSubExpressions();
+
+			int? l = Left.GetValueLiteral_Value();
+			int? r = Right.GetValueLiteral_Value();
+
+			if (l == 0)
+			{
+				return Left; // Left == 0
+			}
+			else if (r == 1)
+			{
+				return Left;
+			}
+			else if (l.HasValue && r.HasValue && r != 0)
+			{
+				return new Expression_Literal(Left.Position, new Literal_Int(Left.Position, l.Value / r.Value));
+			}
+			else
+			{
+				return this;
+			}
 		}
 
 		public override string getDebugString()
@@ -989,6 +1104,31 @@ namespace BefunGen.AST
 			//--
 		}
 
+		public override Expression evaluateExpressions()
+		{
+			evaluateSubExpressions();
+
+			int? l = Left.GetValueLiteral_Value();
+			int? r = Right.GetValueLiteral_Value();
+
+			if (l == 0 && r.HasValue && r != 0)
+			{
+				return Left; // Left == 0
+			}
+			else if (r == 1)
+			{
+				return new Expression_Literal(Left.Position, new Literal_Int(Left.Position, 0));
+			}
+			else if (l.HasValue && r.HasValue && r != 0)
+			{
+				return new Expression_Literal(Left.Position, new Literal_Int(Left.Position, l.Value % r.Value));
+			}
+			else
+			{
+				return this;
+			}
+		}
+
 		public override string getDebugString()
 		{
 			return string.Format("({0} % {1})", Left.getDebugString(), Right.getDebugString());
@@ -1015,6 +1155,31 @@ namespace BefunGen.AST
 			//--
 		}
 
+		public override Expression evaluateExpressions()
+		{
+			evaluateSubExpressions();
+
+			int? l = Left.GetValueLiteral_Value();
+			int? r = Right.GetValueLiteral_Value();
+
+			if (l == 0)
+			{
+				return Right;
+			}
+			else if (r == 0)
+			{
+				return Left;
+			}
+			else if (l.HasValue && r.HasValue)
+			{
+				return new Expression_Literal(Left.Position, new Literal_Int(Left.Position, l.Value + r.Value));
+			}
+			else
+			{
+				return this;
+			}
+		}
+
 		public override string getDebugString()
 		{
 			return string.Format("({0} + {1})", Left.getDebugString(), Right.getDebugString());
@@ -1039,6 +1204,27 @@ namespace BefunGen.AST
 			: base(pos, l, r)
 		{
 			//--
+		}
+
+		public override Expression evaluateExpressions()
+		{
+			evaluateSubExpressions();
+
+			int? l = Left.GetValueLiteral_Value();
+			int? r = Right.GetValueLiteral_Value();
+
+			if (r == 0)
+			{
+				return Left;
+			}
+			else if (l.HasValue && r.HasValue)
+			{
+				return new Expression_Literal(Left.Position, new Literal_Int(Left.Position, l.Value - r.Value));
+			}
+			else
+			{
+				return this;
+			}
 		}
 
 		public override string getDebugString()
@@ -1069,6 +1255,35 @@ namespace BefunGen.AST
 			: base(pos, l, r)
 		{
 			//--
+		}
+
+		public override Expression evaluateExpressions()
+		{
+			evaluateSubExpressions();
+
+			bool? l = Left.GetValueLiteral_Bool_Value();
+			bool? r = Right.GetValueLiteral_Bool_Value();
+
+			if (r == true)
+			{
+				return Left;
+			}
+			else if (l == true)
+			{
+				return Right;
+			}
+			else if (r == false)
+			{
+				return Right; // Right == false
+			}
+			else if (l == false)
+			{
+				return Left; // Left == false
+			}
+			else
+			{
+				return this;
+			}
 		}
 
 		public override string getDebugString()
@@ -1172,6 +1387,35 @@ namespace BefunGen.AST
 			//--
 		}
 
+		public override Expression evaluateExpressions()
+		{
+			evaluateSubExpressions();
+
+			bool? l = Left.GetValueLiteral_Bool_Value();
+			bool? r = Right.GetValueLiteral_Bool_Value();
+
+			if (r == true)
+			{
+				return Right; // Right == true
+			}
+			else if (l == true)
+			{
+				return Left; // Left == true
+			}
+			else if (r == false)
+			{
+				return Left;
+			}
+			else if (l == false)
+			{
+				return Right;
+			}
+			else
+			{
+				return this;
+			}
+		}
+
 		public override string getDebugString()
 		{
 			return string.Format("({0} OR {1})", Left.getDebugString(), Right.getDebugString());
@@ -1270,6 +1514,39 @@ namespace BefunGen.AST
 			: base(pos, l, r)
 		{
 			//--
+		}
+
+		public override Expression evaluateExpressions()
+		{
+			evaluateSubExpressions();
+
+			bool? l = Left.GetValueLiteral_Bool_Value();
+			bool? r = Right.GetValueLiteral_Bool_Value();
+
+			if (r == false)
+			{
+				return Left;
+			}
+			else if (l == false)
+			{
+				return Right;
+			}
+			else if (l.HasValue && r.HasValue)
+			{
+				return new Expression_Literal(Left.Position, new Literal_Bool(Left.Position, l.Value ^ r.Value));
+			}
+			else if (r == true)
+			{
+				return new Expression_Not(Left.Position, Left);
+			}
+			else if (l == true)
+			{
+				return new Expression_Not(Right.Position, Right);
+			}
+			else
+			{
+				return this;
+			}
 		}
 
 		public override string getDebugString()
@@ -1389,6 +1666,30 @@ namespace BefunGen.AST
 			//--
 		}
 
+		public override Expression evaluateExpressions()
+		{
+			evaluateSubExpressions();
+
+			if (Left.getResultType() == Right.getResultType())
+			{
+				int? l = Left.GetValueLiteral_Value();
+				int? r = Right.GetValueLiteral_Value();
+
+				if (l.HasValue && r.HasValue)
+				{
+					return new Expression_Literal(Left.Position, new Literal_Bool(Left.Position, l.Value == r.Value));
+				}
+				else
+				{
+					return this;
+				}
+			}
+			else
+			{
+				return this;
+			}
+		}
+
 		public override string getDebugString()
 		{
 			return string.Format("({0} == {1})", Left.getDebugString(), Right.getDebugString());
@@ -1444,6 +1745,30 @@ namespace BefunGen.AST
 			: base(pos, l, r)
 		{
 			//--
+		}
+
+		public override Expression evaluateExpressions()
+		{
+			evaluateSubExpressions();
+
+			if (Left.getResultType() == Right.getResultType())
+			{
+				int? l = Left.GetValueLiteral_Value();
+				int? r = Right.GetValueLiteral_Value();
+
+				if (l.HasValue && r.HasValue)
+				{
+					return new Expression_Literal(Left.Position, new Literal_Bool(Left.Position, l.Value != r.Value));
+				}
+				else
+				{
+					return this;
+				}
+			}
+			else
+			{
+				return this;
+			}
 		}
 
 		public override string getDebugString()
@@ -1503,6 +1828,30 @@ namespace BefunGen.AST
 			//--
 		}
 
+		public override Expression evaluateExpressions()
+		{
+			evaluateSubExpressions();
+
+			if (Left.getResultType() == Right.getResultType())
+			{
+				int? l = Left.GetValueLiteral_Value();
+				int? r = Right.GetValueLiteral_Value();
+
+				if (l.HasValue && r.HasValue)
+				{
+					return new Expression_Literal(Left.Position, new Literal_Bool(Left.Position, l.Value > r.Value));
+				}
+				else
+				{
+					return this;
+				}
+			}
+			else
+			{
+				return this;
+			}
+		}
+
 		public override string getDebugString()
 		{
 			return string.Format("({0} > {1})", Left.getDebugString(), Right.getDebugString());
@@ -1543,6 +1892,30 @@ namespace BefunGen.AST
 			//--
 		}
 
+		public override Expression evaluateExpressions()
+		{
+			evaluateSubExpressions();
+
+			if (Left.getResultType() == Right.getResultType())
+			{
+				int? l = Left.GetValueLiteral_Value();
+				int? r = Right.GetValueLiteral_Value();
+
+				if (l.HasValue && r.HasValue)
+				{
+					return new Expression_Literal(Left.Position, new Literal_Bool(Left.Position, l.Value < r.Value));
+				}
+				else
+				{
+					return this;
+				}
+			}
+			else
+			{
+				return this;
+			}
+		}
+
 		public override string getDebugString()
 		{
 			return string.Format("({0} < {1})", Left.getDebugString(), Right.getDebugString());
@@ -1581,6 +1954,30 @@ namespace BefunGen.AST
 			: base(pos, l, r)
 		{
 			//--
+		}
+
+		public override Expression evaluateExpressions()
+		{
+			evaluateSubExpressions();
+
+			if (Left.getResultType() == Right.getResultType())
+			{
+				int? l = Left.GetValueLiteral_Value();
+				int? r = Right.GetValueLiteral_Value();
+
+				if (l.HasValue && r.HasValue)
+				{
+					return new Expression_Literal(Left.Position, new Literal_Bool(Left.Position, l.Value >= r.Value));
+				}
+				else
+				{
+					return this;
+				}
+			}
+			else
+			{
+				return this;
+			}
 		}
 
 		public override string getDebugString()
@@ -1669,6 +2066,30 @@ namespace BefunGen.AST
 			: base(pos, l, r)
 		{
 			//--
+		}
+
+		public override Expression evaluateExpressions()
+		{
+			evaluateSubExpressions();
+
+			if (Left.getResultType() == Right.getResultType())
+			{
+				int? l = Left.GetValueLiteral_Value();
+				int? r = Right.GetValueLiteral_Value();
+
+				if (l.HasValue && r.HasValue)
+				{
+					return new Expression_Literal(Left.Position, new Literal_Bool(Left.Position, l.Value <= r.Value));
+				}
+				else
+				{
+					return this;
+				}
+			}
+			else
+			{
+				return this;
+			}
 		}
 
 		public override string getDebugString()
@@ -1763,6 +2184,22 @@ namespace BefunGen.AST
 			//--
 		}
 
+		public override Expression evaluateExpressions()
+		{
+			evaluateSubExpressions();
+
+			bool? v = Expr.GetValueLiteral_Bool_Value();
+
+			if (v.HasValue)
+			{
+				return new Expression_Literal(Expr.Position, new Literal_Bool(Expr.Position, !v.Value));
+			}
+			else
+			{
+				return this;
+			}
+		}
+
 		public override string getDebugString()
 		{
 			return string.Format("(! {0})", Expr.getDebugString());
@@ -1808,6 +2245,22 @@ namespace BefunGen.AST
 			//--
 		}
 
+		public override Expression evaluateExpressions()
+		{
+			evaluateSubExpressions();
+
+			int? v = Expr.GetValueLiteral_Value();
+
+			if (v.HasValue)
+			{
+				return new Expression_Literal(Expr.Position, new Literal_Int(Expr.Position, -v.Value));
+			}
+			else
+			{
+				return this;
+			}
+		}
+
 		public override string getDebugString()
 		{
 			return string.Format("(- {1})", Expr.getDebugString());
@@ -1818,7 +2271,7 @@ namespace BefunGen.AST
 			Expr.linkResultTypes(owner);
 
 			if (!(Expr.getResultType() is BType_Int))
-				throw new ImplicitCastException(Position, Expr.getResultType(), new BType_Bool(Position));
+				throw new ImplicitCastException(Position, Expr.getResultType(), new BType_Int(Position));
 		}
 
 		public override BType getResultType()
@@ -1855,6 +2308,13 @@ namespace BefunGen.AST
 			: base(pos, e)
 		{
 			this.Type = t;
+		}
+
+		public override Expression evaluateExpressions()
+		{
+			evaluateSubExpressions();
+
+			return this;
 		}
 
 		public override string getDebugString()
@@ -2128,6 +2588,11 @@ namespace BefunGen.AST
 			this.Value = l;
 		}
 
+		public override Expression evaluateExpressions()
+		{
+			return this;
+		}
+
 		public override string getDebugString()
 		{
 			return string.Format("{0}", Value.getDebugString());
@@ -2175,6 +2640,11 @@ namespace BefunGen.AST
 			: base(pos)
 		{
 			//--
+		}
+
+		public override Expression evaluateExpressions()
+		{
+			return this;
 		}
 
 		public override string getDebugString()
@@ -2257,6 +2727,20 @@ namespace BefunGen.AST
 			: base(pos)
 		{
 			Exponent = exp;
+		}
+
+		public override Expression evaluateExpressions()
+		{
+			Exponent = Exponent.evaluateExpressions();
+
+			int? v = Exponent.GetValueLiteral_Value();
+
+			if (v.HasValue && v.Value <= 0)
+			{
+				return new Expression_Literal(Exponent.Position, new Literal_Int(Exponent.Position, 0));
+			}
+
+			return this;
 		}
 
 		public override string getDebugString()
@@ -2343,6 +2827,13 @@ namespace BefunGen.AST
 			: base(pos)
 		{
 			this.MethodCall = mc;
+		}
+
+		public override Expression evaluateExpressions()
+		{
+			MethodCall.evaluateExpressions();
+
+			return this;
 		}
 
 		public override string getDebugString()
