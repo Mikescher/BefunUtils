@@ -18,7 +18,6 @@ namespace BefunGen.AST
 		//TODO Optimize -> Remove NOP - Switch Cases
 		//TODO Optimize -> Empty StatementLists => NOP
 		//TODO Optimize -> Remove NOP's in the middle of StatementLists
-		//TODO UserException -> Return in MainStatement
 
 		public string Identifier;
 
@@ -120,7 +119,7 @@ namespace BefunGen.AST
 			VarDeclaration.resetCounter();
 			Statement.resetCounter();
 
-			forceMethodReturn();		// Every Method must always end with a RETURN  {{ Can manipulate Code (Append Returns) }}
+			forceMethodReturn();		// Every Method must always end with a RETURN && No Return in Main {{CODE-MANIPULATION}}
 			addressMethods();			// Methods get their Address
 			addressCodePoints();		// CodeAdressesTargets get their Address
 			linkVariables();			// Variable-uses get their ID
@@ -172,6 +171,8 @@ namespace BefunGen.AST
 		{
 			foreach (Method m in MethodList)
 				m.forceMethodReturn(m == MainMethod);
+
+			MainMethod.raiseErrorOnReturnStatement();
 		}
 
 		#endregion
@@ -499,7 +500,7 @@ namespace BefunGen.AST
 			int h = dv.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None).Length;
 
 			if (w > DisplayWidth || h > DisplayHeight)
-				throw new InitialDisplayValueTooBig(DisplayWidth, DisplayHeight, w, h);
+				throw new InitialDisplayValueTooBigException(DisplayWidth, DisplayHeight, w, h);
 
 			string[] split = dv.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
 

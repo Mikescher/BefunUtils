@@ -675,7 +675,7 @@ namespace BefunWrite
 
 			if (!s_parse)
 			{
-				if (error is InitialDisplayValueTooBig)
+				if (error is InitialDisplayValueTooBigException)
 				{
 					System.Windows.Application.Current.Dispatcher.Invoke(DispatcherPriority.Normal, (ThreadStart)delegate
 					{

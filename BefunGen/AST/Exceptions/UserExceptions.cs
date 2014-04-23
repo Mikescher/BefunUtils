@@ -142,9 +142,15 @@ namespace BefunGen.AST.Exceptions
 			: base(String.Format("There are more than one Case with the same Value ({0}) in the Switch Statement ", val.getDebugString()), pos) { }
 	}
 
-	public class InitialDisplayValueTooBig : BefunGenUserException
+	public class InitialDisplayValueTooBigException : BefunGenUserException
 	{
-		public InitialDisplayValueTooBig(int minx, int miny, int realx, int realy)
+		public InitialDisplayValueTooBigException(int minx, int miny, int realx, int realy)
 			: base(String.Format("The Initial Displaysize ({0}|{1}) does not fit into the display ({2}|{3}).", realx, realy, minx, miny), new SourceCodePosition()) { }
+	}
+
+	public class IllegalReturnCallInMainException : BefunGenUserException
+	{
+		public IllegalReturnCallInMainException(SourceCodePosition pos)
+			: base("Illegal call of RETURN in the Main-statement ", pos) { }
 	}
 }

@@ -37,7 +37,7 @@ program example : display[51, 19]
 		
 		if (name[0] == 'n') then
 			goto lbl2;
-			return;
+			quit;
 		end
 
 		OUT "\r\n";

@@ -108,6 +108,15 @@ namespace BefunGen.AST
 			}
 		}
 
+		public void raiseErrorOnReturnStatement()
+		{
+			Statement_Return sr;
+			if ((sr = Body.hasReturnStatement()) != null)
+			{
+				throw new IllegalReturnCallInMainException(sr.Position);
+			}
+		}
+
 		public VarDeclaration findVariableByIdentifier(string ident)
 		{
 			List<VarDeclaration> r = Variables.Where(p => p.Identifier.ToLower() == ident.ToLower())

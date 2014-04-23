@@ -85,6 +85,7 @@ namespace BefunGen.AST
 		public abstract void linkResultTypes(Method owner);
 		public abstract void linkMethods(Program owner);
 		public abstract bool allPathsReturn();
+		public abstract Statement_Return hasReturnStatement();
 
 		public abstract Statement_Label findLabelByIdentifier(string ident);
 
@@ -179,6 +180,17 @@ namespace BefunGen.AST
 					return true;
 			}
 			return false;
+		}
+
+		public override Statement_Return hasReturnStatement()
+		{
+			for (int i = 0; i < List.Count; i++)
+			{
+				Statement_Return r;
+				if ((r = List[i].hasReturnStatement()) != null)
+					return r;
+			}
+			return null;
 		}
 
 		public override CodePiece generateCode(bool reversed)
@@ -827,6 +839,11 @@ namespace BefunGen.AST
 			return false;
 		}
 
+		public override Statement_Return hasReturnStatement()
+		{
+			return null;
+		}
+
 		public override Statement_Label findLabelByIdentifier(string ident)
 		{
 			return null;
@@ -1200,6 +1217,11 @@ namespace BefunGen.AST
 			return false;
 		}
 
+		public override Statement_Return hasReturnStatement()
+		{
+			return null;
+		}
+
 		public override Statement_Label findLabelByIdentifier(string ident)
 		{
 			return ident.ToLower() == Identifier.ToLower() ? this : null;
@@ -1265,6 +1287,11 @@ namespace BefunGen.AST
 		public override bool allPathsReturn()
 		{
 			return false;
+		}
+
+		public override Statement_Return hasReturnStatement()
+		{
+			return null;
 		}
 
 		public override Statement_Label findLabelByIdentifier(string ident)
@@ -1363,6 +1390,11 @@ namespace BefunGen.AST
 		public override bool allPathsReturn()
 		{
 			return true;
+		}
+
+		public override Statement_Return hasReturnStatement()
+		{
+			return this;
 		}
 
 		public override Statement_Label findLabelByIdentifier(string ident)
@@ -1585,6 +1617,11 @@ namespace BefunGen.AST
 		public override bool allPathsReturn()
 		{
 			return false;
+		}
+
+		public override Statement_Return hasReturnStatement()
+		{
+			return null;
 		}
 
 		public override Statement_Label findLabelByIdentifier(string ident)
@@ -1820,6 +1857,11 @@ namespace BefunGen.AST
 			return false;
 		}
 
+		public override Statement_Return hasReturnStatement()
+		{
+			return null;
+		}
+
 		public override Statement_Label findLabelByIdentifier(string ident)
 		{
 			return null;
@@ -1951,6 +1993,11 @@ namespace BefunGen.AST
 		public override bool allPathsReturn()
 		{
 			return false;
+		}
+
+		public override Statement_Return hasReturnStatement()
+		{
+			return null;
 		}
 
 		public override Statement_Label findLabelByIdentifier(string ident)
@@ -2126,6 +2173,11 @@ namespace BefunGen.AST
 			return true;
 		}
 
+		public override Statement_Return hasReturnStatement()
+		{
+			return null;
+		}
+
 		public override Statement_Label findLabelByIdentifier(string ident)
 		{
 			return null;
@@ -2181,6 +2233,11 @@ namespace BefunGen.AST
 		public override bool allPathsReturn()
 		{
 			return false;
+		}
+
+		public override Statement_Return hasReturnStatement()
+		{
+			return null;
 		}
 
 		public override Statement_Label findLabelByIdentifier(string ident)
@@ -2248,6 +2305,11 @@ namespace BefunGen.AST
 		public override bool allPathsReturn()
 		{
 			return false;
+		}
+
+		public override Statement_Return hasReturnStatement()
+		{
+			return null;
 		}
 
 		public override Statement_Label findLabelByIdentifier(string ident)
@@ -2336,6 +2398,11 @@ namespace BefunGen.AST
 		public override bool allPathsReturn()
 		{
 			return false;
+		}
+
+		public override Statement_Return hasReturnStatement()
+		{
+			return null;
 		}
 
 		public override Statement_Label findLabelByIdentifier(string ident)
@@ -2434,6 +2501,11 @@ namespace BefunGen.AST
 		public override bool allPathsReturn()
 		{
 			return false;
+		}
+
+		public override Statement_Return hasReturnStatement()
+		{
+			return null;
 		}
 
 		public override Statement_Label findLabelByIdentifier(string ident)
@@ -2589,6 +2661,11 @@ namespace BefunGen.AST
 		public override bool allPathsReturn()
 		{
 			return Body.allPathsReturn() && Else.allPathsReturn();
+		}
+
+		public override Statement_Return hasReturnStatement()
+		{
+			return Body.hasReturnStatement() ?? Else.hasReturnStatement();
 		}
 
 		public override Statement_Label findLabelByIdentifier(string ident)
@@ -3034,6 +3111,11 @@ namespace BefunGen.AST
 			return false; // Its possible that the Body isnt executed at all
 		}
 
+		public override Statement_Return hasReturnStatement()
+		{
+			return Body.hasReturnStatement();
+		}
+
 		public override Statement_Label findLabelByIdentifier(string ident)
 		{
 			return Body.findLabelByIdentifier(ident);
@@ -3200,6 +3282,11 @@ namespace BefunGen.AST
 		public override bool allPathsReturn()
 		{
 			return Body.allPathsReturn(); // Body is executed at least once
+		}
+
+		public override Statement_Return hasReturnStatement()
+		{
+			return Body.hasReturnStatement();
 		}
 
 		public override Statement_Label findLabelByIdentifier(string ident)
@@ -3466,6 +3553,17 @@ namespace BefunGen.AST
 			result &= DefaultCase.allPathsReturn();
 
 			return result; // Its possible that the Body isnt executed at all
+		}
+
+		public override Statement_Return hasReturnStatement()
+		{
+			foreach (Switch_Case sc in Cases)
+			{
+				Statement_Return r;
+				if ((r = sc.Body.hasReturnStatement()) != null)
+					return r;
+			}
+			return null;
 		}
 
 		public override Statement_Label findLabelByIdentifier(string ident)
