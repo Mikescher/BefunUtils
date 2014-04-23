@@ -923,11 +923,11 @@ namespace BefungExec.View
 			if (z.bl.Y < 0)
 				z.TrimSouth(-z.bl.Y);
 
-			if (z.Width > prog.Width)
-				z.Width = prog.Width;
+			if (z.tr.X > prog.Width)
+				z.TrimEast(z.tr.X - prog.Width);
 
 			if (z.tr.Y > prog.Height)
-				z.Height = prog.Height;
+				z.TrimNorth(z.tr.Y - prog.Height);
 
 
 			if (zoom.Count > 1)
