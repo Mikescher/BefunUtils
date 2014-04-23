@@ -13,6 +13,7 @@ namespace BefunWrite
 	{
 		public bool Project_isDirty { get; private set; }
 		public bool Sourcecode_isDirty { get; private set; }
+		public bool DisplayVal_isDirty { get; private set; }
 
 		public string ProjectConfigPath;
 		public TextFungeProject ProjectConfig;
@@ -21,6 +22,7 @@ namespace BefunWrite
 		public ProjectCodeGenOptions SelectedConfig { get { return ProjectConfig.Configurations.ElementAtOrDefault(ProjectConfig.SelectedConfiguration); } }
 
 		public string Sourcecode;
+		public string DisplayValue;
 
 		private TextFungeProjectWrapper(string fp, TextFungeProject p)
 		{
@@ -29,9 +31,13 @@ namespace BefunWrite
 
 			Project_isDirty = false;
 			Sourcecode_isDirty = false;
+			DisplayVal_isDirty = false;
 
 			if (File.Exists(getAbsoluteSourceCodePath()))
 				Sourcecode = File.ReadAllText(getAbsoluteSourceCodePath());
+
+			if (File.Exists(getAbsoluteDisplayValuePath()))
+				DisplayValue = File.ReadAllText(getAbsoluteDisplayValuePath());
 		}
 
 		public static TextFungeProjectWrapper CreateNew()
@@ -54,6 +60,7 @@ namespace BefunWrite
 
 			w.Project_isDirty = true;
 			w.Sourcecode_isDirty = true;
+			w.DisplayVal_isDirty = true;
 
 			return w;
 		}
@@ -86,6 +93,21 @@ namespace BefunWrite
 			return Path.GetFullPath(Path.Combine(Path.GetDirectoryName(ProjectConfigPath), ProjectConfig.SourceCodePath));
 		}
 
+		public string getAbsoluteDisplayValuePath()
+		{
+			if (String.IsNullOrWhiteSpace(ProjectConfigPath))
+			{
+				return "";
+			}
+
+			if (String.IsNullOrWhiteSpace(ProjectConfig.DisplayValuePath))
+			{
+				return "";
+			}
+
+			return Path.GetFullPath(Path.Combine(Path.GetDirectoryName(ProjectConfigPath), ProjectConfig.DisplayValuePath));
+		}
+
 		public string GetProjectName()
 		{
 			if (String.IsNullOrWhiteSpace(ProjectConfigPath))
@@ -107,15 +129,31 @@ namespace BefunWrite
 				if (Project_isDirty)
 					s_p = Save_projectfile(forcenew);
 
+				if (!s_p)
+					return false;
+
 				bool s_s = true;
 				if (Sourcecode_isDirty)
 					s_s = Save_sourcecode(forcenew);
 
+				if (!s_s)
+					return false;
+
+				bool s_d = true;
+				if (DisplayVal_isDirty)
+					s_s = Save_displayval(forcenew);
+
+				if (!s_d)
+					return false;
+
 				bool s_p2 = true;
-				if (Project_isDirty) // save_SC Could make Projectfile dirty
+				if (Project_isDirty) // save_SC / save_DV Could make Projectfile dirty
 					s_p = Save_projectfile(forcenew);
 
-				return s_p && s_s && s_p2;
+				if (!s_p2)
+					return false;
+
+				return s_p && s_s && s_d && s_p2;
 			}
 			catch (IOException)
 			{
@@ -143,7 +181,7 @@ namespace BefunWrite
 				SaveFileDialog sfd = new SaveFileDialog();
 				sfd.AddExtension = true;
 				sfd.DefaultExt = ".tfp";
-				sfd.Filter = "TextFungeProject (.tfp)|*.tfp";
+				sfd.Filter = "TextFungeProject |*.tfp";
 
 				if (sfd.ShowDialog().GetValueOrDefault(false))
 				{
@@ -209,9 +247,47 @@ namespace BefunWrite
 			}
 		}
 
+		public bool Save_displayval(bool forcenew = false)
+		{
+			if (!string.IsNullOrWhiteSpace(getAbsoluteDisplayValuePath()) && !forcenew)
+			{
+				File.WriteAllText(getAbsoluteDisplayValuePath(), DisplayValue);
+
+				DisplayVal_isDirty = false;
+
+				return true;
+			}
+			else
+			{
+				if (string.IsNullOrWhiteSpace(ProjectConfigPath))
+					return false;
+
+				string prev = ProjectConfig.DisplayValuePath;
+
+				string relativepath = Path.GetFileNameWithoutExtension(ProjectConfigPath) + ".tfdv";
+				ProjectConfig.DisplayValuePath = relativepath;
+
+				if (File.Exists(getAbsoluteDisplayValuePath()))
+				{
+					if (MessageBox.Show(String.Format("File '{0}' already Exists. Override ?", Path.GetFileName(getAbsoluteDisplayValuePath())), "File exists", MessageBoxButton.YesNo, MessageBoxImage.Exclamation) != MessageBoxResult.Yes)
+					{
+						ProjectConfig.DisplayValuePath = prev;
+						return false;
+					}
+				}
+
+				File.WriteAllText(getAbsoluteDisplayValuePath(), DisplayValue);
+				DisplayVal_isDirty = false;
+
+				Project_isDirty = true;
+
+				return true;
+			}
+		}
+
 		public bool isDirty()
 		{
-			return Sourcecode_isDirty || Project_isDirty;
+			return Sourcecode_isDirty || Project_isDirty || DisplayVal_isDirty;
 		}
 
 		public void DirtyProject()
@@ -224,8 +300,14 @@ namespace BefunWrite
 			Sourcecode_isDirty = true;
 		}
 
+		public void DirtyDisplayValue()
+		{
+			DisplayVal_isDirty = true;
+		}
+
 		public void ClearDirty()
 		{
+			DisplayVal_isDirty = false;
 			Sourcecode_isDirty = false;
 			Project_isDirty = false;
 		}

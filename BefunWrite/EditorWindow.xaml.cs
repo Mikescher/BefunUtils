@@ -30,7 +30,8 @@ namespace BefunWrite
 
 		private TextFungeProjectWrapper project = null; // Is Set in constructor
 
-		private IconBarMargin IconBar;
+		private IconBarMargin IconBar_Code;
+		private IconBarMargin IconBar_Display;
 
 		private bool supressComboBoxChangedEvent = false;
 
@@ -72,7 +73,13 @@ namespace BefunWrite
 			codeEditor.Options.CutCopyWholeLine = true;
 			codeEditor.Options.ShowTabs = true;
 
-			codeEditor.TextArea.LeftMargins.Insert(0, IconBar = new IconBarMargin(this, codeEditor));
+			codeEditor.TextArea.LeftMargins.Insert(0, IconBar_Code = new IconBarMargin(this, codeEditor));
+
+			//######################
+
+			displayEditor.ShowLineNumbers = true;
+
+			displayEditor.TextArea.LeftMargins.Insert(0, IconBar_Display = new IconBarMargin(this, codeEditor));
 
 			//######################
 
@@ -257,7 +264,7 @@ namespace BefunWrite
 			{
 				ASTObject.CGO = project.SelectedConfig.Options;
 
-				code = Parser.generateCode(codeEditor.Text, project.SelectedConfig.ExecSettings.IsDebug);
+				code = Parser.generateCode(codeEditor.Text, displayEditor.Text, project.SelectedConfig.ExecSettings.IsDebug);
 			}
 			catch (BefunGenException ex)
 			{
@@ -317,7 +324,7 @@ namespace BefunWrite
 			{
 				ASTObject.CGO = project.SelectedConfig.Options;
 
-				code = Parser.generateCode(codeEditor.Text, project.SelectedConfig.ExecSettings.IsDebug, out prog, out cpiece);
+				code = Parser.generateCode(codeEditor.Text, displayEditor.Text, project.SelectedConfig.ExecSettings.IsDebug, out prog, out cpiece);
 			}
 			catch (BefunGenException ex)
 			{
@@ -494,6 +501,17 @@ namespace BefunWrite
 			updateUI();
 		}
 
+		private void displayEditor_TextChanged(object sender, EventArgs e)
+		{
+			if (project == null)
+				return;
+
+			project.DisplayValue = displayEditor.Text;
+			project.DirtyDisplayValue();
+
+			updateUI();
+		}
+
 		private void cbxConfiguration_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
 		{
 			if (project == null || supressComboBoxChangedEvent)
@@ -556,6 +574,12 @@ namespace BefunWrite
 					return;
 				}
 
+				if (!File.Exists(pw.getAbsoluteDisplayValuePath()))
+				{
+					MessageBox.Show("DisplayValueFile not found", "Error while loading", MessageBoxButton.OK, MessageBoxImage.Error);
+					return;
+				}
+
 				project = pw;
 
 				updateUI();
@@ -580,9 +604,13 @@ namespace BefunWrite
 			if (codeEditor.Text != project.Sourcecode)
 				codeEditor.Text = project.Sourcecode;
 
+			if (displayEditor.Text != project.DisplayValue)
+				displayEditor.Text = project.DisplayValue;
+
 			this.Title = (String.IsNullOrWhiteSpace(project.ProjectConfigPath) ? "New" : Path.GetFileNameWithoutExtension(project.ProjectConfigPath)) + " - BefunWrite";
 
 			dockCodeEditor.Title = (String.IsNullOrWhiteSpace(project.ProjectConfig.SourceCodePath) ? "New" : Path.GetFileName(project.ProjectConfig.SourceCodePath)) + (project.isDirty() ? "*" : "");
+			dockDisplayEditor.Title = "Display" + (project.isDirty() ? "*" : "");
 		}
 
 		#endregion
@@ -596,28 +624,40 @@ namespace BefunWrite
 			return t;
 		}
 
+		private string getTSDisplay()
+		{
+			string t = "<>";
+			System.Windows.Application.Current.Dispatcher.Invoke(DispatcherPriority.Normal, (ThreadStart)delegate { t = displayEditor.Text; });
+			return t;
+		}
+
 		private void work()
 		{
 			string currentTxt = null;
+			string currentDsp = null;
 
 			while (parseThreadRunning)
 			{
 				string newtxt = getTSCode();
+				string newdsp = getTSDisplay();
 
-				if (newtxt != currentTxt)
+				if (newtxt != currentTxt || newdsp != currentDsp)
 				{
 					bool hasChangedAgain = true;
 					while (hasChangedAgain)
 					{
 						Thread.Sleep(PARSE_WAIT_TIME);
 						string newnewtxt = getTSCode();
-						hasChangedAgain = (newnewtxt != newtxt);
+						string newnewdsp = getTSDisplay();
+						hasChangedAgain = (newnewtxt != newtxt) || (newnewdsp != newdsp);
 						newtxt = newnewtxt;
+						newdsp = newnewdsp;
 					}
 
-					DoThreadedErrorParse(newtxt);
+					DoThreadedErrorParse(newtxt, newdsp);
 
 					currentTxt = newtxt;
+					currentDsp = newdsp;
 				}
 				else
 				{
@@ -626,31 +666,49 @@ namespace BefunWrite
 			}
 		}
 
-		private void DoThreadedErrorParse(string code)
+		private void DoThreadedErrorParse(string code, string disp)
 		{
-			Debug.WriteLine("DoThreadedErrorParse(..)");
-
 			BefunGenException error;
 			Program program;
 
-			if (Parser.TryParse(code, out error, out program))
+			bool s_parse = Parser.TryParse(code, disp, out error, out program);
+
+			if (!s_parse)
 			{
-				System.Windows.Application.Current.Dispatcher.Invoke(DispatcherPriority.Normal, (ThreadStart)delegate
+				if (error is InitialDisplayValueTooBig)
 				{
-					txtErrorList.Text = "";
-					IconBar.SetError(-1, "");
-					hasErrors = false;
-				});
+					System.Windows.Application.Current.Dispatcher.Invoke(DispatcherPriority.Normal, (ThreadStart)delegate
+					{
+						txtErrorList.Text = error.getWellFormattedString();
+
+						IconBar_Code.SetError(-1, "");
+						IconBar_Display.SetError(1, error.ToPopupString());
+
+						hasErrors = true;
+					});
+				}
+				else
+				{
+					System.Windows.Application.Current.Dispatcher.Invoke(DispatcherPriority.Normal, (ThreadStart)delegate
+					{
+						txtErrorList.Text = error.getWellFormattedString();
+
+						IconBar_Code.SetError(error.Position.Line, error.ToPopupString());
+						IconBar_Display.SetError(-1, "");
+
+						hasErrors = true;
+					});
+				}
 			}
 			else
 			{
 				System.Windows.Application.Current.Dispatcher.Invoke(DispatcherPriority.Normal, (ThreadStart)delegate
 				{
-					txtErrorList.Text = error.getWellFormattedString();
-					IconBar.SetError(error.Position.Line, error.ToPopupString());
-					hasErrors = true;
+					txtErrorList.Text = "";
+					IconBar_Code.SetError(-1, "");
+					IconBar_Display.SetError(-1, "");
+					hasErrors = false;
 				});
-
 			}
 
 			System.Windows.Application.Current.Dispatcher.Invoke(DispatcherPriority.Normal, (ThreadStart)delegate
@@ -665,21 +723,21 @@ namespace BefunWrite
 
 			if (p == null)
 			{
-				root = new ClickableTreeViewItem(IconBar, "<Error>", null, false);
+				root = new ClickableTreeViewItem(IconBar_Code, "<Error>", null, false);
 			}
 			else
 			{
-				root = new ClickableTreeViewItem(IconBar, p.getWellFormattedHeader(), null, true);
+				root = new ClickableTreeViewItem(IconBar_Code, p.getWellFormattedHeader(), null, true);
 
 				if (p.Variables.Count > 0)
 				{
-					ClickableTreeViewItem globVars = new ClickableTreeViewItem(IconBar, String.Format("Global Variables ({0})", p.Variables.Count), null, true);
+					ClickableTreeViewItem globVars = new ClickableTreeViewItem(IconBar_Code, String.Format("Global Variables ({0})", p.Variables.Count), null, true);
 					globVars.Header = "Global Variables";
 					globVars.IsExpanded = true;
 					{
 						foreach (VarDeclaration v in p.Variables)
 						{
-							globVars.Items.Add(new ClickableTreeViewItem(IconBar, v.getWellFormattedDecalaration(), v.Position, true));
+							globVars.Items.Add(new ClickableTreeViewItem(IconBar_Code, v.getWellFormattedDecalaration(), v.Position, true));
 						}
 					}
 					root.Items.Add(globVars);
@@ -687,31 +745,31 @@ namespace BefunWrite
 
 				if (p.Constants.Count > 0)
 				{
-					ClickableTreeViewItem constants = new ClickableTreeViewItem(IconBar, String.Format("Constants ({0})", p.Constants.Count), null, true);
+					ClickableTreeViewItem constants = new ClickableTreeViewItem(IconBar_Code, String.Format("Constants ({0})", p.Constants.Count), null, true);
 					{
 						foreach (VarDeclaration v in p.Constants)
 						{
-							constants.Items.Add(new ClickableTreeViewItem(IconBar, String.Format("{0} = {1}", v.getWellFormattedDecalaration(), v.Initial.getDebugString()), v.Position, true));
+							constants.Items.Add(new ClickableTreeViewItem(IconBar_Code, String.Format("{0} = {1}", v.getWellFormattedDecalaration(), v.Initial.getDebugString()), v.Position, true));
 						}
 					}
 					root.Items.Add(constants);
 				}
 
-				ClickableTreeViewItem methods = new ClickableTreeViewItem(IconBar, String.Format("Methods ({0})", p.MethodList.Count), null, true);
+				ClickableTreeViewItem methods = new ClickableTreeViewItem(IconBar_Code, String.Format("Methods ({0})", p.MethodList.Count), null, true);
 				{
 					foreach (Method v in p.MethodList)
 					{
-						ClickableTreeViewItem meth = new ClickableTreeViewItem(IconBar, v.getWellFormattedHeader(), v == p.MainMethod ? p.Position : v.Position, false);
+						ClickableTreeViewItem meth = new ClickableTreeViewItem(IconBar_Code, v.getWellFormattedHeader(), v == p.MainMethod ? p.Position : v.Position, false);
 						{
 							List<VarDeclaration> vars = v.Variables.Where(pp => !v.Parameter.Contains(pp)).ToList();
 
 							if (vars.Count > 0)
 							{
-								ClickableTreeViewItem varitem = new ClickableTreeViewItem(IconBar, "Variables", null, true);
+								ClickableTreeViewItem varitem = new ClickableTreeViewItem(IconBar_Code, "Variables", null, true);
 								{
 									foreach (VarDeclaration vv in vars)
 									{
-										varitem.Items.Add(new ClickableTreeViewItem(IconBar, vv.getWellFormattedDecalaration(), vv.Position, true));
+										varitem.Items.Add(new ClickableTreeViewItem(IconBar_Code, vv.getWellFormattedDecalaration(), vv.Position, true));
 									}
 								}
 								meth.Items.Add(varitem);

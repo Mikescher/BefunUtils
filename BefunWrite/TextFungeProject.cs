@@ -98,6 +98,7 @@ namespace BefunWrite
 	public class TextFungeProject
 	{
 		public string SourceCodePath = "";
+		public string DisplayValuePath = "";
 		public string OutputPath = "";
 
 		public int SelectedConfiguration = -1;

@@ -186,7 +186,7 @@ namespace BefunGen.AST
 			return MathExt.Max(1, MethodList.Select(p => p.ResultType.GetSize()).ToArray());
 		}
 
-		public CodePiece generateCode()
+		public CodePiece generateCode(string initialDisp = "")
 		{
 			// v {TEMP..}
 			// 1 v{STACKFLOODER}        <
@@ -240,8 +240,9 @@ namespace BefunGen.AST
 				CGO.DefaultResultTempSymbol,
 				new TemporaryResultCodeField_Tag(maxReturnValWidth));
 
+			CodePiece displayValue = generateCode_DisplayValue(initialDisp);
 
-			CodePiece p_display = generateCode_Display();
+			CodePiece p_display = generateCode_Display(displayValue);
 
 			DisplayOffsetX = 3;
 			DisplayOffsetY = 3;
@@ -458,7 +459,7 @@ namespace BefunGen.AST
 			return p;
 		}
 
-		private CodePiece generateCode_Display()
+		private CodePiece generateCode_Display(CodePiece val)
 		{
 			MathExt.Point s = new MathExt.Point(DisplayWidth, DisplayHeight);
 
@@ -469,8 +470,7 @@ namespace BefunGen.AST
 			if (s.Size == 0)
 				return p;
 
-			// NOP => Walkway, because Tags
-			p.Fill(b, b, s.X + b, s.Y + b, BCHelper.Walkway);
+			p.SetAt(b, b, val);
 
 			// 44111111
 			// 44111111
@@ -489,6 +489,34 @@ namespace BefunGen.AST
 			p.SetTag(0, 0, new Display_TopLeft_Tag(this, DisplayWidth + 2 * b, DisplayHeight + 2 * b));
 
 			return p;
+		}
+
+		private CodePiece generateCode_DisplayValue(string dv)
+		{
+			CodePiece r = new CodePiece();
+
+			int w = dv.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None).Max(s => s.Length);
+			int h = dv.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None).Length;
+
+			if (w > DisplayWidth || h > DisplayHeight)
+				throw new InitialDisplayValueTooBig(DisplayWidth, DisplayHeight, w, h);
+
+			string[] split = dv.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
+
+
+			BefungeCommand def = CGO.DefaultDisplayValue;
+			if (def.Type == BefungeCommandType.NOP)
+				def = BCHelper.Walkway;
+
+			for (int y = 0; y < DisplayHeight; y++)
+			{
+				for (int x = 0; x < DisplayWidth; x++)
+				{
+					r[x, y] = (y < split.Length && x < split[y].Length) ? BCHelper.chr(split[y][x]) : def;
+				}
+			}
+
+			return r;
 		}
 	}
 

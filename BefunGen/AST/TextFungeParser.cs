@@ -29,18 +29,18 @@ namespace BefunGen.AST
 			return loadTables(new BinaryReader(new FileStream(p, FileMode.Open)));
 		}
 
-		public string generateCode(string txt, bool debug)
+		public string generateCode(string txt, string initialDisplay, bool debug)
 		{
 			Program p;
 			CodePiece c;
-			return generateCode(txt, debug, out p, out c);
+			return generateCode(txt, initialDisplay, debug, out p, out c);
 		}
 
-		public string generateCode(string txt, bool debug, out Program p, out CodePiece cp)
+		public string generateCode(string txt, string initialDisplay, bool debug, out Program p, out CodePiece cp)
 		{
 			p = generateAST(txt) as Program;
 
-			cp = p.generateCode();
+			cp = p.generateCode(initialDisplay);
 
 			string result;
 
@@ -70,7 +70,7 @@ namespace BefunGen.AST
 			return result;
 		}
 
-		public bool TryParse(string txt, out BefunGenException err, out Program prog)
+		public bool TryParse(string txt, string disp, out BefunGenException err, out Program prog)
 		{
 			ParseTime = Environment.TickCount;
 
@@ -103,6 +103,23 @@ namespace BefunGen.AST
 			try
 			{
 				result.prepare();
+			}
+			catch (BefunGenException e)
+			{
+				err = e;
+				prog = null;
+				return false;
+			}
+			catch (Exception e)
+			{
+				err = new NativeException(e);
+				prog = null;
+				return false;
+			}
+
+			try
+			{
+				result.generateCode(disp);
 			}
 			catch (BefunGenException e)
 			{

@@ -100,7 +100,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\demoProg.txt" />
-    <Content Include="icon.ico" />
     <Content Include="icon_BefunExec.ico" />
     <Content Include="Resources\license.txt" />
     <Content Include="Resources\raster.bmp" />

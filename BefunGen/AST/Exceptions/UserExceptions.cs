@@ -141,4 +141,10 @@ namespace BefunGen.AST.Exceptions
 		public DuplicateSwitchCaseException(SourceCodePosition pos, Literal_Value val)
 			: base(String.Format("There are more than one Case with the same Value ({0}) in the Switch Statement ", val.getDebugString()), pos) { }
 	}
+
+	public class InitialDisplayValueTooBig : BefunGenUserException
+	{
+		public InitialDisplayValueTooBig(int minx, int miny, int realx, int realy)
+			: base(String.Format("The Initial Displaysize ({0}|{1}) does not fit into the display ({2}|{3}).", realx, realy, minx, miny), new SourceCodePosition()) { }
+	}
 }
