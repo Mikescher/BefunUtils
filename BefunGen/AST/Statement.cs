@@ -780,7 +780,7 @@ namespace BefunGen.AST
 
 		public override string getDebugString()
 		{
-			return string.Format("#MethodCall {{{0}}} ::{1}:: --> #Parameter: ({1})", Target.MethodAddr, CodePointAddr, indent(getDebugCommaStringForList(CallParameter)));
+			return string.Format("#MethodCall {{{0}}} ::{1}:: --> #Parameter: ({2})", Target.MethodAddr, CodePointAddr, getDebugCommaStringForList(CallParameter));
 		}
 
 		public override void linkVariables(Method owner)
@@ -814,6 +814,8 @@ namespace BefunGen.AST
 
 			if (Target == null)
 				throw new UnresolvableReferenceException(Identifier, Position);
+
+			Target.AddReference(this);
 
 			Identifier = null;
 		}

@@ -147,6 +147,9 @@
 
                             <Label Content="Optimize Static Expressions" />
                             <CheckBox x:Name="V_CompileTimeEvaluateExpressions" VerticalAlignment="Center"/>
+
+                            <Label Content="Remove unused Methods" />
+                            <CheckBox x:Name="V_RemUnreferencedMethods" VerticalAlignment="Center"/>
                         </ctrls:TwoColumnGrid>
                     </Expander>
                     

@@ -12,7 +12,6 @@ namespace BefunGen.AST
 	{
 		//TODO Optimize -> StatementList in StatementList --> Include
 		//TODO Optimize -> ArrayValuePointer/DisplayArrayPointer when Indizies Constant -> Direct Link
-		//TODO Optimize -> Remove unreachable Methods
 		//TODO Optimize -> Remove unused global/local variables (not params)
 		//TODO Optimize -> Remove NOP - Switch Cases
 		//TODO Optimize -> Empty StatementLists => NOP
@@ -46,6 +45,8 @@ namespace BefunGen.AST
 			this.DisplayHeight = hdr.DisplayHeight;
 
 			MethodList.Insert(0, MainMethod);
+
+			MainMethod.AddReference(null);
 
 			addPredefConstants();
 
@@ -125,6 +126,7 @@ namespace BefunGen.AST
 			inlineConstants();			// ValuePointer to Constants become Literals {{CODE-MANIPULATION}}
 			evaluateExpressions();		// Simplify Expressions if possible {{CODE-MANIPULATION}}
 			linkMethods();				// Methodcalls get their ID   &&   Labels + MethodCalls get their CodePointAddress
+			removeUnreferencedMethods();
 			linkResultTypes();			// Statements get their Result-Type (and implicit casting is added)
 		}
 
@@ -159,6 +161,20 @@ namespace BefunGen.AST
 		{
 			foreach (Method m in MethodList)
 				m.linkMethods(this);
+		}
+
+		private void removeUnreferencedMethods()
+		{
+			if (CGO.RemUnreferencedMethods)
+			{
+				for (int i = MethodList.Count - 1; i >= 0; i--)
+				{
+					if (MethodList[i].ReferenceCount == 0)
+					{
+						MethodList.RemoveAt(i);
+					}
+				}
+			}
 		}
 
 		private void linkResultTypes()

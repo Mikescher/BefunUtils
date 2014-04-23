@@ -107,6 +107,8 @@ namespace BefunGen.AST.CodeGen.NumberCode
 
 		public static string generateBenchmark(int cnt, bool doNeg)
 		{
+			ASTObject.CGO.NumberLiteralRepresentation = NumberRep.Best;
+
 			int MIN = (doNeg) ? -(cnt / 2) : (0);
 			int MAX = (doNeg) ? +(cnt / 2) : (cnt);
 

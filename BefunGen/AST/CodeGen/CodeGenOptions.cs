@@ -57,7 +57,7 @@ namespace BefunGen.AST.CodeGen
 		public bool DisplayModuloAccess;
 
 		// Calculate/Optimize Expressions at CompileTime
-		public bool CompileTimeEvaluateExpressions; //TODO Add to BefunWrite Config
+		public bool CompileTimeEvaluateExpressions;
 		/* EvaluateExpression - Optimizations:
 		 * 
 		 * RAND[0]  --> 0
@@ -67,6 +67,8 @@ namespace BefunGen.AST.CodeGen
 		 * LITERAL [+,*,-,/] LITERAL --> LITERAL
 		 * LITERAL [==,!=,>,<,>=,<=] LITERAL --> BOOL
 		*/
+
+		public bool RemUnreferencedMethods;
 
 		public static CodeGenOptions getCGO_Debug()
 		{
@@ -100,6 +102,8 @@ namespace BefunGen.AST.CodeGen
 			c.DisplayModuloAccess = false;
 
 			c.CompileTimeEvaluateExpressions = true;
+
+			c.RemUnreferencedMethods = false;
 
 			return c;
 		}
@@ -136,6 +140,8 @@ namespace BefunGen.AST.CodeGen
 			c.DisplayModuloAccess = false;
 
 			c.CompileTimeEvaluateExpressions = true;
+
+			c.RemUnreferencedMethods = true;
 
 			return c;
 		}

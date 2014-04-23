@@ -143,6 +143,7 @@ namespace BefunWrite.Dialogs
 			V_DisplayModuloAccess.IsChecked = o.Options.DisplayModuloAccess;
 
 			V_CompileTimeEvaluateExpressions.IsChecked = o.Options.CompileTimeEvaluateExpressions;
+			V_RemUnreferencedMethods.IsChecked = o.Options.RemUnreferencedMethods;
 
 			return true;
 		}
@@ -209,6 +210,7 @@ namespace BefunWrite.Dialogs
 			o.Options.DisplayModuloAccess = V_DisplayModuloAccess.IsChecked.Value;
 
 			o.Options.CompileTimeEvaluateExpressions = V_CompileTimeEvaluateExpressions.IsChecked.Value;
+			o.Options.RemUnreferencedMethods = V_RemUnreferencedMethods.IsChecked.Value;
 
 			project.DirtyProject();
 

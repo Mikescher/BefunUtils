@@ -21,6 +21,9 @@ namespace BefunGen.AST
 		public readonly List<VarDeclaration> Variables; // Includes Parameter & Temps
 		public readonly Statement_StatementList Body;
 
+		public int ReferenceCount { get { return References.Count; } }
+		public List<Statement_MethodCall> References = new List<Statement_MethodCall>(); // Can Contain Reference <null> (in MainMethod)
+
 		private int _METHODADDRESS = -1;
 		public int MethodAddr { get { return _METHODADDRESS; } private set { _METHODADDRESS = value; } }
 
@@ -45,10 +48,11 @@ namespace BefunGen.AST
 
 		public override string getDebugString()
 		{
-			return string.Format("#Method ({{{0}}}({1}):{2})\n[\n#Parameter:\n{3}\n#Variables:\n{4}\n#Body:\n{5}\n]",
+			return string.Format("#Method ({{{0}}}({1}):{2})\n[\n#References: {3}\n#Parameter:\n{4}\n#Variables:\n{5}\n#Body:\n{6}\n]",
 				MethodAddr,
 				Identifier,
 				ResultType.getDebugString(),
+				References.Count,
 				indent(getDebugStringForList(Parameter)),
 				indent(getDebugStringForList(Variables.Where(p => !Parameter.Contains(p)).ToList())),
 				indent(Body.getDebugString()));
@@ -120,6 +124,11 @@ namespace BefunGen.AST
 		public void evaluateExpressions()
 		{
 			Body.evaluateExpressions();
+		}
+
+		public void AddReference(Statement_MethodCall rf)
+		{
+			References.Add(rf);
 		}
 
 		public VarDeclaration findVariableByIdentifier(string ident)
