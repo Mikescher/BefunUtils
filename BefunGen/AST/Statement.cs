@@ -807,7 +807,10 @@ namespace BefunGen.AST
 
 		public override void linkMethods(Program owner)
 		{
-			if (Target != null && Identifier == null) // Already linked
+			foreach (Expression e in CallParameter)
+				e.linkMethods(owner);
+
+			if (Target != null) // Already linked
 				return;
 
 			Target = owner.findMethodByIdentifier(Identifier) as Method;
@@ -816,8 +819,6 @@ namespace BefunGen.AST
 				throw new UnresolvableReferenceException(Identifier, Position);
 
 			Target.AddReference(this);
-
-			Identifier = null;
 		}
 
 		public override void linkResultTypes(Method owner)

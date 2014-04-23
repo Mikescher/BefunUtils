@@ -153,4 +153,10 @@ namespace BefunGen.AST.Exceptions
 		public IllegalReturnCallInMainException(SourceCodePosition pos)
 			: base("Illegal call of RETURN in the Main-statement ", pos) { }
 	}
+
+	public class ConstantArrayException : BefunGenUserException
+	{
+		public ConstantArrayException(SourceCodePosition pos)
+			: base("An Array cannot be declared as constant ", pos) { }
+	}
 }

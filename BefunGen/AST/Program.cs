@@ -51,7 +51,7 @@ namespace BefunGen.AST
 			addPredefConstants();
 
 			MethodList.ForEach(pm => pm.Owner = this);
-			Constants.ForEach(pc => pc.IsConstant = true);
+			Constants.ForEach(pc => pc.setConstant());
 
 			testConstantsForDefinition();
 			testGlobalVarsForDefinition();
@@ -524,11 +524,16 @@ namespace BefunGen.AST
 			int w = dv.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None).Max(s => s.Length);
 			int h = dv.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None).Length;
 
+			if (dv == "")
+			{
+				w = 0;
+				h = 0;
+			}
+
 			if (w > DisplayWidth || h > DisplayHeight)
 				throw new InitialDisplayValueTooBigException(DisplayWidth, DisplayHeight, w, h);
 
 			string[] split = dv.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
-
 
 			BefungeCommand def = CGO.DefaultDisplayValue;
 			if (def.Type == BefungeCommandType.NOP)

@@ -1670,7 +1670,7 @@ namespace BefunGen.AST
 		{
 			evaluateSubExpressions();
 
-			if (Left.getResultType() == Right.getResultType())
+			if (Left is Expression_Literal && Right is Expression_Literal && Left.getResultType() == Right.getResultType())
 			{
 				int? l = Left.GetValueLiteral_Value();
 				int? r = Right.GetValueLiteral_Value();
@@ -1751,7 +1751,7 @@ namespace BefunGen.AST
 		{
 			evaluateSubExpressions();
 
-			if (Left.getResultType() == Right.getResultType())
+			if (Left is Expression_Literal && Right is Expression_Literal && Left.getResultType() == Right.getResultType())
 			{
 				int? l = Left.GetValueLiteral_Value();
 				int? r = Right.GetValueLiteral_Value();
@@ -1832,7 +1832,7 @@ namespace BefunGen.AST
 		{
 			evaluateSubExpressions();
 
-			if (Left.getResultType() == Right.getResultType())
+			if (Left is Expression_Literal && Right is Expression_Literal && Left.getResultType() == Right.getResultType())
 			{
 				int? l = Left.GetValueLiteral_Value();
 				int? r = Right.GetValueLiteral_Value();
@@ -1896,7 +1896,7 @@ namespace BefunGen.AST
 		{
 			evaluateSubExpressions();
 
-			if (Left.getResultType() == Right.getResultType())
+			if (Left is Expression_Literal && Right is Expression_Literal && Left.getResultType() == Right.getResultType())
 			{
 				int? l = Left.GetValueLiteral_Value();
 				int? r = Right.GetValueLiteral_Value();
@@ -1960,7 +1960,7 @@ namespace BefunGen.AST
 		{
 			evaluateSubExpressions();
 
-			if (Left.getResultType() == Right.getResultType())
+			if (Left is Expression_Literal && Right is Expression_Literal && Left.getResultType() == Right.getResultType())
 			{
 				int? l = Left.GetValueLiteral_Value();
 				int? r = Right.GetValueLiteral_Value();
@@ -2072,7 +2072,7 @@ namespace BefunGen.AST
 		{
 			evaluateSubExpressions();
 
-			if (Left.getResultType() == Right.getResultType())
+			if (Left is Expression_Literal && Right is Expression_Literal && Left.getResultType() == Right.getResultType())
 			{
 				int? l = Left.GetValueLiteral_Value();
 				int? r = Right.GetValueLiteral_Value();

@@ -14,7 +14,7 @@ namespace BefunGen.AST
 		public readonly int ID;
 
 		public bool hasCompleteUserDefiniedInitialValue;
-		public bool IsConstant = false;
+		public bool IsConstant { get; private set; }
 
 		private int _CodePositionX = -1;
 		public int CodePositionX
@@ -68,6 +68,7 @@ namespace BefunGen.AST
 			this.Type = t;
 			this.Identifier = ident;
 			this.ID = V_ID_COUNTER;
+			this.IsConstant = false;
 
 			if (ASTObject.isKeyword(ident))
 			{
@@ -84,6 +85,14 @@ namespace BefunGen.AST
 				this.Initial = init;
 				hasCompleteUserDefiniedInitialValue = true;
 			}
+		}
+
+		public void setConstant()
+		{
+			IsConstant = true;
+
+			if (this is VarDeclaration_Array)
+				throw new ConstantArrayException(Position);
 		}
 
 		public override string getDebugString()
