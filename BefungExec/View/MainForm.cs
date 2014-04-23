@@ -14,7 +14,7 @@ using System.Windows.Forms;
 
 namespace BefungExec.View
 {
-	public partial class MainForm : Form
+	public partial class MainForm : Form //TODO Follow Cursor Mode
 	{
 		#region Fields
 

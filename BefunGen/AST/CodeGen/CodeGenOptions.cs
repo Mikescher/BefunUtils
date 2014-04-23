@@ -290,3 +290,31 @@ Generate  Math Question and check answers
 Befunge Interpreter :D	  
 PrimzahlCalcer
 */
+
+//TODO CodeGen fail:
+
+/*
+
+
+program example : display[0, 0]
+	begin
+		out "start ";
+		push(peek());
+		out " end";
+	end
+	
+	void push(int v)
+	begin
+		out "<in_push>";
+		out v;
+	end
+
+	int peek()
+	begin
+		out "<in_peek>";
+		return 42;
+	end
+end
+
+
+*/
