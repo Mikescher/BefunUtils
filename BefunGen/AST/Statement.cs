@@ -3717,6 +3717,7 @@ namespace BefunGen.AST
 				//   > "d" 
 				//    ######
 				p = generateCode_Top(reversed);
+				int topWidth = p.Width;
 
 				List<Statement> stmts = Cases.Select(pp => pp.Body).ToList();
 				stmts.Add(DefaultCase);
@@ -3745,6 +3746,8 @@ namespace BefunGen.AST
 
 					p.AppendBottom(p_stmt);
 				}
+
+				p.FillRowWW(0, topWidth, p.Width);
 
 				List<TagLocation> sc_exits = p.findAllActiveCodeTags(typeof(SwitchStmt_Case_Exit)).OrderBy(pp => pp.Y).ToList();
 
