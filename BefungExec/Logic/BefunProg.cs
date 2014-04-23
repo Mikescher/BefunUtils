@@ -457,6 +457,7 @@ namespace BefungExec.Logic
 			InputCharacters = new ConcurrentQueue<char>();
 
 			output.Clear();
+			simpleOutputHash++;
 		}
 
 		private static int GetProgWidth(string pg)

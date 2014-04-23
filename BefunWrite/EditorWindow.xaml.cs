@@ -789,14 +789,3 @@ namespace BefunWrite
 
 	}
 }
-
-
-//TODO Check Licenses:
-// AvalonEdit
-// AvalonDock
-// GOLDTools
-// [>] OpenTK
-// [>] QuickFont
-// [x] SyntaxBox (?)
-// Fugue Icon Set
-// TwoColumnGrid (http://www.codeproject.com/Articles/238307/A-Two-Column-Grid-for-WPF)
