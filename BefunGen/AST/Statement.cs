@@ -28,13 +28,13 @@ namespace BefunGen.AST
 		public CodePiece extendVerticalMCTagsUpwards(CodePiece p)
 		{
 			List<TagLocation> entries = p.findAllActiveCodeTags(typeof(MethodCall_VerticalReEntry_Tag))
-				.OrderBy(tp => (tp.Tag.TagParam as ICodeAddressTarget).CodePointAddr)
+				.OrderByDescending(tp => (tp.Tag.TagParam as ICodeAddressTarget).CodePointAddr)
 				.ToList();
 			List<TagLocation> exits = p.findAllActiveCodeTags(typeof(MethodCall_VerticalExit_Tag));
 
 			int pos_y_exitline = p.MinY - 1;
 
-			foreach (TagLocation exit in exits)
+			foreach (TagLocation exit in exits) // TODO Why not create only 1 exit line ???
 			{
 				MethodCall_VerticalExit_Tag tag_exit = exit.Tag as MethodCall_VerticalExit_Tag;
 				tag_exit.deactivate();
@@ -799,10 +799,10 @@ namespace BefunGen.AST
 
 		public override void addressCodePoints()
 		{
-			_CodePointAddr = CODEPOINT_ADDRESS_COUNTER;
-
 			foreach (Expression e in CallParameter)
 				e.addressCodePoints();
+
+			_CodePointAddr = CODEPOINT_ADDRESS_COUNTER;
 		}
 
 		public override void linkMethods(Program owner)

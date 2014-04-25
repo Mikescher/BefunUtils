@@ -18,7 +18,7 @@ namespace BefunGenTest
 				char cc := 'o';
 				int[4] e := {40, 48, 60, -20};
 				bool c;
-				bool d := 10;
+				bool d := false;
 				int[8] h;
 			begin
 				return max;

@@ -280,41 +280,12 @@ Do Nothing ... just go on ... stack is fine
 
 ########### RPOGRAM IDEAS #######
 
-Find way through Labyrinth thats written on display (recursive / Bruteforce)
-Maze Generation
-Solve Sudoku Thats inputted on Display (recursive Bruteforce)
-Generate Sudoku on Display
-Quicksort input
-Befunge Interpreter
-Generate  Math Question and check answers
-Befunge Interpreter :D	  
-PrimzahlCalcer
-*/
-
-//TODO CodeGen fail:
-
-/*
-
-
-program example : display[0, 0]
-	begin
-		out "start ";
-		push(peek());
-		out " end";
-	end
-	
-	void push(int v)
-	begin
-		out "<in_push>";
-		out v;
-	end
-
-	int peek()
-	begin
-		out "<in_peek>";
-		return 42;
-	end
-end
-
-
+[X] Find way through Labyrinth thats written on display (recursive / Bruteforce)
+[X] Maze Generation
+[O] Solve Sudoku Thats inputted on Display (recursive Bruteforce)
+[X] Generate Sudoku on Display
+[O] Quicksort input
+[?] Befunge Interpreter
+[O] Generate  Math Question and check answers
+[O] PrimzahlCalcer
 */
