@@ -97,15 +97,15 @@
             <avDock:LayoutRoot>
                 <avDock:LayoutPanel Orientation="Horizontal">
                     <avDock:LayoutDocumentPane>
-                        <avDock:LayoutAnchorable Title="Code Editor" x:Name="dockCodeEditor">
+                        <avDock:LayoutAnchorable Title="Code Editor" x:Name="dockCodeEditor" CanClose="False" CanHide="False">
                             <avEdit:TextEditor x:Name="codeEditor" FontFamily="Consolas" FontSize="10pt" TextChanged="codeEditor_TextChanged"/>
                         </avDock:LayoutAnchorable>
-                        <avDock:LayoutAnchorable Title="Display" x:Name="dockDisplayEditor">
+                        <avDock:LayoutAnchorable Title="Display" x:Name="dockDisplayEditor" CanClose="False" CanHide="False">
                             <avEdit:TextEditor x:Name="displayEditor" FontFamily="Consolas" FontSize="10pt" TextChanged="displayEditor_TextChanged"/>
                         </avDock:LayoutAnchorable>
                     </avDock:LayoutDocumentPane>
                     <avDock:LayoutAnchorablePane DockWidth="250">
-                        <avDock:LayoutAnchorable Title="Program Explorer">
+                        <avDock:LayoutAnchorable Title="Program Explorer" CanClose="False" CanHide="False">
                             <TreeView x:Name="sourceTreeView"/>
                         </avDock:LayoutAnchorable>
                     </avDock:LayoutAnchorablePane>
@@ -113,10 +113,10 @@
                 <avDock:LayoutRoot.BottomSide>
                     <avDock:LayoutAnchorSide>
                         <avDock:LayoutAnchorGroup>
-                            <avDock:LayoutAnchorable Title="Output">
+                            <avDock:LayoutAnchorable Title="Output" CanClose="False" CanHide="False">
                                 <TextBox/>
                             </avDock:LayoutAnchorable>
-                            <avDock:LayoutAnchorable Title="ErrorList" AutoHideHeight="150">
+                            <avDock:LayoutAnchorable Title="ErrorList" AutoHideHeight="150" CanClose="False" CanHide="False">
                                 <ScrollViewer>
                                     <TextBox x:Name="txtErrorList" IsReadOnly="True" Foreground="Red"/>
                                 </ScrollViewer>

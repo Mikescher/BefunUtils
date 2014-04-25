@@ -244,6 +244,8 @@ namespace BefunWrite
 		{
 			if (!project.TrySave())
 				return;
+			else
+				updateUI();
 
 			if (!project.HasConfigSelected)
 			{

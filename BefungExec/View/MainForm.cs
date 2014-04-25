@@ -560,10 +560,12 @@ namespace BefungExec.View
 
 			if (isrun && kb[Keys.Escape])
 			{
+				setFollowMode(false);
+
 				if (zoom.Count > 1)
 				{
-					if (!RunOptions.FOLLOW_MODE) //NOT POSSIBLE WHILE FOLLOWING
-						zoom.Pop();
+
+					zoom.Pop();
 				}
 				else
 				{
@@ -704,12 +706,15 @@ namespace BefungExec.View
 
 		private void reset()
 		{
+
 			prog.reset_freeze_request = true;
 
 			while (!prog.reset_freeze_answer)
 				Thread.Sleep(0);
 
 			prog.full_reset(init_code);
+
+			setFollowMode(false);
 
 			Console.WriteLine();
 			Console.WriteLine();
