@@ -24,7 +24,7 @@ namespace BefunWrite
 	/// <summary>
 	/// Interaction logic for MainWindow.xaml
 	/// </summary>
-	public partial class EditorWindow : Window //TODO Load Demos
+	public partial class EditorWindow : Window //TODO Load Demos 
 	{
 		private const int PARSE_WAIT_TIME = 666; // Minimal Time (in ms) without Button Press for Parsing
 
@@ -47,13 +47,21 @@ namespace BefunWrite
 
 		public EditorWindow()
 		{
-			project = TextFungeProjectWrapper.CreateNew();
-
 			InitializeComponent();
 
 			Init();
 
-			codeEditor.Text = Properties.Resources.example;
+			string[] cmdla = Environment.GetCommandLineArgs();
+			if (cmdla.Length > 1 && File.Exists(cmdla[1]) && Path.GetExtension(cmdla[1]) == ".tfp")
+			{
+				DoOpenProject(cmdla[1]);
+			}
+			else
+			{
+				project = TextFungeProjectWrapper.CreateNew();
+				codeEditor.Text = Properties.Resources.example;
+				updateUI();
+			}
 
 			DispatcherTimer itimer = new DispatcherTimer(DispatcherPriority.ApplicationIdle);
 			itimer.Interval = TimeSpan.FromMilliseconds(500);
@@ -565,32 +573,37 @@ namespace BefunWrite
 
 			if (ofd.ShowDialog().GetValueOrDefault(false))
 			{
-				TextFungeProjectWrapper pw = TextFungeProjectWrapper.LoadFromFile(ofd.FileName);
-
-				if (pw == null)
-				{
-					MessageBox.Show("Could not load ProjectFile", "Error while loading", MessageBoxButton.OK, MessageBoxImage.Error);
-					return;
-				}
-
-				if (!File.Exists(pw.getAbsoluteSourceCodePath()))
-				{
-					MessageBox.Show("Sourcecodefile not found", "Error while loading", MessageBoxButton.OK, MessageBoxImage.Error);
-					return;
-				}
-
-				if (!File.Exists(pw.getAbsoluteDisplayValuePath()))
-				{
-					MessageBox.Show("DisplayValueFile not found", "Error while loading", MessageBoxButton.OK, MessageBoxImage.Error);
-					return;
-				}
-
-				project = pw;
-
-				updateUI();
-				pw.ClearDirty();
-				updateUI();
+				DoOpenProject(ofd.FileName);
 			}
+		}
+
+		private void DoOpenProject(string FileName)
+		{
+			TextFungeProjectWrapper pw = TextFungeProjectWrapper.LoadFromFile(FileName);
+
+			if (pw == null)
+			{
+				MessageBox.Show("Could not load ProjectFile", "Error while loading", MessageBoxButton.OK, MessageBoxImage.Error);
+				return;
+			}
+
+			if (!File.Exists(pw.getAbsoluteSourceCodePath()))
+			{
+				MessageBox.Show("Sourcecodefile not found", "Error while loading", MessageBoxButton.OK, MessageBoxImage.Error);
+				return;
+			}
+
+			if (!File.Exists(pw.getAbsoluteDisplayValuePath()))
+			{
+				MessageBox.Show("DisplayValueFile not found", "Error while loading", MessageBoxButton.OK, MessageBoxImage.Error);
+				return;
+			}
+
+			project = pw;
+
+			updateUI();
+			pw.ClearDirty();
+			updateUI();
 		}
 
 		#endregion

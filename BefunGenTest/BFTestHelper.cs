@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace BefunGenTest
 {
-	public static class BFTestHelper //TODO Test CompileTimeEvaluateExpressions ...
+	public static class BFTestHelper
 	{
 		private static TextFungeParser GParser = new TextFungeParser();
 

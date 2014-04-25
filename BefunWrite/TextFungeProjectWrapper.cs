@@ -73,6 +73,7 @@ namespace BefunWrite
 			}
 			catch (Exception e)
 			{
+				MessageBox.Show("Could not open file Projectfile", "Syntax Error", MessageBoxButton.OK, MessageBoxImage.Error);
 				Debug.WriteLine(e);
 				return null;
 			}
