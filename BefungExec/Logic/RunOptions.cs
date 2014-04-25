@@ -20,6 +20,7 @@ namespace BefungExec.Logic
 
 		public static bool SYNTAX_HIGHLIGHTING = true;
 		public static bool ASCII_STACK = true;
+		public static bool FOLLOW_MODE = false;
 
 		public static bool SKIP_NOP = true;
 		public static bool DEBUGRUN = false;

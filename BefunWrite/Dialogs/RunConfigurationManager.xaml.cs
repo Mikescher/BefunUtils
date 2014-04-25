@@ -101,6 +101,7 @@ namespace BefunWrite.Dialogs
 			V_EX_StartPaused.IsChecked = o.ExecSettings.startPaused;
 			V_EX_SyntaxHighlighting.IsChecked = o.ExecSettings.syntaxHighlight;
 			V_EX_ASCIIStack.IsChecked = o.ExecSettings.asciistack;
+			V_EX_FollowCursorMode.IsChecked = o.ExecSettings.follocursormode;
 			V_EX_SkipNOP.IsChecked = o.ExecSettings.skipnop;
 			V_EX_InitialSpeedIndex.Value = o.ExecSettings.initialSpeedIndex;
 			V_EX_Speed_1.Value = o.ExecSettings.simuSpeeds[0];
@@ -168,6 +169,7 @@ namespace BefunWrite.Dialogs
 			o.ExecSettings.startPaused = V_EX_StartPaused.IsChecked.Value;
 			o.ExecSettings.syntaxHighlight = V_EX_SyntaxHighlighting.IsChecked.Value;
 			o.ExecSettings.asciistack = V_EX_ASCIIStack.IsChecked.Value;
+			o.ExecSettings.follocursormode = V_EX_FollowCursorMode.IsChecked.Value;
 			o.ExecSettings.skipnop = V_EX_SkipNOP.IsChecked.Value;
 			o.ExecSettings.initialSpeedIndex = V_EX_InitialSpeedIndex.Value.Value;
 			o.ExecSettings.simuSpeeds[0] = V_EX_Speed_1.Value.Value;

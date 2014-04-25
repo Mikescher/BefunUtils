@@ -376,6 +376,11 @@ namespace BefunWrite
 			else
 				start.Arguments += "-no_asciistack" + " ";
 
+			if (project.SelectedConfig.ExecSettings.follocursormode)
+				start.Arguments += "-follow" + " ";
+			else
+				start.Arguments += "-no_follow" + " ";
+
 			if (project.SelectedConfig.ExecSettings.skipnop)
 				start.Arguments += "-skipnop" + " ";
 			else

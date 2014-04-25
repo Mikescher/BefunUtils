@@ -31,16 +31,21 @@ namespace BefungExec
 			Console.WriteLine();
 			Console.WriteLine("Space:         Pause | Resume");
 			Console.WriteLine("Right:         Step Forward");
+
 			Console.WriteLine("Mouse:         Zoom in | Breakpoint");
+			Console.WriteLine("MouseWheel:    Zoom In/Out");
 			Console.WriteLine("Esc:           Zoom out | Exit");
+
 			Console.WriteLine("C:             Remove all breakpoints");
 			Console.WriteLine("R:             Reset");
+			Console.WriteLine("F:             Follow Cursor Mode");
+
 			Console.WriteLine("1:             Debug speed");
 			Console.WriteLine("2:             Normal speed");
 			Console.WriteLine("3:             High speed");
 			Console.WriteLine("4:             Very High speed");
 			Console.WriteLine("5:             Full speed");
-			Console.WriteLine("MouseWheel:    Zoom In/Out");
+
 
 			Console.WriteLine();
 			Console.WriteLine();
@@ -81,6 +86,7 @@ namespace BefungExec
 				Console.WriteLine("asciistack | no_asciistack : Enable char display in stack");
 				Console.WriteLine("skipnop | no_skipnop       : Skip NOP's");
 				Console.WriteLine("debug | no_debug           : Activates additional debug-messages");
+				Console.WriteLine("follow | no_follow         : Activates the follow-cursor mode");
 
 				Console.WriteLine("speed=?                    : Set the initial speed (index)");
 
@@ -131,6 +137,13 @@ namespace BefungExec
 				RunOptions.DEBUGRUN = false;
 			if (cmda.IsSet("debug") || cmda.IsSet("debugrun"))
 				RunOptions.DEBUGRUN = true;
+
+			//##############
+
+			if (cmda.IsSet("no_followcursor") || cmda.IsSet("no_followcursor"))
+				RunOptions.FOLLOW_MODE = false;
+			if (cmda.IsSet("follow") || cmda.IsSet("followcursor"))
+				RunOptions.FOLLOW_MODE = true;
 
 			//##############
 

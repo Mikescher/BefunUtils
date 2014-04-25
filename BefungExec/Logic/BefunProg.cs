@@ -400,14 +400,13 @@ namespace BefungExec.Logic
 
 		public void move()
 		{
-			PC += delta;
+			int pcx = (PC.X + delta.X + dimension.X) % dimension.X;
+			int pcy = (PC.Y + delta.Y + dimension.Y) % dimension.Y;
 
-			int bx = PC.X;
-			int by = PC.Y;
+			int bx = PC.X + delta.X;
+			int by = PC.Y + delta.Y;
 
-			PC += dimension;
-
-			PC %= dimension;
+			PC.Set(pcx, pcy);
 
 			if (bx != PC.X || by != PC.Y)
 				err = "PC wrapped around ledge (" + bx + "|" + by + ") - (" + PC.X + "|" + PC.Y + ")";

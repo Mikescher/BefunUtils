@@ -238,7 +238,7 @@ namespace BefungExec.View.OpenGL.OGLMath
 			return result;
 		}
 
-		public void normalize()
+		public void Normalize()
 		{
 			if (Width < 0)
 			{
@@ -250,6 +250,87 @@ namespace BefungExec.View.OpenGL.OGLMath
 			{
 				position.Y += Height;
 				Height *= -1;
+			}
+		}
+
+		/// <summary>
+		/// Trims the rect in a way that its fully contained in the other rect
+		/// </summary>
+		public void ForceInside(Rect2i other)
+		{
+			if (this.bl.X < other.bl.X)
+				this.TrimWest(other.bl.X - this.bl.X);
+
+			if (this.bl.Y < other.bl.Y)
+				this.TrimSouth(other.bl.Y - this.bl.Y);
+
+			if (this.tr.X > other.tr.X)
+				this.TrimEast(this.tr.X - other.tr.X);
+
+			if (this.tr.Y > other.tr.Y)
+				this.TrimNorth(this.tr.Y - other.tr.Y);
+		}
+
+		public double GetRatio()
+		{
+			return Width / (Height * 1.0);
+		}
+
+		public void setRatio_Expanding(double ratio)
+		{
+			double real_r = GetRatio();
+
+			if (real_r < ratio) // Expand Width
+			{
+				while (real_r < ratio)
+				{
+					TrimHorizontal(-1);
+					real_r = GetRatio();
+				}
+				TrimHorizontal(1);
+			}
+			else // Expand Height
+			{
+				while (real_r > ratio)
+				{
+					TrimVertical(-1);
+					real_r = GetRatio();
+				}
+				TrimVertical(1);
+			}
+		}
+
+		public void setInsideRatio_Expanding(double ratio, Rect2i other)
+		{
+			double real_r = GetRatio();
+
+			if (real_r < ratio) // Expand Width
+			{
+				double old = real_r;
+				while (real_r < ratio)
+				{
+					TrimHorizontal(-1);
+					ForceInside(other);
+					real_r = GetRatio();
+
+					if (old == real_r)
+						return;
+					old = real_r;
+				}
+			}
+			else // Expand Height
+			{
+				double old = real_r;
+				while (real_r > ratio)
+				{
+					TrimVertical(-1);
+					ForceInside(other);
+					real_r = GetRatio();
+
+					if (old == real_r)
+						return;
+					old = real_r;
+				}
 			}
 		}
 

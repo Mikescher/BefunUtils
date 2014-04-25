@@ -13,6 +13,7 @@ namespace BefunWrite
 		public bool startPaused;
 		public bool syntaxHighlight;
 		public bool asciistack;
+		public bool follocursormode;
 		public bool skipnop;
 		public bool IsDebug;
 
@@ -30,6 +31,7 @@ namespace BefunWrite
 				startPaused = true,
 				syntaxHighlight = true,
 				asciistack = true,
+				follocursormode = false,
 				skipnop = true,
 				IsDebug = true,
 
@@ -56,6 +58,7 @@ namespace BefunWrite
 				startPaused = false,
 				syntaxHighlight = true,
 				asciistack = true,
+				follocursormode = false,
 				skipnop = true,
 				IsDebug = false,
 

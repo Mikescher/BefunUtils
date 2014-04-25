@@ -53,6 +53,9 @@
                             <Label Content="Show Character in Stack as Chars" />
                             <CheckBox x:Name="V_EX_ASCIIStack" VerticalAlignment="Center"/>
 
+                            <Label Content="Automatically follow the PC" />
+                            <CheckBox x:Name="V_EX_FollowCursorMode" VerticalAlignment="Center"/>
+
                             <Label Content="Skip Whitespace Execution" />
                             <CheckBox x:Name="V_EX_SkipNOP" VerticalAlignment="Center"/>
 

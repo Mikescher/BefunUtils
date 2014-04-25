@@ -14,8 +14,14 @@ using System.Windows.Forms;
 
 namespace BefungExec.View
 {
-	public partial class MainForm : Form //TODO Follow Cursor Mode
+	public partial class MainForm : Form
 	{
+		#region Constants
+
+		private const int FOLLOW_MODE_RADIUS = 15;
+
+		#endregion
+
 		#region Fields
 
 		private bool loaded_sv = false;
@@ -66,6 +72,7 @@ namespace BefungExec.View
 
 			syntaxHighlightingToolStripMenuItem.Checked = RunOptions.SYNTAX_HIGHLIGHTING;
 			aSCIIStackToolStripMenuItem.Checked = RunOptions.ASCII_STACK;
+			followCursorToolStripMenuItem.Checked = RunOptions.FOLLOW_MODE;
 			skipNOPsToolStripMenuItem.Checked = RunOptions.SKIP_NOP;
 			debugModeToolStripMenuItem.Checked = RunOptions.DEBUGRUN;
 			showTrailToolStripMenuItem.Checked = RunOptions.SHOW_DECAY;
@@ -203,6 +210,9 @@ namespace BefungExec.View
 
 		private void glProgramView_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
 		{
+			if (RunOptions.FOLLOW_MODE) //NOT POSSIBLE WHILE FOLLOWING
+				return;
+
 			if (e.Button != MouseButtons.Left)
 				return;
 
@@ -271,6 +281,9 @@ namespace BefungExec.View
 
 		private void glProgramView_MouseWheel(object sender, System.Windows.Forms.MouseEventArgs e)
 		{
+			if (RunOptions.FOLLOW_MODE) //NOT POSSIBLE WHILE FOLLOWING
+				return;
+
 			for (int i = 0; i < Math.Abs(e.Delta); i += 120)
 			{
 				if (e.Delta > 0)
@@ -540,13 +553,17 @@ namespace BefungExec.View
 			if (glProgramView.ContainsFocus)
 				kb.update();
 
+			Rect2i prog_rect = new Rect2i(0, 0, prog.Width, prog.Height);
 			bool isrun = (prog.mode == BefunProg.MODE_RUN);
+
+			#region Keys
 
 			if (isrun && kb[Keys.Escape])
 			{
 				if (zoom.Count > 1)
 				{
-					zoom.Pop();
+					if (!RunOptions.FOLLOW_MODE) //NOT POSSIBLE WHILE FOLLOWING
+						zoom.Pop();
 				}
 				else
 				{
@@ -597,11 +614,28 @@ namespace BefungExec.View
 			if (isrun && kb[Keys.C])
 				resetBPs();
 
-			if (isrun && kb[Keys.O])
-				zoomIn();
+			if (isrun && kb[Keys.F])
+				setFollowMode(!RunOptions.FOLLOW_MODE);
 
-			if (isrun && kb[Keys.L])
-				zoomOut();
+			#endregion
+
+			#region Follow Mode
+
+			if (isrun && RunOptions.FOLLOW_MODE)
+			{
+				Vec2i p = new Vec2i(prog.PC);
+
+				Rect2i z = new Rect2i(p.X - FOLLOW_MODE_RADIUS, p.Y - FOLLOW_MODE_RADIUS, FOLLOW_MODE_RADIUS * 2, FOLLOW_MODE_RADIUS * 2);
+
+				z.ForceInside(prog_rect);
+				z.setInsideRatio_Expanding((12.0 * glProgramView.Width) / (8.0 * glProgramView.Height), prog_rect);
+
+				if (zoom.Count > 1)
+					zoom.Pop();
+				zoom.Push(z);
+			}
+
+			#endregion
 		}
 
 		private void RenderStackView()
@@ -859,6 +893,9 @@ namespace BefungExec.View
 
 		private void zoomIn()
 		{
+			if (RunOptions.FOLLOW_MODE) //NOT POSSIBLE WHILE FOLLOWING
+				return;
+
 			Rect2i z = new Rect2i(zoom.Peek());
 
 			int dx = z.Width / 10;
@@ -903,6 +940,9 @@ namespace BefungExec.View
 
 		private void zoomOut()
 		{
+			if (RunOptions.FOLLOW_MODE) //NOT POSSIBLE WHILE FOLLOWING
+				return;
+
 			Rect2i z = new Rect2i(zoom.Peek());
 
 			int dx = z.Width / 10;
@@ -917,22 +957,31 @@ namespace BefungExec.View
 			z.TrimHorizontal(-dx);
 			z.TrimVertical(-dy);
 
-			if (z.bl.X < 0)
-				z.TrimWest(-z.bl.X);
-
-			if (z.bl.Y < 0)
-				z.TrimSouth(-z.bl.Y);
-
-			if (z.tr.X > prog.Width)
-				z.TrimEast(z.tr.X - prog.Width);
-
-			if (z.tr.Y > prog.Height)
-				z.TrimNorth(z.tr.Y - prog.Height);
+			z.ForceInside(new Rect2i(0, 0, prog.Width, prog.Height));
 
 
 			if (zoom.Count > 1)
 				zoom.Pop();
 			zoom.Push(z);
+		}
+
+		private void setFollowMode(bool v)
+		{
+			if (!(v ^ RunOptions.FOLLOW_MODE)) // v == FOLLOW_MODE
+				return;
+
+			RunOptions.FOLLOW_MODE = v;
+			followCursorToolStripMenuItem.Checked = RunOptions.FOLLOW_MODE;
+
+			if (RunOptions.FOLLOW_MODE)
+			{
+				zoom.Push(zoom.Peek());
+			}
+			else
+			{
+				if (zoom.Count > 1)
+					zoom.Pop();
+			}
 		}
 
 		#endregion
@@ -990,6 +1039,11 @@ namespace BefungExec.View
 			RunOptions.ASCII_STACK = aSCIIStackToolStripMenuItem.Checked;
 		}
 
+		private void followCursorToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
+		{
+			setFollowMode(followCursorToolStripMenuItem.Checked);
+		}
+
 		private void speedToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
 		{
 			if (lowToolStripMenuItem.Checked)
@@ -1006,6 +1060,9 @@ namespace BefungExec.View
 
 		private void zoomToInitialToolStripMenuItem_Click(object sender, EventArgs e)
 		{
+			if (RunOptions.FOLLOW_MODE) //NOT POSSIBLE WHILE FOLLOWING
+				return;
+
 			while (zoom.Count > 1)
 			{
 				zoom.Pop();
@@ -1018,6 +1075,9 @@ namespace BefungExec.View
 
 		private void zoomOutToolStripMenuItem_Click(object sender, EventArgs e)
 		{
+			if (RunOptions.FOLLOW_MODE) //NOT POSSIBLE WHILE FOLLOWING
+				return;
+
 			if (zoom.Count > 1)
 			{
 				zoom.Pop();
@@ -1026,6 +1086,9 @@ namespace BefungExec.View
 
 		private void zoomCompleteOutToolStripMenuItem_Click(object sender, EventArgs e)
 		{
+			if (RunOptions.FOLLOW_MODE) //NOT POSSIBLE WHILE FOLLOWING
+				return;
+
 			while (zoom.Count > 1)
 			{
 				zoom.Pop();
