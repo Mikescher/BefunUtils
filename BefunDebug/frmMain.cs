@@ -358,9 +358,6 @@ end
 			string bench = NumberCodeHelper.generateBenchmark(16384, true);
 
 			txtDebug.Text = bench;
-
-			txtDebug.Focus();
-			txtDebug.SelectAll();
 		}
 
 		private void btnRun_Click(object sender, EventArgs e)
@@ -424,6 +421,32 @@ end
 
 				tabControl1.SelectedIndex = 5;
 			}
+		}
+
+		private void btnQCircle_Click(object sender, EventArgs e)
+		{
+			const int CSIZE = 4 * 4 * 4 * 4;
+
+			CodePiece p = new CodePiece();
+			p.Fill(0, 0, CSIZE, CSIZE, BCHelper.Walkway);
+
+			for (int x = 0; x < CSIZE; x++)
+			{
+				for (int y = 0; y < CSIZE; y++)
+				{
+					if (Math.Sqrt(Math.Pow(x, 2) + Math.Pow(y, 2)) < (CSIZE - 0.5))
+					{
+						p.replaceWalkway(CSIZE - 1 - x, CSIZE - 1 - y, BCHelper.chr('#'), false);
+					}
+				}
+			}
+			txtDebug.Text = p.ToSimpleString();
+		}
+
+		private void btnFocus_Click(object sender, EventArgs e)
+		{
+			txtDebug.Focus();
+			txtDebug.SelectAll();
 		}
 	}
 } //Form

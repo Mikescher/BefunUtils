@@ -610,7 +610,7 @@ namespace BefunGen.AST.CodeGen
 				// $_^# !:<{C}
 
 				p.SetAt(2, -1, CodePiece.ParseFromLine(@">\$1-v"));
-				p.SetAt(0, +0, CodePiece.CombineHorizontal(CodePiece.ParseFromLine(@"$_^# !:<"), p_count));
+				p.SetAt(0, +0, CodePiece.CombineHorizontal(CodePiece.ParseFromLine(@"$_^# !:<", true), p_count));
 			}
 			else
 			{

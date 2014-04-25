@@ -62,6 +62,8 @@
 			this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
 			this.btnLoadSYN = new System.Windows.Forms.Button();
 			this.txtSynFile = new System.Windows.Forms.TextBox();
+			this.btnQCircle = new System.Windows.Forms.Button();
+			this.btnFocus = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
@@ -120,7 +122,7 @@
 			// 
 			this.splitContainer1.Panel2.Controls.Add(this.tabControl1);
 			this.splitContainer1.Size = new System.Drawing.Size(686, 466);
-			this.splitContainer1.SplitterDistance = 218;
+			this.splitContainer1.SplitterDistance = 211;
 			this.splitContainer1.TabIndex = 11;
 			// 
 			// txtSource
@@ -148,7 +150,7 @@
 			this.txtSource.ShowGutterMargin = false;
 			this.txtSource.ShowScopeIndicator = false;
 			this.txtSource.ShowTabGuides = true;
-			this.txtSource.Size = new System.Drawing.Size(686, 218);
+			this.txtSource.Size = new System.Drawing.Size(686, 211);
 			this.txtSource.SmoothScroll = true;
 			this.txtSource.SplitView = false;
 			this.txtSource.SplitviewH = -4;
@@ -174,7 +176,7 @@
 			this.tabControl1.Location = new System.Drawing.Point(0, 0);
 			this.tabControl1.Name = "tabControl1";
 			this.tabControl1.SelectedIndex = 0;
-			this.tabControl1.Size = new System.Drawing.Size(686, 244);
+			this.tabControl1.Size = new System.Drawing.Size(686, 251);
 			this.tabControl1.TabIndex = 7;
 			// 
 			// tabPage1
@@ -379,7 +381,7 @@
 			this.tabPage7.Location = new System.Drawing.Point(4, 4);
 			this.tabPage7.Name = "tabPage7";
 			this.tabPage7.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPage7.Size = new System.Drawing.Size(678, 218);
+			this.tabPage7.Size = new System.Drawing.Size(678, 225);
 			this.tabPage7.TabIndex = 6;
 			this.tabPage7.Text = "Debug";
 			this.tabPage7.UseVisualStyleBackColor = true;
@@ -396,7 +398,7 @@
 			this.tableLayoutPanel1.Name = "tableLayoutPanel1";
 			this.tableLayoutPanel1.RowCount = 1;
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-			this.tableLayoutPanel1.Size = new System.Drawing.Size(672, 212);
+			this.tableLayoutPanel1.Size = new System.Drawing.Size(672, 219);
 			this.tableLayoutPanel1.TabIndex = 1;
 			// 
 			// txtDebug
@@ -409,7 +411,7 @@
 			this.txtDebug.Name = "txtDebug";
 			this.txtDebug.ReadOnly = true;
 			this.txtDebug.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-			this.txtDebug.Size = new System.Drawing.Size(517, 206);
+			this.txtDebug.Size = new System.Drawing.Size(517, 213);
 			this.txtDebug.TabIndex = 0;
 			this.txtDebug.WordWrap = false;
 			// 
@@ -420,6 +422,8 @@
 			this.tableLayoutPanel5.Controls.Add(this.btnExecuteDebug, 0, 0);
 			this.tableLayoutPanel5.Controls.Add(this.btnDebugNumberRep, 0, 1);
 			this.tableLayoutPanel5.Controls.Add(this.btnSendToRun, 0, 2);
+			this.tableLayoutPanel5.Controls.Add(this.btnQCircle, 0, 3);
+			this.tableLayoutPanel5.Controls.Add(this.btnFocus, 0, 5);
 			this.tableLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tableLayoutPanel5.Location = new System.Drawing.Point(526, 3);
 			this.tableLayoutPanel5.Name = "tableLayoutPanel5";
@@ -431,7 +435,7 @@
 			this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
 			this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
 			this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 35F));
-			this.tableLayoutPanel5.Size = new System.Drawing.Size(143, 206);
+			this.tableLayoutPanel5.Size = new System.Drawing.Size(143, 213);
 			this.tableLayoutPanel5.TabIndex = 1;
 			// 
 			// btnExecuteDebug
@@ -520,6 +524,28 @@
 			this.txtSynFile.Size = new System.Drawing.Size(580, 20);
 			this.txtSynFile.TabIndex = 11;
 			// 
+			// btnQCircle
+			// 
+			this.btnQCircle.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.btnQCircle.Location = new System.Drawing.Point(3, 108);
+			this.btnQCircle.Name = "btnQCircle";
+			this.btnQCircle.Size = new System.Drawing.Size(137, 29);
+			this.btnQCircle.TabIndex = 4;
+			this.btnQCircle.Text = "Quarter Circle";
+			this.btnQCircle.UseVisualStyleBackColor = true;
+			this.btnQCircle.Click += new System.EventHandler(this.btnQCircle_Click);
+			// 
+			// btnFocus
+			// 
+			this.btnFocus.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.btnFocus.Location = new System.Drawing.Point(3, 178);
+			this.btnFocus.Name = "btnFocus";
+			this.btnFocus.Size = new System.Drawing.Size(137, 29);
+			this.btnFocus.TabIndex = 5;
+			this.btnFocus.Text = "Select All";
+			this.btnFocus.UseVisualStyleBackColor = true;
+			this.btnFocus.Click += new System.EventHandler(this.btnFocus_Click);
+			// 
 			// frmMain
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -598,6 +624,8 @@
 		private System.Windows.Forms.Button btnExecuteDebug;
 		private System.Windows.Forms.Button btnDebugNumberRep;
 		private System.Windows.Forms.Button btnSendToRun;
+		private System.Windows.Forms.Button btnQCircle;
+		private System.Windows.Forms.Button btnFocus;
 	}
 }
 
