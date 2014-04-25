@@ -370,5 +370,100 @@ program p
 end
 ");
 		}
+
+		[TestMethod]
+		public void codeGenTest_Program_recursive_calls()
+		{
+			BFTestHelper.debugProgram_Terminate(@"
+program example : display[0, 0]
+	begin
+		push(peek());
+	end
+	
+	void push(int v)
+	begin
+		out ''<in_push>'';
+	end
+
+	int peek()
+	begin
+		out ''<in_peek>'';
+		return 42;
+	end
+end
+");
+		}
+
+		[TestMethod]
+		public void codeGenTest_Program_call_order()
+		{
+			BFTestHelper.debugProgram_Output("ab", @"
+program example : display[0, 0]
+	begin
+		b(a());
+	end
+	
+	void b(int v)
+	begin
+		out ''b'';
+	end
+
+	int a()
+	begin
+		out ''a'';
+		return 0;
+	end
+end
+");
+		}
+
+		[TestMethod]
+		public void codeGenTest_Program_call_order_2()
+		{
+			BFTestHelper.debugProgram_Output("aab", @"
+program example
+	var 
+		int x;
+	begin
+		x = a() * b(a());
+	end
+	
+	int b(int v)
+	begin
+		out ''b'';
+		return 0;
+	end
+
+	int a()
+	begin
+		out ''a'';
+		return 0;
+	end
+end
+");
+		}
+
+		[TestMethod]
+		public void codeGenTest_Program_CompileTimeEvaluation()
+		{
+			ASTObject.CGO.CompileTimeEvaluateExpressions = true;
+
+			BFTestHelper.debugProgram_Output("", @"
+program example
+	var 
+		int x;
+	begin
+		x = 0 * a();
+		x = a() * 0;
+	end
+
+	int a()
+	begin
+		out ''a'';
+		return 0;
+	end
+end
+");
+		}
 	}
 }

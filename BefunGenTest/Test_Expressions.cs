@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using BefunGen.AST;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace BefunGenTest
 {
@@ -64,6 +65,22 @@ namespace BefunGenTest
 		public void codeGenTest_Expr_b4_rand_negative()
 		{
 			BFTestHelper.debugExpression("int", "RAND[-4]");
+		}
+
+		[TestMethod]
+		public void codeGenTest_Expr_CompileTimeEvaluation()
+		{
+			ASTObject.CGO.CompileTimeEvaluateExpressions = true;
+
+			BFTestHelper.debugExpression_Output("0", "int", "RAND[0]");
+			BFTestHelper.debugExpression_Output("0", "int", "4 - 4");	//TODO [BUG] Can't parse 4-4 (grammer failure) --> interprets as "4" "-4"
+			BFTestHelper.debugExpression_Output("0", "int", "4 * 0");
+			BFTestHelper.debugExpression_Output("0", "int", "0 * 4");
+			BFTestHelper.debugExpression_Output("0", "int", "0 * 0");
+			BFTestHelper.debugExpression_Output("0", "int", "0 + 0");
+			BFTestHelper.debugExpression_Output("0", "int", "12 * (11 - 11)");
+			BFTestHelper.debugExpression_Output("0", "int", "666 / 6 - 111");
+			BFTestHelper.debugExpression("bool", "!a");
 		}
 	}
 }

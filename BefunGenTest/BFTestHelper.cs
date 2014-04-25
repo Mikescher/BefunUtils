@@ -27,6 +27,22 @@ namespace BefunGenTest
 			return p;
 		}
 
+		public static Program parseExpression_o_lr(string type, string expr)
+		{
+			string txt = String.Format("program b var {0} a; begin a = {1}; OUT a; end end", type, expr);
+			BefunGen.AST.Program p = GParser.generateAST(txt);
+
+			return p;
+		}
+
+		public static Program parseExpression_o_rl(string type, string expr)
+		{
+			string txt = String.Format("program b var {0} a; begin OUT \"\"; a = {1}; OUT a; end end", type, expr);
+			BefunGen.AST.Program p = GParser.generateAST(txt);
+
+			return p;
+		}
+
 		public static Program parseStatement(string stmt)
 		{
 			string txt = String.Format("program b var  bool a; begin {0} QUIT; end end", stmt);
@@ -66,6 +82,20 @@ namespace BefunGenTest
 
 			TestCP(pc_lr);
 			TestCP(pc_rl);
+		}
+
+		public static void debugExpression_Output(string o, string type, string expr)
+		{
+			expr = expr.Replace(@"''", "\"");
+
+			Program e_lr = parseExpression_o_lr(type, expr);
+			Program e_rl = parseExpression_o_rl(type, expr);
+
+			CodePiece pc_lr = e_lr.generateCode();
+			CodePiece pc_rl = e_rl.generateCode();
+
+			TestCP_Output(pc_lr, o);
+			TestCP_Output(pc_rl, o);
 		}
 
 		public static void debugStatement(string stmt)
