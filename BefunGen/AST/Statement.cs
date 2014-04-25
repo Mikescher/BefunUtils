@@ -30,16 +30,23 @@ namespace BefunGen.AST
 			List<TagLocation> entries = p.findAllActiveCodeTags(typeof(MethodCall_VerticalReEntry_Tag))
 				.OrderByDescending(tp => (tp.Tag.TagParam as ICodeAddressTarget).CodePointAddr)
 				.ToList();
-			List<TagLocation> exits = p.findAllActiveCodeTags(typeof(MethodCall_VerticalExit_Tag));
+			List<TagLocation> exits = p.findAllActiveCodeTags(typeof(MethodCall_VerticalExit_Tag))
+				.OrderByDescending(tp => tp.X)
+				.ToList();
+
+			//########################
 
 			int pos_y_exitline = p.MinY - 1;
+			TagLocation last_exit = null;
 
-			foreach (TagLocation exit in exits) // TODO Why not create only 1 exit line ???
+			foreach (TagLocation exit in exits)
 			{
 				MethodCall_VerticalExit_Tag tag_exit = exit.Tag as MethodCall_VerticalExit_Tag;
 				tag_exit.deactivate();
 
-				p[exit.X, pos_y_exitline] = BCHelper.PC_Right_tagged(new MethodCall_HorizontalExit_Tag(tag_exit.TagParam));
+				BefungeCommand curr_exit_cmd = BCHelper.PC_Right_tagged(new MethodCall_HorizontalExit_Tag(tag_exit.TagParam));
+				p[exit.X, pos_y_exitline] = curr_exit_cmd;
+				TagLocation curr_exit = new TagLocation(exit.X, pos_y_exitline, curr_exit_cmd);
 
 				try
 				{
@@ -50,11 +57,19 @@ namespace BefunGen.AST
 					throw new CommandPathFindingFailureException(ce.Message);
 				}
 
-				pos_y_exitline--;
+				if (last_exit != null)
+				{
+					p.CreateRowWW(pos_y_exitline, curr_exit.X + 1, last_exit.X);
+
+					curr_exit.Tag.deactivate();
+				}
+
+				last_exit = curr_exit;
 			}
 
-			int entrycount = entries.Count;
+			//########################
 
+			int entrycount = entries.Count;
 			int pos_y_entry = pos_y_exitline - entrycount * 3 + 2;
 
 			foreach (TagLocation entry in entries)
