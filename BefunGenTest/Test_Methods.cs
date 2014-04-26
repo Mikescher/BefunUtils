@@ -567,7 +567,7 @@ namespace BefunGenTest
 		}
 
 		[TestMethod]
-		public void codeGenTest_PostIncrement()
+		public void codeGenTest_Method_PostIncrement()
 		{
 			BFTestHelper.debugMethod_Output("5", "a()",
 			@"
@@ -583,7 +583,7 @@ namespace BefunGenTest
 		}
 
 		[TestMethod]
-		public void codeGenTest_PostDecrement()
+		public void codeGenTest_Method_PostDecrement()
 		{
 			BFTestHelper.debugMethod_Output("5", "a()",
 			@"
@@ -599,7 +599,7 @@ namespace BefunGenTest
 		}
 
 		[TestMethod]
-		public void codeGenTest_PreIncrement()
+		public void codeGenTest_Method_PreIncrement()
 		{
 			BFTestHelper.debugMethod_Output("6", "a()",
 			@"
@@ -615,7 +615,7 @@ namespace BefunGenTest
 		}
 
 		[TestMethod]
-		public void codeGenTest_PreDecrement()
+		public void codeGenTest_Method_PreDecrement()
 		{
 			BFTestHelper.debugMethod_Output("4", "a()",
 			@"
@@ -626,6 +626,32 @@ namespace BefunGenTest
 					i = 5;
 
 					OUT --i;
+				end
+			");
+		}
+
+		[TestMethod]
+		public void codeGenTest_Method_Goto()
+		{
+			BFTestHelper.debugMethod_Output("abc", "a()",
+			@"
+				void a()
+				begin
+					goto lbl_S;	
+				lbl0:
+					return;
+				lbl_S:
+					out ''a'';
+					goto lbl1;
+					out ''x'';
+				lbl1:
+					out ''b'';
+					goto lbl2;
+				lbl2:
+					out ''c'';
+					goto lbl0;
+					out ''x'';
+					return;
 				end
 			");
 		}

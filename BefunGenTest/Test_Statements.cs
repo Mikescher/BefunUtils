@@ -48,5 +48,10 @@ namespace BefunGenTest
 			BFTestHelper.debugStatement("WHILE(FALSE) DO END");
 		}
 
+		[TestMethod]
+		public void codeGenTest_Statement_Outf()
+		{
+			BFTestHelper.debugStatement("OUTF ''a'', ''B'', 55;");
+		}
 	}
 }
