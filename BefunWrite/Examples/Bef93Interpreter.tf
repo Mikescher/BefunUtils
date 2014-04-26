@@ -62,9 +62,7 @@ program BefInterpreter : display[60, 30]
 	var
 		char c;
 	
-		int tmp;
-		int tmp2;
-		char tmp3;
+		int tmp, tmp2, tmp3;
 	begin
 		c = display[PC_X, PC_Y];
 

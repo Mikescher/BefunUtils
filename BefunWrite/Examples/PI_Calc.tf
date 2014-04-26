@@ -45,8 +45,7 @@ program PICalc : display[256, 256]
 	
 	void drop()
 	var
-		int x;
-		int y;
+		int x, y;
 		
 		char c;
 	begin

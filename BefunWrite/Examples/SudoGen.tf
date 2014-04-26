@@ -23,8 +23,7 @@ program example : display[17, 17]
 
 	void Init()
 	var
-		int x;
-		int y;
+		int x, y;
 	begin
 		for (y = 0; y < DISPLAY_HEIGHT; y++) do
 			for (x = 0; x < DISPLAY_WIDTH; x++) do
@@ -45,8 +44,7 @@ program example : display[17, 17]
 
 	bool Create()
 	var
-		int x;
-		int y;
+		int x, y;
 
 		int on;
 		int n;
@@ -80,8 +78,7 @@ program example : display[17, 17]
 
 	bool IsValid()
 	var
-		int x;
-		int y;
+		int x, y;
 		int p;
 		int c;
 		int[9] vals;
@@ -155,9 +152,8 @@ program example : display[17, 17]
 	bool isRemovable(int x, int y)
 	var
 		int v;
-		int rx;
-		int ry;
 		int p;
+		int rx, ry;
 		bool[9] vals;
 	begin
 		
@@ -203,11 +199,9 @@ program example : display[17, 17]
 
 	void Obfuscate()
 	var
-		int ox;
-		int oy;
-
-		int x;
-		int y;
+		int ox, oy;
+		
+		int x, y;
 	begin
 		ox = rand[3];
 		oy = rand[3];

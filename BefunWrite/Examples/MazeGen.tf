@@ -29,8 +29,7 @@ program MazeGen : display[131, 51]
 	 
 	void Init()
 	var
-		int x;
-		int y;
+		int x, y;
 	begin
 		for(x = 0; x < DISPLAY_WIDTH; x++) do
 			for(y = 0; y < DISPLAY_HEIGHT; y++) do
@@ -152,12 +151,9 @@ program MazeGen : display[131, 51]
 	 
 	void Hunt()
 	var
-	 int ox;
-	 int oy;
-	 int fx;
-	 int fy;
-	 int x;
-	 int y;
+	 int ox, oy;
+	 int fx, fy;
+	 int x, y;
 	begin
 		ox = rand[6];
 		oy = rand[6];
@@ -209,10 +205,7 @@ program MazeGen : display[131, 51]
 	 
 	bool Solve(int x, int y, int tx, int ty)
 	var 
-		bool top;
-		bool left;
-		bool bot;
-		bool right;
+		bool top, left, bot, right;
 	begin
 			top   = display[x + 0, y - 1] == CHR_FLOOR;
 			left  = display[x - 1, y + 0] == CHR_FLOOR;

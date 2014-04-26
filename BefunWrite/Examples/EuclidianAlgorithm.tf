@@ -5,10 +5,7 @@
 
 program EuclidianAlgo
 	var
-		int a;
-		int b;
-		
-		int eucl;
+		int a, b, eucl;
 	begin
 		out "Please insert numer [a]\r\n";
 		in a;

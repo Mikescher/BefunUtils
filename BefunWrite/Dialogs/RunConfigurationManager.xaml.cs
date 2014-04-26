@@ -6,7 +6,7 @@ namespace BefunWrite.Dialogs
 	/// <summary>
 	/// Interaction logic for RunConfigurationManager.xaml
 	/// </summary>
-	public partial class RunConfigurationManager : Window
+	public partial class RunConfigurationManager : Window //TODO Save load chars (--> will always become 164 (eg BorderValue )) ---> Fix in ExampleProject
 	{
 		private TextFungeProjectWrapper project;
 
