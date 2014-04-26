@@ -2613,7 +2613,7 @@ namespace BefunGen.AST
 
 	public class Statement_Assignment : Statement
 	{
-		public readonly Expression_ValuePointer Target;
+		public Expression_ValuePointer Target;
 		public Expression Expr;
 
 		public Statement_Assignment(SourceCodePosition pos, Expression_ValuePointer t, Expression e)
@@ -2641,6 +2641,7 @@ namespace BefunGen.AST
 
 		public override void inlineConstants()
 		{
+			Target = (Expression_ValuePointer)Target.inlineConstants();
 			Expr = Expr.inlineConstants();
 		}
 

@@ -285,7 +285,7 @@ Do Nothing ... just go on ... stack is fine
 [O] Solve Sudoku Thats inputted on Display (recursive Bruteforce)
 [X] Generate Sudoku on Display
 [O] Quicksort input
-[?] Befunge Interpreter
+[X] Befunge Interpreter
 [O] Generate  Math Question and check answers
-[O] PrimzahlCalcer
+[X] PrimzahlCalcer
 */

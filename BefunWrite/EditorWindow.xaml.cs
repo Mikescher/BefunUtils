@@ -24,7 +24,7 @@ namespace BefunWrite
 	/// <summary>
 	/// Interaction logic for MainWindow.xaml
 	/// </summary>
-	public partial class EditorWindow : Window //TODO DEMO: Goto
+	public partial class EditorWindow : Window
 	{
 		private const int PARSE_WAIT_TIME = 666; // Minimal Time (in ms) without Button Press for Parsing
 
