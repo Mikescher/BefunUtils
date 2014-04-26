@@ -15,8 +15,6 @@ namespace BefunGen.AST
 		//Optimize -> Remove unused global/local variables (not params)
 		//Optimize -> Remove NOP - Switch Cases
 
-		//TODO Shorthand var decl: int a, b, c;
-
 		public string Identifier;
 
 		public readonly Method MainMethod;
@@ -55,6 +53,7 @@ namespace BefunGen.AST
 
 			testConstantsForDefinition();
 			testGlobalVarsForDefinition();
+			testDuplicateIdentifierCondition();
 		}
 
 		public override string getDebugString()
@@ -114,6 +113,49 @@ namespace BefunGen.AST
 			foreach (VarDeclaration v in Variables)
 				if (v.hasCompleteUserDefiniedInitialValue)
 					throw new UndefiniedValueInitConstantException(v.Position, v.Identifier);
+		}
+
+		private void testDuplicateIdentifierCondition()
+		{
+			// Duplicate in Global variables
+			if (Variables.Any(lp1 => Variables.Any(lp2 => lp1.Identifier.ToLower() == lp2.Identifier.ToLower() && lp1 != lp2)))
+			{
+				VarDeclaration err = Variables.Last(lp1 => Variables.Any(lp2 => lp1.Identifier.ToLower() == lp2.Identifier.ToLower()));
+				throw new DuplicateIdentifierException(err.Position, err.Identifier);
+			}
+
+			// Duplicate in Constants
+			if (Constants.Any(lp1 => Constants.Any(lp2 => lp1.Identifier.ToLower() == lp2.Identifier.ToLower() && lp1 != lp2)))
+			{
+				VarDeclaration err = Constants.Last(lp1 => Constants.Any(lp2 => lp1.Identifier.ToLower() == lp2.Identifier.ToLower()));
+				throw new DuplicateIdentifierException(err.Position, err.Identifier);
+			}
+
+			// Name Conflict Global variables <-> Constants
+			if (Constants.Any(lp1 => Variables.Any(lp2 => lp1.Identifier.ToLower() == lp2.Identifier.ToLower() && lp1 != lp2)))
+			{
+				VarDeclaration err = Constants.Last(lp1 => Variables.Any(lp2 => lp1.Identifier.ToLower() == lp2.Identifier.ToLower()));
+				throw new DuplicateIdentifierException(err.Position, err.Identifier);
+			}
+
+			// Name Methods
+			if (MethodList.Any(lp1 => MethodList.Any(lp2 => lp1.Identifier.ToLower() == lp2.Identifier.ToLower() && lp1 != lp2)))
+			{
+				Method err = MethodList.Last(lp1 => MethodList.Any(lp2 => lp1.Identifier.ToLower() == lp2.Identifier.ToLower()));
+				throw new DuplicateIdentifierException(err.Position, err.Identifier);
+			}
+
+			// Name Conflict Local variables <-> (Constants & Global variables)
+			foreach (Method m in MethodList)
+			{
+				foreach (VarDeclaration t in m.Variables)
+				{
+					if (Constants.Any(pl => pl.Identifier.ToLower() == t.Identifier.ToLower()) || Variables.Any(pl => pl.Identifier.ToLower() == t.Identifier.ToLower()))
+					{
+						throw new DuplicateIdentifierException(t.Position, t.Identifier);
+					}
+				}
+			}
 		}
 
 		#region Prepare

@@ -401,6 +401,12 @@ namespace BefunGen.AST
 		{
 			this.Variables = v;
 			this.Body = b;
+
+			if (Variables.Any(lp1 => Variables.Any(lp2 => lp1.Identifier.ToLower() == lp2.Identifier.ToLower() && lp1 != lp2)))
+			{
+				VarDeclaration err = Variables.Last(lp1 => Variables.Any(lp2 => lp1.Identifier.ToLower() == lp2.Identifier.ToLower()));
+				throw new DuplicateIdentifierException(err.Position, err.Identifier);
+			}
 		}
 
 		public override string getDebugString()
