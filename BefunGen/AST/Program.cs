@@ -11,12 +11,11 @@ namespace BefunGen.AST
 	public class Program : ASTObject
 	{
 		//TODO Possible Optimizations [LOW PRIO]
-		//Optimize -> StatementList in StatementList --> Include
 		//Optimize -> ArrayValuePointer/DisplayArrayPointer when Indizies Constant -> Direct Link
 		//Optimize -> Remove unused global/local variables (not params)
 		//Optimize -> Remove NOP - Switch Cases
-		//Optimize -> Empty StatementLists => NOP
-		//Optimize -> Remove NOP's in the middle of StatementLists
+
+		//TODO Shorthand var decl: int a, b, c;
 
 		public string Identifier;
 

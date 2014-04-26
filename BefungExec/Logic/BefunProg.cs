@@ -395,7 +395,8 @@ namespace BefungExec.Logic
 				}
 			}
 
-			StepCount++;
+			if (!delta.isZero()) //Don't count when finished
+				StepCount++;
 		}
 
 		public void move()
