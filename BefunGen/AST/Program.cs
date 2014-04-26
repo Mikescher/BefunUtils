@@ -87,14 +87,20 @@ namespace BefunGen.AST
 			Constants.Insert(0, new VarDeclaration_Value(
 				new SourceCodePosition(),
 				new BType_Int(new SourceCodePosition()),
-				"DISPLAY_WIDTH",
-				new Literal_Int(new SourceCodePosition(), DisplayWidth)));
+				"DISPLAY_SIZE",
+				new Literal_Int(new SourceCodePosition(), DisplayWidth * DisplayHeight)));
 
 			Constants.Insert(0, new VarDeclaration_Value(
 				new SourceCodePosition(),
 				new BType_Int(new SourceCodePosition()),
 				"DISPLAY_HEIGHT",
 				new Literal_Int(new SourceCodePosition(), DisplayHeight)));
+
+			Constants.Insert(0, new VarDeclaration_Value(
+				new SourceCodePosition(),
+				new BType_Int(new SourceCodePosition()),
+				"DISPLAY_WIDTH",
+				new Literal_Int(new SourceCodePosition(), DisplayWidth)));
 		}
 
 		private void testConstantsForDefinition()
