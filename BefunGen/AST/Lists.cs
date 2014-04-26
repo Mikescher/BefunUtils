@@ -1,5 +1,6 @@
 ﻿using BefunGen.AST.CodeGen;
 using BefunGen.AST.Exceptions;
+using System;
 using System.Collections.Generic;
 
 namespace BefunGen.AST
@@ -84,6 +85,12 @@ namespace BefunGen.AST
 		public List_VarDeclarations Append(VarDeclaration d)
 		{
 			List.Add(d);
+			return this;
+		}
+
+		public List_VarDeclarations Append(List_VarDeclarations d)
+		{
+			List.AddRange(d.List);
 			return this;
 		}
 	}
@@ -217,6 +224,28 @@ namespace BefunGen.AST
 		public List_OutfElements Prepend(Literal_CharArr v)
 		{
 			List.Insert(0, new Outf_Union(v));
+			return this;
+		}
+	}
+
+	public class List_Identifier : ASTList
+	{
+		public List<String> List = new List<String>();
+
+		public List_Identifier(SourceCodePosition pos)
+			: base(pos)
+		{
+		}
+
+		public List_Identifier(SourceCodePosition pos, String e)
+			: base(pos)
+		{
+			List.Add(e);
+		}
+
+		public List_Identifier Append(String e)
+		{
+			List.Add(e);
 			return this;
 		}
 	}

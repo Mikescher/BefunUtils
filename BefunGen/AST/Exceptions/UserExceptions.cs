@@ -159,4 +159,10 @@ namespace BefunGen.AST.Exceptions
 		public ConstantArrayException(SourceCodePosition pos)
 			: base("An Array cannot be declared as constant ", pos) { }
 	}
+
+	public class DuplicateIdentifierException : BefunGenUserException
+	{
+		public DuplicateIdentifierException(SourceCodePosition pos, string ident)
+			: base(String.Format("The Identifier {0} is already in use", ident), pos) { }
+	}
 }

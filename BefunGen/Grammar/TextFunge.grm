@@ -84,9 +84,11 @@ HexLiteral             = 0x{Hex Digit}+
 <VarList>              ::= <VarList> <VarDecl> ';'
                        |   <VarDecl> ';'
                    
-<VarDecl>              ::= <Type> Identifier
-
+<VarDecl>              ::= <Type> <IdentifierList>
                        |   <Type> Identifier ':=' <Literal>
+                       
+<IdentifierList>       ::= <IdentifierList> ',' Identifier
+                       |   Identifier
 
 !############
 ! STATEMENT !

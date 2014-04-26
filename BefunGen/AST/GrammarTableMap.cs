@@ -124,22 +124,33 @@ namespace BefunGen.AST
 
 				case ProductionIndex.Varlist_Semi:
 					// <VarList> ::= <VarList> <VarDecl> ';'
-					result = ((List_VarDeclarations)r.get_Data(0)).Append((VarDeclaration)r.get_Data(1));
+					result = ((List_VarDeclarations)r.get_Data(0)).Append((List_VarDeclarations)r.get_Data(1));
 					break;
 
 				case ProductionIndex.Varlist_Semi2:
 					// <VarList> ::= <VarDecl> ';'
-					result = new List_VarDeclarations(p, (VarDeclaration)r.get_Data(0));
+					result = (List_VarDeclarations)r.get_Data(0);
 					break;
 
-				case ProductionIndex.Vardecl_Identifier:
-					// <VarDecl> ::= <Type> Identifier
-					result = CreateASTDeclarationFromReduction(r, false, p);
+				case ProductionIndex.Vardecl:
+					// <VarDecl> ::= <Type> <IdentifierList>
+					result = new List_VarDeclarations(p);
+					((List_Identifier)r.get_Data(1)).List.ForEach(lp => ((List_VarDeclarations)result).Append(CreateASTDeclarationFromValues((BType)r.get_Data(0), lp, null, p)));
 					break;
 
 				case ProductionIndex.Vardecl_Identifier_Coloneq:
 					// <VarDecl> ::= <Type> Identifier ':=' <Literal>
-					result = CreateASTDeclarationFromReduction(r, true, p);
+					result = new List_VarDeclarations(p, CreateASTDeclarationFromReduction(r, true, p));
+					break;
+
+				case ProductionIndex.Identifierlist_Comma_Identifier:
+					// <IdentifierList> ::= <IdentifierList> ',' Identifier
+					result = ((List_Identifier)r.get_Data(0)).Append(GetStrData(2, r));
+					break;
+
+				case ProductionIndex.Identifierlist_Identifier:
+					// <IdentifierList> ::= Identifier
+					result = new List_Identifier(p, GetStrData(0, r));
 					break;
 
 				case ProductionIndex.Optionalsimstatement:
@@ -924,21 +935,26 @@ namespace BefunGen.AST
 
 		private static VarDeclaration CreateASTDeclarationFromReduction(GOLD.Reduction r, bool hasInit, SourceCodePosition p)
 		{
-			if (hasInit)
+			return CreateASTDeclarationFromValues((BType)r.get_Data(0), GetStrData(1, r), hasInit ? (Literal)r.get_Data(3) : null, p);
+		}
+
+		private static VarDeclaration CreateASTDeclarationFromValues(BType type, string ident, Literal init_arr, SourceCodePosition p)
+		{
+			if (init_arr != null)
 			{
-				if (r.get_Data(0) is BType_Array)
-					return new VarDeclaration_Array(p, (BType_Array)r.get_Data(0), GetStrData(1, r), (Literal_Array)r.get_Data(3));
-				else if (r.get_Data(0) is BType_Value)
-					return new VarDeclaration_Value(p, (BType_Value)r.get_Data(0), GetStrData(1, r), (Literal_Value)r.get_Data(3));
+				if (type is BType_Array)
+					return new VarDeclaration_Array(p, (BType_Array)type, ident, (Literal_Array)init_arr);
+				else if (type is BType_Value)
+					return new VarDeclaration_Value(p, (BType_Value)type, ident, (Literal_Value)init_arr);
 				else
 					return null;
 			}
 			else
 			{
-				if (r.get_Data(0) is BType_Array)
-					return new VarDeclaration_Array(p, (BType_Array)r.get_Data(0), GetStrData(1, r));
-				else if (r.get_Data(0) is BType_Value)
-					return new VarDeclaration_Value(p, (BType_Value)r.get_Data(0), GetStrData(1, r));
+				if (type is BType_Array)
+					return new VarDeclaration_Array(p, (BType_Array)type, ident);
+				else if (type is BType_Value)
+					return new VarDeclaration_Value(p, (BType_Value)type, ident);
 				else
 					return null;
 			}
