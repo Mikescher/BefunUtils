@@ -87,14 +87,8 @@ namespace BefunGen
 			else
 				txtLog.AppendText(string.Format("Syntaxfile not found: {0} \r\n", txtSynFile.Text));
 
-			string path_tf = Path.Combine(Application.StartupPath, "example_00.tf");
-			if (File.Exists(path_tf))
-			{
-				txtSource.Document.Text = File.ReadAllText(path_tf);
-				currentSC = txtSource.Document.Text;
-			}
-			else
-				txtLog.AppendText(string.Format("Example not found: {0} \r\n", path_tf));
+			txtSource.Document.Text = Properties.Resources.example;
+			currentSC = txtSource.Document.Text;
 
 			//##########
 

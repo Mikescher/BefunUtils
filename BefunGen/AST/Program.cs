@@ -120,6 +120,7 @@ namespace BefunGen.AST
 			VarDeclaration.resetCounter();
 			Statement.resetCounter();
 
+			integrateStatementLists();	// Flattens StatementList Hierachie && Cleans it up (Removes NOP's, empty StmtLists)
 			forceMethodReturn();		// Every Method must always end with a RETURN && No Return in Main {{CODE-MANIPULATION}}
 			addressMethods();			// Methods get their Address
 			addressCodePoints();		// CodeAdressesTargets get their Address
@@ -129,6 +130,12 @@ namespace BefunGen.AST
 			linkMethods();				// Methodcalls get their ID   &&   Labels + MethodCalls get their CodePointAddress
 			removeUnreferencedMethods();
 			linkResultTypes();			// Statements get their Result-Type (and implicit casting is added)
+		}
+
+		private void integrateStatementLists()
+		{
+			foreach (Method m in MethodList)
+				m.integrateStatementLists();
 		}
 
 		private void addressMethods()

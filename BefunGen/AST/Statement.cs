@@ -94,6 +94,7 @@ namespace BefunGen.AST
 			return p;
 		}
 
+		public abstract void integrateStatementLists();
 		public abstract void linkVariables(Method owner);
 		public abstract void inlineConstants();
 		public abstract void addressCodePoints();
@@ -136,6 +137,37 @@ namespace BefunGen.AST
 		public override string getDebugString()
 		{
 			return string.Format("#StatementList\n[\n{0}\n]", indent(getDebugStringForList(List)));
+		}
+
+		public override void integrateStatementLists()
+		{
+			List<Statement> List_new = new List<Statement>();
+
+			for (int i = 0; i < List.Count; i++)
+			{
+				List[i].integrateStatementLists();
+
+				if (List[i] is Statement_NOP)
+				{
+					// Do nothing
+				}
+				else if (List[i] is Statement_StatementList)
+				{
+					if ((List[i] as Statement_StatementList).List.Count > 0)
+					{
+						foreach (Statement stmt in (List[i] as Statement_StatementList).List)
+						{
+							List_new.Add(stmt);
+						}
+					}
+				}
+				else
+				{
+					List_new.Add(List[i]);
+				}
+			}
+
+			List = List_new;
 		}
 
 		public override void linkVariables(Method owner)
@@ -798,6 +830,11 @@ namespace BefunGen.AST
 			return string.Format("#MethodCall {{{0}}} ::{1}:: --> #Parameter: ({2})", Target.MethodAddr, CodePointAddr, getDebugCommaStringForList(CallParameter));
 		}
 
+		public override void integrateStatementLists()
+		{
+			//NOP
+		}
+
 		public override void linkVariables(Method owner)
 		{
 			this.owner = owner;
@@ -1220,6 +1257,11 @@ namespace BefunGen.AST
 			return string.Format("#LABEL: {{{0}}}", CodePointAddr);
 		}
 
+		public override void integrateStatementLists()
+		{
+			//NOP
+		}
+
 		public override void addressCodePoints()
 		{
 			_CodePointAddr = CODEPOINT_ADDRESS_COUNTER;
@@ -1292,6 +1334,11 @@ namespace BefunGen.AST
 		public override string getDebugString()
 		{
 			return string.Format("#GOTO: {{{0}}}", Target.CodePointAddr);
+		}
+
+		public override void integrateStatementLists()
+		{
+			//NOP
 		}
 
 		public override void addressCodePoints()
@@ -1390,6 +1437,11 @@ namespace BefunGen.AST
 		public override string getDebugString()
 		{
 			return string.Format("#RETURN: {0}", Value.getDebugString());
+		}
+
+		public override void integrateStatementLists()
+		{
+			//NOP
 		}
 
 		public override void linkVariables(Method owner)
@@ -1593,6 +1645,11 @@ namespace BefunGen.AST
 		public override string getDebugString()
 		{
 			return string.Format("#OUT {0}", Value.getDebugString());
+		}
+
+		public override void integrateStatementLists()
+		{
+			//NOP
 		}
 
 		public override void linkVariables(Method owner)
@@ -1880,6 +1937,11 @@ namespace BefunGen.AST
 			return string.Format("#OUT {0}", Value.getDebugString());
 		}
 
+		public override void integrateStatementLists()
+		{
+			//NOP
+		}
+
 		public override void linkVariables(Method owner)
 		{
 			//NOP
@@ -1993,6 +2055,11 @@ namespace BefunGen.AST
 		public override string getDebugString()
 		{
 			return string.Format("#IN {0}", ValueTarget.getDebugString());
+		}
+
+		public override void integrateStatementLists()
+		{
+			//NOP
 		}
 
 		public override void linkVariables(Method owner)
@@ -2206,6 +2273,11 @@ namespace BefunGen.AST
 			return "#QUIT";
 		}
 
+		public override void integrateStatementLists()
+		{
+			//NOP
+		}
+
 		public override void linkVariables(Method owner)
 		{
 			//NOP
@@ -2271,6 +2343,11 @@ namespace BefunGen.AST
 		public override string getDebugString()
 		{
 			return "#NOP";
+		}
+
+		public override void integrateStatementLists()
+		{
+			//NOP
 		}
 
 		public override void linkVariables(Method owner)
@@ -2341,6 +2418,11 @@ namespace BefunGen.AST
 		public override string getDebugString()
 		{
 			return string.Format("#INC {0}", Target.getDebugString());
+		}
+
+		public override void integrateStatementLists()
+		{
+			//NOP
 		}
 
 		public override void linkVariables(Method owner)
@@ -2441,6 +2523,11 @@ namespace BefunGen.AST
 			return string.Format("#DEC {0}", Target.getDebugString());
 		}
 
+		public override void integrateStatementLists()
+		{
+			//NOP
+		}
+
 		public override void linkVariables(Method owner)
 		{
 			Target.linkVariables(owner);
@@ -2539,6 +2626,11 @@ namespace BefunGen.AST
 		public override string getDebugString()
 		{
 			return string.Format("#ASSIGN {0} = ({1})", Target.getDebugString(), Expr.getDebugString());
+		}
+
+		public override void integrateStatementLists()
+		{
+			//NOP
 		}
 
 		public override void linkVariables(Method owner)
@@ -2698,6 +2790,12 @@ namespace BefunGen.AST
 		public override string getDebugString()
 		{
 			return string.Format("#IF ({0})\n{1}\n#IFELSE\n{2}", Condition.getDebugString(), indent(Body.getDebugString()), Else == null ? "  NULL" : indent(Else.getDebugString()));
+		}
+
+		public override void integrateStatementLists()
+		{
+			Body.integrateStatementLists();
+			Else.integrateStatementLists();
 		}
 
 		public override void linkVariables(Method owner)
@@ -3162,6 +3260,11 @@ namespace BefunGen.AST
 			return string.Format("#WHILE ({0})\n{1}", Condition.getDebugString(), indent(Body.getDebugString()));
 		}
 
+		public override void integrateStatementLists()
+		{
+			Body.integrateStatementLists();
+		}
+
 		public override void linkVariables(Method owner)
 		{
 			Condition.linkVariables(owner);
@@ -3340,6 +3443,11 @@ namespace BefunGen.AST
 		public override string getDebugString()
 		{
 			return string.Format("#REPEAT-UNTIL ({0})\n{1}", Condition.getDebugString(), indent(Body.getDebugString()));
+		}
+
+		public override void integrateStatementLists()
+		{
+			Body.integrateStatementLists();
 		}
 
 		public override void linkVariables(Method owner)
@@ -3566,6 +3674,12 @@ namespace BefunGen.AST
 						)
 					)
 				);
+		}
+
+		public override void integrateStatementLists()
+		{
+			Cases.ForEach(p => p.Body.integrateStatementLists());
+			DefaultCase.integrateStatementLists();
 		}
 
 		public override void linkVariables(Method owner)
@@ -3990,7 +4104,6 @@ namespace BefunGen.AST
 			return p;
 		}
 	}
-
 
 	#endregion Constructs
 }

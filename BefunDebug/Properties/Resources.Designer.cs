@@ -61,6 +61,25 @@ namespace BefunGen.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to /*
+        /// * Hello World
+        /// * by Mike Schwörer 2014
+        ///*/
+        ///
+        ///program example : display[0, 0]
+        ///	begin
+        ///		out &quot;Hello World\r\n&quot;;
+        ///		quit;
+        ///	end
+        ///end.
+        /// </summary>
+        internal static string example {
+            get {
+                return ResourceManager.GetString("example", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
         internal static byte[] TextFunge {

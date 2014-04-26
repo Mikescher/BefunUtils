@@ -68,6 +68,11 @@ namespace BefunGen.AST
 			MethodAddr = METHODADDRESS_COUNTER;
 		}
 
+		public void integrateStatementLists()
+		{
+			Body.integrateStatementLists();
+		}
+
 		public void linkVariables()
 		{
 			Body.linkVariables(this);
