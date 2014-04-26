@@ -113,6 +113,7 @@ HexLiteral             = 0x{Hex Digit}+
                        |   <Stmt_Assignment>
                        |   <Stmt_Call>
                        |   <Stmt_ModAssignment>
+                       |   <Stmt_Outf>
 
 <StatementList>        ::= <StatementList> <Statement>
                        |
@@ -144,6 +145,13 @@ HexLiteral             = 0x{Hex Digit}+
 <Stmt_Call>            ::= Identifier '(' <ExpressionList> ')'
                        |   Identifier '(' ')'
 
+<Stmt_Outf>            ::= 'outf' <OutfList>
+
+<OutfList>             ::= <Expression>
+                       |   <Literal_String>
+                       |   <OutfList> ',' <Expression>
+                       |   <OutfList> ',' <Literal_String>
+                        
 !#################
 !  CONTROL FLOW  !
 !#################

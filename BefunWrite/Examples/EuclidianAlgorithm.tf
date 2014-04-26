@@ -1,5 +1,5 @@
 /*
- * Hello World
+ * Euclidian Algorithm Example
  * by Mike Schwörer 2014
 */
 
@@ -17,7 +17,9 @@ program EuclidianAlgo
 		
 		eucl = euclid(a, b);
 		
-		outf "euclid(" + a + "," + b + ") = " + euclid; 
+		outf "euclid(", a, ",", b, ") = ", eucl, "\r\n";
+
+		outf a, "/", b, " = ", (a/eucl), "/", (b/eucl), "\r\n";
 		
 		quit;
 	end

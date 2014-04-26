@@ -39,17 +39,8 @@ program PICalc : display[256, 256]
 	
 	void output()
 	begin
-		out "PI = ";
-		
-		out 4 * hit;
-		out "/";
-		out hit + miss;
-		
-		out " = ";
-		
-		out floatDiv(4 * hit, miss + hit); // PI := (4 * hit)/(total)
-		
-		out "\r\n";
+		// PI := (4 * hit)/(total)
+		outf "PI = ", (4*hit), "/", (hit+miss), " = ", floatDiv(4 * hit, miss + hit), "\r\n";
 	end
 	
 	void drop()

@@ -24,12 +24,12 @@ namespace BefunGen.AST
 
 				case ProductionIndex.Header_Program_Identifier:
 					// <Header> ::= program Identifier
-					result = new Program_Header(p, getStrData(1, r));
+					result = new Program_Header(p, GetStrData(1, r));
 					break;
 
 				case ProductionIndex.Header_Program_Identifier_Colon_Display_Lbracket_Comma_Rbracket:
 					//  <Header> ::= program Identifier ':' display '[' <Literal_Int> ',' <Literal_Int> ']'
-					result = new Program_Header(p, getStrData(1, r), ((Literal_Int)r.get_Data(5)).Value, ((Literal_Int)r.get_Data(7)).Value);
+					result = new Program_Header(p, GetStrData(1, r), ((Literal_Int)r.get_Data(5)).Value, ((Literal_Int)r.get_Data(7)).Value);
 					break;
 
 				case ProductionIndex.Constants_Const:
@@ -84,7 +84,7 @@ namespace BefunGen.AST
 
 				case ProductionIndex.Methodheader_Identifier_Lparen_Rparen:
 					// <MethodHeader> ::= <Type> Identifier '(' <ParamDecl> ')'
-					result = new Method_Header(p, (BType)r.get_Data(0), getStrData(1, r), ((List_VarDeclarations)r.get_Data(3)).List);
+					result = new Method_Header(p, (BType)r.get_Data(0), GetStrData(1, r), ((List_VarDeclarations)r.get_Data(3)).List);
 					break;
 
 				case ProductionIndex.Vardeclbody_Var:
@@ -119,7 +119,7 @@ namespace BefunGen.AST
 
 				case ProductionIndex.Param_Identifier:
 					// <Param> ::= <Type> Identifier
-					result = createASTDeclarationFromReduction(r, false, p);
+					result = CreateASTDeclarationFromReduction(r, false, p);
 					break;
 
 				case ProductionIndex.Varlist_Semi:
@@ -134,12 +134,12 @@ namespace BefunGen.AST
 
 				case ProductionIndex.Vardecl_Identifier:
 					// <VarDecl> ::= <Type> Identifier
-					result = createASTDeclarationFromReduction(r, false, p);
+					result = CreateASTDeclarationFromReduction(r, false, p);
 					break;
 
 				case ProductionIndex.Vardecl_Identifier_Coloneq:
 					// <VarDecl> ::= <Type> Identifier ':=' <Literal>
-					result = createASTDeclarationFromReduction(r, true, p);
+					result = CreateASTDeclarationFromReduction(r, true, p);
 					break;
 
 				case ProductionIndex.Optionalsimstatement:
@@ -159,7 +159,7 @@ namespace BefunGen.AST
 
 				case ProductionIndex.Statement_Begin_End:
 					// <Statement> ::= begin <StatementList> end
-					result = getStmtListAsStatement(p, r, 1);
+					result = GetStmtListAsStatement(p, r, 1);
 					break;
 
 				case ProductionIndex.Statement:
@@ -233,7 +233,12 @@ namespace BefunGen.AST
 					break;
 
 				case ProductionIndex.Simplestatement8:
-					// // <SimpleStatement> ::= <Stmt_ModAssignment>
+					// <SimpleStatement> ::= <Stmt_ModAssignment>
+					result = (Statement)r.get_Data(0);
+					break;
+
+				case ProductionIndex.Simplestatement9:
+					// <SimpleStatement> ::= <Stmt_Outf>
 					result = (Statement)r.get_Data(0);
 					break;
 
@@ -344,27 +349,52 @@ namespace BefunGen.AST
 
 				case ProductionIndex.Stmt_call_Identifier_Lparen_Rparen:
 					// <Stmt_Call> ::= Identifier '(' <ExpressionList> ')'
-					result = new Statement_MethodCall(p, getStrData(r), ((List_Expressions)r.get_Data(2)).List);
+					result = new Statement_MethodCall(p, GetStrData(r), ((List_Expressions)r.get_Data(2)).List);
 					break;
 
 				case ProductionIndex.Stmt_call_Identifier_Lparen_Rparen2:
 					// <Stmt_Call> ::= Identifier '(' ')'
-					result = new Statement_MethodCall(p, getStrData(r));
+					result = new Statement_MethodCall(p, GetStrData(r));
+					break;
+
+				case ProductionIndex.Stmt_outf_Outf:
+					// <Stmt_Outf> ::= outf <OutfList>
+					result = OutfListToStmtList(p, (List_OutfElements)r.get_Data(1));
+					break;
+
+				case ProductionIndex.Outflist:
+					// <OutfList> ::= <Expression>
+					result = new List_OutfElements(p, (Expression)r.get_Data(0));
+					break;
+
+				case ProductionIndex.Outflist2:
+					// <OutfList> ::= <Literal_String>
+					result = new List_OutfElements(p, (Literal_CharArr)r.get_Data(0));
+					break;
+
+				case ProductionIndex.Outflist_Comma:
+					// <OutfList> ::= <OutfList> ',' <Expression>
+					result = ((List_OutfElements)r.get_Data(0)).Append((Expression)r.get_Data(2));
+					break;
+
+				case ProductionIndex.Outflist_Comma2:
+					// <OutfList> ::= <OutfList> ',' <Literal_String>
+					result = ((List_OutfElements)r.get_Data(0)).Append((Literal_CharArr)r.get_Data(2));
 					break;
 
 				case ProductionIndex.Stmt_if_If_Then_End:
 					// <Stmt_If> ::= if <Expression> then <StatementList> <Stmt_ElseIfList> end
-					result = new Statement_If(p, (Expression)r.get_Data(1), getStmtListAsStatement(p, r, 3), (Statement)r.get_Data(4));
+					result = new Statement_If(p, (Expression)r.get_Data(1), GetStmtListAsStatement(p, r, 3), (Statement)r.get_Data(4));
 					break;
 
 				case ProductionIndex.Stmt_elseiflist_Elsif_Then:
 					// <Stmt_ElseIfList> ::= elsif <Expression> then <StatementList> <Stmt_ElseIfList>
-					result = new Statement_If(p, (Expression)r.get_Data(1), getStmtListAsStatement(p, r, 3), (Statement)r.get_Data(4));
+					result = new Statement_If(p, (Expression)r.get_Data(1), GetStmtListAsStatement(p, r, 3), (Statement)r.get_Data(4));
 					break;
 
 				case ProductionIndex.Stmt_elseiflist_Else:
 					// <Stmt_ElseIfList> ::= else <StatementList>
-					result = getStmtListAsStatement(p, r, 1);
+					result = GetStmtListAsStatement(p, r, 1);
 					break;
 
 				case ProductionIndex.Stmt_elseiflist:
@@ -374,17 +404,17 @@ namespace BefunGen.AST
 
 				case ProductionIndex.Stmt_while_While_Do_End:
 					// <Stmt_While> ::= while <Expression> do <StatementList> end
-					result = new Statement_While(p, (Expression)r.get_Data(1), getStmtListAsStatement(p, r, 3));
+					result = new Statement_While(p, (Expression)r.get_Data(1), GetStmtListAsStatement(p, r, 3));
 					break;
 
 				case ProductionIndex.Stmt_for_For_Lparen_Semi_Semi_Rparen_Do_End:
 					// <Stmt_For> ::= for '(' <OptionalSimStatement> ';' <OptionalExpression> ';' <OptionalSimStatement> ')' do <StatementList> end
-					result = Statement_While.GenerateForLoop(p, (Statement)r.get_Data(2), (Expression)r.get_Data(4), (Statement)r.get_Data(6), getStmtListAsStatement(p, r, 9));
+					result = Statement_While.GenerateForLoop(p, (Statement)r.get_Data(2), (Expression)r.get_Data(4), (Statement)r.get_Data(6), GetStmtListAsStatement(p, r, 9));
 					break;
 
 				case ProductionIndex.Stmt_repeat_Repeat_Until_Lparen_Rparen:
 					// <Stmt_Repeat> ::= repeat <StatementList> until '(' <Expression> ')'
-					result = new Statement_RepeatUntil(p, (Expression)r.get_Data(4), getStmtListAsStatement(p, r, 1));
+					result = new Statement_RepeatUntil(p, (Expression)r.get_Data(4), GetStmtListAsStatement(p, r, 1));
 					break;
 
 				case ProductionIndex.Stmt_switch_Switch_Begin_End:
@@ -394,12 +424,12 @@ namespace BefunGen.AST
 
 				case ProductionIndex.Stmt_switch_caselist_Case_Colon_End:
 					// <Stmt_Switch_CaseList> ::= case <Value_Literal> ':' <StatementList> end <Stmt_Switch_CaseList>
-					result = ((List_Switchs)r.get_Data(5)).Prepend((Literal_Value)r.get_Data(1), getStmtListAsStatement(p, r, 3));
+					result = ((List_Switchs)r.get_Data(5)).Prepend((Literal_Value)r.get_Data(1), GetStmtListAsStatement(p, r, 3));
 					break;
 
 				case ProductionIndex.Stmt_switch_caselist_Default_Colon_End:
 					// <Stmt_Switch_CaseList> ::= default ':' <StatementList> end
-					result = new List_Switchs(p, null, getStmtListAsStatement(p, r, 2));
+					result = new List_Switchs(p, null, GetStmtListAsStatement(p, r, 2));
 					break;
 
 				case ProductionIndex.Stmt_switch_caselist:
@@ -409,12 +439,12 @@ namespace BefunGen.AST
 
 				case ProductionIndex.Stmt_goto_Goto_Identifier:
 					// <Stmt_Goto> ::= goto Identifier
-					result = new Statement_Goto(p, getStrData(1, r));
+					result = new Statement_Goto(p, GetStrData(1, r));
 					break;
 
 				case ProductionIndex.Stmt_label_Identifier_Colon:
 					// <Stmt_Label> ::= Identifier ':'
-					result = new Statement_Label(p, getStrData(r));
+					result = new Statement_Label(p, GetStrData(r));
 					break;
 
 				case ProductionIndex.Type:
@@ -574,17 +604,17 @@ namespace BefunGen.AST
 
 				case ProductionIndex.Literal_int_Decliteral:
 					// <Literal_Int> ::= DecLiteral
-					result = new Literal_Int(p, Convert.ToInt32(getStrData(r), 10));
+					result = new Literal_Int(p, Convert.ToInt32(GetStrData(r), 10));
 					break;
 
 				case ProductionIndex.Literal_int_Hexliteral:
 					// <Literal_Int> ::= HexLiteral
-					result = new Literal_Int(p, Convert.ToInt32(getStrData(r), 16));
+					result = new Literal_Int(p, Convert.ToInt32(GetStrData(r), 16));
 					break;
 
 				case ProductionIndex.Literal_char_Charliteral:
 					// <Literal_Char> ::= CharLiteral
-					result = new Literal_Char(p, unescapeChr(p, getStrTrimData(r)));
+					result = new Literal_Char(p, UnescapeChr(p, GetStrTrimData(r)));
 					break;
 
 				case ProductionIndex.Literal_bool_True:
@@ -599,7 +629,7 @@ namespace BefunGen.AST
 
 				case ProductionIndex.Literal_digit_Digitliteral:
 					// <Literal_Digit> ::= DigitLiteral
-					result = new Literal_Digit(p, Convert.ToByte(getStrData(r).Substring(1), 10));
+					result = new Literal_Digit(p, Convert.ToByte(GetStrData(r).Substring(1), 10));
 					break;
 
 				case ProductionIndex.Literal_intarr_Lbrace_Rbrace:
@@ -614,7 +644,7 @@ namespace BefunGen.AST
 
 				case ProductionIndex.Literal_string_Stringliteral:
 					// <Literal_String> ::= StringLiteral
-					result = new Literal_CharArr(p, unescapeStr(p, getStrTrimData(r)));
+					result = new Literal_CharArr(p, UnescapeStr(p, GetStrTrimData(r)));
 					break;
 
 				case ProductionIndex.Literal_digitarr_Lbrace_Rbrace:
@@ -814,12 +844,12 @@ namespace BefunGen.AST
 
 				case ProductionIndex.Value_Identifier_Lparen_Rparen:
 					// <Value> ::= Identifier '(' <ExpressionList> ')'
-					result = new Expression_FunctionCall(p, new Statement_MethodCall(p, getStrData(r), ((List_Expressions)r.get_Data(2)).List));
+					result = new Expression_FunctionCall(p, new Statement_MethodCall(p, GetStrData(r), ((List_Expressions)r.get_Data(2)).List));
 					break;
 
 				case ProductionIndex.Value_Identifier_Lparen_Rparen2:
 					// <Value> ::= Identifier '(' ')'
-					result = new Expression_FunctionCall(p, new Statement_MethodCall(p, getStrData(r)));
+					result = new Expression_FunctionCall(p, new Statement_MethodCall(p, GetStrData(r)));
 					break;
 
 				case ProductionIndex.Value_Lparen_Rparen:
@@ -869,12 +899,12 @@ namespace BefunGen.AST
 
 				case ProductionIndex.Valuepointer_Identifier:
 					// <ValuePointer> ::= Identifier
-					result = new Expression_DirectValuePointer(p, getStrData(r));
+					result = new Expression_DirectValuePointer(p, GetStrData(r));
 					break;
 
 				case ProductionIndex.Valuepointer_Identifier_Lbracket_Rbracket:
 					// <ValuePointer> ::= Identifier '[' <Expression> ']'
-					result = new Expression_ArrayValuePointer(p, getStrData(r), (Expression)r.get_Data(2));
+					result = new Expression_ArrayValuePointer(p, GetStrData(r), (Expression)r.get_Data(2));
 					break;
 
 				case ProductionIndex.Valuepointer_Display_Lbracket_Comma_Rbracket:
@@ -892,34 +922,34 @@ namespace BefunGen.AST
 			return result;
 		}
 
-		private static VarDeclaration createASTDeclarationFromReduction(GOLD.Reduction r, bool hasInit, SourceCodePosition p)
+		private static VarDeclaration CreateASTDeclarationFromReduction(GOLD.Reduction r, bool hasInit, SourceCodePosition p)
 		{
 			if (hasInit)
 			{
 				if (r.get_Data(0) is BType_Array)
-					return new VarDeclaration_Array(p, (BType_Array)r.get_Data(0), getStrData(1, r), (Literal_Array)r.get_Data(3));
+					return new VarDeclaration_Array(p, (BType_Array)r.get_Data(0), GetStrData(1, r), (Literal_Array)r.get_Data(3));
 				else if (r.get_Data(0) is BType_Value)
-					return new VarDeclaration_Value(p, (BType_Value)r.get_Data(0), getStrData(1, r), (Literal_Value)r.get_Data(3));
+					return new VarDeclaration_Value(p, (BType_Value)r.get_Data(0), GetStrData(1, r), (Literal_Value)r.get_Data(3));
 				else
 					return null;
 			}
 			else
 			{
 				if (r.get_Data(0) is BType_Array)
-					return new VarDeclaration_Array(p, (BType_Array)r.get_Data(0), getStrData(1, r));
+					return new VarDeclaration_Array(p, (BType_Array)r.get_Data(0), GetStrData(1, r));
 				else if (r.get_Data(0) is BType_Value)
-					return new VarDeclaration_Value(p, (BType_Value)r.get_Data(0), getStrData(1, r));
+					return new VarDeclaration_Value(p, (BType_Value)r.get_Data(0), GetStrData(1, r));
 				else
 					return null;
 			}
 		}
 
-		private static string getStrData(GOLD.Reduction r)
+		private static string GetStrData(GOLD.Reduction r)
 		{
-			return getStrData(0, r);
+			return GetStrData(0, r);
 		}
 
-		private static string getStrData(int p, GOLD.Reduction r)
+		private static string GetStrData(int p, GOLD.Reduction r)
 		{
 			if (r.get_Data(p) == null)
 			{
@@ -928,7 +958,7 @@ namespace BefunGen.AST
 			return (string)r.get_Data(p);
 		}
 
-		private static string unescapeStr(SourceCodePosition p, string s)
+		private static string UnescapeStr(SourceCodePosition p, string s)
 		{
 			StringBuilder outstr = new StringBuilder();
 
@@ -937,7 +967,7 @@ namespace BefunGen.AST
 			{
 				if (esc)
 				{
-					outstr.Append(unescapeChr(p, "\\" + chr));
+					outstr.Append(UnescapeChr(p, "\\" + chr));
 
 					esc = false;
 				}
@@ -953,7 +983,7 @@ namespace BefunGen.AST
 			return outstr.ToString();
 		}
 
-		private static char unescapeChr(SourceCodePosition p, string s)
+		private static char UnescapeChr(SourceCodePosition p, string s)
 		{
 			if (s.Length == 1)
 			{
@@ -989,13 +1019,13 @@ namespace BefunGen.AST
 			}
 		}
 
-		private static string getStrTrimData(GOLD.Reduction r)
+		private static string GetStrTrimData(GOLD.Reduction r)
 		{
-			string s = getStrData(r);
+			string s = GetStrData(r);
 			return s.Substring(1, s.Length - 2);
 		}
 
-		private static Statement_StatementList getStmtListAsStatement(SourceCodePosition p, GOLD.Reduction r, int pos)
+		private static Statement_StatementList GetStmtListAsStatement(SourceCodePosition p, GOLD.Reduction r, int pos)
 		{
 			return new Statement_StatementList(p, ((List_Statements)r.get_Data(pos)).List);
 		}
@@ -1006,6 +1036,11 @@ namespace BefunGen.AST
 				return s as Statement_StatementList;
 			else
 				return new Statement_StatementList(s.Position, new List<Statement>() { s });
+		}
+
+		private static Statement_StatementList OutfListToStmtList(SourceCodePosition p, List_OutfElements s)
+		{
+			return new Statement_StatementList(p, s.List.Select(lp => lp.CreateStatement()).ToList());
 		}
 	}
 }

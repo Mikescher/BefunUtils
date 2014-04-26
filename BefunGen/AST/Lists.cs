@@ -138,6 +138,89 @@ namespace BefunGen.AST
 		}
 	}
 
+	public class List_OutfElements : ASTList
+	{
+		public class Outf_Union
+		{
+			public readonly Literal_CharArr String;
+			public readonly Expression Expr;
+
+			public bool IsString { get { return String != null; } }
+			public bool IsExpression { get { return Expr != null; } }
+
+			public Outf_Union(Literal_CharArr v)
+			{
+				String = v;
+				Expr = null;
+			}
+
+			public Outf_Union(Expression v)
+			{
+				String = null;
+				Expr = v;
+			}
+
+			public Statement CreateStatement()
+			{
+				if (IsString)
+				{
+					return new Statement_Out_CharArrLiteral(String.Position, String);
+				}
+				else if (IsExpression)
+				{
+					return new Statement_Out(Expr.Position, Expr);
+				}
+				else
+				{
+					throw new InternalCodeGenException();
+				}
+			}
+		}
+
+		public List<Outf_Union> List = new List<Outf_Union>();
+
+		public List_OutfElements(SourceCodePosition pos)
+			: base(pos)
+		{
+		}
+
+		public List_OutfElements(SourceCodePosition pos, Expression v)
+			: base(pos)
+		{
+			List.Add(new Outf_Union(v));
+		}
+
+		public List_OutfElements(SourceCodePosition pos, Literal_CharArr v)
+			: base(pos)
+		{
+			List.Add(new Outf_Union(v));
+		}
+
+		public List_OutfElements Append(Expression v)
+		{
+			List.Add(new Outf_Union(v));
+			return this;
+		}
+
+		public List_OutfElements Append(Literal_CharArr v)
+		{
+			List.Add(new Outf_Union(v));
+			return this;
+		}
+
+		public List_OutfElements Prepend(Expression v)
+		{
+			List.Insert(0, new Outf_Union(v));
+			return this;
+		}
+
+		public List_OutfElements Prepend(Literal_CharArr v)
+		{
+			List.Insert(0, new Outf_Union(v));
+			return this;
+		}
+	}
+
 	#endregion Lists
 
 	#region Literals Lists

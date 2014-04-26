@@ -12,9 +12,9 @@ namespace BefunGen.AST
 			"begin", "close", "const", "display", "do", 
 			"else", "elsif", "end", "false", "for", 
 			"global", "goto", "if", "in", "out", 
-			"program", "quit", "rand", "repeat", "return", 
-			"stop", "then", "true", "until", "var", 
-			"while", "switch", "case", "default",
+			"outf", "program", "quit", "rand", "repeat", 
+			"return", "stop", "then", "true", "until", 
+			"var", "while", "switch", "case", "default",
 			
 			"bool", "boolean", "char", "character", "digit", 
 			"int", "integer", "void"
