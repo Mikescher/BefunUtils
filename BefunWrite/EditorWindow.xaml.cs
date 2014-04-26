@@ -24,7 +24,7 @@ namespace BefunWrite
 	/// <summary>
 	/// Interaction logic for MainWindow.xaml
 	/// </summary>
-	public partial class EditorWindow : Window //TODO Load Demos 
+	public partial class EditorWindow : Window //TODO DEMO: Goto
 	{
 		private const int PARSE_WAIT_TIME = 666; // Minimal Time (in ms) without Button Press for Parsing
 
@@ -247,60 +247,48 @@ namespace BefunWrite
 			else
 				updateUI();
 
-			if (!project.HasConfigSelected)
-			{
-				MessageBox.Show("No Config selected", ">> Error <<", MessageBoxButton.OK, MessageBoxImage.Error);
-				return;
-			}
-
-			//#############################################
-
-			string buildDir = Path.Combine(Path.GetDirectoryName(project.ProjectConfigPath), "build-" + project.GetProjectName(), DirectoryHelper.PrepareStringAsPath(project.SelectedConfig.Name));
-
-			string filename;
-			if (project.SelectedConfig.ExecSettings.IsDebug)
-				filename = DirectoryHelper.PrepareStringAsPath(project.SelectedConfig.Name) + ".tfd";
-			else
-				filename = DirectoryHelper.PrepareStringAsPath(project.SelectedConfig.Name) + ".b98";
-
-			string target = Path.Combine(buildDir, filename);
-
-			Directory.CreateDirectory(buildDir);
-
-			//#############################################
-
-			string code;
-			try
-			{
-				ASTObject.CGO = project.SelectedConfig.Options;
-
-				code = Parser.generateCode(codeEditor.Text, displayEditor.Text, project.SelectedConfig.ExecSettings.IsDebug);
-			}
-			catch (BefunGenException ex)
-			{
-				MessageBox.Show(ex.ToString(), ">> BefunGen Error <<", MessageBoxButton.OK, MessageBoxImage.Error);
-				return;
-			}
-			catch (Exception ex)
-			{
-				MessageBox.Show(ex.ToString(), ">> Internal Error <<", MessageBoxButton.OK, MessageBoxImage.Error);
-				return;
-			}
-
-			//#############################################
-
-			try
-			{
-				File.WriteAllText(target, code);
-			}
-			catch (IOException ex)
-			{
-				MessageBox.Show(ex.ToString(), ">> Filesystem Error <<", MessageBoxButton.OK, MessageBoxImage.Error);
-				return;
-			}
+			DoBuild();
 		}
 
 		private void BuildEnabled(object sender, CanExecuteRoutedEventArgs e)
+		{
+			e.CanExecute = !hasErrors;
+
+			e.Handled = true;
+		}
+
+		#endregion
+
+		#region BuildAll
+
+		private void BuildAllExecuted(object sender, ExecutedRoutedEventArgs e)
+		{
+			if (!project.TrySave())
+				return;
+			else
+				updateUI();
+
+			if (project.ProjectConfig.Configurations.Count == 0)
+			{
+				MessageBox.Show("No Configurations set", ">> Error <<", MessageBoxButton.OK, MessageBoxImage.Error);
+				return;
+			}
+
+			int initialConf = project.ProjectConfig.SelectedConfiguration;
+
+			for (int i = 0; i < project.ProjectConfig.Configurations.Count; i++)
+			{
+				project.ProjectConfig.SelectedConfiguration = i;
+				updateUI();
+
+				DoBuild();
+			}
+
+			project.ProjectConfig.SelectedConfiguration = initialConf;
+			updateUI();
+		}
+
+		private void BuildAllEnabled(object sender, CanExecuteRoutedEventArgs e)
 		{
 			e.CanExecute = !hasErrors;
 
@@ -807,5 +795,64 @@ namespace BefunWrite
 
 		#endregion
 
+		#region Helper
+
+		private void DoBuild()
+		{
+			if (!project.HasConfigSelected)
+			{
+				MessageBox.Show("No Config selected", ">> Error <<", MessageBoxButton.OK, MessageBoxImage.Error);
+				return;
+			}
+
+			//#############################################
+
+			string buildDir = Path.Combine(Path.GetDirectoryName(project.ProjectConfigPath), "build-" + project.GetProjectName(), DirectoryHelper.PrepareStringAsPath(project.SelectedConfig.Name));
+
+			string filename;
+			if (project.SelectedConfig.ExecSettings.IsDebug)
+				filename = DirectoryHelper.PrepareStringAsPath(project.SelectedConfig.Name) + ".tfd";
+			else
+				filename = DirectoryHelper.PrepareStringAsPath(project.SelectedConfig.Name) + ".b98";
+
+			string target = Path.Combine(buildDir, filename);
+
+			Directory.CreateDirectory(buildDir);
+
+			//#############################################
+
+			string code;
+			try
+			{
+				ASTObject.CGO = project.SelectedConfig.Options;
+
+				code = Parser.generateCode(codeEditor.Text, displayEditor.Text, project.SelectedConfig.ExecSettings.IsDebug);
+			}
+			catch (BefunGenException ex)
+			{
+				MessageBox.Show(ex.ToString(), ">> BefunGen Error <<", MessageBoxButton.OK, MessageBoxImage.Error);
+				return;
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show(ex.ToString(), ">> Internal Error <<", MessageBoxButton.OK, MessageBoxImage.Error);
+				return;
+			}
+
+			//#############################################
+
+			try
+			{
+				File.WriteAllText(target, code);
+			}
+			catch (IOException ex)
+			{
+				MessageBox.Show(ex.ToString(), ">> Filesystem Error <<", MessageBoxButton.OK, MessageBoxImage.Error);
+				return;
+			}
+		}
+
+
+		#endregion
 	}
 }

@@ -15,10 +15,11 @@
         <CommandBinding Command="Open"                            Executed="OpenExecuted"            CanExecute="OpenEnabled"            />
         <CommandBinding Command="New"                             Executed="NewExecuted"             CanExecute="NewEnabled"             />
         <CommandBinding Command="self:CustomCMDs.Build"           Executed="BuildExecuted"           CanExecute="BuildEnabled"           />
+        <CommandBinding Command="self:CustomCMDs.BuildAll"        Executed="BuildAllExecuted"        CanExecute="BuildAllEnabled"        />
         <CommandBinding Command="self:CustomCMDs.Start"           Executed="StartExecuted"           CanExecute="StartEnabled"           />
         <CommandBinding Command="self:CustomCMDs.Stop"            Executed="StopExecuted"            CanExecute="StopEnabled"            />
         <CommandBinding Command="self:CustomCMDs.ShowRunConfig"   Executed="ShowRunConfigExecuted"   CanExecute="ShowRunConfigEnabled"   />
-        <CommandBinding Command="self:CustomCMDs.AboutHelp"       Executed="AboutHelpExecuted"       CanExecute="AboutHelpEnabled"   />
+        <CommandBinding Command="self:CustomCMDs.AboutHelp"       Executed="AboutHelpExecuted"       CanExecute="AboutHelpEnabled"       />
     </Window.CommandBindings>
 
     <Window.InputBindings>
@@ -53,6 +54,7 @@
             </MenuItem>
             <MenuItem Header="Run">
                 <MenuItem Header="Build" Command="self:CustomCMDs.Build"/>
+                <MenuItem Header="Build All" Command="self:CustomCMDs.BuildAll"/>
                 <Separator/>
                 <MenuItem Header="Start" Command="self:CustomCMDs.Start"/>
                 <MenuItem Header="Stop" Command="self:CustomCMDs.Stop"/>
