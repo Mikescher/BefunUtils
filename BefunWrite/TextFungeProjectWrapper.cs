@@ -127,21 +127,21 @@ namespace BefunWrite
 			{
 
 				bool s_p = true;
-				if (Project_isDirty)
+				if (Project_isDirty || forcenew)
 					s_p = Save_projectfile(forcenew);
 
 				if (!s_p)
 					return false;
 
 				bool s_s = true;
-				if (Sourcecode_isDirty)
+				if (Sourcecode_isDirty || forcenew)
 					s_s = Save_sourcecode(forcenew);
 
 				if (!s_s)
 					return false;
 
 				bool s_d = true;
-				if (DisplayVal_isDirty)
+				if (DisplayVal_isDirty || forcenew)
 					s_s = Save_displayval(forcenew);
 
 				if (!s_d)
@@ -149,7 +149,7 @@ namespace BefunWrite
 
 				bool s_p2 = true;
 				if (Project_isDirty) // save_SC / save_DV Could make Projectfile dirty
-					s_p = Save_projectfile(forcenew);
+					s_p = Save_projectfile(false);
 
 				if (!s_p2)
 					return false;

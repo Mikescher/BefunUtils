@@ -10,12 +10,13 @@ namespace BefunGen.AST
 {
 	public class Program : ASTObject
 	{
-		//TODO Optimize -> StatementList in StatementList --> Include
-		//TODO Optimize -> ArrayValuePointer/DisplayArrayPointer when Indizies Constant -> Direct Link
-		//TODO Optimize -> Remove unused global/local variables (not params)
-		//TODO Optimize -> Remove NOP - Switch Cases
-		//TODO Optimize -> Empty StatementLists => NOP
-		//TODO Optimize -> Remove NOP's in the middle of StatementLists
+		//TODO Possible Optimizations [LOW PRIO]
+		//Optimize -> StatementList in StatementList --> Include
+		//Optimize -> ArrayValuePointer/DisplayArrayPointer when Indizies Constant -> Direct Link
+		//Optimize -> Remove unused global/local variables (not params)
+		//Optimize -> Remove NOP - Switch Cases
+		//Optimize -> Empty StatementLists => NOP
+		//Optimize -> Remove NOP's in the middle of StatementLists
 
 		public string Identifier;
 
