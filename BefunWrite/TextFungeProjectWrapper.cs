@@ -2,7 +2,6 @@
 using Microsoft.Win32;
 using Newtonsoft.Json;
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -65,18 +64,9 @@ namespace BefunWrite
 			return w;
 		}
 
-		public static TextFungeProjectWrapper LoadFromFile(string path)
+		public static TextFungeProjectWrapper LoadFromFile(string path) //throws Exception
 		{
-			try
-			{
-				return new TextFungeProjectWrapper(path, JsonConvert.DeserializeObject<TextFungeProject>(File.ReadAllText(path)));
-			}
-			catch (Exception e)
-			{
-				MessageBox.Show("Could not open file Projectfile", "Syntax Error", MessageBoxButton.OK, MessageBoxImage.Error);
-				Debug.WriteLine(e);
-				return null;
-			}
+			return new TextFungeProjectWrapper(path, JsonConvert.DeserializeObject<TextFungeProject>(File.ReadAllText(path)));
 		}
 
 		public string getAbsoluteSourceCodePath()

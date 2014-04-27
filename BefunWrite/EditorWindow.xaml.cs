@@ -270,7 +270,7 @@ namespace BefunWrite
 
 			if (project.ProjectConfig.Configurations.Count == 0)
 			{
-				MessageBox.Show("No Configurations set", ">> Error <<", MessageBoxButton.OK, MessageBoxImage.Error);
+				RaiseError("No Configuration selected");
 				return;
 			}
 
@@ -280,12 +280,16 @@ namespace BefunWrite
 			{
 				project.ProjectConfig.SelectedConfiguration = i;
 				updateUI();
+				AddOutput("Switched Configuration to " + project.SelectedConfig.Name);
 
 				DoBuild();
 			}
 
 			project.ProjectConfig.SelectedConfiguration = initialConf;
 			updateUI();
+			AddOutput("Switched Configuration to " + project.SelectedConfig.Name);
+
+			AddOutput("Build All Successfull");
 		}
 
 		private void BuildAllEnabled(object sender, CanExecuteRoutedEventArgs e)
@@ -301,9 +305,11 @@ namespace BefunWrite
 
 		private void StartExecuted(object sender, ExecutedRoutedEventArgs e)
 		{
+			long startTime = Environment.TickCount;
+
 			if (!project.HasConfigSelected)
 			{
-				MessageBox.Show("No Config selected", ">> Error <<", MessageBoxButton.OK, MessageBoxImage.Error);
+				RaiseError("No Configuration selected");
 				return;
 			}
 
@@ -326,12 +332,12 @@ namespace BefunWrite
 			}
 			catch (BefunGenException ex)
 			{
-				MessageBox.Show(ex.ToString(), ">> BefunGen Error <<", MessageBoxButton.OK, MessageBoxImage.Error);
+				RaiseError(ex.ToString());
 				return;
 			}
 			catch (Exception ex)
 			{
-				MessageBox.Show(ex.ToString(), ">> Internal Error <<", MessageBoxButton.OK, MessageBoxImage.Error);
+				RaiseError(ex.ToString());
 				return;
 			}
 
@@ -343,7 +349,7 @@ namespace BefunWrite
 			}
 			catch (IOException ex)
 			{
-				MessageBox.Show(ex.ToString(), ">> Filesystem Error <<", MessageBoxButton.OK, MessageBoxImage.Error);
+				RaiseError(ex.ToString());
 				return;
 			}
 
@@ -415,9 +421,14 @@ namespace BefunWrite
 			}
 			catch (Exception ex)
 			{
-				MessageBox.Show(ex.ToString(), ">> Excecution Error <<", MessageBoxButton.OK, MessageBoxImage.Error);
+				RaiseError(ex.ToString());
 				return;
 			}
+
+			AddOutput(String.Format("Succesfully started.\r\nParseTime: {0}ms\r\nGenerationTime: {1}ms\r\nTotalTime: {2}ms",
+				Parser.ParseTime,
+				Parser.GenerateTime,
+				Environment.TickCount - startTime));
 		}
 
 		private void StartEnabled(object sender, CanExecuteRoutedEventArgs e)
@@ -441,7 +452,10 @@ namespace BefunWrite
 		private void StopExecuted(object sender, ExecutedRoutedEventArgs e)
 		{
 			if (ExecProc != null && !ExecProc.HasExited)
+			{
 				ExecProc.CloseMainWindow();
+				AddOutput("BefunExec stopped");
+			}
 		}
 
 		private void StopEnabled(object sender, CanExecuteRoutedEventArgs e)
@@ -502,6 +516,7 @@ namespace BefunWrite
 			project.DirtySourcecode();
 
 			updateUI();
+
 		}
 
 		private void displayEditor_TextChanged(object sender, EventArgs e)
@@ -548,52 +563,6 @@ namespace BefunWrite
 		private void Window_Closed(object sender, EventArgs e)
 		{
 			parseThreadRunning = false;
-		}
-
-		#endregion
-
-		#region Loading
-
-		private void DoOpen()
-		{
-			OpenFileDialog ofd = new OpenFileDialog();
-			ofd.Filter = "TextFungeProject (.tfp)|*.tfp";
-			ofd.CheckFileExists = true;
-			ofd.CheckPathExists = true;
-
-			if (ofd.ShowDialog().GetValueOrDefault(false))
-			{
-				DoOpenProject(ofd.FileName);
-			}
-		}
-
-		private void DoOpenProject(string FileName)
-		{
-			TextFungeProjectWrapper pw = TextFungeProjectWrapper.LoadFromFile(FileName);
-
-			if (pw == null)
-			{
-				MessageBox.Show("Could not load ProjectFile", "Error while loading", MessageBoxButton.OK, MessageBoxImage.Error);
-				return;
-			}
-
-			if (!File.Exists(pw.getAbsoluteSourceCodePath()))
-			{
-				MessageBox.Show("Sourcecodefile not found", "Error while loading", MessageBoxButton.OK, MessageBoxImage.Error);
-				return;
-			}
-
-			if (!File.Exists(pw.getAbsoluteDisplayValuePath()))
-			{
-				MessageBox.Show("DisplayValueFile not found", "Error while loading", MessageBoxButton.OK, MessageBoxImage.Error);
-				return;
-			}
-
-			project = pw;
-
-			updateUI();
-			pw.ClearDirty();
-			updateUI();
 		}
 
 		#endregion
@@ -797,11 +766,58 @@ namespace BefunWrite
 
 		#region Helper
 
+		private void DoOpen()
+		{
+			OpenFileDialog ofd = new OpenFileDialog();
+			ofd.Filter = "TextFungeProject (.tfp)|*.tfp";
+			ofd.CheckFileExists = true;
+			ofd.CheckPathExists = true;
+
+			if (ofd.ShowDialog().GetValueOrDefault(false))
+			{
+				DoOpenProject(ofd.FileName);
+			}
+		}
+
+		private void DoOpenProject(string FileName)
+		{
+			TextFungeProjectWrapper pw;
+			try
+			{
+				pw = TextFungeProjectWrapper.LoadFromFile(FileName);
+			}
+			catch (Exception e)
+			{
+				RaiseError(String.Format("Could not load ProjectFile\r\n  caused by {0}", e.Message));
+				return;
+			}
+
+			if (!File.Exists(pw.getAbsoluteSourceCodePath()))
+			{
+				RaiseError(string.Format("SourceCodeFile ({0}) not found", pw.ProjectConfig.SourceCodePath));
+				return;
+			}
+
+			if (!File.Exists(pw.getAbsoluteDisplayValuePath()))
+			{
+				RaiseError(string.Format("DisplayValueFile ({0}) not found", pw.ProjectConfig.DisplayValuePath));
+				return;
+			}
+
+			project = pw;
+
+			updateUI();
+			pw.ClearDirty();
+			updateUI();
+		}
+
 		private void DoBuild()
 		{
+			long startTime = Environment.TickCount;
+
 			if (!project.HasConfigSelected)
 			{
-				MessageBox.Show("No Config selected", ">> Error <<", MessageBoxButton.OK, MessageBoxImage.Error);
+				RaiseError("No Configuration Selected");
 				return;
 			}
 
@@ -830,12 +846,12 @@ namespace BefunWrite
 			}
 			catch (BefunGenException ex)
 			{
-				MessageBox.Show(ex.ToString(), ">> BefunGen Error <<", MessageBoxButton.OK, MessageBoxImage.Error);
+				RaiseError(ex.ToString());
 				return;
 			}
 			catch (Exception ex)
 			{
-				MessageBox.Show(ex.ToString(), ">> Internal Error <<", MessageBoxButton.OK, MessageBoxImage.Error);
+				RaiseError(ex.ToString());
 				return;
 			}
 
@@ -847,11 +863,27 @@ namespace BefunWrite
 			}
 			catch (IOException ex)
 			{
-				MessageBox.Show(ex.ToString(), ">> Filesystem Error <<", MessageBoxButton.OK, MessageBoxImage.Error);
+				RaiseError(ex.ToString());
 				return;
 			}
+
+			AddOutput(String.Format("Succesfully build.\r\nParseTime: {0}ms\r\nGenerationTime: {1}ms\r\nTotalTime: {2}ms",
+				Parser.ParseTime,
+				Parser.GenerateTime,
+				Environment.TickCount - startTime));
 		}
 
+		private void RaiseError(string msg)
+		{
+			MessageBox.Show(msg, "[BefunWrite] Error", MessageBoxButton.OK, MessageBoxImage.Error);
+
+			AddOutput("[ERROR]\r\n" + msg);
+		}
+
+		private void AddOutput(string s)
+		{
+			txtOutput.Text += s + "\r\n\r\n";
+		}
 
 		#endregion
 	}

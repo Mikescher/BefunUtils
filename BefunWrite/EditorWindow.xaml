@@ -115,8 +115,10 @@
                 <avDock:LayoutRoot.BottomSide>
                     <avDock:LayoutAnchorSide>
                         <avDock:LayoutAnchorGroup>
-                            <avDock:LayoutAnchorable Title="Output" CanClose="False" CanHide="False">
-                                <TextBox/>
+                            <avDock:LayoutAnchorable x:Name="anchLayoutOutput" Title="Output" CanClose="False" CanHide="False" AutoHideHeight="150">
+                                <ScrollViewer>
+                                    <TextBox x:Name="txtOutput" IsReadOnly="True"/>
+                                </ScrollViewer>
                             </avDock:LayoutAnchorable>
                             <avDock:LayoutAnchorable Title="ErrorList" AutoHideHeight="150" CanClose="False" CanHide="False">
                                 <ScrollViewer>

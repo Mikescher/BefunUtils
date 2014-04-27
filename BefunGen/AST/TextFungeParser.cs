@@ -11,6 +11,7 @@ namespace BefunGen.AST
 		private GOLD.Parser parser;
 
 		public long ParseTime { get; private set; }
+		public long GenerateTime { get; private set; }
 
 		public TextFungeParser()
 		{
@@ -40,7 +41,9 @@ namespace BefunGen.AST
 		{
 			p = generateAST(txt) as Program;
 
+			GenerateTime = Environment.TickCount;
 			cp = p.generateCode(initialDisplay);
+			GenerateTime = Environment.TickCount - GenerateTime;
 
 			string result;
 
