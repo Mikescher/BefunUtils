@@ -6,7 +6,7 @@ namespace BefunWrite.Dialogs
 	/// <summary>
 	/// Interaction logic for RunConfigurationManager.xaml
 	/// </summary>
-	public partial class RunConfigurationManager : Window //TODO Save load chars (--> will always become 164 (eg BorderValue )) ---> Fix in ExampleProject
+	public partial class RunConfigurationManager : Window
 	{
 		private TextFungeProjectWrapper project;
 
@@ -127,9 +127,9 @@ namespace BefunWrite.Dialogs
 
 			V_DefaultVarDeclarationWidth.Value = o.Options.DefaultVarDeclarationWidth;
 
-			V_DefaultVarDeclarationSymbol.CValue = o.Options.DefaultVarDeclarationSymbol.getCommandCode();
-			V_DefaultTempSymbol.CValue = o.Options.DefaultTempSymbol.getCommandCode();
-			V_DefaultResultTempSymbol.CValue = o.Options.DefaultResultTempSymbol.getCommandCode();
+			V_DefaultVarDeclarationSymbol.CValue = o.Options.DefaultVarDeclarationSymbol;
+			V_DefaultTempSymbol.CValue = o.Options.DefaultTempSymbol;
+			V_DefaultResultTempSymbol.CValue = o.Options.DefaultResultTempSymbol;
 
 			V_ExtendedBooleanCast.IsChecked = o.Options.ExtendedBooleanCast;
 
@@ -137,8 +137,8 @@ namespace BefunWrite.Dialogs
 			V_DefaultCharacterValue.CValue = o.Options.DefaultCharacterValue;
 			V_DefaultBooleanValue.IsChecked = o.Options.DefaultBooleanValue;
 
-			V_DefaultDisplayValue.CValue = o.Options.DefaultDisplayValue.getCommandCode();
-			V_DisplayBorder.CValue = o.Options.DisplayBorder.getCommandCode();
+			V_DefaultDisplayValue.CValue = o.Options.DefaultDisplayValue;
+			V_DisplayBorder.CValue = o.Options.DisplayBorder;
 			V_DisplayBorderThickness.Value = o.Options.DisplayBorderThickness;
 
 			V_DisplayModuloAccess.IsChecked = o.Options.DisplayModuloAccess;
@@ -195,9 +195,9 @@ namespace BefunWrite.Dialogs
 
 			o.Options.DefaultVarDeclarationWidth = V_DefaultVarDeclarationWidth.Value.Value;
 
-			o.Options.DefaultVarDeclarationSymbol = BCHelper.chr(V_DefaultVarDeclarationSymbol.CValue);
-			o.Options.DefaultTempSymbol = BCHelper.chr(V_DefaultTempSymbol.CValue);
-			o.Options.DefaultResultTempSymbol = BCHelper.chr(V_DefaultResultTempSymbol.CValue);
+			o.Options.DefaultVarDeclarationSymbol = V_DefaultVarDeclarationSymbol.CValue;
+			o.Options.DefaultTempSymbol = V_DefaultTempSymbol.CValue;
+			o.Options.DefaultResultTempSymbol = V_DefaultResultTempSymbol.CValue;
 
 			o.Options.ExtendedBooleanCast = V_ExtendedBooleanCast.IsChecked.Value;
 
@@ -205,8 +205,8 @@ namespace BefunWrite.Dialogs
 			o.Options.DefaultCharacterValue = V_DefaultCharacterValue.CValue;
 			o.Options.DefaultBooleanValue = V_DefaultBooleanValue.IsChecked.Value;
 
-			o.Options.DefaultDisplayValue = BCHelper.chr(V_DefaultDisplayValue.CValue);
-			o.Options.DisplayBorder = BCHelper.chr(V_DisplayBorder.CValue);
+			o.Options.DefaultDisplayValue = V_DefaultDisplayValue.CValue;
+			o.Options.DisplayBorder = V_DisplayBorder.CValue;
 			o.Options.DisplayBorderThickness = V_DisplayBorderThickness.Value.Value;
 
 			o.Options.DisplayModuloAccess = V_DisplayModuloAccess.IsChecked.Value;

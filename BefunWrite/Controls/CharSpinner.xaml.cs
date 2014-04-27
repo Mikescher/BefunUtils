@@ -63,6 +63,8 @@ namespace BefunWrite.Controls
 
 			if (v == ' ')
 				return "'SPACE' (#" + v + ")";
+			if (v == 164)
+				return "'DBG' (#" + v + ")";
 			else if (v > ' ' && v <= '~')
 				return "'" + (char)v + "' (#" + v + ")";
 			else

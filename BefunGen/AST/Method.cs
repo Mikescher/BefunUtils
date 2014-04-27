@@ -212,12 +212,12 @@ namespace BefunGen.AST
 
 				if (var is VarDeclaration_Value)
 				{
-					lit[0, 0] = CGO.DefaultVarDeclarationSymbol.copyWithTag(new VarDeclaration_Tag(var));
+					lit[0, 0] = BCHelper.chr(CGO.DefaultVarDeclarationSymbol,new VarDeclaration_Tag(var));
 				}
 				else
 				{
 					int sz = (var as VarDeclaration_Array).Size;
-					lit.Fill(0, 0, sz, 1, CGO.DefaultVarDeclarationSymbol, new VarDeclaration_Tag(var));
+					lit.Fill(0, 0, sz, 1, BCHelper.chr(CGO.DefaultVarDeclarationSymbol), new VarDeclaration_Tag(var));
 				}
 
 				var.CodePositionX = mo_x + paramX;

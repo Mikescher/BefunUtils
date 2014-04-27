@@ -32,13 +32,13 @@ namespace BefunGen.AST.CodeGen
 		public int DefaultVarDeclarationWidth;
 
 		// The Value of reserved for variable fields before initialization 
-		public BefungeCommand DefaultVarDeclarationSymbol;
+		public char DefaultVarDeclarationSymbol;
 
 		// The Value of reserved for temp_field before initialization 
-		public BefungeCommand DefaultTempSymbol;
+		public char DefaultTempSymbol;
 
 		// The Value of reserved for temp_field_returnval before initialization 
-		public BefungeCommand DefaultResultTempSymbol;
+		public char DefaultResultTempSymbol;
 
 		// When hard casting to bool force the value to be '0' or '1'
 		public bool ExtendedBooleanCast;
@@ -49,8 +49,8 @@ namespace BefunGen.AST.CodeGen
 		public bool DefaultBooleanValue;
 
 		// Values for the Display
-		public BefungeCommand DefaultDisplayValue;
-		public BefungeCommand DisplayBorder;
+		public char DefaultDisplayValue;
+		public char DisplayBorder;
 		public int DisplayBorderThickness;
 
 		// If set to true you can't Out-Of-Bounce the Display - Set&Get is put into a modulo Width before
@@ -85,9 +85,9 @@ namespace BefunGen.AST.CodeGen
 
 			c.DefaultVarDeclarationWidth = 16;
 
-			c.DefaultVarDeclarationSymbol = BCHelper.chr('V');
-			c.DefaultTempSymbol = BCHelper.chr('R');
-			c.DefaultResultTempSymbol = BCHelper.chr('T');
+			c.DefaultVarDeclarationSymbol = 'V';
+			c.DefaultTempSymbol = 'R';
+			c.DefaultResultTempSymbol = 'T';
 
 			c.ExtendedBooleanCast = false;
 
@@ -95,8 +95,8 @@ namespace BefunGen.AST.CodeGen
 			c.DefaultCharacterValue = ' ';
 			c.DefaultBooleanValue = false;
 
-			c.DefaultDisplayValue = BCHelper.chr(' ');
-			c.DisplayBorder = BCHelper.chr('#');
+			c.DefaultDisplayValue = ' ';
+			c.DisplayBorder = '#';
 			c.DisplayBorderThickness = 1;
 
 			c.DisplayModuloAccess = false;
@@ -123,9 +123,9 @@ namespace BefunGen.AST.CodeGen
 
 			c.DefaultVarDeclarationWidth = 16;
 
-			c.DefaultVarDeclarationSymbol = BCHelper.chr(' ');
-			c.DefaultTempSymbol = BCHelper.chr(' ');
-			c.DefaultResultTempSymbol = BCHelper.chr(' ');
+			c.DefaultVarDeclarationSymbol = ' ';
+			c.DefaultTempSymbol = ' ';
+			c.DefaultResultTempSymbol = ' ';
 
 			c.ExtendedBooleanCast = false;
 
@@ -133,8 +133,8 @@ namespace BefunGen.AST.CodeGen
 			c.DefaultCharacterValue = ' ';
 			c.DefaultBooleanValue = false;
 
-			c.DefaultDisplayValue = BCHelper.chr(' ');
-			c.DisplayBorder = BCHelper.chr('#');
+			c.DefaultDisplayValue = ' ';
+			c.DisplayBorder = '#';
 			c.DisplayBorderThickness = 1;
 
 			c.DisplayModuloAccess = false;

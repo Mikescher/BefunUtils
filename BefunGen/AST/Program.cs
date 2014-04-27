@@ -313,12 +313,12 @@ namespace BefunGen.AST
 			CodePiece p_flooder = CodePieceStore.BooleanStackFlooder();
 			p_TopLane.SetAt(3, 1, p_flooder);
 
-			p_TopLane[CodeGenConstants.TMP_FIELD_IO_ARR.X, CodeGenConstants.TMP_FIELD_IO_ARR.Y] = CGO.DefaultTempSymbol.copyWithTag(new TemporaryCodeField_Tag());
-			p_TopLane[CodeGenConstants.TMP_FIELD_OUT_ARR.X, CodeGenConstants.TMP_FIELD_OUT_ARR.Y] = CGO.DefaultTempSymbol.copyWithTag(new TemporaryCodeField_Tag());
-			p_TopLane[CodeGenConstants.TMP_FIELD_JMP_ADDR.X, CodeGenConstants.TMP_FIELD_JMP_ADDR.Y] = CGO.DefaultTempSymbol.copyWithTag(new TemporaryCodeField_Tag());
+			p_TopLane[CodeGenConstants.TMP_FIELD_IO_ARR.X, CodeGenConstants.TMP_FIELD_IO_ARR.Y] = BCHelper.chr(CGO.DefaultTempSymbol, new TemporaryCodeField_Tag());
+			p_TopLane[CodeGenConstants.TMP_FIELD_OUT_ARR.X, CodeGenConstants.TMP_FIELD_OUT_ARR.Y] = BCHelper.chr(CGO.DefaultTempSymbol, new TemporaryCodeField_Tag());
+			p_TopLane[CodeGenConstants.TMP_FIELD_JMP_ADDR.X, CodeGenConstants.TMP_FIELD_JMP_ADDR.Y] = BCHelper.chr(CGO.DefaultTempSymbol, new TemporaryCodeField_Tag());
 			p_TopLane.Fill(CodeGenConstants.TMP_ARRFIELD_RETURNVAL.X, CodeGenConstants.TMP_ARRFIELD_RETURNVAL.Y,
 				CodeGenConstants.TMP_ARRFIELD_RETURNVAL.X + maxReturnValWidth, CodeGenConstants.TMP_ARRFIELD_RETURNVAL.Y + 1,
-				CGO.DefaultResultTempSymbol,
+				BCHelper.chr(CGO.DefaultResultTempSymbol),
 				new TemporaryResultCodeField_Tag(maxReturnValWidth));
 
 			CodePiece displayValue = generateCode_DisplayValue(initialDisp);
@@ -522,12 +522,12 @@ namespace BefunGen.AST
 
 				if (var is VarDeclaration_Value)
 				{
-					lit[0, 0] = CGO.DefaultVarDeclarationSymbol.copyWithTag(new VarDeclaration_Tag(var));
+					lit[0, 0] = BCHelper.chr(CGO.DefaultVarDeclarationSymbol, new VarDeclaration_Tag(var));
 				}
 				else
 				{
 					int sz = (var as VarDeclaration_Array).Size;
-					lit.Fill(0, 0, sz, 1, CGO.DefaultVarDeclarationSymbol, new VarDeclaration_Tag(var));
+					lit.Fill(0, 0, sz, 1, BCHelper.chr(CGO.DefaultVarDeclarationSymbol), new VarDeclaration_Tag(var));
 				}
 
 				var.CodePositionX = mo_x + paramX;
@@ -562,10 +562,10 @@ namespace BefunGen.AST
 			// 33333322
 			// 33333322
 
-			p.Fill(b, 0, s.X + 2 * b, b, CGO.DisplayBorder);						// 1
-			p.Fill(s.X + b, b, s.X + 2 * b, s.Y + 2 * b, CGO.DisplayBorder);		// 2
-			p.Fill(0, s.Y + b, s.X + b, s.Y + 2 * b, CGO.DisplayBorder);			// 3
-			p.Fill(0, 0, b, s.Y + b, CGO.DisplayBorder);							// 4
+			p.Fill(b, 0, s.X + 2 * b, b, BCHelper.chr(CGO.DisplayBorder));						// 1
+			p.Fill(s.X + b, b, s.X + 2 * b, s.Y + 2 * b, BCHelper.chr(CGO.DisplayBorder));		// 2
+			p.Fill(0, s.Y + b, s.X + b, s.Y + 2 * b, BCHelper.chr(CGO.DisplayBorder));			// 3
+			p.Fill(0, 0, b, s.Y + b, BCHelper.chr(CGO.DisplayBorder));							// 4
 
 			p.SetTag(0, 0, new Display_TopLeft_Tag(this, DisplayWidth + 2 * b, DisplayHeight + 2 * b));
 
@@ -590,7 +590,7 @@ namespace BefunGen.AST
 
 			string[] split = dv.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
 
-			BefungeCommand def = CGO.DefaultDisplayValue;
+			BefungeCommand def = BCHelper.chr(CGO.DefaultDisplayValue);
 			if (def.Type == BefungeCommandType.NOP)
 				def = BCHelper.Walkway;
 

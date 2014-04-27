@@ -14,35 +14,15 @@
         "CompressHorizontalCombining": true,
         "CompressVerticalCombining": true,
         "DefaultVarDeclarationWidth": 16,
-        "DefaultVarDeclarationSymbol": {
-          "Type": 0,
-          "Param": 0,
-          "Tag": null
-        },
-        "DefaultTempSymbol": {
-          "Type": 0,
-          "Param": 0,
-          "Tag": null
-        },
-        "DefaultResultTempSymbol": {
-          "Type": 0,
-          "Param": 0,
-          "Tag": null
-        },
+        "DefaultVarDeclarationSymbol": "V",
+        "DefaultTempSymbol": "R",
+        "DefaultResultTempSymbol": "T",
         "ExtendedBooleanCast": false,
         "DefaultNumeralValue": 0,
         "DefaultCharacterValue": " ",
         "DefaultBooleanValue": false,
-        "DefaultDisplayValue": {
-          "Type": 0,
-          "Param": 0,
-          "Tag": null
-        },
-        "DisplayBorder": {
-          "Type": 0,
-          "Param": 0,
-          "Tag": null
-        },
+        "DefaultDisplayValue": " ",
+        "DisplayBorder": "#",
         "DisplayBorderThickness": 1,
         "DisplayModuloAccess": false,
         "CompileTimeEvaluateExpressions": true,
@@ -78,35 +58,15 @@
         "CompressHorizontalCombining": true,
         "CompressVerticalCombining": true,
         "DefaultVarDeclarationWidth": 16,
-        "DefaultVarDeclarationSymbol": {
-          "Type": 0,
-          "Param": 0,
-          "Tag": null
-        },
-        "DefaultTempSymbol": {
-          "Type": 0,
-          "Param": 0,
-          "Tag": null
-        },
-        "DefaultResultTempSymbol": {
-          "Type": 0,
-          "Param": 0,
-          "Tag": null
-        },
+        "DefaultVarDeclarationSymbol": " ",
+        "DefaultTempSymbol": " ",
+        "DefaultResultTempSymbol": " ",
         "ExtendedBooleanCast": false,
         "DefaultNumeralValue": 0,
         "DefaultCharacterValue": " ",
         "DefaultBooleanValue": false,
-        "DefaultDisplayValue": {
-          "Type": 0,
-          "Param": 0,
-          "Tag": null
-        },
-        "DisplayBorder": {
-          "Type": 0,
-          "Param": 0,
-          "Tag": null
-        },
+        "DefaultDisplayValue": " ",
+        "DisplayBorder": "#",
         "DisplayBorderThickness": 1,
         "DisplayModuloAccess": false,
         "CompileTimeEvaluateExpressions": true,
