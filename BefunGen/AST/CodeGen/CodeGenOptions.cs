@@ -1,4 +1,4 @@
-﻿
+
 namespace BefunGen.AST.CodeGen
 {
 	public enum NumberRep
@@ -288,4 +288,5 @@ Do Nothing ... just go on ... stack is fine
 [X] Befunge Interpreter
 [O] Generate  Math Question and check answers
 [X] PrimzahlCalcer
+[O] GOL Klon
 */
