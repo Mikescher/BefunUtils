@@ -58,12 +58,14 @@
 			this.btnExecuteDebug = new System.Windows.Forms.Button();
 			this.btnDebugNumberRep = new System.Windows.Forms.Button();
 			this.btnSendToRun = new System.Windows.Forms.Button();
+			this.btnQCircle = new System.Windows.Forms.Button();
+			this.btnFocus = new System.Windows.Forms.Button();
 			this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
 			this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
 			this.btnLoadSYN = new System.Windows.Forms.Button();
 			this.txtSynFile = new System.Windows.Forms.TextBox();
-			this.btnQCircle = new System.Windows.Forms.Button();
-			this.btnFocus = new System.Windows.Forms.Button();
+			this.tableLayoutPanel6 = new System.Windows.Forms.TableLayoutPanel();
+			this.edNumberRep = new System.Windows.Forms.NumericUpDown();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
@@ -85,6 +87,8 @@
 			this.tableLayoutPanel5.SuspendLayout();
 			this.tableLayoutPanel2.SuspendLayout();
 			this.tableLayoutPanel3.SuspendLayout();
+			this.tableLayoutPanel6.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.edNumberRep)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// btnLoad
@@ -185,7 +189,7 @@
 			this.tabPage1.Location = new System.Drawing.Point(4, 4);
 			this.tabPage1.Name = "tabPage1";
 			this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPage1.Size = new System.Drawing.Size(678, 218);
+			this.tabPage1.Size = new System.Drawing.Size(678, 225);
 			this.tabPage1.TabIndex = 0;
 			this.tabPage1.Text = "Reduction Tree";
 			this.tabPage1.UseVisualStyleBackColor = true;
@@ -200,7 +204,7 @@
 			this.txtParseTree.Name = "txtParseTree";
 			this.txtParseTree.ReadOnly = true;
 			this.txtParseTree.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-			this.txtParseTree.Size = new System.Drawing.Size(672, 212);
+			this.txtParseTree.Size = new System.Drawing.Size(672, 219);
 			this.txtParseTree.TabIndex = 6;
 			this.txtParseTree.WordWrap = false;
 			// 
@@ -210,7 +214,7 @@
 			this.tabPage3.Location = new System.Drawing.Point(4, 4);
 			this.tabPage3.Name = "tabPage3";
 			this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPage3.Size = new System.Drawing.Size(678, 218);
+			this.tabPage3.Size = new System.Drawing.Size(678, 225);
 			this.tabPage3.TabIndex = 2;
 			this.tabPage3.Text = "Trimmed Tree";
 			this.tabPage3.UseVisualStyleBackColor = true;
@@ -225,7 +229,7 @@
 			this.txtParseTrimTree.Name = "txtParseTrimTree";
 			this.txtParseTrimTree.ReadOnly = true;
 			this.txtParseTrimTree.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-			this.txtParseTrimTree.Size = new System.Drawing.Size(672, 212);
+			this.txtParseTrimTree.Size = new System.Drawing.Size(672, 219);
 			this.txtParseTrimTree.TabIndex = 7;
 			this.txtParseTrimTree.WordWrap = false;
 			// 
@@ -235,7 +239,7 @@
 			this.tabPage2.Location = new System.Drawing.Point(4, 4);
 			this.tabPage2.Name = "tabPage2";
 			this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPage2.Size = new System.Drawing.Size(678, 218);
+			this.tabPage2.Size = new System.Drawing.Size(678, 225);
 			this.tabPage2.TabIndex = 1;
 			this.tabPage2.Text = "AST";
 			this.tabPage2.UseVisualStyleBackColor = true;
@@ -248,7 +252,7 @@
 			this.txtAST.Multiline = true;
 			this.txtAST.Name = "txtAST";
 			this.txtAST.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.txtAST.Size = new System.Drawing.Size(672, 212);
+			this.txtAST.Size = new System.Drawing.Size(672, 219);
 			this.txtAST.TabIndex = 0;
 			this.txtAST.WordWrap = false;
 			// 
@@ -258,7 +262,7 @@
 			this.tabPage4.Location = new System.Drawing.Point(4, 4);
 			this.tabPage4.Name = "tabPage4";
 			this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPage4.Size = new System.Drawing.Size(678, 218);
+			this.tabPage4.Size = new System.Drawing.Size(678, 225);
 			this.tabPage4.TabIndex = 3;
 			this.tabPage4.Text = "Log";
 			this.tabPage4.UseVisualStyleBackColor = true;
@@ -270,7 +274,7 @@
 			this.txtLog.Multiline = true;
 			this.txtLog.Name = "txtLog";
 			this.txtLog.ReadOnly = true;
-			this.txtLog.Size = new System.Drawing.Size(672, 212);
+			this.txtLog.Size = new System.Drawing.Size(672, 219);
 			this.txtLog.TabIndex = 0;
 			// 
 			// tabPage5
@@ -279,7 +283,7 @@
 			this.tabPage5.Location = new System.Drawing.Point(4, 4);
 			this.tabPage5.Name = "tabPage5";
 			this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPage5.Size = new System.Drawing.Size(678, 218);
+			this.tabPage5.Size = new System.Drawing.Size(678, 225);
 			this.tabPage5.TabIndex = 4;
 			this.tabPage5.Text = "Grammar";
 			this.tabPage5.UseVisualStyleBackColor = true;
@@ -293,7 +297,7 @@
 			this.txtGrammar.Name = "txtGrammar";
 			this.txtGrammar.ReadOnly = true;
 			this.txtGrammar.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.txtGrammar.Size = new System.Drawing.Size(672, 212);
+			this.txtGrammar.Size = new System.Drawing.Size(672, 219);
 			this.txtGrammar.TabIndex = 0;
 			// 
 			// tabPage6
@@ -302,7 +306,7 @@
 			this.tabPage6.Location = new System.Drawing.Point(4, 4);
 			this.tabPage6.Name = "tabPage6";
 			this.tabPage6.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPage6.Size = new System.Drawing.Size(678, 218);
+			this.tabPage6.Size = new System.Drawing.Size(678, 225);
 			this.tabPage6.TabIndex = 5;
 			this.tabPage6.Text = "Code";
 			this.tabPage6.UseVisualStyleBackColor = true;
@@ -320,7 +324,7 @@
 			// splitContainer2.Panel2
 			// 
 			this.splitContainer2.Panel2.Controls.Add(this.tableLayoutPanel4);
-			this.splitContainer2.Size = new System.Drawing.Size(672, 212);
+			this.splitContainer2.Size = new System.Drawing.Size(672, 219);
 			this.splitContainer2.SplitterDistance = 488;
 			this.splitContainer2.TabIndex = 1;
 			// 
@@ -333,7 +337,7 @@
 			this.txtCode.Multiline = true;
 			this.txtCode.Name = "txtCode";
 			this.txtCode.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-			this.txtCode.Size = new System.Drawing.Size(488, 212);
+			this.txtCode.Size = new System.Drawing.Size(488, 219);
 			this.txtCode.TabIndex = 0;
 			this.txtCode.WordWrap = false;
 			// 
@@ -350,7 +354,7 @@
 			this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32F));
 			this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32F));
 			this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel4.Size = new System.Drawing.Size(180, 212);
+			this.tableLayoutPanel4.Size = new System.Drawing.Size(180, 219);
 			this.tableLayoutPanel4.TabIndex = 0;
 			// 
 			// btnGen
@@ -420,10 +424,10 @@
 			this.tableLayoutPanel5.ColumnCount = 1;
 			this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this.tableLayoutPanel5.Controls.Add(this.btnExecuteDebug, 0, 0);
-			this.tableLayoutPanel5.Controls.Add(this.btnDebugNumberRep, 0, 1);
-			this.tableLayoutPanel5.Controls.Add(this.btnSendToRun, 0, 2);
-			this.tableLayoutPanel5.Controls.Add(this.btnQCircle, 0, 3);
+			this.tableLayoutPanel5.Controls.Add(this.btnSendToRun, 0, 3);
+			this.tableLayoutPanel5.Controls.Add(this.btnQCircle, 0, 4);
 			this.tableLayoutPanel5.Controls.Add(this.btnFocus, 0, 5);
+			this.tableLayoutPanel5.Controls.Add(this.tableLayoutPanel6, 0, 2);
 			this.tableLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tableLayoutPanel5.Location = new System.Drawing.Point(526, 3);
 			this.tableLayoutPanel5.Name = "tableLayoutPanel5";
@@ -452,24 +456,46 @@
 			// btnDebugNumberRep
 			// 
 			this.btnDebugNumberRep.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.btnDebugNumberRep.Location = new System.Drawing.Point(3, 38);
+			this.btnDebugNumberRep.Location = new System.Drawing.Point(71, 3);
 			this.btnDebugNumberRep.Name = "btnDebugNumberRep";
-			this.btnDebugNumberRep.Size = new System.Drawing.Size(137, 29);
+			this.btnDebugNumberRep.Size = new System.Drawing.Size(63, 23);
 			this.btnDebugNumberRep.TabIndex = 2;
-			this.btnDebugNumberRep.Text = "NumberRep";
+			this.btnDebugNumberRep.Text = "NumRep";
 			this.btnDebugNumberRep.UseVisualStyleBackColor = true;
 			this.btnDebugNumberRep.Click += new System.EventHandler(this.btnDebugNumberRep_Click);
 			// 
 			// btnSendToRun
 			// 
 			this.btnSendToRun.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.btnSendToRun.Location = new System.Drawing.Point(3, 73);
+			this.btnSendToRun.Location = new System.Drawing.Point(3, 108);
 			this.btnSendToRun.Name = "btnSendToRun";
 			this.btnSendToRun.Size = new System.Drawing.Size(137, 29);
 			this.btnSendToRun.TabIndex = 3;
 			this.btnSendToRun.Text = "Send To Run";
 			this.btnSendToRun.UseVisualStyleBackColor = true;
 			this.btnSendToRun.Click += new System.EventHandler(this.btnSendToRun_Click);
+			// 
+			// btnQCircle
+			// 
+			this.btnQCircle.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.btnQCircle.Location = new System.Drawing.Point(3, 143);
+			this.btnQCircle.Name = "btnQCircle";
+			this.btnQCircle.Size = new System.Drawing.Size(137, 29);
+			this.btnQCircle.TabIndex = 4;
+			this.btnQCircle.Text = "Quarter Circle";
+			this.btnQCircle.UseVisualStyleBackColor = true;
+			this.btnQCircle.Click += new System.EventHandler(this.btnQCircle_Click);
+			// 
+			// btnFocus
+			// 
+			this.btnFocus.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.btnFocus.Location = new System.Drawing.Point(3, 178);
+			this.btnFocus.Name = "btnFocus";
+			this.btnFocus.Size = new System.Drawing.Size(137, 29);
+			this.btnFocus.TabIndex = 5;
+			this.btnFocus.Text = "Select All";
+			this.btnFocus.UseVisualStyleBackColor = true;
+			this.btnFocus.Click += new System.EventHandler(this.btnFocus_Click);
 			// 
 			// tableLayoutPanel2
 			// 
@@ -524,27 +550,37 @@
 			this.txtSynFile.Size = new System.Drawing.Size(580, 20);
 			this.txtSynFile.TabIndex = 11;
 			// 
-			// btnQCircle
+			// tableLayoutPanel6
 			// 
-			this.btnQCircle.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.btnQCircle.Location = new System.Drawing.Point(3, 108);
-			this.btnQCircle.Name = "btnQCircle";
-			this.btnQCircle.Size = new System.Drawing.Size(137, 29);
-			this.btnQCircle.TabIndex = 4;
-			this.btnQCircle.Text = "Quarter Circle";
-			this.btnQCircle.UseVisualStyleBackColor = true;
-			this.btnQCircle.Click += new System.EventHandler(this.btnQCircle_Click);
+			this.tableLayoutPanel6.ColumnCount = 2;
+			this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+			this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+			this.tableLayoutPanel6.Controls.Add(this.btnDebugNumberRep, 1, 0);
+			this.tableLayoutPanel6.Controls.Add(this.edNumberRep, 0, 0);
+			this.tableLayoutPanel6.Location = new System.Drawing.Point(3, 73);
+			this.tableLayoutPanel6.Name = "tableLayoutPanel6";
+			this.tableLayoutPanel6.RowCount = 1;
+			this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+			this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+			this.tableLayoutPanel6.Size = new System.Drawing.Size(137, 29);
+			this.tableLayoutPanel6.TabIndex = 6;
 			// 
-			// btnFocus
+			// edNumberRep
 			// 
-			this.btnFocus.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.btnFocus.Location = new System.Drawing.Point(3, 178);
-			this.btnFocus.Name = "btnFocus";
-			this.btnFocus.Size = new System.Drawing.Size(137, 29);
-			this.btnFocus.TabIndex = 5;
-			this.btnFocus.Text = "Select All";
-			this.btnFocus.UseVisualStyleBackColor = true;
-			this.btnFocus.Click += new System.EventHandler(this.btnFocus_Click);
+			this.edNumberRep.Location = new System.Drawing.Point(3, 3);
+			this.edNumberRep.Maximum = new decimal(new int[] {
+            1000000,
+            0,
+            0,
+            0});
+			this.edNumberRep.Name = "edNumberRep";
+			this.edNumberRep.Size = new System.Drawing.Size(62, 20);
+			this.edNumberRep.TabIndex = 3;
+			this.edNumberRep.Value = new decimal(new int[] {
+            16384,
+            0,
+            0,
+            0});
 			// 
 			// frmMain
 			// 
@@ -586,6 +622,8 @@
 			this.tableLayoutPanel2.ResumeLayout(false);
 			this.tableLayoutPanel3.ResumeLayout(false);
 			this.tableLayoutPanel3.PerformLayout();
+			this.tableLayoutPanel6.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.edNumberRep)).EndInit();
 			this.ResumeLayout(false);
 
 		}
@@ -626,6 +664,8 @@
 		private System.Windows.Forms.Button btnSendToRun;
 		private System.Windows.Forms.Button btnQCircle;
 		private System.Windows.Forms.Button btnFocus;
+		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel6;
+		private System.Windows.Forms.NumericUpDown edNumberRep;
 	}
 }
 

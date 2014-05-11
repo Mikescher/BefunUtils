@@ -349,7 +349,7 @@ end
 
 		private void btnDebugNumberRep_Click(object sender, EventArgs e)
 		{
-			string bench = NumberCodeHelper.generateBenchmark(16384, true);
+			string bench = NumberCodeHelper.generateBenchmark(Convert.ToInt32(edNumberRep.Value), true);
 
 			txtDebug.Text = bench;
 		}
