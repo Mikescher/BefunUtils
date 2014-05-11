@@ -213,10 +213,11 @@ namespace BefungExec.Logic
 				if (Stack.Count == 0)
 				{
 					err = "Trying to pop an empty stack"; // Yes, pop, not peek - no peek OP in Befunge
-					return 0;
+
+					Stack.Push(0);
 				}
-				else
-					return Stack.Peek();
+
+				return Stack.Peek();
 			}
 		}
 
