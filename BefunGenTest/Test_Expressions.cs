@@ -73,7 +73,7 @@ namespace BefunGenTest
 			ASTObject.CGO.CompileTimeEvaluateExpressions = true;
 
 			BFTestHelper.debugExpression_Output("0", "int", "RAND[0]");
-			BFTestHelper.debugExpression_Output("0", "int", "4 - 4");	//TODO [BUG] Can't parse 4-4 (grammer failure) --> interprets as "4" "-4"
+			BFTestHelper.debugExpression_Output("0", "int", "4 - 4");
 			BFTestHelper.debugExpression_Output("0", "int", "4 * 0");
 			BFTestHelper.debugExpression_Output("0", "int", "0 * 4");
 			BFTestHelper.debugExpression_Output("0", "int", "0 * 0");
