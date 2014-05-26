@@ -410,7 +410,7 @@ namespace BefungExec.View
 
 						font.RenderLQ(docol, new Rect2d(offx + (x - zoom.Peek().bl.X) * w, offy + ((zoom.Peek().Height - 1) - (y - zoom.Peek().bl.Y)) * h, w, h), -4, prog[x, y]);
 
-						last = prog.raster[x, y];
+						last = (decay_perc < 0.66 || prog.breakpoints[x, y]) ? int.MinValue : prog.raster[x, y];
 					}
 				}
 
