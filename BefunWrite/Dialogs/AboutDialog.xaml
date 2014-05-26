@@ -1,7 +1,7 @@
 ﻿<Window x:Class="BefunWrite.Dialogs.AboutDialog"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="About BefunWrite" Height="600" Width="500" WindowStartupLocation="CenterOwner" ResizeMode="NoResize" Icon="/BefunWrite;component/icon.ico">
+        Title="About BefunWrite" Height="600" Width="500" WindowStartupLocation="CenterOwner" ResizeMode="NoResize" Icon="/BefunWrite;component/icon_BefunWrite.ico">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
