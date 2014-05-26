@@ -1,0 +1,96 @@
+{
+  "SourceCodePath": "GameOfLife.tf",
+  "DisplayValuePath": "GameOfLife.tfdv",
+  "OutputPath": "",
+  "SelectedConfiguration": 0,
+  "Configurations": [
+    {
+      "Name": "Debug",
+      "Options": {
+        "NumberLiteralRepresentation": 1,
+        "StripDoubleStringmodeToogle": true,
+        "SetNOPCellsToCustom": true,
+        "CustomNOPSymbol": "¤",
+        "CompressHorizontalCombining": true,
+        "CompressVerticalCombining": true,
+        "DefaultVarDeclarationWidth": 16,
+        "DefaultVarDeclarationSymbol": "V",
+        "DefaultTempSymbol": "R",
+        "DefaultResultTempSymbol": "T",
+        "ExtendedBooleanCast": true,
+        "DefaultNumeralValue": 0,
+        "DefaultCharacterValue": " ",
+        "DefaultBooleanValue": false,
+        "DefaultDisplayValue": " ",
+        "DisplayBorder": "#",
+        "DisplayBorderThickness": 1,
+        "DisplayModuloAccess": true,
+        "CompileTimeEvaluateExpressions": true,
+        "RemUnreferencedMethods": false
+      },
+      "ExecSettings": {
+        "startPaused": true,
+        "syntaxHighlight": true,
+        "asciistack": true,
+        "follocursormode": false,
+        "skipnop": true,
+        "IsDebug": true,
+        "initialSpeedIndex": 3,
+        "simuSpeeds": [
+          500,
+          150,
+          50,
+          1,
+          0
+        ],
+        "decaytime": 500,
+        "dodecay": true,
+        "zoomToDisplay": false
+      }
+    },
+    {
+      "Name": "Release",
+      "Options": {
+        "NumberLiteralRepresentation": 6,
+        "StripDoubleStringmodeToogle": true,
+        "SetNOPCellsToCustom": false,
+        "CustomNOPSymbol": "@",
+        "CompressHorizontalCombining": true,
+        "CompressVerticalCombining": true,
+        "DefaultVarDeclarationWidth": 16,
+        "DefaultVarDeclarationSymbol": " ",
+        "DefaultTempSymbol": " ",
+        "DefaultResultTempSymbol": " ",
+        "ExtendedBooleanCast": false,
+        "DefaultNumeralValue": 0,
+        "DefaultCharacterValue": " ",
+        "DefaultBooleanValue": false,
+        "DefaultDisplayValue": " ",
+        "DisplayBorder": "#",
+        "DisplayBorderThickness": 1,
+        "DisplayModuloAccess": false,
+        "CompileTimeEvaluateExpressions": true,
+        "RemUnreferencedMethods": true
+      },
+      "ExecSettings": {
+        "startPaused": false,
+        "syntaxHighlight": true,
+        "asciistack": true,
+        "follocursormode": false,
+        "skipnop": true,
+        "IsDebug": false,
+        "initialSpeedIndex": 5,
+        "simuSpeeds": [
+          500,
+          150,
+          50,
+          1,
+          0
+        ],
+        "decaytime": 500,
+        "dodecay": false,
+        "zoomToDisplay": false
+      }
+    }
+  ]
+}
