@@ -47,6 +47,7 @@
 			this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.displayToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.syntaxHighlightingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.followCursorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.showTrailToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.aSCIIStackToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripSeparator();
@@ -74,7 +75,7 @@
 			this.showCurrentStateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.followCursorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.captureGIFToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.tableLayoutPanel1.SuspendLayout();
 			this.tableLayoutPanel2.SuspendLayout();
 			this.flowLayoutPanel1.SuspendLayout();
@@ -287,6 +288,14 @@
 			this.syntaxHighlightingToolStripMenuItem.Text = "Syntax Highlighting";
 			this.syntaxHighlightingToolStripMenuItem.CheckedChanged += new System.EventHandler(this.syntaxHighlightingToolStripMenuItem_CheckedChanged);
 			// 
+			// followCursorToolStripMenuItem
+			// 
+			this.followCursorToolStripMenuItem.CheckOnClick = true;
+			this.followCursorToolStripMenuItem.Name = "followCursorToolStripMenuItem";
+			this.followCursorToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.followCursorToolStripMenuItem.Text = "Follow cursor";
+			this.followCursorToolStripMenuItem.CheckedChanged += new System.EventHandler(this.followCursorToolStripMenuItem_CheckedChanged);
+			// 
 			// showTrailToolStripMenuItem
 			// 
 			this.showTrailToolStripMenuItem.CheckOnClick = true;
@@ -483,6 +492,7 @@
 			// helpToolStripMenuItem
 			// 
 			this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.captureGIFToolStripMenuItem,
             this.aboutToolStripMenuItem});
 			this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
 			this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
@@ -491,17 +501,16 @@
 			// aboutToolStripMenuItem
 			// 
 			this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-			this.aboutToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
+			this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.aboutToolStripMenuItem.Text = "About ...";
 			this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
 			// 
-			// followCursorToolStripMenuItem
+			// captureGIFToolStripMenuItem
 			// 
-			this.followCursorToolStripMenuItem.CheckOnClick = true;
-			this.followCursorToolStripMenuItem.Name = "followCursorToolStripMenuItem";
-			this.followCursorToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-			this.followCursorToolStripMenuItem.Text = "Follow cursor";
-			this.followCursorToolStripMenuItem.CheckedChanged += new System.EventHandler(this.followCursorToolStripMenuItem_CheckedChanged);
+			this.captureGIFToolStripMenuItem.Name = "captureGIFToolStripMenuItem";
+			this.captureGIFToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.captureGIFToolStripMenuItem.Text = "Capture GIF";
+			this.captureGIFToolStripMenuItem.Click += new System.EventHandler(this.captureGIFToolStripMenuItem_Click);
 			// 
 			// MainForm
 			// 
@@ -577,5 +586,6 @@
 		private System.Windows.Forms.RichTextBox edOutput;
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.ToolStripMenuItem followCursorToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem captureGIFToolStripMenuItem;
 	}
 }

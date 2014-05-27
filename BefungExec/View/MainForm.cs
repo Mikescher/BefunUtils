@@ -297,7 +297,7 @@ namespace BefungExec.View
 
 		#region Render & Update
 
-		private void RenderProgramView()
+		private void RenderProgramView(bool do_swap = true)
 		{
 			#region INIT
 
@@ -543,9 +543,40 @@ namespace BefungExec.View
 
 			#region FINISH
 
-			glProgramView.SwapBuffers();
+			if (do_swap)
+				glProgramView.SwapBuffers();
 
 			#endregion
+		}
+
+		public Bitmap GrabScreenshot()
+		{
+			double r_offx;
+			double r_offy;
+			double r_w;
+			double r_h;
+			calcProgPos(out r_offx, out r_offy, out r_w, out r_h);
+			r_w *= prog.Width;
+			r_h *= prog.Height;
+
+			int w = glProgramView.Width;
+			int h = glProgramView.Height;
+
+			glProgramView.MakeCurrent();
+
+			RenderProgramView(false);
+
+			if (GraphicsContext.CurrentContext == null)
+				throw new GraphicsContextMissingException();
+
+			Bitmap bmp = new Bitmap(w, h);
+			System.Drawing.Imaging.BitmapData data = bmp.LockBits(new Rectangle(0, 0, w, h), System.Drawing.Imaging.ImageLockMode.WriteOnly, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+			GL.ReadPixels(0, 0, w, h, PixelFormat.Bgr, PixelType.UnsignedByte, data.Scan0);
+			bmp.UnlockBits(data);
+
+			bmp.RotateFlip(RotateFlipType.RotateNoneFlipY);
+
+			return bmp.Clone(new Rectangle((int)r_offx, (int)r_offy, (int)r_w, (int)r_h), bmp.PixelFormat);
 		}
 
 		private void updateProgramView()
@@ -1195,6 +1226,11 @@ namespace BefungExec.View
 		private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			(new AboutForm()).ShowDialog();
+		}
+
+		private void captureGIFToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			(new CaptureForm(this, prog)).ShowDialog();
 		}
 
 		#endregion

@@ -54,6 +54,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommandLineArguments.cs" />
+    <Compile Include="GIFEncoder\AnimatedGifEncoder.cs" />
+    <Compile Include="GIFEncoder\GifDecoder.cs" />
+    <Compile Include="GIFEncoder\LZWEncoder.cs" />
+    <Compile Include="GIFEncoder\NeuQuant.cs" />
     <Compile Include="Logic\BefungeFileHelper.cs" />
     <Compile Include="Logic\BefunProg.cs" />
     <Compile Include="Logic\RunOptions.cs" />
@@ -70,6 +74,12 @@
     </Compile>
     <Compile Include="View\AboutForm.Designer.cs">
       <DependentUpon>AboutForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\CaptureForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\CaptureForm.Designer.cs">
+      <DependentUpon>CaptureForm.cs</DependentUpon>
     </Compile>
     <Compile Include="View\FontRasterSheet.cs" />
     <Compile Include="View\InteropKeyboard.cs" />
@@ -112,6 +122,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="View\AboutForm.resx">
       <DependentUpon>AboutForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\CaptureForm.resx">
+      <DependentUpon>CaptureForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>

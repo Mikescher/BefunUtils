@@ -290,3 +290,5 @@ Do Nothing ... just go on ... stack is fine
 [X] PrimzahlCalcer
 [O] GOL Klon
 */
+
+//TODO : General Befunge Syntax Highlighter --> With PathDiscovery (own Github Repo ?)
