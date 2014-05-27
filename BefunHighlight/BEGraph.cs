@@ -45,13 +45,13 @@ namespace BefunHighlight
 				{
 					if (cmd.getGraphOpType() == BeGraphOpType.Stringmode)
 					{
-						fields[op.X, op.Y].information[(int)op.D].hl_string = true;
-						ops.Push(op.next(Width, Height, op.D));
+						fields[op.X, op.Y].information[(int)op.D].hl_command = true;
+						ops.Push(op.next_sm(Width, Height, op.D));
 					}
 					else
 					{
-						fields[op.X, op.Y].information[(int)op.D].hl_command = true;
-						ops.Push(op.next_sm(Width, Height));
+						fields[op.X, op.Y].information[(int)op.D].hl_string = true;
+						ops.Push(op.next(Width, Height, op.D));
 					}
 				}
 				else
@@ -98,7 +98,7 @@ namespace BefunHighlight
 							break;
 						case BeGraphOpType.Stringmode:
 							fields[op.X, op.Y].information[(int)op.D].hl_command = true;
-							ops.Push(op.next_sm(Width, Height));
+							ops.Push(op.next_sm(Width, Height, op.D));
 							break;
 					}
 				}

@@ -23,25 +23,15 @@ namespace BefunHighlight
 		public BeGraphDirection getDC(BeGraphCommand cmd)
 		{
 			if (cmd.Type == BeGraphCommandType.PC_Up)
-			{
 				return BeGraphDirection.BottomTop;
-			}
 			else if (cmd.Type == BeGraphCommandType.PC_Down)
-			{
 				return BeGraphDirection.TopBottom;
-			}
 			else if (cmd.Type == BeGraphCommandType.PC_Left)
-			{
-				return BeGraphDirection.LeftRight;
-			}
-			else if (cmd.Type == BeGraphCommandType.PC_Right)
-			{
 				return BeGraphDirection.RightLeft;
-			}
+			else if (cmd.Type == BeGraphCommandType.PC_Right)
+				return BeGraphDirection.LeftRight;
 			else
-			{
 				throw new Exception();
-			}
 		}
 
 		public BeGraphCalculateOperation next(int w, int h, BeGraphDirection dir, int jmp = 1)
@@ -85,9 +75,9 @@ namespace BefunHighlight
 			}
 		}
 
-		public BeGraphCalculateOperation next_sm(int w, int h)
+		public BeGraphCalculateOperation next_sm(int w, int h, BeGraphDirection dir)
 		{
-			switch (D)
+			switch (dir)
 			{
 				case BeGraphDirection.LeftRight:
 					return new BeGraphCalculateOperation()

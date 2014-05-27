@@ -39,9 +39,9 @@ namespace BefunHighlight
 			switch (getType())
 			{
 				case HighlightType.Command:
-					return 'X';
+					return '+';
 				case HighlightType.String:
-					return 'O';
+					return ':';
 				case HighlightType.String_and_Command:
 					return '#';
 				case HighlightType.NOP:

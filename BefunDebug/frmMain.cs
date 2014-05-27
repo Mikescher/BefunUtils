@@ -446,7 +446,7 @@ end
 
 		private void btnHighlight_Click(object sender, EventArgs e)
 		{
-			string eh = edHighlight.Text;
+			string eh = edHighlightCode.Text;
 
 			int w;
 			int h;
@@ -458,7 +458,8 @@ end
 
 			string dh = graph.toDebugString();
 
-			edHighlight.Text = dh;
+			edHighlighted.Text = dh;
+			tcHighlight.SelectedIndex = 1;
 		}
 	}
 } //Form
