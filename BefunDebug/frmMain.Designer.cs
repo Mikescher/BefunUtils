@@ -56,16 +56,21 @@
 			this.txtDebug = new System.Windows.Forms.TextBox();
 			this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
 			this.btnExecuteDebug = new System.Windows.Forms.Button();
-			this.btnDebugNumberRep = new System.Windows.Forms.Button();
 			this.btnSendToRun = new System.Windows.Forms.Button();
 			this.btnQCircle = new System.Windows.Forms.Button();
 			this.btnFocus = new System.Windows.Forms.Button();
+			this.tableLayoutPanel6 = new System.Windows.Forms.TableLayoutPanel();
+			this.btnDebugNumberRep = new System.Windows.Forms.Button();
+			this.edNumberRep = new System.Windows.Forms.NumericUpDown();
 			this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
 			this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
 			this.btnLoadSYN = new System.Windows.Forms.Button();
 			this.txtSynFile = new System.Windows.Forms.TextBox();
-			this.tableLayoutPanel6 = new System.Windows.Forms.TableLayoutPanel();
-			this.edNumberRep = new System.Windows.Forms.NumericUpDown();
+			this.tabPage8 = new System.Windows.Forms.TabPage();
+			this.tableLayoutPanel7 = new System.Windows.Forms.TableLayoutPanel();
+			this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+			this.btnHighlight = new System.Windows.Forms.Button();
+			this.edHighlight = new System.Windows.Forms.TextBox();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
@@ -85,10 +90,13 @@
 			this.tabPage7.SuspendLayout();
 			this.tableLayoutPanel1.SuspendLayout();
 			this.tableLayoutPanel5.SuspendLayout();
-			this.tableLayoutPanel2.SuspendLayout();
-			this.tableLayoutPanel3.SuspendLayout();
 			this.tableLayoutPanel6.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.edNumberRep)).BeginInit();
+			this.tableLayoutPanel2.SuspendLayout();
+			this.tableLayoutPanel3.SuspendLayout();
+			this.tabPage8.SuspendLayout();
+			this.tableLayoutPanel7.SuspendLayout();
+			this.flowLayoutPanel1.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// btnLoad
@@ -176,6 +184,7 @@
 			this.tabControl1.Controls.Add(this.tabPage5);
 			this.tabControl1.Controls.Add(this.tabPage6);
 			this.tabControl1.Controls.Add(this.tabPage7);
+			this.tabControl1.Controls.Add(this.tabPage8);
 			this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tabControl1.Location = new System.Drawing.Point(0, 0);
 			this.tabControl1.Name = "tabControl1";
@@ -453,17 +462,6 @@
 			this.btnExecuteDebug.UseVisualStyleBackColor = true;
 			this.btnExecuteDebug.Click += new System.EventHandler(this.btnExecuteDebug_Click);
 			// 
-			// btnDebugNumberRep
-			// 
-			this.btnDebugNumberRep.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.btnDebugNumberRep.Location = new System.Drawing.Point(71, 3);
-			this.btnDebugNumberRep.Name = "btnDebugNumberRep";
-			this.btnDebugNumberRep.Size = new System.Drawing.Size(63, 23);
-			this.btnDebugNumberRep.TabIndex = 2;
-			this.btnDebugNumberRep.Text = "NumRep";
-			this.btnDebugNumberRep.UseVisualStyleBackColor = true;
-			this.btnDebugNumberRep.Click += new System.EventHandler(this.btnDebugNumberRep_Click);
-			// 
 			// btnSendToRun
 			// 
 			this.btnSendToRun.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -496,6 +494,49 @@
 			this.btnFocus.Text = "Select All";
 			this.btnFocus.UseVisualStyleBackColor = true;
 			this.btnFocus.Click += new System.EventHandler(this.btnFocus_Click);
+			// 
+			// tableLayoutPanel6
+			// 
+			this.tableLayoutPanel6.ColumnCount = 2;
+			this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+			this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+			this.tableLayoutPanel6.Controls.Add(this.btnDebugNumberRep, 1, 0);
+			this.tableLayoutPanel6.Controls.Add(this.edNumberRep, 0, 0);
+			this.tableLayoutPanel6.Location = new System.Drawing.Point(3, 73);
+			this.tableLayoutPanel6.Name = "tableLayoutPanel6";
+			this.tableLayoutPanel6.RowCount = 1;
+			this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+			this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 29F));
+			this.tableLayoutPanel6.Size = new System.Drawing.Size(137, 29);
+			this.tableLayoutPanel6.TabIndex = 6;
+			// 
+			// btnDebugNumberRep
+			// 
+			this.btnDebugNumberRep.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.btnDebugNumberRep.Location = new System.Drawing.Point(71, 3);
+			this.btnDebugNumberRep.Name = "btnDebugNumberRep";
+			this.btnDebugNumberRep.Size = new System.Drawing.Size(63, 23);
+			this.btnDebugNumberRep.TabIndex = 2;
+			this.btnDebugNumberRep.Text = "NumRep";
+			this.btnDebugNumberRep.UseVisualStyleBackColor = true;
+			this.btnDebugNumberRep.Click += new System.EventHandler(this.btnDebugNumberRep_Click);
+			// 
+			// edNumberRep
+			// 
+			this.edNumberRep.Location = new System.Drawing.Point(3, 3);
+			this.edNumberRep.Maximum = new decimal(new int[] {
+            1000000,
+            0,
+            0,
+            0});
+			this.edNumberRep.Name = "edNumberRep";
+			this.edNumberRep.Size = new System.Drawing.Size(62, 20);
+			this.edNumberRep.TabIndex = 3;
+			this.edNumberRep.Value = new decimal(new int[] {
+            16384,
+            0,
+            0,
+            0});
 			// 
 			// tableLayoutPanel2
 			// 
@@ -550,37 +591,59 @@
 			this.txtSynFile.Size = new System.Drawing.Size(580, 20);
 			this.txtSynFile.TabIndex = 11;
 			// 
-			// tableLayoutPanel6
+			// tabPage8
 			// 
-			this.tableLayoutPanel6.ColumnCount = 2;
-			this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-			this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-			this.tableLayoutPanel6.Controls.Add(this.btnDebugNumberRep, 1, 0);
-			this.tableLayoutPanel6.Controls.Add(this.edNumberRep, 0, 0);
-			this.tableLayoutPanel6.Location = new System.Drawing.Point(3, 73);
-			this.tableLayoutPanel6.Name = "tableLayoutPanel6";
-			this.tableLayoutPanel6.RowCount = 1;
-			this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-			this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-			this.tableLayoutPanel6.Size = new System.Drawing.Size(137, 29);
-			this.tableLayoutPanel6.TabIndex = 6;
+			this.tabPage8.Controls.Add(this.tableLayoutPanel7);
+			this.tabPage8.Location = new System.Drawing.Point(4, 4);
+			this.tabPage8.Name = "tabPage8";
+			this.tabPage8.Padding = new System.Windows.Forms.Padding(3);
+			this.tabPage8.Size = new System.Drawing.Size(678, 225);
+			this.tabPage8.TabIndex = 7;
+			this.tabPage8.Text = "Highlight";
+			this.tabPage8.UseVisualStyleBackColor = true;
 			// 
-			// edNumberRep
+			// tableLayoutPanel7
 			// 
-			this.edNumberRep.Location = new System.Drawing.Point(3, 3);
-			this.edNumberRep.Maximum = new decimal(new int[] {
-            1000000,
-            0,
-            0,
-            0});
-			this.edNumberRep.Name = "edNumberRep";
-			this.edNumberRep.Size = new System.Drawing.Size(62, 20);
-			this.edNumberRep.TabIndex = 3;
-			this.edNumberRep.Value = new decimal(new int[] {
-            16384,
-            0,
-            0,
-            0});
+			this.tableLayoutPanel7.ColumnCount = 2;
+			this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 80F));
+			this.tableLayoutPanel7.Controls.Add(this.flowLayoutPanel1, 1, 0);
+			this.tableLayoutPanel7.Controls.Add(this.edHighlight, 0, 0);
+			this.tableLayoutPanel7.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.tableLayoutPanel7.Location = new System.Drawing.Point(3, 3);
+			this.tableLayoutPanel7.Name = "tableLayoutPanel7";
+			this.tableLayoutPanel7.RowCount = 1;
+			this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.tableLayoutPanel7.Size = new System.Drawing.Size(672, 219);
+			this.tableLayoutPanel7.TabIndex = 0;
+			// 
+			// flowLayoutPanel1
+			// 
+			this.flowLayoutPanel1.Controls.Add(this.btnHighlight);
+			this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.flowLayoutPanel1.Location = new System.Drawing.Point(595, 3);
+			this.flowLayoutPanel1.Name = "flowLayoutPanel1";
+			this.flowLayoutPanel1.Size = new System.Drawing.Size(74, 213);
+			this.flowLayoutPanel1.TabIndex = 0;
+			// 
+			// btnHighlight
+			// 
+			this.btnHighlight.Location = new System.Drawing.Point(3, 3);
+			this.btnHighlight.Name = "btnHighlight";
+			this.btnHighlight.Size = new System.Drawing.Size(65, 23);
+			this.btnHighlight.TabIndex = 0;
+			this.btnHighlight.Text = "Highlight";
+			this.btnHighlight.UseVisualStyleBackColor = true;
+			this.btnHighlight.Click += new System.EventHandler(this.btnHighlight_Click);
+			// 
+			// edHighlight
+			// 
+			this.edHighlight.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.edHighlight.Location = new System.Drawing.Point(3, 3);
+			this.edHighlight.Multiline = true;
+			this.edHighlight.Name = "edHighlight";
+			this.edHighlight.Size = new System.Drawing.Size(586, 213);
+			this.edHighlight.TabIndex = 1;
 			// 
 			// frmMain
 			// 
@@ -619,11 +682,15 @@
 			this.tableLayoutPanel1.ResumeLayout(false);
 			this.tableLayoutPanel1.PerformLayout();
 			this.tableLayoutPanel5.ResumeLayout(false);
+			this.tableLayoutPanel6.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.edNumberRep)).EndInit();
 			this.tableLayoutPanel2.ResumeLayout(false);
 			this.tableLayoutPanel3.ResumeLayout(false);
 			this.tableLayoutPanel3.PerformLayout();
-			this.tableLayoutPanel6.ResumeLayout(false);
-			((System.ComponentModel.ISupportInitialize)(this.edNumberRep)).EndInit();
+			this.tabPage8.ResumeLayout(false);
+			this.tableLayoutPanel7.ResumeLayout(false);
+			this.tableLayoutPanel7.PerformLayout();
+			this.flowLayoutPanel1.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}
@@ -666,6 +733,11 @@
 		private System.Windows.Forms.Button btnFocus;
 		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel6;
 		private System.Windows.Forms.NumericUpDown edNumberRep;
+		private System.Windows.Forms.TabPage tabPage8;
+		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel7;
+		private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
+		private System.Windows.Forms.Button btnHighlight;
+		private System.Windows.Forms.TextBox edHighlight;
 	}
 }
 

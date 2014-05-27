@@ -157,6 +157,10 @@
       <Project>{9cffc63f-6f1b-44a8-b330-5367bc23bc0e}</Project>
       <Name>BefunExec</Name>
     </ProjectReference>
+    <ProjectReference Include="..\BefunHighlight\BefunHighlight.csproj">
+      <Project>{ed56cfac-ed62-485e-9438-e1fa0216d02f}</Project>
+      <Name>BefunHighlight</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="icon_BefunDebug.ico" />

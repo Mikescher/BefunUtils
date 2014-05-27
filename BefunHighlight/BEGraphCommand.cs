@@ -171,5 +171,48 @@ namespace BefunHighlight
 					return new BeGraphCommand(BeGraphCommandType.Other);
 			}
 		}
+
+		public BeGraphOpType getGraphOpType()
+		{
+			switch (Type)
+			{
+				case BeGraphCommandType.NOP:
+				case BeGraphCommandType.Add:
+				case BeGraphCommandType.Sub:
+				case BeGraphCommandType.Mult:
+				case BeGraphCommandType.Div:
+				case BeGraphCommandType.Modulo:
+				case BeGraphCommandType.Not:
+				case BeGraphCommandType.GreaterThan:
+				case BeGraphCommandType.Stack_Dup:
+				case BeGraphCommandType.Stack_Swap:
+				case BeGraphCommandType.Stack_Pop:
+				case BeGraphCommandType.Out_Int:
+				case BeGraphCommandType.Out_ASCII:
+				case BeGraphCommandType.Reflect_Set:
+				case BeGraphCommandType.Reflect_Get:
+				case BeGraphCommandType.In_Int:
+				case BeGraphCommandType.In_ASCII:
+				case BeGraphCommandType.Other:
+					return BeGraphOpType.SimpleCommand;
+				case BeGraphCommandType.PC_Right:
+				case BeGraphCommandType.PC_Left:
+				case BeGraphCommandType.PC_Up:
+				case BeGraphCommandType.PC_Down:
+					return BeGraphOpType.DirectionChange;
+				case BeGraphCommandType.PC_Random:
+				case BeGraphCommandType.If_Horizontal:
+				case BeGraphCommandType.If_Vertical:
+					return BeGraphOpType.Descision;
+				case BeGraphCommandType.Stringmode:
+					return BeGraphOpType.Stringmode;
+				case BeGraphCommandType.PC_Jump:
+					return BeGraphOpType.Jump;
+				case BeGraphCommandType.Stop:
+					return BeGraphOpType.Stop;
+				default:
+					throw new Exception();
+			}
+		}
 	}
 }

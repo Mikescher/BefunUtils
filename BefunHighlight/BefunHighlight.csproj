@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>BefunHighlight</RootNamespace>
     <AssemblyName>BefunHighlight</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -42,9 +43,12 @@
     <Compile Include="BeGraphCalculateOperation.cs" />
     <Compile Include="BEGraphCommand.cs" />
     <Compile Include="BeGraphDirection.cs" />
-    <Compile Include="BEGraph.cs" />
+    <Compile Include="BeGraph.cs" />
+    <Compile Include="BeGraphHelper.cs" />
+    <Compile Include="BeGraphOpType.cs" />
     <Compile Include="HighlightField.cs" />
     <Compile Include="HighlightInformation.cs" />
+    <Compile Include="HighlightType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

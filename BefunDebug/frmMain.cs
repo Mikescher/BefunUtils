@@ -1,6 +1,7 @@
 ﻿using BefunGen.AST;
 using BefunGen.AST.CodeGen;
 using BefunGen.AST.CodeGen.NumberCode;
+using BefunHighlight;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -441,6 +442,23 @@ end
 		{
 			txtDebug.Focus();
 			txtDebug.SelectAll();
+		}
+
+		private void btnHighlight_Click(object sender, EventArgs e)
+		{
+			string eh = edHighlight.Text;
+
+			int w;
+			int h;
+			BeGraphCommand[,] cmds = BeGraphHelper.parse(eh, out w, out h);
+
+			BeGraph graph = new BeGraph(w, h);
+
+			graph.Calculate(0, 0, BeGraphDirection.LeftRight, cmds);
+
+			string dh = graph.toDebugString();
+
+			edHighlight.Text = dh;
 		}
 	}
 } //Form
