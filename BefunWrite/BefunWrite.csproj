@@ -205,9 +205,9 @@
       <Project>{1ff871b2-5334-487a-bb1b-da8245c8083f}</Project>
       <Name>BefunGen</Name>
     </ProjectReference>
-    <ProjectReference Include="..\BefungExec\BefungExec.csproj">
+    <ProjectReference Include="..\BefungExec\BefunExec.csproj">
       <Project>{9cffc63f-6f1b-44a8-b330-5367bc23bc0e}</Project>
-      <Name>BefungExec</Name>
+      <Name>BefunExec</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
