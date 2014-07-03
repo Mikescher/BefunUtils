@@ -3,10 +3,14 @@ namespace BefunHighlight
 {
 	public class HighlightField
 	{
-		public HighlightInformation[] information = new HighlightInformation[8]; // One for each BEGraphDirection
+		public HighlightInformation[] information = new HighlightInformation[8]; // One for each _incoming_ BEGraphDirection
 
-		public HighlightField()
+		public readonly BeGraphCommand command;
+
+		public HighlightField(BeGraphCommand cmd)
 		{
+			command = cmd;
+
 			for (int i = 0; i < 8; i++)
 			{
 				information[i] = new HighlightInformation();

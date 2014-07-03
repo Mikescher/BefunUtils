@@ -41,7 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BeGraphCalculateOperation.cs" />
-    <Compile Include="BEGraphCommand.cs" />
+    <Compile Include="BeGraphCommand.cs" />
     <Compile Include="BeGraphDirection.cs" />
     <Compile Include="BeGraph.cs" />
     <Compile Include="BeGraphHelper.cs" />
