@@ -48,5 +48,21 @@ namespace BefunHighlight
 
 			return prog;
 		}
+
+		public static BeGraphDirection getBeGraphDir(int delta_x, int delta_y)
+		{
+			BeGraphDirection d = BeGraphDirection.LeftRight;
+
+			if (delta_x == -1)
+				d = BeGraphDirection.RightLeft;
+			else if (delta_x == 1)
+				d = BeGraphDirection.LeftRight;
+			else if (delta_y == -1)
+				d = BeGraphDirection.BottomTop;
+			else if (delta_y == 1)
+				d = BeGraphDirection.TopBottom;
+
+			return d;
+		}
 	}
 }

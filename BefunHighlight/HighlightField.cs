@@ -5,7 +5,7 @@ namespace BefunHighlight
 	{
 		public HighlightInformation[] information = new HighlightInformation[8]; // One for each _incoming_ BEGraphDirection
 
-		public readonly BeGraphCommand command;
+		public BeGraphCommand command;
 
 		public HighlightField(BeGraphCommand cmd)
 		{
