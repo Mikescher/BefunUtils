@@ -4,8 +4,8 @@ namespace BefunHighlight
 {
 	struct BeGraphCalculateOperation
 	{
-		public int X;
-		public int Y;
+		public long X;
+		public long Y;
 		public BeGraphDirection D;
 
 		public bool isDirectionStringMode

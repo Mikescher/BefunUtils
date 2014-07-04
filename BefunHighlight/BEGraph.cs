@@ -25,7 +25,7 @@ namespace BefunHighlight
 		{
 			for (int x = 0; x < Width; x++)
 				for (int y = 0; y < Height; y++)
-					fields[x, y] = new HighlightField(cmds[x,y]);
+					fields[x, y] = new HighlightField(cmds[x, y]);
 		}
 
 		public void Calculate(BeGraphCommand[,] cmds)
@@ -33,12 +33,15 @@ namespace BefunHighlight
 			Calculate(0, 0, BeGraphDirection.LeftRight, cmds);
 		}
 
-		public void Calculate(int _x, int _y, BeGraphDirection _d, BeGraphCommand[,] cmds, bool reset = true)
+		public void Calculate(long _x, long _y, BeGraphDirection _d, BeGraphCommand[,] cmds, bool reset = true)
 		{
 			if (reset)
 				Reset(cmds);
 
 			last_cmds = cmds;
+
+			if (cmds.GetLength(0) * cmds.GetLength(1) == 0)
+				return;
 
 			Stack<BeGraphCalculateOperation> ops = new Stack<BeGraphCalculateOperation>();
 			ops.Push(new BeGraphCalculateOperation() { X = _x, Y = _y, D = _d });
@@ -115,14 +118,14 @@ namespace BefunHighlight
 			}
 		}
 
-		public bool Update(int _x, int _y, BeGraphCommand cmd, int pos_x, int pos_y, int delta_x, int delta_y)
+		public bool Update(long _x, long _y, BeGraphCommand cmd, long pos_x, long pos_y, int delta_x, int delta_y)
 		{
 			BeGraphDirection d = BeGraphHelper.getBeGraphDir(delta_x, delta_y);
 
 			return Update(_x, _y, cmd, pos_x, pos_y, d);
 		}
 
-		public bool Update(int _x, int _y, BeGraphCommand cmd, int pos_x, int pos_y, BeGraphDirection d)
+		public bool Update(long _x, long _y, BeGraphCommand cmd, long pos_x, long pos_y, BeGraphDirection d)
 		{
 			if (fields[_x, _y].getType() == HighlightType.NOP)
 			{

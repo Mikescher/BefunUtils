@@ -12,7 +12,7 @@ namespace BefunGen.AST.CodeGen.NumberCode
 			return p;
 		}
 
-		public static CodePiece generateCode(int lit)
+		public static CodePiece generateCode(long lit)
 		{
 			CodePiece p = new CodePiece();
 

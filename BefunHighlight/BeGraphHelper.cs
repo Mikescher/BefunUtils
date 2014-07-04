@@ -49,6 +49,23 @@ namespace BefunHighlight
 			return prog;
 		}
 
+		public static BeGraphCommand[,] parse(long[,] raster)
+		{
+			int w;
+			int h;
+			BeGraphCommand[,] prog = new BeGraphCommand[w = raster.GetLength(0), h = raster.GetLength(1)];
+
+			for (int y = 0; y < h; y++)
+			{
+				for (int x = 0; x < w; x++)
+				{
+					prog[x, y] = BeGraphCommand.getCommand(raster[x, y]);
+				}
+			}
+
+			return prog;
+		}
+
 		public static BeGraphDirection getBeGraphDir(int delta_x, int delta_y)
 		{
 			BeGraphDirection d = BeGraphDirection.LeftRight;

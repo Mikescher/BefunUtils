@@ -109,7 +109,7 @@ namespace BefunHighlight
 			}
 		}
 
-		public static BeGraphCommand getCommand(int code)
+		public static BeGraphCommand getCommand(long code)
 		{
 			switch (code)
 			{
