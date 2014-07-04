@@ -10,7 +10,7 @@ namespace BefunGen.AST.CodeGen.NumberCode
 	{
 		public static NumberRep lastRep;
 
-		public static CodePiece generateCode(int Value, bool reversed)
+		public static CodePiece generateCode(long Value, bool reversed)
 		{
 			CodePiece p = generateCode(Value);
 			if (reversed)
@@ -18,7 +18,7 @@ namespace BefunGen.AST.CodeGen.NumberCode
 			return p;
 		}
 
-		public static CodePiece generateCode(int Value)
+		public static CodePiece generateCode(long Value)
 		{
 			CodePiece p;
 
@@ -85,7 +85,7 @@ namespace BefunGen.AST.CodeGen.NumberCode
 			throw new WTFException();
 		}
 
-		public static List<Tuple<NumberRep, CodePiece>> generateAllCode(int Value, bool filter, bool reversed = false)
+		public static List<Tuple<NumberRep, CodePiece>> generateAllCode(long Value, bool filter, bool reversed = false)
 		{
 			List<Tuple<NumberRep, CodePiece>> result = new List<Tuple<NumberRep, CodePiece>>();
 

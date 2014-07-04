@@ -5,7 +5,7 @@ namespace BefunGen.AST.CodeGen.NumberCode
 {
 	public static class NumberCodeFactory_Factorization
 	{
-		public static CodePiece generateCode(int Value, bool reversed)
+		public static CodePiece generateCode(long Value, bool reversed)
 		{
 			CodePiece p = generateCode(Value);
 			if (reversed)
@@ -13,7 +13,7 @@ namespace BefunGen.AST.CodeGen.NumberCode
 			return p;
 		}
 
-		public static CodePiece generateCode(int lit)
+		public static CodePiece generateCode(long lit)
 		{
 			bool isneg;
 			if (isneg = lit < 0)
@@ -44,7 +44,7 @@ namespace BefunGen.AST.CodeGen.NumberCode
 			return p;
 		}
 
-		private static void getFactors(CodePiece p, int a) // Wenn nicht möglich so gut wie mögl und am ende add
+		private static void getFactors(CodePiece p, long a) // Wenn nicht möglich so gut wie mögl und am ende add
 		{
 			List<int> result = new List<int>();
 

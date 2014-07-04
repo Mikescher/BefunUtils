@@ -207,6 +207,11 @@ namespace BefunGen.AST.CodeGen
 			return new BefungeCommand(BefungeCommandType.Other, v);
 		}
 
+		public static BefungeCommand chr(long v)
+		{
+			return new BefungeCommand(BefungeCommandType.Other, (int)v); // Hardcode down - hopefully never use such big numbers ...
+		}
+
 		public static BefungeCommand dig(byte v)
 		{
 			if (v < 10)

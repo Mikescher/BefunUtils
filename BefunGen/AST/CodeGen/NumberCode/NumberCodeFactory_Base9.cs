@@ -4,7 +4,7 @@ namespace BefunGen.AST.CodeGen.NumberCode
 {
 	public class NumberCodeFactory_Base9
 	{
-		public static CodePiece generateCode(int Value, bool reversed)
+		public static CodePiece generateCode(long Value, bool reversed)
 		{
 			CodePiece p = generateCode(Value);
 			if (reversed)

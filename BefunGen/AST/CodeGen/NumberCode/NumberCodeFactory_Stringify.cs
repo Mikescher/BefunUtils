@@ -11,7 +11,7 @@ namespace BefunGen.AST.CodeGen.NumberCode
 		private const char MIN_ASCII = ' '; // 32
 		private const char MAX_ASCII = '~'; // 126
 
-		public static CodePiece generateCode(int Value, bool reversed)
+		public static CodePiece generateCode(long Value, bool reversed)
 		{
 			CodePiece p = generateCode(Value);
 
@@ -23,7 +23,7 @@ namespace BefunGen.AST.CodeGen.NumberCode
 			return p;
 		}
 
-		public static CodePiece generateCode(int lit)
+		public static CodePiece generateCode(long lit)
 		{
 			if (lit < 0)
 			{
@@ -102,7 +102,7 @@ namespace BefunGen.AST.CodeGen.NumberCode
 			return null;
 		}
 
-		private static bool calculateStringOps(out List<char> str, out List<StripOp> ops, int val)
+		private static bool calculateStringOps(out List<char> str, out List<StripOp> ops, long val)
 		{
 			if (val < MIN_ASCII)
 			{

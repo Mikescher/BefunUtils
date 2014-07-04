@@ -3,7 +3,7 @@ namespace BefunGen.AST.CodeGen.NumberCode
 {
 	public class NumberCodeFactory_StringmodeChar
 	{
-		public static CodePiece generateCode(int Value, bool reversed)
+		public static CodePiece generateCode(long Value, bool reversed)
 		{
 			CodePiece p = generateCode(Value);
 
@@ -15,7 +15,7 @@ namespace BefunGen.AST.CodeGen.NumberCode
 			return p;
 		}
 
-		public static CodePiece generateCode(int Value)
+		public static CodePiece generateCode(long Value)
 		{
 			CodePiece p = new CodePiece();
 

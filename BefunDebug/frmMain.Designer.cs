@@ -66,15 +66,18 @@
 			this.tableLayoutPanel7 = new System.Windows.Forms.TableLayoutPanel();
 			this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
 			this.btnHighlight = new System.Windows.Forms.Button();
+			this.tcHighlight = new System.Windows.Forms.TabControl();
+			this.tabPage9 = new System.Windows.Forms.TabPage();
 			this.edHighlightCode = new System.Windows.Forms.TextBox();
+			this.tabPage10 = new System.Windows.Forms.TabPage();
+			this.edHighlighted = new System.Windows.Forms.TextBox();
 			this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
 			this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
 			this.btnLoadSYN = new System.Windows.Forms.Button();
 			this.txtSynFile = new System.Windows.Forms.TextBox();
-			this.tcHighlight = new System.Windows.Forms.TabControl();
-			this.tabPage9 = new System.Windows.Forms.TabPage();
-			this.tabPage10 = new System.Windows.Forms.TabPage();
-			this.edHighlighted = new System.Windows.Forms.TextBox();
+			this.tableLayoutPanel8 = new System.Windows.Forms.TableLayoutPanel();
+			this.btnSingleRep = new System.Windows.Forms.Button();
+			this.edSingleRep = new System.Windows.Forms.NumericUpDown();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
@@ -99,11 +102,13 @@
 			this.tabPage8.SuspendLayout();
 			this.tableLayoutPanel7.SuspendLayout();
 			this.flowLayoutPanel1.SuspendLayout();
-			this.tableLayoutPanel2.SuspendLayout();
-			this.tableLayoutPanel3.SuspendLayout();
 			this.tcHighlight.SuspendLayout();
 			this.tabPage9.SuspendLayout();
 			this.tabPage10.SuspendLayout();
+			this.tableLayoutPanel2.SuspendLayout();
+			this.tableLayoutPanel3.SuspendLayout();
+			this.tableLayoutPanel8.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.edSingleRep)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// btnLoad
@@ -444,6 +449,7 @@
 			this.tableLayoutPanel5.Controls.Add(this.btnQCircle, 0, 4);
 			this.tableLayoutPanel5.Controls.Add(this.btnFocus, 0, 5);
 			this.tableLayoutPanel5.Controls.Add(this.tableLayoutPanel6, 0, 2);
+			this.tableLayoutPanel5.Controls.Add(this.tableLayoutPanel8, 0, 1);
 			this.tableLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tableLayoutPanel5.Location = new System.Drawing.Point(526, 3);
 			this.tableLayoutPanel5.Name = "tableLayoutPanel5";
@@ -524,7 +530,7 @@
 			this.btnDebugNumberRep.Name = "btnDebugNumberRep";
 			this.btnDebugNumberRep.Size = new System.Drawing.Size(63, 23);
 			this.btnDebugNumberRep.TabIndex = 2;
-			this.btnDebugNumberRep.Text = "NumRep";
+			this.btnDebugNumberRep.Text = "Bench";
 			this.btnDebugNumberRep.UseVisualStyleBackColor = true;
 			this.btnDebugNumberRep.Click += new System.EventHandler(this.btnDebugNumberRep_Click);
 			// 
@@ -590,6 +596,28 @@
 			this.btnHighlight.UseVisualStyleBackColor = true;
 			this.btnHighlight.Click += new System.EventHandler(this.btnHighlight_Click);
 			// 
+			// tcHighlight
+			// 
+			this.tcHighlight.Controls.Add(this.tabPage9);
+			this.tcHighlight.Controls.Add(this.tabPage10);
+			this.tcHighlight.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.tcHighlight.Location = new System.Drawing.Point(3, 3);
+			this.tcHighlight.Name = "tcHighlight";
+			this.tcHighlight.SelectedIndex = 0;
+			this.tcHighlight.Size = new System.Drawing.Size(586, 213);
+			this.tcHighlight.TabIndex = 1;
+			// 
+			// tabPage9
+			// 
+			this.tabPage9.Controls.Add(this.edHighlightCode);
+			this.tabPage9.Location = new System.Drawing.Point(4, 22);
+			this.tabPage9.Name = "tabPage9";
+			this.tabPage9.Padding = new System.Windows.Forms.Padding(3);
+			this.tabPage9.Size = new System.Drawing.Size(578, 187);
+			this.tabPage9.TabIndex = 0;
+			this.tabPage9.Text = "Code";
+			this.tabPage9.UseVisualStyleBackColor = true;
+			// 
 			// edHighlightCode
 			// 
 			this.edHighlightCode.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -600,6 +628,28 @@
 			this.edHighlightCode.ScrollBars = System.Windows.Forms.ScrollBars.Both;
 			this.edHighlightCode.Size = new System.Drawing.Size(572, 181);
 			this.edHighlightCode.TabIndex = 1;
+			// 
+			// tabPage10
+			// 
+			this.tabPage10.Controls.Add(this.edHighlighted);
+			this.tabPage10.Location = new System.Drawing.Point(4, 22);
+			this.tabPage10.Name = "tabPage10";
+			this.tabPage10.Padding = new System.Windows.Forms.Padding(3);
+			this.tabPage10.Size = new System.Drawing.Size(578, 187);
+			this.tabPage10.TabIndex = 1;
+			this.tabPage10.Text = "Highlight";
+			this.tabPage10.UseVisualStyleBackColor = true;
+			// 
+			// edHighlighted
+			// 
+			this.edHighlighted.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.edHighlighted.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.edHighlighted.Location = new System.Drawing.Point(3, 3);
+			this.edHighlighted.Multiline = true;
+			this.edHighlighted.Name = "edHighlighted";
+			this.edHighlighted.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+			this.edHighlighted.Size = new System.Drawing.Size(572, 181);
+			this.edHighlighted.TabIndex = 2;
 			// 
 			// tableLayoutPanel2
 			// 
@@ -654,49 +704,46 @@
 			this.txtSynFile.Size = new System.Drawing.Size(580, 20);
 			this.txtSynFile.TabIndex = 11;
 			// 
-			// tcHighlight
+			// tableLayoutPanel8
 			// 
-			this.tcHighlight.Controls.Add(this.tabPage9);
-			this.tcHighlight.Controls.Add(this.tabPage10);
-			this.tcHighlight.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tcHighlight.Location = new System.Drawing.Point(3, 3);
-			this.tcHighlight.Name = "tcHighlight";
-			this.tcHighlight.SelectedIndex = 0;
-			this.tcHighlight.Size = new System.Drawing.Size(586, 213);
-			this.tcHighlight.TabIndex = 1;
+			this.tableLayoutPanel8.ColumnCount = 2;
+			this.tableLayoutPanel8.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+			this.tableLayoutPanel8.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+			this.tableLayoutPanel8.Controls.Add(this.btnSingleRep, 1, 0);
+			this.tableLayoutPanel8.Controls.Add(this.edSingleRep, 0, 0);
+			this.tableLayoutPanel8.Location = new System.Drawing.Point(3, 38);
+			this.tableLayoutPanel8.Name = "tableLayoutPanel8";
+			this.tableLayoutPanel8.RowCount = 1;
+			this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+			this.tableLayoutPanel8.Size = new System.Drawing.Size(137, 29);
+			this.tableLayoutPanel8.TabIndex = 7;
 			// 
-			// tabPage9
+			// btnSingleRep
 			// 
-			this.tabPage9.Controls.Add(this.edHighlightCode);
-			this.tabPage9.Location = new System.Drawing.Point(4, 22);
-			this.tabPage9.Name = "tabPage9";
-			this.tabPage9.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPage9.Size = new System.Drawing.Size(578, 187);
-			this.tabPage9.TabIndex = 0;
-			this.tabPage9.Text = "Code";
-			this.tabPage9.UseVisualStyleBackColor = true;
+			this.btnSingleRep.Location = new System.Drawing.Point(71, 3);
+			this.btnSingleRep.Name = "btnSingleRep";
+			this.btnSingleRep.Size = new System.Drawing.Size(63, 23);
+			this.btnSingleRep.TabIndex = 0;
+			this.btnSingleRep.Text = "NumRep";
+			this.btnSingleRep.UseVisualStyleBackColor = true;
+			this.btnSingleRep.Click += new System.EventHandler(this.btnSingleRep_Click);
 			// 
-			// tabPage10
+			// edSingleRep
 			// 
-			this.tabPage10.Controls.Add(this.edHighlighted);
-			this.tabPage10.Location = new System.Drawing.Point(4, 22);
-			this.tabPage10.Name = "tabPage10";
-			this.tabPage10.Padding = new System.Windows.Forms.Padding(3);
-			this.tabPage10.Size = new System.Drawing.Size(578, 187);
-			this.tabPage10.TabIndex = 1;
-			this.tabPage10.Text = "Highlight";
-			this.tabPage10.UseVisualStyleBackColor = true;
-			// 
-			// edHighlighted
-			// 
-			this.edHighlighted.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.edHighlighted.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.edHighlighted.Location = new System.Drawing.Point(3, 3);
-			this.edHighlighted.Multiline = true;
-			this.edHighlighted.Name = "edHighlighted";
-			this.edHighlighted.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-			this.edHighlighted.Size = new System.Drawing.Size(572, 181);
-			this.edHighlighted.TabIndex = 2;
+			this.edSingleRep.Location = new System.Drawing.Point(3, 3);
+			this.edSingleRep.Maximum = new decimal(new int[] {
+            -1,
+            0,
+            0,
+            0});
+			this.edSingleRep.Name = "edSingleRep";
+			this.edSingleRep.Size = new System.Drawing.Size(62, 20);
+			this.edSingleRep.TabIndex = 1;
+			this.edSingleRep.Value = new decimal(new int[] {
+            1024,
+            0,
+            0,
+            0});
 			// 
 			// frmMain
 			// 
@@ -740,14 +787,16 @@
 			this.tabPage8.ResumeLayout(false);
 			this.tableLayoutPanel7.ResumeLayout(false);
 			this.flowLayoutPanel1.ResumeLayout(false);
-			this.tableLayoutPanel2.ResumeLayout(false);
-			this.tableLayoutPanel3.ResumeLayout(false);
-			this.tableLayoutPanel3.PerformLayout();
 			this.tcHighlight.ResumeLayout(false);
 			this.tabPage9.ResumeLayout(false);
 			this.tabPage9.PerformLayout();
 			this.tabPage10.ResumeLayout(false);
 			this.tabPage10.PerformLayout();
+			this.tableLayoutPanel2.ResumeLayout(false);
+			this.tableLayoutPanel3.ResumeLayout(false);
+			this.tableLayoutPanel3.PerformLayout();
+			this.tableLayoutPanel8.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.edSingleRep)).EndInit();
 			this.ResumeLayout(false);
 
 		}
@@ -799,6 +848,9 @@
 		private System.Windows.Forms.TabPage tabPage9;
 		private System.Windows.Forms.TabPage tabPage10;
 		private System.Windows.Forms.TextBox edHighlighted;
+		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel8;
+		private System.Windows.Forms.Button btnSingleRep;
+		internal System.Windows.Forms.NumericUpDown edSingleRep;
 	}
 }
 

@@ -1,24 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
+﻿
 namespace BefunGen.AST.CodeGen.NumberCode
 {
 	public class NumberCodeFactory_Boolean
 	{
-		public static CodePiece generateCode(int Value)
+		public static CodePiece generateCode(long Value)
 		{
 			return generateCode(Value, false);
 		}
 
-		public static CodePiece generateCode(int Value, bool reversed)
+		public static CodePiece generateCode(long Value, bool reversed)
 		{
 			if (Value == 0 || Value == 1)
 			{
 				return generateCode(Value == 1, reversed);
 			}
-			else 
+			else
 			{
 				return null;
 			}

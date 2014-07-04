@@ -8,6 +8,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
+using System.Linq;
 
 namespace BefunGen
 {
@@ -460,6 +461,13 @@ end
 
 			edHighlighted.Text = dh;
 			tcHighlight.SelectedIndex = 1;
+		}
+
+		private void btnSingleRep_Click(object sender, EventArgs e)
+		{
+			string bench = String.Join(Environment.NewLine, NumberCodeHelper.generateAllCode(Convert.ToInt64(edSingleRep.Value), true).Select(p => p.Item1 + ":  " + p.Item2.ToSimpleString()).ToList());
+
+			txtDebug.Text = bench;
 		}
 	}
 } //Form
