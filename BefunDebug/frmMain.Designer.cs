@@ -62,6 +62,9 @@
 			this.tableLayoutPanel6 = new System.Windows.Forms.TableLayoutPanel();
 			this.btnDebugNumberRep = new System.Windows.Forms.Button();
 			this.edNumberRep = new System.Windows.Forms.NumericUpDown();
+			this.tableLayoutPanel8 = new System.Windows.Forms.TableLayoutPanel();
+			this.btnSingleRep = new System.Windows.Forms.Button();
+			this.edSingleRep = new System.Windows.Forms.NumericUpDown();
 			this.tabPage8 = new System.Windows.Forms.TabPage();
 			this.tableLayoutPanel7 = new System.Windows.Forms.TableLayoutPanel();
 			this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
@@ -75,9 +78,6 @@
 			this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
 			this.btnLoadSYN = new System.Windows.Forms.Button();
 			this.txtSynFile = new System.Windows.Forms.TextBox();
-			this.tableLayoutPanel8 = new System.Windows.Forms.TableLayoutPanel();
-			this.btnSingleRep = new System.Windows.Forms.Button();
-			this.edSingleRep = new System.Windows.Forms.NumericUpDown();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
@@ -99,6 +99,8 @@
 			this.tableLayoutPanel5.SuspendLayout();
 			this.tableLayoutPanel6.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.edNumberRep)).BeginInit();
+			this.tableLayoutPanel8.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.edSingleRep)).BeginInit();
 			this.tabPage8.SuspendLayout();
 			this.tableLayoutPanel7.SuspendLayout();
 			this.flowLayoutPanel1.SuspendLayout();
@@ -107,8 +109,6 @@
 			this.tabPage10.SuspendLayout();
 			this.tableLayoutPanel2.SuspendLayout();
 			this.tableLayoutPanel3.SuspendLayout();
-			this.tableLayoutPanel8.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.edSingleRep)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// btnLoad
@@ -551,6 +551,47 @@
             0,
             0});
 			// 
+			// tableLayoutPanel8
+			// 
+			this.tableLayoutPanel8.ColumnCount = 2;
+			this.tableLayoutPanel8.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+			this.tableLayoutPanel8.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+			this.tableLayoutPanel8.Controls.Add(this.btnSingleRep, 1, 0);
+			this.tableLayoutPanel8.Controls.Add(this.edSingleRep, 0, 0);
+			this.tableLayoutPanel8.Location = new System.Drawing.Point(3, 38);
+			this.tableLayoutPanel8.Name = "tableLayoutPanel8";
+			this.tableLayoutPanel8.RowCount = 1;
+			this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+			this.tableLayoutPanel8.Size = new System.Drawing.Size(137, 29);
+			this.tableLayoutPanel8.TabIndex = 7;
+			// 
+			// btnSingleRep
+			// 
+			this.btnSingleRep.Location = new System.Drawing.Point(71, 3);
+			this.btnSingleRep.Name = "btnSingleRep";
+			this.btnSingleRep.Size = new System.Drawing.Size(63, 23);
+			this.btnSingleRep.TabIndex = 0;
+			this.btnSingleRep.Text = "NumRep";
+			this.btnSingleRep.UseVisualStyleBackColor = true;
+			this.btnSingleRep.Click += new System.EventHandler(this.btnSingleRep_Click);
+			// 
+			// edSingleRep
+			// 
+			this.edSingleRep.Location = new System.Drawing.Point(3, 3);
+			this.edSingleRep.Maximum = new decimal(new int[] {
+            -1,
+            0,
+            0,
+            0});
+			this.edSingleRep.Name = "edSingleRep";
+			this.edSingleRep.Size = new System.Drawing.Size(62, 20);
+			this.edSingleRep.TabIndex = 1;
+			this.edSingleRep.Value = new decimal(new int[] {
+            1024,
+            0,
+            0,
+            0});
+			// 
 			// tabPage8
 			// 
 			this.tabPage8.Controls.Add(this.tableLayoutPanel7);
@@ -704,47 +745,6 @@
 			this.txtSynFile.Size = new System.Drawing.Size(580, 20);
 			this.txtSynFile.TabIndex = 11;
 			// 
-			// tableLayoutPanel8
-			// 
-			this.tableLayoutPanel8.ColumnCount = 2;
-			this.tableLayoutPanel8.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-			this.tableLayoutPanel8.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-			this.tableLayoutPanel8.Controls.Add(this.btnSingleRep, 1, 0);
-			this.tableLayoutPanel8.Controls.Add(this.edSingleRep, 0, 0);
-			this.tableLayoutPanel8.Location = new System.Drawing.Point(3, 38);
-			this.tableLayoutPanel8.Name = "tableLayoutPanel8";
-			this.tableLayoutPanel8.RowCount = 1;
-			this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-			this.tableLayoutPanel8.Size = new System.Drawing.Size(137, 29);
-			this.tableLayoutPanel8.TabIndex = 7;
-			// 
-			// btnSingleRep
-			// 
-			this.btnSingleRep.Location = new System.Drawing.Point(71, 3);
-			this.btnSingleRep.Name = "btnSingleRep";
-			this.btnSingleRep.Size = new System.Drawing.Size(63, 23);
-			this.btnSingleRep.TabIndex = 0;
-			this.btnSingleRep.Text = "NumRep";
-			this.btnSingleRep.UseVisualStyleBackColor = true;
-			this.btnSingleRep.Click += new System.EventHandler(this.btnSingleRep_Click);
-			// 
-			// edSingleRep
-			// 
-			this.edSingleRep.Location = new System.Drawing.Point(3, 3);
-			this.edSingleRep.Maximum = new decimal(new int[] {
-            -1,
-            0,
-            0,
-            0});
-			this.edSingleRep.Name = "edSingleRep";
-			this.edSingleRep.Size = new System.Drawing.Size(62, 20);
-			this.edSingleRep.TabIndex = 1;
-			this.edSingleRep.Value = new decimal(new int[] {
-            1024,
-            0,
-            0,
-            0});
-			// 
 			// frmMain
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -784,6 +784,8 @@
 			this.tableLayoutPanel5.ResumeLayout(false);
 			this.tableLayoutPanel6.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.edNumberRep)).EndInit();
+			this.tableLayoutPanel8.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.edSingleRep)).EndInit();
 			this.tabPage8.ResumeLayout(false);
 			this.tableLayoutPanel7.ResumeLayout(false);
 			this.flowLayoutPanel1.ResumeLayout(false);
@@ -795,8 +797,6 @@
 			this.tableLayoutPanel2.ResumeLayout(false);
 			this.tableLayoutPanel3.ResumeLayout(false);
 			this.tableLayoutPanel3.PerformLayout();
-			this.tableLayoutPanel8.ResumeLayout(false);
-			((System.ComponentModel.ISupportInitialize)(this.edSingleRep)).EndInit();
 			this.ResumeLayout(false);
 
 		}

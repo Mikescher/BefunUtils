@@ -1,5 +1,5 @@
-﻿using BefunGen.AST.CodeGen;
-using BefungExec.Logic;
+﻿using BefunExec.Logic;
+using BefunGen.AST.CodeGen;
 using System.Collections.Generic;
 
 namespace BefunWrite
