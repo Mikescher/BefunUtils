@@ -41,25 +41,30 @@
 
                     <Expander Header="Execution" IsExpanded="True">
                         <ctrls:TwoColumnGrid RowSpacing="5" ColumnSpacing="5">
-                            <Label Content="Debugging Enabled" />
+                            <Label Content="Debugging enabled" />
                             <CheckBox x:Name="V_EX_IsDebug" VerticalAlignment="Center"/>
                             
-                            <Label Content="Start Paused" />
+                            <Label Content="Start paused" />
                             <CheckBox x:Name="V_EX_StartPaused" VerticalAlignment="Center"/>
 
-                            <Label Content="Syntaxhighlighting" />
-                            <CheckBox x:Name="V_EX_SyntaxHighlighting" VerticalAlignment="Center"/>
+                            <Label Content="Syntax highlighting" />
+							<ComboBox x:Name="V_EX_SyntaxHighlighting" VerticalAlignment="Center" SelectedIndex="0">
+								<ComboBoxItem Content="Automatic"/>
+								<ComboBoxItem Content="None"/>
+								<ComboBoxItem Content="Simple"/>
+								<ComboBoxItem Content="Extended"/>
+							</ComboBox>
 
-                            <Label Content="Show Character in Stack as Chars" />
+                            <Label Content="Show entries in stack as ASCII" />
                             <CheckBox x:Name="V_EX_ASCIIStack" VerticalAlignment="Center"/>
 
                             <Label Content="Automatically follow the PC" />
                             <CheckBox x:Name="V_EX_FollowCursorMode" VerticalAlignment="Center"/>
 
-                            <Label Content="Skip Whitespace Execution" />
+                            <Label Content="Skip whitespace execution" />
                             <CheckBox x:Name="V_EX_SkipNOP" VerticalAlignment="Center"/>
 
-                            <Label Content="Initial Speed Setting" />
+                            <Label Content="Initial speed setting" />
                             <xctk:IntegerUpDown x:Name="V_EX_InitialSpeedIndex" VerticalAlignment="Center" Minimum="1" Maximum="5" Value="0"/>
 
                             <Label Content="Speed[1] (in ms)" />
@@ -77,81 +82,81 @@
                             <Label Content="Speed[5] (in ms)" />
                             <xctk:IntegerUpDown x:Name="V_EX_Speed_5" VerticalAlignment="Center" Minimum="0" Maximum="100000" Value="0"/>
 
-                            <Label Content="Show Tail" />
+                            <Label Content="Show tail" />
                             <CheckBox x:Name="V_EX_DoDecay" VerticalAlignment="Center"/>
                             
-                            <Label Content="Lifeime (ms) for Tail" />
+                            <Label Content="Lifetime (ms) for tail" />
                             <xctk:IntegerUpDown x:Name="V_EX_DecayTime" VerticalAlignment="Center" Minimum="0" Maximum="5000" Value="0"/>
 
-                            <Label Content="Start zoomed in on Display" />
+                            <Label Content="Start zoomed in on display" />
                             <CheckBox x:Name="V_EX_ZoomToDisplay" VerticalAlignment="Center"/>
                         </ctrls:TwoColumnGrid>
                     </Expander>
 
-                    <Expander Header="Code Generation" IsExpanded="True">
+                    <Expander Header="Code generation" IsExpanded="True">
                         <ctrls:TwoColumnGrid RowSpacing="5" ColumnSpacing="5">
-                            <Label Content="Numberliteral Representation" />
+                            <Label Content="Numberliteral representation" />
                             <ComboBox x:Name="V_NumberLiteralRepresentation" VerticalAlignment="Center">
                                 <ComboBoxItem Content="Base9"/>
                                 <ComboBoxItem Content="Factorization"/>
                                 <ComboBoxItem Content="Best"/>
                             </ComboBox>
 
-                            <Label Content="Optimize Double StringmodeToogle" />
+                            <Label Content="Optimize double stringmodeToogle" />
                             <CheckBox x:Name="V_StripDoubleStringmodeToogle" VerticalAlignment="Center"/>
 
-                            <Label Content="Set NOP-Cells to Special Char" />
+                            <Label Content="Set NOP-cells to special char" />
                             <CheckBox x:Name="V_SetNOPCellsToCustom" VerticalAlignment="Center"/>
 
-                            <Label Content="Custom NOP Char" />
+                            <Label Content="Special NOP char" />
                             <ctrls:CharSpinner x:Name="V_CustomNOPSymbol" VerticalAlignment="Center"/>
 
-                            <Label Content="Horizontal Compression" />
+                            <Label Content="Horizontal compression" />
                             <CheckBox x:Name="V_CompressHorizontalCombining" VerticalAlignment="Center" />
 
-                            <Label Content="Vertical Compression" />
+                            <Label Content="Vertical compression" />
                             <CheckBox x:Name="V_CompressVerticalCombining" VerticalAlignment="Center" />
 
-                            <Label Content="Minimum VarDeclaration Width" />
+                            <Label Content="Minimum variable declaration width" />
                             <xctk:IntegerUpDown x:Name="V_DefaultVarDeclarationWidth" VerticalAlignment="Center" Minimum="0" Value="0"/>
 
-                            <Label Content="Default VarDeclaration Char" />
+                            <Label Content="Default variable declaration char" />
                             <ctrls:CharSpinner x:Name="V_DefaultVarDeclarationSymbol" VerticalAlignment="Center"/>
 
-                            <Label Content="Default TempDeclaration Char" />
+                            <Label Content="Default temp declaration char" />
                             <ctrls:CharSpinner x:Name="V_DefaultTempSymbol" VerticalAlignment="Center"/>
 
-                            <Label Content="Default TempResult Char" />
+                            <Label Content="Default temp result char" />
                             <ctrls:CharSpinner x:Name="V_DefaultResultTempSymbol" VerticalAlignment="Center"/>
 
-                            <Label Content="Safe Boolean Cast" />
+                            <Label Content="Safe boolean cast" />
                             <CheckBox x:Name="V_ExtendedBooleanCast" VerticalAlignment="Center"/>
 
-                            <Label Content="Default local Numbervariable Value" />
+                            <Label Content="Initial local variable value (number)" />
                             <xctk:IntegerUpDown x:Name="V_DefaultNumeralValue" VerticalAlignment="Center" Minimum="0" Maximum="255" Value="0"/>
 
-                            <Label Content="Default local Charactervariable Value" />
+							<Label Content="Initial local variable value (char)" />
                             <ctrls:CharSpinner x:Name="V_DefaultCharacterValue" VerticalAlignment="Center"/>
 
-                            <Label Content="Default local Booleanvariable Value" />
+							<Label Content="Initial local variable value (bool)" />
                             <CheckBox x:Name="V_DefaultBooleanValue" VerticalAlignment="Center"/>
 
-                            <Label Content="Initial Display Char" />
+                            <Label Content="Initial display char" />
                             <ctrls:CharSpinner x:Name="V_DefaultDisplayValue" VerticalAlignment="Center"/>
 
-                            <Label Content="Display Border Value" />
+                            <Label Content="Display border value" />
                             <ctrls:CharSpinner x:Name="V_DisplayBorder" VerticalAlignment="Center"/>
 
-                            <Label Content="Display Borderthickness" />
+                            <Label Content="Display border thickness" />
                             <xctk:IntegerUpDown x:Name="V_DisplayBorderThickness" VerticalAlignment="Center" Minimum="0" Value="0"/>
 
-                            <Label Content="Preven Overflow in Display Access" />
+                            <Label Content="Prevent overflow in display access" />
                             <CheckBox x:Name="V_DisplayModuloAccess" VerticalAlignment="Center"/>
 
-                            <Label Content="Optimize Static Expressions" />
+                            <Label Content="Optimize static expressions" />
                             <CheckBox x:Name="V_CompileTimeEvaluateExpressions" VerticalAlignment="Center"/>
 
-                            <Label Content="Remove unused Methods" />
+                            <Label Content="Remove unused methods" />
                             <CheckBox x:Name="V_RemUnreferencedMethods" VerticalAlignment="Center"/>
                         </ctrls:TwoColumnGrid>
                     </Expander>

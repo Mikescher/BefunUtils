@@ -30,7 +30,7 @@
       },
       "ExecSettings": {
         "startPaused": true,
-        "syntaxHighlight": true,
+        "syntaxHighlight": 0,
         "asciistack": true,
         "follocursormode": false,
         "skipnop": true,
@@ -74,7 +74,7 @@
       },
       "ExecSettings": {
         "startPaused": false,
-        "syntaxHighlight": true,
+        "syntaxHighlight": 1,
         "asciistack": true,
         "follocursormode": false,
         "skipnop": true,

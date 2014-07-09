@@ -4,6 +4,13 @@ using System.Collections.Generic;
 
 namespace BefunWrite
 {
+	public enum SH_Mode
+	{
+		AUTOMATIC = 0,
+		NONE = 1,
+		SIMPLE = 2,
+		EXTENDED = 3,
+	}
 
 	/// <summary>
 	/// Class in JSON Config File
@@ -11,7 +18,7 @@ namespace BefunWrite
 	public class BefunExecSettings
 	{
 		public bool startPaused;
-		public bool syntaxHighlight;
+		public SH_Mode syntaxHighlight;
 		public bool asciistack;
 		public bool follocursormode;
 		public bool skipnop;
@@ -29,7 +36,7 @@ namespace BefunWrite
 			return new BefunExecSettings()
 			{
 				startPaused = true,
-				syntaxHighlight = true,
+				syntaxHighlight = SH_Mode.AUTOMATIC,
 				asciistack = true,
 				follocursormode = false,
 				skipnop = true,
@@ -56,7 +63,7 @@ namespace BefunWrite
 			return new BefunExecSettings()
 			{
 				startPaused = false,
-				syntaxHighlight = true,
+				syntaxHighlight = SH_Mode.AUTOMATIC,
 				asciistack = true,
 				follocursormode = false,
 				skipnop = true,

@@ -370,10 +370,21 @@ namespace BefunWrite
 			else
 				start.Arguments += "-no_pause" + " ";
 
-			if (project.SelectedConfig.ExecSettings.syntaxHighlight)
-				start.Arguments += "-highlight" + " ";
-			else
-				start.Arguments += "-no_highlight" + " ";
+			switch (project.SelectedConfig.ExecSettings.syntaxHighlight)
+			{
+				case SH_Mode.AUTOMATIC:
+					// nothing
+					break;
+				case SH_Mode.NONE:
+					start.Arguments += "-p_highlight" + " ";
+					break;
+				case SH_Mode.SIMPLE:
+					start.Arguments += "-s_highlight" + " ";
+					break;
+				case SH_Mode.EXTENDED:
+					start.Arguments += "-e_highlight" + " ";
+					break;
+			}
 
 			if (project.SelectedConfig.ExecSettings.asciistack)
 				start.Arguments += "-asciistack" + " ";
@@ -403,7 +414,7 @@ namespace BefunWrite
 			if (project.SelectedConfig.ExecSettings.dodecay)
 				start.Arguments += "-dodecay" + " ";
 			else
-				start.Arguments += "-no_dodecay" + " ";
+				start.Arguments += "-no_decay" + " ";
 
 			if (project.SelectedConfig.ExecSettings.zoomToDisplay && prog.HasDisplay)
 			{

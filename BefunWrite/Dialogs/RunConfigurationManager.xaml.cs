@@ -99,7 +99,7 @@ namespace BefunWrite.Dialogs
 
 			V_EX_IsDebug.IsChecked = o.ExecSettings.IsDebug;
 			V_EX_StartPaused.IsChecked = o.ExecSettings.startPaused;
-			V_EX_SyntaxHighlighting.IsChecked = o.ExecSettings.syntaxHighlight;
+			V_EX_SyntaxHighlighting.SelectedIndex = ((int)o.ExecSettings.syntaxHighlight) % V_EX_SyntaxHighlighting.Items.Count; // Modulo for safety
 			V_EX_ASCIIStack.IsChecked = o.ExecSettings.asciistack;
 			V_EX_FollowCursorMode.IsChecked = o.ExecSettings.follocursormode;
 			V_EX_SkipNOP.IsChecked = o.ExecSettings.skipnop;
@@ -167,7 +167,7 @@ namespace BefunWrite.Dialogs
 
 			o.ExecSettings.IsDebug = V_EX_IsDebug.IsChecked.Value;
 			o.ExecSettings.startPaused = V_EX_StartPaused.IsChecked.Value;
-			o.ExecSettings.syntaxHighlight = V_EX_SyntaxHighlighting.IsChecked.Value;
+			o.ExecSettings.syntaxHighlight = (SH_Mode)V_EX_SyntaxHighlighting.SelectedIndex;
 			o.ExecSettings.asciistack = V_EX_ASCIIStack.IsChecked.Value;
 			o.ExecSettings.follocursormode = V_EX_FollowCursorMode.IsChecked.Value;
 			o.ExecSettings.skipnop = V_EX_SkipNOP.IsChecked.Value;

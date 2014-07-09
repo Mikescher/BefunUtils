@@ -30,7 +30,7 @@
       },
       "ExecSettings": {
         "startPaused": true,
-        "syntaxHighlight": true,
+        "syntaxHighlight": 0,
         "asciistack": true,
         "follocursormode": false,
         "skipnop": true,
