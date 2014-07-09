@@ -4,6 +4,7 @@ namespace BefunGen.AST.CodeGen
 {
 	public static class CodeGenConstants
 	{
+		public static string BEFUNGEN_VERSION = "1.1";
 
 		public static MathExt.Point TMP_FIELD_IO_ARR = new MathExt.Point(1, 0);
 		public static MathExt.Point TMP_FIELD_OUT_ARR = new MathExt.Point(2, 0);

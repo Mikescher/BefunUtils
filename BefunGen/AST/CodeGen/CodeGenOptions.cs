@@ -288,5 +288,6 @@ Do Nothing ... just go on ... stack is fine
 [X] Befunge Interpreter
 [O] Generate  Math Question and check answers
 [X] PrimzahlCalcer
-[O] GOL Klon
+[X] GOL Klon
+[X] Square-It (+ KI)
 */

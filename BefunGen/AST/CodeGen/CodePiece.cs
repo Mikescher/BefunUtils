@@ -514,6 +514,14 @@ namespace BefunGen.AST.CodeGen
 			}
 		}
 
+		public void setText(int x, int y, string text)
+		{
+			for (int i = 0; i < text.Length; i++)
+			{
+				this[x + i, y] = BCHelper.chr(text[i]);
+			}
+		}
+
 		public void replaceWalkway(int x, int y, BefungeCommand cmd, bool deleteTags)
 		{
 			if (this[x, y].EqualsTagLess(BCHelper.Walkway) || (deleteTags && this[x, y].Type == BefungeCommandType.Walkway))

@@ -424,7 +424,7 @@ namespace BefunWrite
 				start.Arguments += "-zoom=" + tagloc.X + "," + tagloc.Y + "," + (tagloc.X + tag.Width) + "," + (tagloc.Y + tag.Height) + " ";
 			}
 
-			start.FileName = "BefunExec.exe";
+			start.FileName = System.AppDomain.CurrentDomain.BaseDirectory + "\\" + "BefunExec.exe";
 
 			try
 			{
@@ -432,7 +432,7 @@ namespace BefunWrite
 			}
 			catch (Exception ex)
 			{
-				RaiseError(ex.ToString());
+				RaiseError("Could not execute file ... 'BefunExec.exe' missing ?" + Environment.NewLine + Environment.NewLine + ex.ToString());
 				return;
 			}
 

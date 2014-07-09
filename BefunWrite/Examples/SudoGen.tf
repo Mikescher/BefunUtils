@@ -5,7 +5,7 @@
  * 29.03.2014
 */
 
-program example : display[17, 17]
+program SudoGen : display[17, 17]
 	const
 		char CHR_EMPTY     := ' ';
 		char CHR_UNKNOWN   := ' ';

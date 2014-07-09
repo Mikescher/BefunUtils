@@ -1,5 +1,5 @@
 /*
- * Hello World
+ * Game of Life
  * by Mike Schwörer 2014
 */
 

@@ -1,5 +1,5 @@
 /*
- * Hello World
+ * Fibonacci Numbers
  * by Mike Schwörer 2014
 */
 
