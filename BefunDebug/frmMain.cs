@@ -371,7 +371,7 @@ end
 				ProcessStartInfo start = new ProcessStartInfo();
 
 				start.Arguments = String.Format("-file=\"{0}\" -debug", path);
-				start.FileName = Path.Combine(Application.StartupPath, "BefungExec.exe");
+				start.FileName = Path.Combine(Application.StartupPath, "BefunExec.exe");
 
 				Process.Start(start);
 			}

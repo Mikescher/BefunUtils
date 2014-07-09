@@ -413,7 +413,7 @@ namespace BefunWrite
 				start.Arguments += "-zoom=" + tagloc.X + "," + tagloc.Y + "," + (tagloc.X + tag.Width) + "," + (tagloc.Y + tag.Height) + " ";
 			}
 
-			start.FileName = "BefungExec.exe";
+			start.FileName = "BefunExec.exe";
 
 			try
 			{
