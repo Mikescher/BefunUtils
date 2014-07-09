@@ -3483,32 +3483,32 @@ namespace BefunGen.AST
 
 		public override void linkVariables(Method owner)
 		{
-			Condition.linkVariables(owner);
 			Body.linkVariables(owner);
+			Condition.linkVariables(owner);
 		}
 
 		public override void inlineConstants()
 		{
-			Condition = Condition.inlineConstants();
 			Body.inlineConstants();
+			Condition = Condition.inlineConstants();
 		}
 
 		public override void addressCodePoints()
 		{
-			Condition.addressCodePoints();
 			Body.addressCodePoints();
+			Condition.addressCodePoints();
 		}
 
 		public override void linkMethods(Program owner)
 		{
-			Condition.linkMethods(owner);
 			Body.linkMethods(owner);
+			Condition.linkMethods(owner);
 		}
 
 		public override void linkResultTypes(Method owner)
 		{
-			Condition.linkResultTypes(owner);
 			Body.linkResultTypes(owner);
+			Condition.linkResultTypes(owner);
 
 			BType present = Condition.getResultType();
 			BType expected = new BType_Bool(Position);
@@ -3534,9 +3534,9 @@ namespace BefunGen.AST
 
 		public override void evaluateExpressions()
 		{
-			Condition = Condition.evaluateExpressions();
-
 			Body.evaluateExpressions();
+
+			Condition = Condition.evaluateExpressions();
 		}
 
 		public override Statement_Label findLabelByIdentifier(string ident)
@@ -3549,7 +3549,7 @@ namespace BefunGen.AST
 			CodePiece cp_body = Body.generateCode(reversed);
 			cp_body.normalizeX();
 
-			CodePiece cp_cond = Condition.generateCode(!reversed);
+			CodePiece cp_cond = extendVerticalMCTagsUpwards(Condition.generateCode(!reversed));
 			cp_cond.normalizeX();
 
 			if (reversed)
