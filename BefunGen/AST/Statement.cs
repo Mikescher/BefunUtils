@@ -3873,7 +3873,7 @@ namespace BefunGen.AST
 				//    ######
 				// v_v
 				// >v
-				//    ######
+				//  @ ######
 				//   > "d" 
 				//    ######
 				p = generateCode_Top(reversed);
@@ -3895,13 +3895,16 @@ namespace BefunGen.AST
 					p_stmt[2, 0] = BCHelper.PC_Right;
 					p_stmt.FillColWW(2, p_stmt.MinY + 2, 0);
 
-					p_stmt.FillColWW(1, p_stmt.MinY + 2, p_stmt.MaxY);
+					if (i + 1 != stmts.Count)
+						p_stmt.FillColWW(1, p_stmt.MinY + 2, p_stmt.MaxY);
+					else // last one
+						p_stmt[1, p_stmt.MinY + 2] = BCHelper.Stop_tagged(new Unreachable_Tag());
 
 					p_stmt[p_stmt.MaxX, 0] = BCHelper.PC_Down;
 					p_stmt[p_stmt.MaxX - 1, p_stmt.MaxY] = BCHelper.PC_Left;
 					p_stmt.FillColWW(p_stmt.MaxX - 1, 1, p_stmt.MaxY - 1);
 					p_stmt.FillRowWW(p_stmt.MaxY - 1, 0, p_stmt.MaxX - 1);
-					p_stmt[-1, p_stmt.MaxY - 1] = BCHelper.PC_Up_tagged(new SwitchStmt_Case_Exit());
+					p_stmt[-1, p_stmt.MaxY - 1] = BCHelper.PC_Up_tagged(new SwitchStmt_Case_Exit_Tag());
 
 
 					p.AppendBottom(p_stmt);
@@ -3909,7 +3912,7 @@ namespace BefunGen.AST
 
 				p.FillRowWW(0, topWidth, p.Width);
 
-				List<TagLocation> sc_exits = p.findAllActiveCodeTags(typeof(SwitchStmt_Case_Exit)).OrderBy(pp => pp.Y).ToList();
+				List<TagLocation> sc_exits = p.findAllActiveCodeTags(typeof(SwitchStmt_Case_Exit_Tag)).OrderBy(pp => pp.Y).ToList();
 
 				int lastY = 0;
 
@@ -3948,7 +3951,7 @@ namespace BefunGen.AST
 				//    ######
 				// v_v
 				// >v
-				//    ######
+				//  @ ######
 				//   > "d"                                       ^
 				//    ######
 				p = generateCode_Top(reversed);
@@ -3969,14 +3972,17 @@ namespace BefunGen.AST
 					p_stmt[2, 0] = BCHelper.PC_Right;
 					p_stmt.FillColWW(2, p_stmt.MinY + 2, 0);
 
-					p_stmt.FillColWW(1, p_stmt.MinY + 2, p_stmt.MaxY);
+					if (i + 1 != stmts.Count)
+						p_stmt.FillColWW(1, p_stmt.MinY + 2, p_stmt.MaxY);
+					else // last one
+						p_stmt[1, p_stmt.MinY + 2] = BCHelper.Stop_tagged(new Unreachable_Tag());
 
-					p_stmt[p_stmt.MaxX, 0] = BCHelper.PC_Right_tagged(new SwitchStmt_Case_Exit());
+					p_stmt[p_stmt.MaxX, 0] = BCHelper.PC_Right_tagged(new SwitchStmt_Case_Exit_Tag());
 
 					p.AppendBottom(p_stmt);
 				}
 
-				List<TagLocation> sc_exits = p.findAllActiveCodeTags(typeof(SwitchStmt_Case_Exit)).OrderBy(pp => pp.Y).ToList();
+				List<TagLocation> sc_exits = p.findAllActiveCodeTags(typeof(SwitchStmt_Case_Exit_Tag)).OrderBy(pp => pp.Y).ToList();
 
 				int rightLaneX = p.MaxX;
 
