@@ -1994,44 +1994,74 @@ namespace BefunGen.AST
 
 			if (reversed)
 			{
-				// $_>#!,#:<"???"0
 				CodePiece p = new CodePiece();
 
-				p.AppendLeft(BCHelper.Digit_0);
+				#region reversed
 
-				p.AppendLeft(Value.generateCode(reversed));
+				if (Value.Value.Count <= 10)
+				{
+					// ,,,,,"???"
+					for (int i = 0; i < Value.Value.Count; i++)
+						p.AppendRight(BCHelper.Out_ASCII);
 
-				p.AppendLeft(BCHelper.PC_Left);
-				p.AppendLeft(BCHelper.Stack_Dup);
-				p.AppendLeft(BCHelper.PC_Jump);
-				p.AppendLeft(BCHelper.Out_ASCII);
-				p.AppendLeft(BCHelper.Not);
-				p.AppendLeft(BCHelper.PC_Jump);
-				p.AppendLeft(BCHelper.PC_Right);
-				p.AppendLeft(BCHelper.If_Horizontal);
-				p.AppendLeft(BCHelper.Stack_Pop);
+					p.AppendRight(Value.generateCode(reversed));
+				}
+				else
+				{
+					// $_>#!,#:<"???"0
+					p.AppendLeft(BCHelper.Digit_0);
 
-				p.normalizeX();
+					p.AppendLeft(Value.generateCode(reversed));
+
+					p.AppendLeft(BCHelper.PC_Left);
+					p.AppendLeft(BCHelper.Stack_Dup);
+					p.AppendLeft(BCHelper.PC_Jump);
+					p.AppendLeft(BCHelper.Out_ASCII);
+					p.AppendLeft(BCHelper.Not);
+					p.AppendLeft(BCHelper.PC_Jump);
+					p.AppendLeft(BCHelper.PC_Right);
+					p.AppendLeft(BCHelper.If_Horizontal);
+					p.AppendLeft(BCHelper.Stack_Pop);
+
+					p.normalizeX();
+				}
+
+				#endregion
 
 				return p;
 			}
 			else
 			{
-				// 0"???">:#,_$
 				CodePiece p = new CodePiece();
 
-				p.AppendRight(BCHelper.Digit_0);
+				#region Normal
 
-				p.AppendRight(Value.generateCode(reversed));
+				if (Value.Value.Count <= 7)
+				{
+					// "???",,,,,
+					p.AppendRight(Value.generateCode(reversed));
 
-				p.AppendRight(BCHelper.PC_Right);
-				p.AppendRight(BCHelper.Stack_Dup);
-				p.AppendRight(BCHelper.PC_Jump);
-				p.AppendRight(BCHelper.Out_ASCII);
-				p.AppendRight(BCHelper.If_Horizontal);
-				p.AppendRight(BCHelper.Stack_Pop);
+					for (int i = 0; i < Value.Value.Count; i++)
+						p.AppendRight(BCHelper.Out_ASCII);
+				}
+				else
+				{
+					// 0"???">:#,_$
+					p.AppendRight(BCHelper.Digit_0);
 
-				p.normalizeX();
+					p.AppendRight(Value.generateCode(reversed));
+
+					p.AppendRight(BCHelper.PC_Right);
+					p.AppendRight(BCHelper.Stack_Dup);
+					p.AppendRight(BCHelper.PC_Jump);
+					p.AppendRight(BCHelper.Out_ASCII);
+					p.AppendRight(BCHelper.If_Horizontal);
+					p.AppendRight(BCHelper.Stack_Pop);
+
+					p.normalizeX();
+				}
+
+				#endregion
 
 				return p;
 			}

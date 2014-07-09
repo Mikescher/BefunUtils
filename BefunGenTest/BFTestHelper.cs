@@ -108,6 +108,16 @@ namespace BefunGenTest
 			TestCP(pc);
 		}
 
+		public static void debugStatement_Output(string stmt, string op)
+		{
+			stmt = stmt.Replace(@"''", "\"");
+
+			Program e = parseStatement(stmt);
+			CodePiece pc = e.generateCode();
+
+			TestCP_Output(pc, op);
+		}
+
 		public static void debugMethod(string call, string meth)
 		{
 			meth = Regex.Replace(meth, @"[\r\n]{1,2}[ \t]+[\r\n]{1,2}", "\r\n");
