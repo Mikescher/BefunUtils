@@ -931,7 +931,7 @@ namespace BefunGen.AST
 
 			CodePiece p = new CodePiece();
 
-			if (reversed)
+			if (reversed) // TODO [!] Lump EXIT::JUMPIN / ENTRY::JUMP-BACK Together into block (maxlen = 8 ? ... config) block like left v<right v> left ... (length improvement: test Square It)
 			{
 				#region Reversed
 
