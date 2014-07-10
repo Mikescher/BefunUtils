@@ -98,6 +98,16 @@ namespace BefunGen.AST.CodeGen
 			return p;
 		}
 
+		public static CodePiece CreateFromVerticalList(List<CodePiece> cplist)
+		{
+			CodePiece p = new CodePiece();
+
+			foreach (var cp in cplist)
+				p.AppendBottom(cp);
+
+			return p;
+		}
+
 		#endregion
 
 		#region Internal
@@ -1017,6 +1027,20 @@ namespace BefunGen.AST.CodeGen
 		{
 			if (Size == 0)
 				this[0, 0] = cmd;
+		}
+
+		public void ExtendWithWalkwayLeft(int maxlen)
+		{
+			while (Width < maxlen)
+				AppendLeftDirect(new CodePiece(BCHelper.Walkway));
+
+		}
+
+		public void ExtendWithWalkwayRight(int maxlen)
+		{
+			while (Width < maxlen)
+				AppendRightDirect(new CodePiece(BCHelper.Walkway));
+
 		}
 
 		#endregion

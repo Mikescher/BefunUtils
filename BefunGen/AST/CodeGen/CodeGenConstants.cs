@@ -14,5 +14,8 @@ namespace BefunGen.AST.CodeGen
 
 		public const int VERTICAL_METHOD_DISTANCE = 0;
 		public const int LANE_VERTICAL_MARGIN = 0;
+
+		public const int MAX_JUMPIN_VARFRAME_LENGTH = 16;
+		public const int MAX_JUMPBACK_VARFRAME_LENGTH = 16;
 	}
 }

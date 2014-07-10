@@ -931,7 +931,7 @@ namespace BefunGen.AST
 
 			CodePiece p = new CodePiece();
 
-			if (reversed) // TODO [!] Lump EXIT::JUMPIN / ENTRY::JUMP-BACK Together into block (maxlen = 8 ? ... config) block like left v<right v> left ... (length improvement: test Square It)
+			if (reversed)
 			{
 				#region Reversed
 
@@ -941,25 +941,7 @@ namespace BefunGen.AST
 
 				// Put own Variables on Stack
 
-				for (int i = 0; i < owner.Variables.Count; i++)
-				{
-					if (owner.Variables[i] is VarDeclaration_Value)
-					{
-						VarDeclaration_Value var = owner.Variables[i] as VarDeclaration_Value;
-
-						p.AppendLeft(new Expression_DirectValuePointer(Position, var).generateCode(reversed));
-					}
-					else if (owner.Variables[i] is VarDeclaration_Array)
-					{
-						VarDeclaration_Array var = owner.Variables[i] as VarDeclaration_Array;
-
-						p.AppendLeft(CodePieceStore.ReadArrayToStack(var, reversed));
-					}
-					else
-					{
-						throw new WTFException();
-					}
-				}
+				p.AppendLeft(generateCode_varFrame_JumpIn(reversed));
 
 				// Put own JumpBack-Adress on Stack
 
@@ -1034,10 +1016,7 @@ namespace BefunGen.AST
 
 				// Restore Variables
 
-				for (int i = owner.Variables.Count - 1; i >= 0; i--)
-				{
-					p.AppendLeft(owner.Variables[i].generateCode_SetToStackVal(reversed));
-				}
+				p.AppendLeft(generateCode_varFrame_JumpBack(reversed));
 
 				// Put ReturnValue Back to Stack
 
@@ -1081,25 +1060,7 @@ namespace BefunGen.AST
 
 				// Put own Variables on Stack
 
-				for (int i = 0; i < owner.Variables.Count; i++)
-				{
-					if (owner.Variables[i] is VarDeclaration_Value)
-					{
-						VarDeclaration_Value var = owner.Variables[i] as VarDeclaration_Value;
-
-						p.AppendRight(new Expression_DirectValuePointer(Position, var).generateCode(reversed));
-					}
-					else if (owner.Variables[i] is VarDeclaration_Array)
-					{
-						VarDeclaration_Array var = owner.Variables[i] as VarDeclaration_Array;
-
-						p.AppendRight(CodePieceStore.ReadArrayToStack(var, reversed));
-					}
-					else
-					{
-						throw new WTFException();
-					}
-				}
+				p.AppendRight(generateCode_varFrame_JumpIn(reversed));
 
 				// Put own JumpBack-Adress on Stack
 
@@ -1175,10 +1136,7 @@ namespace BefunGen.AST
 
 				// Restore Variables
 
-				for (int i = owner.Variables.Count - 1; i >= 0; i--)
-				{
-					p.AppendRight(owner.Variables[i].generateCode_SetToStackVal(reversed));
-				}
+				p.AppendRight(generateCode_varFrame_JumpBack(reversed));
 
 				// Put ReturnValue Back to Stack
 
@@ -1217,6 +1175,188 @@ namespace BefunGen.AST
 
 			return p;
 
+		}
+
+		private CodePiece generateCode_varFrame_JumpIn(bool initial_reversed)
+		{
+			List<CodePiece> pieces = new List<CodePiece>();
+			CodePiece current = new CodePiece();
+
+			bool reversed = initial_reversed;
+
+			for (int i = 0; i < owner.Variables.Count; i++)
+			{
+				if (owner.Variables[i] is VarDeclaration_Value)
+				{
+					VarDeclaration_Value var = owner.Variables[i] as VarDeclaration_Value;
+
+					if (reversed)
+						current.AppendLeft(new Expression_DirectValuePointer(Position, var).generateCode(reversed));
+					else
+						current.AppendRight(new Expression_DirectValuePointer(Position, var).generateCode(reversed));
+				}
+				else if (owner.Variables[i] is VarDeclaration_Array)
+				{
+					VarDeclaration_Array var = owner.Variables[i] as VarDeclaration_Array;
+
+					if (reversed)
+						current.AppendLeft(CodePieceStore.ReadArrayToStack(var, reversed));
+					else
+						current.AppendRight(CodePieceStore.ReadArrayToStack(var, reversed));
+				}
+				else
+					throw new WTFException();
+
+				if (current.Width >= CodeGenConstants.MAX_JUMPIN_VARFRAME_LENGTH)
+				{
+					pieces.Add(current);
+					current = new CodePiece();
+					reversed = !reversed;
+				}
+			}
+
+			pieces.Add(current);
+
+			if (pieces.Count == 0)
+				return new CodePiece();
+			if (pieces.Count == 1)
+				return pieces[0];
+
+			if (pieces.Count % 2 == 0)
+				pieces.Add(new CodePiece());
+
+			int maxlen = pieces.Max(lp => lp.Width);
+
+			pieces.ForEach(lp => lp.ExtendWithWalkwayLeft(maxlen));
+			pieces.ForEach(lp => lp.normalize());
+
+
+			if (initial_reversed)
+			{
+				#region Reversed
+
+				for (int i = 0; i < (pieces.Count - 1); i++)
+					pieces[i][-1, 0] = (i % 2 == 0) ? BCHelper.PC_Down : BCHelper.PC_Right;
+
+				for (int i = 1; i < pieces.Count; i++)
+					pieces[i][maxlen, 0] = (i % 2 == 0) ? BCHelper.PC_Left : BCHelper.PC_Down;
+
+
+				pieces[0][maxlen, 0] = BCHelper.Walkway;
+				pieces[pieces.Count - 1][-2, 0] = BCHelper.PC_Up;
+				pieces[pieces.Count - 1][-1, 0] = BCHelper.Walkway;
+				pieces[0][-2, 0] = BCHelper.PC_Left;
+
+				for (int i = 1; i < (pieces.Count - 1); i++)
+					pieces[i][-2, 0] = BCHelper.Walkway;
+
+				#endregion
+			}
+			else
+			{
+				#region Normal
+
+				for (int i = 0; i < (pieces.Count - 1); i++)
+					pieces[i][maxlen, 0] = (i % 2 == 0) ? BCHelper.PC_Down : BCHelper.PC_Left;
+
+				for (int i = 1; i < pieces.Count; i++)
+					pieces[i][-1, 0] = (i % 2 == 0) ? BCHelper.PC_Right : BCHelper.PC_Down;
+
+				pieces[0][-1, 0] = BCHelper.Walkway;
+				pieces[pieces.Count - 1][maxlen + 1, 0] = BCHelper.PC_Up;
+				pieces[pieces.Count - 1][maxlen, 0] = BCHelper.Walkway;
+				pieces[0][maxlen + 1, 0] = BCHelper.PC_Right;
+
+				for (int i = 1; i < (pieces.Count - 1); i++)
+					pieces[i][maxlen + 1, 0] = BCHelper.Walkway;
+
+				#endregion
+			}
+
+			return CodePiece.CreateFromVerticalList(pieces);
+		}
+
+		private CodePiece generateCode_varFrame_JumpBack(bool initial_reversed)
+		{
+			List<CodePiece> pieces = new List<CodePiece>();
+			CodePiece current = new CodePiece();
+
+			bool reversed = initial_reversed;
+
+			for (int i = owner.Variables.Count - 1; i >= 0; i--)
+			{
+				if (reversed)
+					current.AppendLeft(owner.Variables[i].generateCode_SetToStackVal(reversed));
+				else
+					current.AppendRight(owner.Variables[i].generateCode_SetToStackVal(reversed));
+
+				if (current.Width >= CodeGenConstants.MAX_JUMPIN_VARFRAME_LENGTH)
+				{
+					pieces.Add(current);
+					current = new CodePiece();
+					reversed = !reversed;
+				}
+			}
+
+			pieces.Add(current);
+
+			if (pieces.Count == 0)
+				return new CodePiece();
+			if (pieces.Count == 1)
+				return pieces[0];
+
+			if (pieces.Count % 2 == 0)
+				pieces.Add(new CodePiece());
+
+			int maxlen = pieces.Max(lp => lp.Width);
+
+			pieces.ForEach(lp => lp.ExtendWithWalkwayLeft(maxlen));
+			pieces.ForEach(lp => lp.normalize());
+
+
+			if (initial_reversed)
+			{
+				#region Reversed
+
+				for (int i = 0; i < (pieces.Count - 1); i++)
+					pieces[i][-1, 0] = (i % 2 == 0) ? BCHelper.PC_Down : BCHelper.PC_Right;
+
+				for (int i = 1; i < pieces.Count; i++)
+					pieces[i][maxlen, 0] = (i % 2 == 0) ? BCHelper.PC_Left : BCHelper.PC_Down;
+
+
+				pieces[0][maxlen, 0] = BCHelper.Walkway;
+				pieces[pieces.Count - 1][-2, 0] = BCHelper.PC_Up;
+				pieces[pieces.Count - 1][-1, 0] = BCHelper.Walkway;
+				pieces[0][-2, 0] = BCHelper.PC_Left;
+
+				for (int i = 1; i < (pieces.Count - 1); i++)
+					pieces[i][-2, 0] = BCHelper.Walkway;
+
+				#endregion
+			}
+			else
+			{
+				#region Normal
+
+				for (int i = 0; i < (pieces.Count - 1); i++)
+					pieces[i][maxlen, 0] = (i % 2 == 0) ? BCHelper.PC_Down : BCHelper.PC_Left;
+
+				for (int i = 1; i < pieces.Count; i++)
+					pieces[i][-1, 0] = (i % 2 == 0) ? BCHelper.PC_Right : BCHelper.PC_Down;
+
+				pieces[0][-1, 0] = BCHelper.Walkway;
+				pieces[pieces.Count - 1][maxlen + 1, 0] = BCHelper.PC_Up;
+				pieces[pieces.Count - 1][maxlen, 0] = BCHelper.Walkway;
+				pieces[0][maxlen + 1, 0] = BCHelper.PC_Right;
+
+				for (int i = 1; i < (pieces.Count - 1); i++)
+					pieces[i][maxlen + 1, 0] = BCHelper.Walkway;
+
+				#endregion
+			}
+
+			return CodePiece.CreateFromVerticalList(pieces);
 		}
 	}
 
