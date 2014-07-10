@@ -28,6 +28,7 @@ program Square_It : display[34, 36] // 1 + 1+2*16 || 1 + 1+2*16 + 2
 	var
 		int choice;
 	begin
+			
 		for(;;) do
 			Init();
 			
@@ -75,6 +76,8 @@ program Square_It : display[34, 36] // 1 + 1+2*16 || 1 + 1+2*16 + 2
 			out ">> DRAW !\r\n\r\n";
 		end
 		
+		in winner; // pause
+		
 		return;
 	end
 	
@@ -104,6 +107,8 @@ program Square_It : display[34, 36] // 1 + 1+2*16 || 1 + 1+2*16 + 2
 			out ">> DRAW !\r\n\r\n";
 		end
 		
+		in winner; // pause
+		
 		return;
 	end
 	
@@ -127,6 +132,8 @@ program Square_It : display[34, 36] // 1 + 1+2*16 || 1 + 1+2*16 + 2
 		else
 			out ">> DRAW !\r\n\r\n";
 		end
+		
+		in winner; // pause
 		
 		return;
 	end
