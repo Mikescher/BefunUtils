@@ -1,7 +1,7 @@
 /*
  * PICalc
  *
- * Calculates PI wo a certain degree with the Monte Carlo algorithm
+ * Calculates PI to a certain degree with the Monte Carlo algorithm
  *
  * by Mike Schwörer 2014
 */
