@@ -9,6 +9,9 @@ namespace BefunHighlight
 		public readonly int Width;
 		public readonly int Height;
 
+		public int EffectiveWidth { get; private set; }
+		public int EffectiveHeight { get; private set; }
+
 		BeGraphCommand[,] last_cmds;
 
 		public HighlightField[,] fields;
@@ -18,6 +21,9 @@ namespace BefunHighlight
 			Width = w;
 			Height = h;
 
+			EffectiveWidth = -1;
+			EffectiveHeight = -1;
+
 			fields = new HighlightField[w, h];
 		}
 
@@ -26,6 +32,9 @@ namespace BefunHighlight
 			for (int x = 0; x < Width; x++)
 				for (int y = 0; y < Height; y++)
 					fields[x, y] = new HighlightField(cmds[x, y]);
+
+			EffectiveWidth = -1;
+			EffectiveHeight = -1;
 		}
 
 		public void Calculate(BeGraphCommand[,] cmds)
@@ -116,6 +125,8 @@ namespace BefunHighlight
 					}
 				}
 			}
+
+			CalculateEffectiveSize();
 		}
 
 		public bool Update(long _x, long _y, BeGraphCommand cmd, long pos_x, long pos_y, int delta_x, int delta_y)
@@ -163,6 +174,25 @@ namespace BefunHighlight
 		{
 			Calculate(cmds);
 			Calculate(_x, _y, BeGraphHelper.getBeGraphDir(delta_x, delta_y), cmds, false);
+		}
+
+		private void CalculateEffectiveSize()
+		{
+			EffectiveWidth = -1;
+			EffectiveHeight = -1;
+
+			for (int y = 0; y < Height; y++)
+				for (int x = 0; x < Width; x++)
+					if (fields[x, y].getType() != HighlightType.NOP)
+					{
+						EffectiveHeight = Math.Max(EffectiveHeight, y + 1);
+						EffectiveWidth = Math.Max(EffectiveWidth, x + 1);
+					}
+		}
+
+		public bool isEffectiveSizeCalculated()
+		{
+			return EffectiveHeight > 0 && EffectiveWidth > 0;
 		}
 	}
 }
