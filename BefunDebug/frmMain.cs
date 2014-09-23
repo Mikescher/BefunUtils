@@ -1,4 +1,5 @@
-﻿using BefunGen.AST;
+﻿using System.Text;
+using BefunGen.AST;
 using BefunGen.AST.CodeGen;
 using BefunGen.AST.CodeGen.NumberCode;
 using BefunHighlight;
@@ -468,6 +469,21 @@ end
 			string bench = String.Join(Environment.NewLine, NumberCodeHelper.generateAllCode(Convert.ToInt64(edSingleRep.Value), true).Select(p => p.Item1 + ":  " + p.Item2.ToSimpleString()).ToList());
 
 			txtDebug.Text = bench;
+		}
+
+		private void btnReverse_Click(object sender, EventArgs e)
+		{
+			edReverse.Text = string.Join("", edReverse.Text.ToCharArray().Reverse());
+		}
+
+		private void btnSquash_Click(object sender, EventArgs e)
+		{
+			SquashHelper sh = new SquashHelper(edSquashInput.Text);
+
+			sh.Squash();
+
+			edSquashInput.Text = sh.ToString();
+
 		}
 	}
 } //Form

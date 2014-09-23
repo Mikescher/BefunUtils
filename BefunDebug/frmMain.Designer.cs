@@ -78,6 +78,12 @@
 			this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
 			this.btnLoadSYN = new System.Windows.Forms.Button();
 			this.txtSynFile = new System.Windows.Forms.TextBox();
+			this.tabPage11 = new System.Windows.Forms.TabPage();
+			this.tableLayoutPanel9 = new System.Windows.Forms.TableLayoutPanel();
+			this.edReverse = new System.Windows.Forms.TextBox();
+			this.btnReverse = new System.Windows.Forms.Button();
+			this.edSquashInput = new System.Windows.Forms.TextBox();
+			this.btnSquash = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
@@ -109,6 +115,8 @@
 			this.tabPage10.SuspendLayout();
 			this.tableLayoutPanel2.SuspendLayout();
 			this.tableLayoutPanel3.SuspendLayout();
+			this.tabPage11.SuspendLayout();
+			this.tableLayoutPanel9.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// btnLoad
@@ -197,6 +205,7 @@
 			this.tabControl1.Controls.Add(this.tabPage6);
 			this.tabControl1.Controls.Add(this.tabPage7);
 			this.tabControl1.Controls.Add(this.tabPage8);
+			this.tabControl1.Controls.Add(this.tabPage11);
 			this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tabControl1.Location = new System.Drawing.Point(0, 0);
 			this.tabControl1.Name = "tabControl1";
@@ -745,6 +754,81 @@
 			this.txtSynFile.Size = new System.Drawing.Size(580, 20);
 			this.txtSynFile.TabIndex = 11;
 			// 
+			// tabPage11
+			// 
+			this.tabPage11.Controls.Add(this.tableLayoutPanel9);
+			this.tabPage11.Location = new System.Drawing.Point(4, 4);
+			this.tabPage11.Name = "tabPage11";
+			this.tabPage11.Padding = new System.Windows.Forms.Padding(3);
+			this.tabPage11.Size = new System.Drawing.Size(678, 225);
+			this.tabPage11.TabIndex = 8;
+			this.tabPage11.Text = "Tools";
+			this.tabPage11.UseVisualStyleBackColor = true;
+			// 
+			// tableLayoutPanel9
+			// 
+			this.tableLayoutPanel9.ColumnCount = 2;
+			this.tableLayoutPanel9.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.tableLayoutPanel9.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 150F));
+			this.tableLayoutPanel9.Controls.Add(this.edReverse, 0, 0);
+			this.tableLayoutPanel9.Controls.Add(this.btnReverse, 1, 0);
+			this.tableLayoutPanel9.Controls.Add(this.edSquashInput, 0, 1);
+			this.tableLayoutPanel9.Controls.Add(this.btnSquash, 1, 1);
+			this.tableLayoutPanel9.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.tableLayoutPanel9.Location = new System.Drawing.Point(3, 3);
+			this.tableLayoutPanel9.Name = "tableLayoutPanel9";
+			this.tableLayoutPanel9.RowCount = 6;
+			this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 28F));
+			this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 28F));
+			this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 28F));
+			this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 28F));
+			this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 28F));
+			this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle());
+			this.tableLayoutPanel9.Size = new System.Drawing.Size(672, 219);
+			this.tableLayoutPanel9.TabIndex = 0;
+			// 
+			// edReverse
+			// 
+			this.edReverse.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.edReverse.Location = new System.Drawing.Point(3, 3);
+			this.edReverse.Name = "edReverse";
+			this.edReverse.Size = new System.Drawing.Size(516, 20);
+			this.edReverse.TabIndex = 0;
+			// 
+			// btnReverse
+			// 
+			this.btnReverse.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.btnReverse.Location = new System.Drawing.Point(525, 3);
+			this.btnReverse.Name = "btnReverse";
+			this.btnReverse.Size = new System.Drawing.Size(144, 22);
+			this.btnReverse.TabIndex = 1;
+			this.btnReverse.Text = "Reverse";
+			this.btnReverse.UseVisualStyleBackColor = true;
+			this.btnReverse.Click += new System.EventHandler(this.btnReverse_Click);
+			// 
+			// edSquashInput
+			// 
+			this.edSquashInput.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.edSquashInput.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.edSquashInput.Location = new System.Drawing.Point(3, 31);
+			this.edSquashInput.Multiline = true;
+			this.edSquashInput.Name = "edSquashInput";
+			this.tableLayoutPanel9.SetRowSpan(this.edSquashInput, 5);
+			this.edSquashInput.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+			this.edSquashInput.Size = new System.Drawing.Size(516, 185);
+			this.edSquashInput.TabIndex = 2;
+			this.edSquashInput.WordWrap = false;
+			// 
+			// btnSquash
+			// 
+			this.btnSquash.Location = new System.Drawing.Point(525, 31);
+			this.btnSquash.Name = "btnSquash";
+			this.btnSquash.Size = new System.Drawing.Size(144, 22);
+			this.btnSquash.TabIndex = 3;
+			this.btnSquash.Text = "Squash";
+			this.btnSquash.UseVisualStyleBackColor = true;
+			this.btnSquash.Click += new System.EventHandler(this.btnSquash_Click);
+			// 
 			// frmMain
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -797,6 +881,9 @@
 			this.tableLayoutPanel2.ResumeLayout(false);
 			this.tableLayoutPanel3.ResumeLayout(false);
 			this.tableLayoutPanel3.PerformLayout();
+			this.tabPage11.ResumeLayout(false);
+			this.tableLayoutPanel9.ResumeLayout(false);
+			this.tableLayoutPanel9.PerformLayout();
 			this.ResumeLayout(false);
 
 		}
@@ -851,6 +938,12 @@
 		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel8;
 		private System.Windows.Forms.Button btnSingleRep;
 		internal System.Windows.Forms.NumericUpDown edSingleRep;
+		private System.Windows.Forms.TabPage tabPage11;
+		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel9;
+		private System.Windows.Forms.TextBox edReverse;
+		private System.Windows.Forms.Button btnReverse;
+		private System.Windows.Forms.TextBox edSquashInput;
+		private System.Windows.Forms.Button btnSquash;
 	}
 }
 
