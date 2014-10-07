@@ -96,4 +96,4 @@ The problem here is that there may be code that never gets executed (not part of
 BefunHighlight tries to solve this by evaluating every possible path an program can execute and so calculating the ways a single command is used.
 Based on these informations it's now possible for another program to better highlight the source code.
 
-Be aware that **p**ut and **g**et operations will invalidate the calculated values and it is needed to update them.
+Be aware that put (**p**) and get (**g**) operations will invalidate the calculated values and it is needed to update them.
