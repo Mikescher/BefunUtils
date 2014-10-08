@@ -6,7 +6,17 @@ A tool for generating Befunge-93 Programs out of a imperative-programming-langua
 *Download:* [mikescher.de](http://www.mikescher.de/programs/view/BefunGen)  
 *Manual:* [mikescher.de](http://www.mikescher.de/programs/view/BefunGen)  
 *Examples:* [mikescher.de](http://www.mikescher.de/programs/view/BefunGen) (= BefunWrite/Examples)  
-*Example of compiled code:* [pastebin (Square-It)](http://pastebin.com/raw.php?i=1d2U399C)  
+*Example of compiled code:*  
+[Maze Generator and Solver](http://hastebin.com/yehovesefa.coffee) | 
+[Game Of Life](http://hastebin.com/boqomabeni.coffee) | 
+[Sieve Of Eratosthenes](http://hastebin.com/abowonetos.coffee) | 
+[Bef93-Interpreter](http://hastebin.com/iwepozizog.coffee) | 
+[PI Approximation](http://hastebin.com/moliraqoko.coffee) | 
+[Euclidian algorithm](http://hastebin.com/ofebuwojuh.1c) | 
+[Fibonacci numbers](http://hastebin.com/oloheyakor.1c) | 
+[Fizz buzz](http://hastebin.com/azivuduhov.1c) | 
+[Square It with KI](http://hastebin.com/isujoreyay.coffee) | 
+[Sudoku Generator](http://hastebin.com/isegaluxer.coffee)
 
 Overview
 ========
