@@ -1,5 +1,4 @@
 ﻿using BefunRep.Exceptions;
-using BefunRep.FileHandling;
 using System.Collections.Generic;
 using System.Text;
 
@@ -11,15 +10,9 @@ namespace BefunRep.Algorithms
 	/// </summary>
 	public class FactorizationAlgorithm : RepAlgorithm
 	{
-		public FactorizationAlgorithm(RepresentationSafe s)
-			: base(s)
-		{
-			//
-		}
 
 		public override string get(int lit)
 		{
-			bool isneg;
 			if (lit < 0)
 			{
 				StringBuilder p = new StringBuilder();

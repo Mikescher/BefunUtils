@@ -1,5 +1,4 @@
 ﻿using BefunRep.Exceptions;
-using BefunRep.FileHandling;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,12 +15,6 @@ namespace BefunRep.Algorithms
 
 		private const char MIN_ASCII = ' '; // 32
 		private const char MAX_ASCII = '~'; // 126
-
-		public StringifyAlgorithm(RepresentationSafe s)
-			: base(s)
-		{
-			//
-		}
 
 		public override string get(int lit)
 		{

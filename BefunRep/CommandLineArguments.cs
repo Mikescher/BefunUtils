@@ -1,4 +1,5 @@
-﻿using System.Collections.Specialized;
+﻿using System;
+using System.Collections.Specialized;
 using System.Text.RegularExpressions;
 
 namespace BefunRep
@@ -111,6 +112,11 @@ namespace BefunRep
 		public int GetIntDefault(string p, int def)
 		{
 			return IsInt(p) ? GetInt(p) : def;
+		}
+
+		public int GetIntDefaultRange(string p, int def, int min, int max)
+		{
+			return Math.Min(max - 1, Math.Max(min, (IsInt(p) ? GetInt(p) : def)));
 		}
 	}
 }

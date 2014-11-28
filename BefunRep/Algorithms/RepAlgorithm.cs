@@ -4,12 +4,7 @@ namespace BefunRep.Algorithms
 {
 	public abstract class RepAlgorithm
 	{
-		protected readonly RepresentationSafe representations;
-
-		public RepAlgorithm(RepresentationSafe safe)
-		{
-			this.representations = safe;
-		}
+		public RepresentationSafe representations = null;
 
 		public string calculate(int value)
 		{

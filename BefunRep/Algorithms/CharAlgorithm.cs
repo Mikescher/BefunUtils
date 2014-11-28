@@ -1,5 +1,4 @@
-﻿using BefunRep.FileHandling;
-
+﻿
 namespace BefunRep.Algorithms
 {
 	/// <summary>
@@ -8,11 +7,6 @@ namespace BefunRep.Algorithms
 	/// </summary>
 	public class CharAlgorithm : RepAlgorithm
 	{
-		public CharAlgorithm(RepresentationSafe s)
-			: base(s)
-		{
-			//
-		}
 
 		public override string get(int value)
 		{

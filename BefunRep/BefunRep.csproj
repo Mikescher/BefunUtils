@@ -55,6 +55,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RepCalculator.cs" />
     <Compile Include="FileHandling\RepresentationSafe.cs" />
+    <Compile Include="Test\BFRunException.cs" />
+    <Compile Include="Test\CPTester.cs" />
+    <Compile Include="Test\DummyResultTester.cs" />
+    <Compile Include="Test\ExecuteResultTester.cs" />
+    <Compile Include="Test\ResultTester.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
