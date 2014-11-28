@@ -13,25 +13,25 @@ namespace BefunRep.Algorithms
 			//
 		}
 
-		public override string get(int lit)
+		public override string get(int value)
 		{
 			StringBuilder p = new StringBuilder();
 
-			if (lit < 0)
+			if (value < 0)
 			{
-				return "0" + getPositive(-lit) + "-";
+				return "0" + getPositive(-value) + "-";
 			}
 			else
 			{
-				return getPositive(lit);
+				return getPositive(value);
 			}
 		}
 
-		private string getPositive(int lit)
+		private string getPositive(int value)
 		{
 			StringBuilder p = new StringBuilder();
 
-			string rep = ConvertToBase(lit, 9);
+			string rep = ConvertToBase(value, 9);
 
 			for (int i = 0; i < rep.Length; i++)
 			{

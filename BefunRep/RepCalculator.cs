@@ -22,6 +22,7 @@ namespace BefunRep
 			algorithms = new RepAlgorithm[]
 			{
 				new Base9Algorithm(safe),
+				new CharAlgorithm(safe),
 			};
 		}
 

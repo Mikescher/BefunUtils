@@ -28,7 +28,9 @@ namespace BefunRep.FileHandling
 			int tmp;
 			var elements = file
 							.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries)
-							.Select(p => p.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(q => q.Trim()))
+							.Where(p => p.Contains(' '))
+							.Select(p => new string[] { p.Substring(0, p.IndexOf(' ')), p.Substring(p.IndexOf(' ') + 1) })
+							.Select(p => p.Select(q => q.Trim()))
 							.Select(p => p.ToList())
 							.Where(p => p.Count == 2)
 							.Where(p => int.TryParse(p[0], out tmp))
@@ -43,7 +45,7 @@ namespace BefunRep.FileHandling
 
 		private void safe()
 		{
-			string txt = String.Join(Environment.NewLine, representations.Select(p => p.Key + ", " + p.Value));
+			string txt = String.Join(Environment.NewLine, representations.Select(p => String.Format("{0, -11} {1}", p.Key, p.Value)));
 
 			File.WriteAllText(filepath, txt);
 		}
@@ -58,7 +60,7 @@ namespace BefunRep.FileHandling
 
 		public override void put(int key, string representation)
 		{
-			representations.Add(key, representation);
+			representations[key] = representation;
 
 			safe();
 		}

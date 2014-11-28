@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Algorithms\Base9Algorithm.cs" />
+    <Compile Include="Algorithms\CharAlgorithm.cs" />
     <Compile Include="Algorithms\RepAlgorithm.cs" />
     <Compile Include="CommandLineArguments.cs" />
     <Compile Include="FileHandling\BinarySafe.cs" />

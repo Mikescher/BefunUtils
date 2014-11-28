@@ -12,7 +12,7 @@ namespace BefunRep
 			int lowerBoundary = cmda.GetIntDefault("lower", -1024);
 			int upperBoundary = cmda.GetIntDefault("upper", 1024);
 
-			RepCalculator r = new RepCalculator(lowerBoundary, upperBoundary, new CSVSafe("out.json"));
+			RepCalculator r = new RepCalculator(lowerBoundary, upperBoundary, new CSVSafe("out.csv"));
 
 			r.start();
 
