@@ -9,8 +9,10 @@ namespace BefunRep
 		{
 			CommandLineArguments cmda = new CommandLineArguments(args);
 
-			int lowerBoundary = cmda.GetIntDefault("lower", -1024);
+			int lowerBoundary = cmda.GetIntDefault("lower", -256);
 			int upperBoundary = cmda.GetIntDefault("upper", 1024);
+
+			//System.IO.File.WriteAllText("out.csv", string.Empty); // reset;
 
 			RepCalculator r = new RepCalculator(lowerBoundary, upperBoundary, new CSVSafe("out.csv"));
 

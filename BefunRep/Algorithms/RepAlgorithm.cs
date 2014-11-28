@@ -16,7 +16,7 @@ namespace BefunRep.Algorithms
 			string old = representations.get(value);
 			string result = get(value);
 
-			if (result == null || result == "" || result == representations.get(value) || old.Length <= result.Length)
+			if (result == null || result == "" || result == old || (old != null && old.Length <= result.Length))
 			{
 				return null;
 			}
@@ -27,6 +27,11 @@ namespace BefunRep.Algorithms
 				return result;
 			}
 
+		}
+
+		protected char dig(long v)
+		{
+			return (char)(v + '0');
 		}
 
 		public abstract string get(int value);
