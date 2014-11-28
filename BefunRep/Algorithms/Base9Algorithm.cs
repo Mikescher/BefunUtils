@@ -4,6 +4,9 @@ using System.Text;
 
 namespace BefunRep.Algorithms
 {
+	/// <summary>
+	/// Represents the numbers as Base 9
+	/// </summary>
 	public class Base9Algorithm : RepAlgorithm
 	{
 

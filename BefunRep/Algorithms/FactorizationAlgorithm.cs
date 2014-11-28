@@ -5,9 +5,12 @@ using System.Text;
 
 namespace BefunRep.Algorithms
 {
+	/// <summary>
+	/// Represents numbers as multiple multiplications
+	/// If this is not possible it tries to get as near as possible and then use an "add"
+	/// </summary>
 	public class FactorizationAlgorithm : RepAlgorithm
 	{
-
 		public FactorizationAlgorithm(RepresentationSafe s)
 			: base(s)
 		{

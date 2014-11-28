@@ -24,6 +24,7 @@ namespace BefunRep
 				new Base9Algorithm(safe),
 				new FactorizationAlgorithm(safe),
 				new CharAlgorithm(safe),
+				new StringifyAlgorithm(safe),
 			};
 		}
 
@@ -37,7 +38,13 @@ namespace BefunRep
 
 					if (result != null)
 					{
-						Console.Out.WriteLine(String.Format("Found: {0,11}  ->  {1}", v, result));
+						Console.Out.WriteLine(
+							String.Format("[{0:HH:mm:ss}] {1,16} Found: {2,11}  ->  {3}",
+								DateTime.Now,
+								algo.GetType().Name.Replace("Algorithm", ""),
+								v,
+								result)
+							);
 					}
 				}
 			}
