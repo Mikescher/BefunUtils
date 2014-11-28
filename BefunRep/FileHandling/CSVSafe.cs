@@ -9,7 +9,7 @@ namespace BefunRep.FileHandling
 	{
 		private readonly string filepath;
 
-		private SortedDictionary<int, string> representations;
+		private SortedDictionary<long, string> representations;
 
 		public CSVSafe(string path)
 		{
@@ -36,7 +36,7 @@ namespace BefunRep.FileHandling
 							.Where(p => int.TryParse(p[0], out tmp))
 							.Where(p => p[1] != "");
 
-			representations = new SortedDictionary<int, string>();
+			representations = new SortedDictionary<long, string>();
 			foreach (var item in elements)
 			{
 				representations.Add(int.Parse(item[0]), item[1]);
@@ -50,7 +50,7 @@ namespace BefunRep.FileHandling
 			File.WriteAllText(filepath, txt);
 		}
 
-		public override string get(int key)
+		public override string get(long key)
 		{
 			if (representations.ContainsKey(key))
 				return representations[key];
@@ -58,12 +58,31 @@ namespace BefunRep.FileHandling
 				return null;
 		}
 
-		public override void put(int key, string representation)
+		public override void put(long key, string representation)
 		{
 			representations[key] = representation;
 
 			safe();
 		}
 
+		public override void start()
+		{
+			//
+		}
+
+		public override void stop()
+		{
+			safe();
+		}
+
+		public override long getLowestValue()
+		{
+			return representations.Keys.Min();
+		}
+
+		public override long getHighestValue()
+		{
+			return representations.Keys.Max();
+		}
 	}
 }

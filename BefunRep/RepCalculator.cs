@@ -39,36 +39,72 @@ namespace BefunRep
 				algo.representations = rsafe;
 		}
 
-		public void start()
+		public void calculate(int algonum)
 		{
-			string outerror;
+			if (algonum < 0)
+			{
+				calculate();
+				return;
+			}
+
+			safe.start();
+
+			//#################################################################
+
+			RepAlgorithm algo = algorithms[algonum];
+
+			for (int v = lowerB; v < upperB; v++)
+			{
+				calculateSingle(algo, v);
+			}
+
+			//#################################################################
+
+			safe.stop();
+		}
+
+		public void calculate()
+		{
+			safe.start();
+
+			//#################################################################
 
 			foreach (RepAlgorithm algo in algorithms)
 			{
 				for (int v = lowerB; v < upperB; v++)
 				{
-					string result = algo.calculate(v);
+					calculateSingle(algo, v);
+				}
+			}
 
-					if (result != null)
-					{
-						Console.Out.WriteLine(
-							String.Format("[{0:HH:mm:ss}] {1,16} Found: {2,11}  ->  {3}",
-								DateTime.Now,
-								algo.GetType().Name.Replace("Algorithm", ""),
-								v,
-								result)
-							);
+			//#################################################################
 
-						if (!tester.test(result, v, out outerror))
-						{
-							Console.Out.WriteLine(String.Format("[{0:HH:mm:ss}] TEST RESULT ERROR", DateTime.Now));
-							Console.Out.WriteLine(String.Format("[{0:HH:mm:ss}] #################", DateTime.Now));
-							Console.Out.WriteLine(String.Format("[{0:HH:mm:ss}] TEST Program = {1}", DateTime.Now, result));
-							Console.Out.WriteLine(String.Format("[{0:HH:mm:ss}] TEST Algorithm = {1}", DateTime.Now, algo.GetType().Name));
-							Console.Out.WriteLine(String.Format("[{0:HH:mm:ss}] TEST Expected Result = {1}", DateTime.Now, v));
-							Console.Out.WriteLine(String.Format("[{0:HH:mm:ss}] TEST Problem = \"{1}\"", DateTime.Now, outerror));
-						}
-					}
+			safe.stop();
+		}
+
+		private void calculateSingle(RepAlgorithm algo, int v)
+		{
+			string outerror;
+			string result = algo.calculate(v);
+
+			if (result != null)
+			{
+				Console.Out.WriteLine(
+					String.Format("[{0:HH:mm:ss}] {1,16} Found: {2,11}  ->  {3}",
+						DateTime.Now,
+						algo.GetType().Name.Replace("Algorithm", ""),
+						v,
+						result)
+					);
+
+				if (!tester.test(result, v, out outerror))
+				{
+					Console.Out.WriteLine(String.Format("[{0:HH:mm:ss}] TEST RESULT ERROR", DateTime.Now));
+					Console.Out.WriteLine(String.Format("[{0:HH:mm:ss}] #################", DateTime.Now));
+					Console.Out.WriteLine(String.Format("[{0:HH:mm:ss}] TEST Program = {1}", DateTime.Now, result));
+					Console.Out.WriteLine(String.Format("[{0:HH:mm:ss}] TEST Algorithm = {1}", DateTime.Now, algo.GetType().Name));
+					Console.Out.WriteLine(String.Format("[{0:HH:mm:ss}] TEST Expected Result = {1}", DateTime.Now, v));
+					Console.Out.WriteLine(String.Format("[{0:HH:mm:ss}] TEST Problem = \"{1}\"", DateTime.Now, outerror));
 				}
 			}
 		}

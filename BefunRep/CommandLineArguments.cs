@@ -118,5 +118,10 @@ namespace BefunRep
 		{
 			return Math.Min(max - 1, Math.Max(min, (IsInt(p) ? GetInt(p) : def)));
 		}
+
+		public string GetStringDefault(string p, string def)
+		{
+			return Contains(p) ? this[p] : def;
+		}
 	}
 }

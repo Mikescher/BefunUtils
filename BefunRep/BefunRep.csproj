@@ -32,6 +32,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.6\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -47,10 +50,16 @@
     <Compile Include="Algorithms\FactorizationAlgorithm.cs" />
     <Compile Include="Algorithms\RepAlgorithm.cs" />
     <Compile Include="CommandLineArguments.cs" />
+    <Compile Include="CustomExtensions.cs" />
     <Compile Include="Exceptions\WTFException.cs" />
     <Compile Include="FileHandling\BinarySafe.cs" />
     <Compile Include="FileHandling\CSVSafe.cs" />
     <Compile Include="FileHandling\JSONSafe.cs" />
+    <Compile Include="OutputHandling\DummyOutputFormatter.cs" />
+    <Compile Include="OutputHandling\XMLOutputFormatter.cs" />
+    <Compile Include="OutputHandling\JSONOutputFormatter.cs" />
+    <Compile Include="OutputHandling\CSVOutputFormatter.cs" />
+    <Compile Include="OutputHandling\OutputFormatter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RepCalculator.cs" />
@@ -63,6 +72,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
