@@ -7,6 +7,11 @@ namespace BefunRep.Algorithms
 	/// </summary>
 	public class CharAlgorithm : RepAlgorithm
 	{
+		public CharAlgorithm(byte aid)
+			: base(aid)
+		{
+			// NOP
+		}
 
 		public override string get(long value)
 		{

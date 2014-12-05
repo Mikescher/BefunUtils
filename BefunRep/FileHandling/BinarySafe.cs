@@ -19,7 +19,7 @@ namespace BefunRep.FileHandling
 	/// </summary>
 	public class BinarySafe : RepresentationSafe
 	{
-		private const int INITIAL_CODE_LEN = 32; // Wird von Base9 erst bei über 4.782.969 gesprengt
+		private const int INITIAL_CODE_LEN = 32; // Wird von Base9 erst bei über 4.782.969 gesprengt    (enthält das eine byte für den algo)
 		private readonly long INITIAL_VALUE_START;
 		private readonly long INITIAL_VALUE_END;
 
@@ -66,7 +66,23 @@ namespace BefunRep.FileHandling
 			return b.ToString();
 		}
 
-		public override void put(long key, string representation)
+		public override byte? getAlgorithm(long key)
+		{
+			if (key < valueStart || key >= valueEnd)
+				return null;
+
+			fstream.Seek(HEADER_SIZE + codeLength * (key - valueStart), SeekOrigin.Begin);
+
+			byte[] read = new byte[codeLength];
+			fstream.Read(read, 0, codeLength);
+
+			if (read[0] == 0)
+				return null;
+
+			return read[codeLength - 1];
+		}
+
+		public override void put(long key, string representation, byte algorithm)
 		{
 			if (key >= valueEnd)
 				updateEndSize(key);
@@ -74,8 +90,8 @@ namespace BefunRep.FileHandling
 			if (key < valueStart)
 				updateStartSize(key);
 
-			if (representation.Length > codeLength)
-				updateCodeLength(representation.Length);
+			if ((representation.Length + 1) > codeLength)
+				updateCodeLength(representation.Length + 1);
 
 			fstream.Seek(HEADER_SIZE + codeLength * (key - valueStart), SeekOrigin.Begin);
 
@@ -88,6 +104,7 @@ namespace BefunRep.FileHandling
 				else
 					write[i] = 0;
 			}
+			write[codeLength - 1] = algorithm;
 
 			fstream.Write(write, 0, codeLength);
 		}

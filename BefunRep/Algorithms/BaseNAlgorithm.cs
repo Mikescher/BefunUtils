@@ -12,6 +12,11 @@ namespace BefunRep.Algorithms
 	/// </summary>
 	public class BaseNAlgorithm : RepAlgorithm
 	{
+		public BaseNAlgorithm(byte aid)
+			: base(aid)
+		{
+			// NOP
+		}
 
 		public override string get(long value)
 		{

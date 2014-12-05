@@ -21,11 +21,15 @@ namespace BefunRep.OutputHandling
 				for (long v = min; v < max; v++)
 				{
 					string rep = safe.get(v);
+					byte? algo = safe.getAlgorithm(v);
 
-					if (rep == null)
+					if (rep == null || algo == null)
 						continue;
 
-					writer.WriteLine(String.Format("{0, -11} {1}", v, rep));
+					writer.WriteLine(String.Format("{0, -11}   {1,-30}   {2}",
+						v,
+						RepCalculator.algorithmNames[algo.Value] + "-Algorithm",
+						rep));
 				}
 			}
 		}

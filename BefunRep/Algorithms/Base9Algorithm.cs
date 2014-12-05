@@ -8,6 +8,11 @@ namespace BefunRep.Algorithms
 	/// </summary>
 	public class Base9Algorithm : RepAlgorithm
 	{
+		public Base9Algorithm(byte aid)
+			: base(aid)
+		{
+			// NOP
+		}
 
 		public override string get(long value)
 		{

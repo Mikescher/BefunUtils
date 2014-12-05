@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
-using System;
 using System.IO;
+using System.Linq;
 
 namespace BefunRep.OutputHandling
 {
@@ -14,25 +14,22 @@ namespace BefunRep.OutputHandling
 
 		public override void Output(FileHandling.RepresentationSafe safe)
 		{
-			using (StreamWriter writer = new StreamWriter(filepath))
-			{
-				long min = safe.getLowestValue();
-				long max = safe.getHighestValue();
+			long min = safe.getLowestValue();
+			long max = safe.getHighestValue();
 
-				writer.WriteLine("{");
-
-				for (long v = min; v < max; v++)
+			var data = CustomExtensions
+				.LongRange(min, max)
+				.Where(p => safe.get(p) != null)
+				.Where(p => safe.getAlgorithm(p) != null)
+				.Select(p => new
 				{
-					string rep = safe.get(v);
+					value = p,
+					representation = safe.get(p),
+					algorithmID = safe.getAlgorithm(p),
+					algorithm = RepCalculator.algorithmNames[safe.getAlgorithm(p).Value]
+				});
 
-					if (rep == null)
-						continue;
-
-					writer.WriteLine(String.Format("  \"{0}\": {1},", v, JsonConvert.SerializeObject(rep)));
-				}
-
-				writer.WriteLine("}");
-			}
+			File.WriteAllText(filepath, JsonConvert.SerializeObject(data, Formatting.Indented));
 		}
 	}
 }

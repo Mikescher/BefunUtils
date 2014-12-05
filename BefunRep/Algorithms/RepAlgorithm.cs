@@ -5,6 +5,12 @@ namespace BefunRep.Algorithms
 	public abstract class RepAlgorithm
 	{
 		public RepresentationSafe representations = null;
+		public readonly byte algorithmID;
+
+		public RepAlgorithm(byte id)
+		{
+			this.algorithmID = id;
+		}
 
 		public string calculate(long value)
 		{
@@ -17,7 +23,7 @@ namespace BefunRep.Algorithms
 			}
 			else
 			{
-				representations.put(value, result);
+				representations.put(value, result, algorithmID);
 
 				return result;
 			}

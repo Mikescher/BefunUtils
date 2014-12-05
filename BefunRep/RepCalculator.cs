@@ -11,11 +11,11 @@ namespace BefunRep
 	{
 		public static readonly RepAlgorithm[] algorithms = new RepAlgorithm[]
 		{
-			new Base9Algorithm(),			// [0]
-			new FactorizationAlgorithm(),	// [1]
-			new CharAlgorithm(),			// [2]
-			new StringifyAlgorithm(),		// [3]
-			new BaseNAlgorithm(),	// [4]
+			new Base9Algorithm(0),			// [0]
+			new FactorizationAlgorithm(1),	// [1]
+			new CharAlgorithm(2),			// [2]
+			new StringifyAlgorithm(3),		// [3]
+			new BaseNAlgorithm(4),			// [4]
 		};
 
 		public static string[] algorithmNames { get { return algorithms.Select(p => p.GetType().Name.Replace("Algorithm", "")).ToArray(); } }

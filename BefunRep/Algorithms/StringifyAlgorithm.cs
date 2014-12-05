@@ -15,6 +15,12 @@ namespace BefunRep.Algorithms
 
 		private const char MIN_ASCII = ' '; // 32
 		private const char MAX_ASCII = '~'; // 126
+		
+		public StringifyAlgorithm(byte aid)
+			: base(aid)
+		{
+			// NOP
+		}
 
 		public override string get(long lit)
 		{

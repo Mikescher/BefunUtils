@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace BefunRep.FileHandling
 	{
 		private readonly string filepath;
 
-		private SortedDictionary<long, string> representations;
+		private SortedDictionary<long, Tuple<byte, string>> representations;
 
 		public JSONSafe(string path)
 		{
@@ -23,16 +24,16 @@ namespace BefunRep.FileHandling
 			if (!File.Exists(filepath))
 			{
 				File.CreateText(filepath).Close();
-				representations = new SortedDictionary<long, string>();
+				representations = new SortedDictionary<long, Tuple<byte, string>>();
 				return;
 			}
 
 			string file = File.ReadAllText(filepath);
 
-			representations = JsonConvert.DeserializeObject<SortedDictionary<long, string>>(file);
+			representations = JsonConvert.DeserializeObject<SortedDictionary<long, Tuple<byte, string>>>(file);
 
 			if (representations == null)
-				representations = new SortedDictionary<long, string>();
+				representations = new SortedDictionary<long, Tuple<byte, string>>();
 		}
 
 		private void safe()
@@ -45,14 +46,22 @@ namespace BefunRep.FileHandling
 		public override string get(long key)
 		{
 			if (representations.ContainsKey(key))
-				return representations[key];
+				return representations[key].Item2;
 			else
 				return null;
 		}
 
-		public override void put(long key, string representation)
+		public override byte? getAlgorithm(long key)
 		{
-			representations[key] = representation;
+			if (representations.ContainsKey(key))
+				return representations[key].Item1;
+			else
+				return null;
+		}
+
+		public override void put(long key, string representation, byte algorithm)
+		{
+			representations[key] = Tuple.Create(algorithm, representation);
 
 			safe();
 		}
