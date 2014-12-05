@@ -4,7 +4,7 @@ namespace BefunRep.Test
 {
 	public class ExecuteResultTester : ResultTester
 	{
-		public override bool test(string code, int result, out string error)
+		public override bool test(string code, long result, out string error)
 		{
 			CPTester t = new CPTester(code + "@");
 

@@ -9,7 +9,7 @@ namespace BefunRep.Algorithms
 	public class Base9Algorithm : RepAlgorithm
 	{
 
-		public override string get(int value)
+		public override string get(long value)
 		{
 			StringBuilder p = new StringBuilder();
 
@@ -23,7 +23,7 @@ namespace BefunRep.Algorithms
 			}
 		}
 
-		private string getPositive(int value)
+		private string getPositive(long value)
 		{
 			StringBuilder p = new StringBuilder();
 

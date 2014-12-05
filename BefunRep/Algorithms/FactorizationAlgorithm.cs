@@ -11,7 +11,7 @@ namespace BefunRep.Algorithms
 	public class FactorizationAlgorithm : RepAlgorithm
 	{
 
-		public override string get(int lit)
+		public override string get(long lit)
 		{
 			if (lit < 0)
 			{

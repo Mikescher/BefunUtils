@@ -6,7 +6,7 @@ namespace BefunRep.Algorithms
 	{
 		public RepresentationSafe representations = null;
 
-		public string calculate(int value)
+		public string calculate(long value)
 		{
 			string old = representations.get(value);
 			string result = get(value);
@@ -29,6 +29,6 @@ namespace BefunRep.Algorithms
 			return (char)(v + '0');
 		}
 
-		public abstract string get(int value);
+		public abstract string get(long value);
 	}
 }

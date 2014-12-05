@@ -93,15 +93,36 @@ namespace BefunRep
 			}
 		}
 
+		public bool isEmpty()
+		{
+			return Parameters.Count == 0;
+		}
+
+		public bool IsLong(string p)
+		{
+			long a;
+			return IsSet(p) && long.TryParse(Parameters[p], out a);
+		}
+
+		public long GetLong(string p)
+		{
+			return long.Parse(this[p]);
+		}
+
+		public long GetLongDefault(string p, long def)
+		{
+			return IsLong(p) ? GetLong(p) : def;
+		}
+
+		public long GetLongDefaultRange(string p, long def, long min, long max)
+		{
+			return Math.Min(max - 1, Math.Max(min, (IsLong(p) ? GetLong(p) : def)));
+		}
+
 		public bool IsInt(string p)
 		{
 			int a;
 			return IsSet(p) && int.TryParse(Parameters[p], out a);
-		}
-
-		public bool isEmpty()
-		{
-			return Parameters.Count == 0;
 		}
 
 		public int GetInt(string p)

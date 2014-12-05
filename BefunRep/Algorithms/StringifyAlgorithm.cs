@@ -16,7 +16,7 @@ namespace BefunRep.Algorithms
 		private const char MIN_ASCII = ' '; // 32
 		private const char MAX_ASCII = '~'; // 126
 
-		public override string get(int lit)
+		public override string get(long lit)
 		{
 			if (lit < 0)
 			{

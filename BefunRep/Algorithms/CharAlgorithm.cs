@@ -8,7 +8,7 @@ namespace BefunRep.Algorithms
 	public class CharAlgorithm : RepAlgorithm
 	{
 
-		public override string get(int value)
+		public override string get(long value)
 		{
 			if (value <= -(int)' ' && value >= -(int)'~' && value != -(int)'"')
 			{

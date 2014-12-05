@@ -77,12 +77,12 @@ namespace BefunRep.FileHandling
 
 		public override long getLowestValue()
 		{
-			return representations.Keys.Min();
+			return (representations.Count == 0) ? 0 : representations.Keys.Min();
 		}
 
 		public override long getHighestValue()
 		{
-			return representations.Keys.Max();
+			return (representations.Count == 0) ? 0 : representations.Keys.Max();
 		}
 	}
 }

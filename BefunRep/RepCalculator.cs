@@ -3,6 +3,7 @@ using BefunRep.FileHandling;
 using BefunRep.Test;
 using System;
 using System.Linq;
+using System.Threading;
 
 namespace BefunRep
 {
@@ -18,13 +19,13 @@ namespace BefunRep
 
 		public static string[] algorithmNames { get { return algorithms.Select(p => p.GetType().Name.Replace("Algorithm", "")).ToArray(); } }
 
-		private readonly int lowerB;
-		private readonly int upperB;
+		private readonly long lowerB;
+		private readonly long upperB;
 
 		private readonly RepresentationSafe safe;
 		private readonly ResultTester tester;
 
-		public RepCalculator(int low, int high, bool test, RepresentationSafe rsafe)
+		public RepCalculator(long low, long high, bool test, RepresentationSafe rsafe)
 		{
 			this.lowerB = low;
 			this.upperB = high;
@@ -53,7 +54,7 @@ namespace BefunRep
 
 			RepAlgorithm algo = algorithms[algonum];
 
-			for (int v = lowerB; v < upperB; v++)
+			for (long v = lowerB; v < upperB; v++)
 			{
 				calculateSingle(algo, v);
 			}
@@ -71,7 +72,7 @@ namespace BefunRep
 
 			foreach (RepAlgorithm algo in algorithms)
 			{
-				for (int v = lowerB; v < upperB; v++)
+				for (long v = lowerB; v < upperB; v++)
 				{
 					calculateSingle(algo, v);
 				}
@@ -82,7 +83,7 @@ namespace BefunRep
 			safe.stop();
 		}
 
-		private void calculateSingle(RepAlgorithm algo, int v)
+		private void calculateSingle(RepAlgorithm algo, long v)
 		{
 			string outerror;
 			string result = algo.calculate(v);
@@ -105,6 +106,8 @@ namespace BefunRep
 					Console.Out.WriteLine(String.Format("[{0:HH:mm:ss}] TEST Algorithm = {1}", DateTime.Now, algo.GetType().Name));
 					Console.Out.WriteLine(String.Format("[{0:HH:mm:ss}] TEST Expected Result = {1}", DateTime.Now, v));
 					Console.Out.WriteLine(String.Format("[{0:HH:mm:ss}] TEST Problem = \"{1}\"", DateTime.Now, outerror));
+
+					Thread.Sleep(5 * 1000);
 				}
 			}
 		}
