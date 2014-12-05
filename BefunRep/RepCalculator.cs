@@ -23,15 +23,17 @@ namespace BefunRep
 
 		private readonly long lowerB;
 		private readonly long upperB;
+		private readonly bool quiet;
 
 		private readonly RepresentationSafe safe;
 		private readonly ResultTester tester;
 
-		public RepCalculator(long low, long high, bool test, RepresentationSafe rsafe)
+		public RepCalculator(long low, long high, bool test, RepresentationSafe rsafe, bool isQuiet)
 		{
 			this.lowerB = low;
 			this.upperB = high;
 			this.safe = rsafe;
+			this.quiet = isQuiet;
 
 			if (test)
 				tester = new ExecuteResultTester();
@@ -92,13 +94,16 @@ namespace BefunRep
 
 			if (result != null)
 			{
-				Console.Out.WriteLine(
-					String.Format("[{0:HH:mm:ss}] {1,16} Found: {2,11}  ->  {3}",
-						DateTime.Now,
-						algo.GetType().Name.Replace("Algorithm", ""),
-						v,
-						result)
-					);
+				if (!quiet)
+				{
+					Console.Out.WriteLine(
+						String.Format("[{0:HH:mm:ss}] {1,16} Found: {2,11}  ->  {3}",
+							DateTime.Now,
+							algo.GetType().Name.Replace("Algorithm", ""),
+							v,
+							result)
+						);
+				}
 
 				if (!tester.test(result, v, out outerror))
 				{

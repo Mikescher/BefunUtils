@@ -24,6 +24,7 @@ namespace BefunRep
 		private int algorithm;
 		private string safepath;
 		private string outpath;
+		private bool quiet;
 
 		private bool boundaryDiscovery = false;
 
@@ -55,7 +56,7 @@ namespace BefunRep
 
 			interpreteCMDA(cmda);
 
-			RepCalculator r = new RepCalculator(lowerBoundary, upperBoundary, testResults, safe);
+			RepCalculator r = new RepCalculator(lowerBoundary, upperBoundary, testResults, safe, quiet);
 			outputCMDA();
 
 			//##############
@@ -113,6 +114,7 @@ namespace BefunRep
 			Console.Out.WriteLine("-lower=[int]");
 			Console.Out.WriteLine("-upper=[int]");
 			Console.Out.WriteLine("-notest");
+			Console.Out.WriteLine("-quiet");
 			Console.Out.WriteLine("-reset");
 			Console.Out.WriteLine("-algorithm=[0 - " + (RepCalculator.algorithms.Length - 1) + "]");
 			Console.Out.WriteLine("-safe=[filename].[csv|json|bin|dat]");
@@ -214,6 +216,7 @@ namespace BefunRep
 			upperBoundary = cmda.GetLongDefault("upper", 0);
 			testResults = !cmda.IsSet("notest");
 			doReset = cmda.IsSet("reset");
+			quiet = cmda.IsSet("q") || cmda.IsSet("quiet");
 			statsLevel = cmda.GetIntDefaultRange("stats", 0, 0, 4);
 			algorithm = cmda.GetIntDefaultRange("algorithm", -1, -1, RepCalculator.algorithms.Length);
 			safepath = cmda.GetStringDefault("safe", "out.csv");
@@ -224,13 +227,13 @@ namespace BefunRep
 		private void printStats(RepresentationSafe safe)
 		{
 			safe.start();
-
-			Console.Out.WriteLine("  Statistics  ");
-			Console.Out.WriteLine("##############");
-			Console.Out.WriteLine();
-
 			if (statsLevel >= 1) //############################################
 			{
+
+				Console.Out.WriteLine("  Statistics  ");
+				Console.Out.WriteLine("##############");
+				Console.Out.WriteLine();
+
 				long valuecount = safe.getHighestValue() - safe.getLowestValue();
 
 				long repcount = safe.getNonNullRepresentations();
