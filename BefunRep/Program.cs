@@ -11,7 +11,7 @@ namespace BefunRep
 	class Program
 	{
 		public const string VERSION = "0.1";
-		public const string TITLE = "BefunExec";
+		public const string TITLE = "BefunRep";
 
 		private long lowerBoundary;
 		private long upperBoundary;

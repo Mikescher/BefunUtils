@@ -1,0 +1,12 @@
+box: wercker-labs/windows
+
+build:
+  steps:
+
+    - wercker-labs/nuget
+
+    - wercker-labs/msbuild
+        configuration: Release
+        solution: BefunGen
+
+    - wercker-labs/dotnet-test
