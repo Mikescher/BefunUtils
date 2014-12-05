@@ -5,6 +5,9 @@ using System.IO;
 
 namespace BefunRep
 {
+
+	//TODO Add info about algorithm into safes (all 3)
+
 	class Program
 	{
 		public const string VERSION = "0.1";
