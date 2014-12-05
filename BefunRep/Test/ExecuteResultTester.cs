@@ -24,7 +24,7 @@ namespace BefunRep.Test
 				return false;
 			}
 
-			if (t.Stack.Peek() != result)
+			if (t.Peek() != result)
 			{
 				error = "Result = " + t.Stack.Peek();
 				return false;

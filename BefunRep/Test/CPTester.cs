@@ -46,12 +46,12 @@ namespace BefunRep.Test
 		public int w;
 		public int h;
 
-		public int[,] raster;
+		public long[,] raster;
 		public Vector PC;
 		public Vector Delta;
 		public bool Stringmode;
 
-		public Stack<int> Stack;
+		public Stack<long> Stack;
 
 		public StringBuilder Output;
 
@@ -65,7 +65,7 @@ namespace BefunRep.Test
 			h = lines.Length;
 			w = lines.Max(p => p.Length);
 
-			raster = new int[w, h];
+			raster = new long[w, h];
 
 			for (int x = 0; x < w; x++)
 				for (int y = 0; y < h; y++)
@@ -73,7 +73,7 @@ namespace BefunRep.Test
 
 			PC = new Vector(0, 0);
 			Delta = new Vector(1, 0);
-			Stack = new Stack<int>();
+			Stack = new Stack<long>();
 			Output = new StringBuilder();
 			StepCount = 0;
 			Stringmode = false;
@@ -112,7 +112,7 @@ namespace BefunRep.Test
 			StepCount++;
 		}
 
-		public void Set(int x, int y, int chr)
+		public void Set(long x, long y, long chr)
 		{
 			if (x < 0 || y < 0 || x >= w || y >= h)
 				throw new BFRunException("Modification Out Of Raster");
@@ -123,7 +123,7 @@ namespace BefunRep.Test
 			raster[x, y] = chr;
 		}
 
-		public int Get(int x, int y)
+		public long Get(long x, long y)
 		{
 			if (x < 0 || y < 0 || x >= w || y >= h)
 				throw new BFRunException("Reflection Out Of Raster");
@@ -134,12 +134,12 @@ namespace BefunRep.Test
 			return raster[x, y];
 		}
 
-		public void Push(int i)
+		public void Push(long i)
 		{
 			Stack.Push(i);
 		}
 
-		public int Pop()
+		public long Pop()
 		{
 			if (Stack.Count == 0)
 			{
@@ -149,7 +149,7 @@ namespace BefunRep.Test
 			return Stack.Pop();
 		}
 
-		public int Peek()
+		public long Peek()
 		{
 			if (Stack.Count == 0)
 			{
@@ -169,7 +169,7 @@ namespace BefunRep.Test
 			Push(b ? 1 : 0);
 		}
 
-		private void executCmd(int cmd)
+		private void executCmd(long cmd)
 		{
 			if (Stringmode)
 			{
@@ -185,9 +185,9 @@ namespace BefunRep.Test
 				}
 			}
 
-			int t1;
-			int t2;
-			int t3;
+			long t1;
+			long t2;
+			long t3;
 
 			switch (cmd)
 			{
