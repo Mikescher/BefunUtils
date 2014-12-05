@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace BefunRep
 {
@@ -18,6 +19,11 @@ namespace BefunRep
 			{
 				yield return i;
 			}
+		}
+
+		public static string Repeat(this string str, int count)
+		{
+			return string.Concat(Enumerable.Repeat(str, count));
 		}
 	}
 }

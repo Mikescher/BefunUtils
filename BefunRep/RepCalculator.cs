@@ -16,6 +16,7 @@ namespace BefunRep
 			new CharAlgorithm(2),			// [2]
 			new StringifyAlgorithm(3),		// [3]
 			new BaseNAlgorithm(4),			// [4]
+			new PowerAlgorithm(5),			// [5]
 		};
 
 		public static string[] algorithmNames { get { return algorithms.Select(p => p.GetType().Name.Replace("Algorithm", "")).ToArray(); } }
