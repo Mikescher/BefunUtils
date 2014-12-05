@@ -2,6 +2,7 @@
 using BefunRep.OutputHandling;
 using System;
 using System.IO;
+using System.Linq;
 
 namespace BefunRep
 {
@@ -13,10 +14,13 @@ namespace BefunRep
 		public const string VERSION = "0.1";
 		public const string TITLE = "BefunRep";
 
+		private readonly DateTime startTime = DateTime.Now;
+
 		private long lowerBoundary;
 		private long upperBoundary;
 		private bool testResults;
 		private bool doReset;
+		private int statsLevel;
 		private int algorithm;
 		private string safepath;
 		private string outpath;
@@ -38,7 +42,7 @@ namespace BefunRep
 
 			printHeader();
 
-			//#################################################################
+			//##############
 
 			CommandLineArguments cmda = loadCMDA(args);
 
@@ -67,6 +71,13 @@ namespace BefunRep
 			Console.Out.WriteLine();
 			Console.Out.WriteLine();
 			Console.Out.WriteLine(String.Format("[{0:HH:mm:ss}] Finished.", DateTime.Now));
+			Console.Out.WriteLine();
+			Console.Out.WriteLine();
+
+			printStats(safe);
+
+			Console.Out.WriteLine();
+			Console.Out.WriteLine();
 			Console.ReadLine();
 		}
 
@@ -106,6 +117,7 @@ namespace BefunRep
 			Console.Out.WriteLine("-algorithm=[0 - " + (RepCalculator.algorithms.Length - 1) + "]");
 			Console.Out.WriteLine("-safe=[filename].[csv|json|bin|dat]");
 			Console.Out.WriteLine("-out=[filename].[csv|json|xml]");
+			Console.Out.WriteLine("-stats=[0-3]");
 			Console.Out.WriteLine("-help");
 			Console.Out.WriteLine();
 			Console.Out.WriteLine("################################");
@@ -126,6 +138,9 @@ namespace BefunRep
 
 			Console.Out.WriteLine(String.Format("[{0:HH:mm:ss}] Reset      := {1}", DateTime.Now,
 				doReset.ToString().ToLower()));
+
+			Console.Out.WriteLine(String.Format("[{0:HH:mm:ss}] Statistics := {1}", DateTime.Now,
+				new string[] { "none", "simple", "verbose", "all" }[statsLevel]));
 
 			Console.Out.WriteLine(String.Format("[{0:HH:mm:ss}] Algorithm  := {1}", DateTime.Now,
 				algorithm == -1 ? "all" : RepCalculator.algorithmNames[algorithm]));
@@ -199,10 +214,72 @@ namespace BefunRep
 			upperBoundary = cmda.GetLongDefault("upper", 0);
 			testResults = !cmda.IsSet("notest");
 			doReset = cmda.IsSet("reset");
+			statsLevel = cmda.GetIntDefaultRange("stats", 0, 0, 4);
 			algorithm = cmda.GetIntDefaultRange("algorithm", -1, -1, RepCalculator.algorithms.Length);
 			safepath = cmda.GetStringDefault("safe", "out.csv");
 			outpath = cmda.GetStringDefault("out", null);
 			return cmda;
+		}
+
+		private void printStats(RepresentationSafe safe)
+		{
+			safe.start();
+
+			Console.Out.WriteLine("  Statistics  ");
+			Console.Out.WriteLine("##############");
+			Console.Out.WriteLine();
+
+			if (statsLevel >= 1) //############################################
+			{
+				long valuecount = safe.getHighestValue() - safe.getLowestValue();
+
+				long repcount = safe.getNonNullRepresentations();
+
+				Console.Out.WriteLine(String.Format("{0}/{1} Representations found", valuecount, repcount));
+				Console.Out.WriteLine(String.Format("{0} Algorithms registered", RepCalculator.algorithms.Length));
+				Console.Out.WriteLine(String.Format("Run Duration = {0:mm} minutes {0:ss} seconds {0:ff} milliseconds", startTime - DateTime.Now));
+
+				Console.Out.WriteLine();
+
+				if (statsLevel >= 2) //########################################
+				{
+					long[] repPerAlgo = Enumerable.Range(0, RepCalculator.algorithms.Length)
+						.Select(p => safe.countRepresentationsPerAlgorithm(p))
+						.ToArray();
+
+					for (int i = 0; i < repPerAlgo.Length; i++)
+					{
+						Console.Out.WriteLine(String.Format("{0} Representations with algorithm {1} ({2:0.##}%)",
+							repPerAlgo[i],
+							RepCalculator.algorithmNames[i],
+							repPerAlgo[i] * 100d / repcount));
+					}
+
+					Console.Out.WriteLine();
+
+					if (statsLevel >= 3) //####################################
+					{
+						double avgWidth = safe.getAverageRepresentationWidth();
+
+						double[] avgWidthPerAlgo = Enumerable.Range(0, RepCalculator.algorithms.Length)
+							.Select(p => safe.getAverageRepresentationWidthPerAlgorithm(p))
+							.ToArray();
+
+						Console.Out.WriteLine(String.Format("Average representation width = {0}", avgWidth));
+
+						for (int i = 0; i < repPerAlgo.Length; i++)
+						{
+							Console.Out.WriteLine(String.Format("Average representation width with algorithm {0}  = {1:0.##}",
+								RepCalculator.algorithmNames[i],
+								avgWidthPerAlgo[i]));
+						}
+
+						Console.Out.WriteLine();
+					}
+				}
+			}
+
+			safe.stop();
 		}
 	}
 }
