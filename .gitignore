@@ -160,8 +160,19 @@ GOLD Tools/
 #*.egt
 
 
+# BefunRep dangling safes
 
+*safe.bin
+*safe.csv
+*safe.json
+*safe.xml
+*safe.dat
 
+*out.bin
+*out.csv
+*out.json
+*out.xml
+*out.dat
 
 
 
