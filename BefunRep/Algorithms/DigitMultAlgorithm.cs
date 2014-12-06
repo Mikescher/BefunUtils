@@ -1,10 +1,9 @@
-﻿using System;
-
+﻿
 namespace BefunRep.Algorithms
 {
 	/// <summary>
 	/// Represents numbers as 
-	/// othernumber [+-] [0-9] 
+	/// othernumber [*/] [0-9] 
 	/// Not possible for all numbers
 	/// </summary>
 	public class DigitMultAlgorithm : RepAlgorithm

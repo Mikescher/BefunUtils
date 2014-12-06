@@ -270,7 +270,7 @@ namespace BefunRep
 
 					for (int i = 0; i < repPerAlgo.Length; i++)
 					{
-						Console.Out.WriteLine(String.Format("{0} Representations with algorithm {1} ({2:0.##}%)",
+						Console.Out.WriteLine(String.Format("{0,6} Representations with algorithm {1,16} ({2:0.##}%)",
 							repPerAlgo[i],
 							RepCalculator.algorithmNames[i],
 							repPerAlgo[i] * 100d / repcount));
@@ -290,7 +290,7 @@ namespace BefunRep
 
 						for (int i = 0; i < repPerAlgo.Length; i++)
 						{
-							Console.Out.WriteLine(String.Format("Average representation width with algorithm {0}  = {1:0.##}",
+							Console.Out.WriteLine(String.Format("Average representation width with algorithm {0,16}  = {1:0.##}",
 								RepCalculator.algorithmNames[i],
 								avgWidthPerAlgo[i]));
 						}
