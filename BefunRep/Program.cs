@@ -38,8 +38,17 @@ namespace BefunRep
 
 		public Program(string[] args)
 		{
-			Console.SetBufferSize(256, 8192);
-			Console.WindowHeight = Math.Max(Console.WindowHeight, 40);
+			try
+			{
+				Console.SetBufferSize(256, 8192);
+				Console.WindowHeight = Math.Max(Console.WindowHeight, 40);
+				Console.WindowWidth = Math.Max(Console.WindowWidth, 140);
+			}
+			catch (Exception e)
+			{
+				Console.Error.WriteLine("Can't configure Conole:");
+				Console.Error.WriteLine(e.ToString());
+			}
 
 			printHeader();
 

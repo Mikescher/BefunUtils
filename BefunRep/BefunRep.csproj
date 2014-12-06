@@ -50,6 +50,7 @@
     <Compile Include="Algorithms\Base9Algorithm.cs" />
     <Compile Include="Algorithms\CharAlgorithm.cs" />
     <Compile Include="Algorithms\BaseNAlgorithm.cs" />
+    <Compile Include="Algorithms\DigitAddAlgorithm.cs" />
     <Compile Include="Algorithms\PowerAlgorithm.cs" />
     <Compile Include="Algorithms\StringifyAlgorithm.cs" />
     <Compile Include="Algorithms\FactorizationAlgorithm.cs" />

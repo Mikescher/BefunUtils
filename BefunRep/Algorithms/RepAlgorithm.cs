@@ -35,6 +35,16 @@ namespace BefunRep.Algorithms
 			return (char)(v + '0');
 		}
 
+		protected char chrsign(long i)
+		{
+			if (i < 0)
+				return '-';
+			else if (i > 0)
+				return '+';
+			else
+				return '0';
+		}
+
 		public abstract string get(long value);
 	}
 }
