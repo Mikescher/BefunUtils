@@ -18,6 +18,7 @@ namespace BefunRep
 			new BaseNAlgorithm(4),			// [4]
 			new PowerAlgorithm(5),			// [5]
 			new DigitAddAlgorithm(6),		// [6]
+			new SimpleNegativeAlgorithm(7),	// [7]
 		};
 
 		public static string[] algorithmNames { get { return algorithms.Select(p => p.GetType().Name.Replace("Algorithm", "")).ToArray(); } }
