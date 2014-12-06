@@ -19,9 +19,11 @@ namespace BefunRep
 			new PowerAlgorithm(5),			// [5]
 			new DigitAddAlgorithm(6),		// [6]
 			new SimpleNegativeAlgorithm(7),	// [7]
+			new DigitMultAlgorithm(8),		// [8]
 		};
 
 		public static string[] algorithmNames { get { return algorithms.Select(p => p.GetType().Name.Replace("Algorithm", "")).ToArray(); } }
+		public static long[] algorithmTime = new long[algorithms.Length];
 
 		private readonly long lowerB;
 		private readonly long upperB;
@@ -58,12 +60,14 @@ namespace BefunRep
 
 			//#################################################################
 
+			algorithmTime[algonum] = Environment.TickCount;
 			RepAlgorithm algo = algorithms[algonum];
 
 			for (long v = lowerB; v < upperB; v++)
 			{
 				calculateSingle(algo, v);
 			}
+			algorithmTime[algonum] = Environment.TickCount - algorithmTime[algonum];
 
 			//#################################################################
 
@@ -76,12 +80,14 @@ namespace BefunRep
 
 			//#################################################################
 
-			foreach (RepAlgorithm algo in algorithms)
+			for (int algonum = 0; algonum < algorithms.Length; algonum++)
 			{
+				algorithmTime[algonum] = Environment.TickCount;
 				for (long v = lowerB; v < upperB; v++)
 				{
-					calculateSingle(algo, v);
+					calculateSingle(algorithms[algonum], v);
 				}
+				algorithmTime[algonum] = Environment.TickCount - algorithmTime[algonum];
 			}
 
 			//#################################################################

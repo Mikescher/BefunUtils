@@ -226,7 +226,7 @@ namespace BefunRep
 			testResults = !cmda.IsSet("notest");
 			doReset = cmda.IsSet("reset");
 			quiet = cmda.IsSet("q") || cmda.IsSet("quiet");
-			statsLevel = cmda.GetIntDefaultRange("stats", 0, 0, 4);
+			statsLevel = cmda.GetIntDefaultRange("stats", 1, 0, 4);
 			algorithm = cmda.GetIntDefaultRange("algorithm", -1, -1, RepCalculator.algorithms.Length);
 			safepath = cmda.GetStringDefault("safe", "out.csv");
 			outpath = cmda.GetStringDefault("out", null);
@@ -250,6 +250,15 @@ namespace BefunRep
 				Console.Out.WriteLine(String.Format("{0}/{1} Representations found", valuecount, repcount));
 				Console.Out.WriteLine(String.Format("{0} Algorithms registered", RepCalculator.algorithms.Length));
 				Console.Out.WriteLine(String.Format("Run Duration = {0:mm} minutes {0:ss} seconds {0:ff} milliseconds", startTime - DateTime.Now));
+
+				Console.Out.WriteLine();
+
+				for (int i = 0; i < RepCalculator.algorithmTime.Length; i++)
+				{
+					Console.Out.WriteLine(String.Format("Time per algorithm {0, 24}: {1,6} ms",
+						RepCalculator.algorithmNames[i],
+						RepCalculator.algorithmTime[i]));
+				}
 
 				Console.Out.WriteLine();
 
