@@ -47,57 +47,65 @@ namespace BefunRep
 
 			foreach (var algo in algorithms)
 				algo.representations = rsafe;
+
+			algorithmTime = Enumerable.Repeat(0l, algorithmTime.Length).ToArray();
 		}
 
-		public void calculate(int algonum)
+		public int calculate(int algonum)
 		{
+			int found = 0;
+
 			if (algonum < 0)
-			{
-				calculate();
-				return;
-			}
+				return calculate();
 
 			safe.start();
 
-			//#################################################################
+			found += calculateSingleAlgorithm(algonum);
 
-			algorithmTime[algonum] = Environment.TickCount;
+			safe.stop();
+
+			return found;
+		}
+
+		public int calculate()
+		{
+			int found = 0;
+
+			safe.start();
+
+			for (int algonum = 0; algonum < algorithms.Length; algonum++)
+			{
+				found += calculateSingleAlgorithm(algonum);
+			}
+
+			safe.stop();
+
+			return found;
+		}
+
+		private int calculateSingleAlgorithm(int algonum)
+		{
+			int algofound = 0;
+
+			algorithmTime[algonum] += Environment.TickCount;
+
 			RepAlgorithm algo = algorithms[algonum];
 
 			for (long v = lowerB; v < upperB; v++)
 			{
-				calculateSingle(algo, v);
+				algofound += calculateSingleNumber(algo, v) ? 1 : 0;
 			}
 			algorithmTime[algonum] = Environment.TickCount - algorithmTime[algonum];
 
-			//#################################################################
+			Console.Out.WriteLine(String.Format("[{0:HH:mm:ss}] Algorithm {1} Finished (+{2})", DateTime.Now, algorithmNames[algonum], algofound));
 
-			safe.stop();
+			return algofound;
 		}
 
-		public void calculate()
+		private bool calculateSingleNumber(RepAlgorithm algo, long v)
 		{
-			safe.start();
+			bool found = false;
 
-			//#################################################################
-
-			for (int algonum = 0; algonum < algorithms.Length; algonum++)
-			{
-				algorithmTime[algonum] = Environment.TickCount;
-				for (long v = lowerB; v < upperB; v++)
-				{
-					calculateSingle(algorithms[algonum], v);
-				}
-				algorithmTime[algonum] = Environment.TickCount - algorithmTime[algonum];
-			}
-
-			//#################################################################
-
-			safe.stop();
-		}
-
-		private void calculateSingle(RepAlgorithm algo, long v)
-		{
 			string outerror;
 			string before = safe.get(v);
 			string beforeAlgo = before == null ? null : algorithmNames[safe.getAlgorithm(v).Value];
@@ -109,6 +117,8 @@ namespace BefunRep
 
 			if (result != null)
 			{
+				found = true;
+
 				if (!quiet)
 				{
 					if (before != "")
@@ -144,6 +154,8 @@ namespace BefunRep
 					Thread.Sleep(5 * 1000);
 				}
 			}
+
+			return found;
 		}
 	}
 }

@@ -1,6 +1,8 @@
 ﻿using BefunRep.FileHandling;
 using BefunRep.OutputHandling;
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
@@ -15,6 +17,7 @@ namespace BefunRep
 		public const string TITLE = "BefunRep";
 
 		private readonly DateTime startTime = DateTime.Now;
+		private List<int> founds = new List<int>();
 
 		private long lowerBoundary;
 		private long upperBoundary;
@@ -25,6 +28,7 @@ namespace BefunRep
 		private string safepath;
 		private string outpath;
 		private bool quiet;
+		private int iterations;
 
 		private bool boundaryDiscovery = false;
 
@@ -46,7 +50,7 @@ namespace BefunRep
 			}
 			catch (Exception e)
 			{
-				Console.Error.WriteLine("Can't configure Conole:");
+				Console.Error.WriteLine("Can't configure Console:");
 				Console.Error.WriteLine(e.ToString());
 			}
 
@@ -70,24 +74,51 @@ namespace BefunRep
 
 			//##############
 
-			r.calculate(algorithm);
+			Console.Out.WriteLine(String.Format("[{0:HH:mm:ss}] Calculations Started.", DateTime.Now));
+			Console.Out.WriteLine();
+			Console.Out.WriteLine();
+
+			for (int i = 0; i < iterations || iterations < 0; i++) // iterations neg => run until no changes
+			{
+				int foundcount = r.calculate(algorithm);
+				founds.Add(foundcount);
+
+				Console.Out.WriteLine(String.Format("[{0:HH:mm:ss}] Iteration {1} Finished (+{2})", DateTime.Now, i, foundcount));
+				Console.Out.WriteLine();
+
+				if (foundcount == 0)
+					break;
+			}
+
+			Console.Out.WriteLine(String.Format("[{0:HH:mm:ss}] Caclulations Finished.", DateTime.Now));
+			Console.Out.WriteLine(String.Format("[{0:HH:mm:ss}] Outputting Started.", DateTime.Now));
 
 			safe.start();
 			formatter.Output(safe);
 			safe.stop();
 
+			Console.Out.WriteLine(String.Format("[{0:HH:mm:ss}] Outputting Finished.", DateTime.Now));
+
 			//##############
 
-			Console.Out.WriteLine();
-			Console.Out.WriteLine();
-			Console.Out.WriteLine(String.Format("[{0:HH:mm:ss}] Finished.", DateTime.Now));
-			Console.Out.WriteLine();
 			Console.Out.WriteLine();
 
 			printStats(safe);
 
 			Console.Out.WriteLine();
 			Console.Out.WriteLine();
+
+			printAnyKeyMessage();
+		}
+
+		[ConditionalAttribute("DEBUG")]
+		private static void printAnyKeyMessage()
+		{
+			Console.Out.WriteLine("Press any Key to exit.");
+
+			Console.Out.WriteLine();
+			Console.Out.WriteLine();
+
 			Console.ReadLine();
 		}
 
@@ -169,9 +200,6 @@ namespace BefunRep
 				outpath));
 
 			Console.Out.WriteLine();
-			Console.Out.WriteLine(String.Format("[{0:HH:mm:ss}] Starting ...", DateTime.Now));
-			Console.Out.WriteLine();
-			Console.Out.WriteLine();
 		}
 
 		private void interpreteCMDA(CommandLineArguments cmda)
@@ -230,6 +258,7 @@ namespace BefunRep
 			algorithm = cmda.GetIntDefaultRange("algorithm", -1, -1, RepCalculator.algorithms.Length);
 			safepath = cmda.GetStringDefault("safe", "out.csv");
 			outpath = cmda.GetStringDefault("out", null);
+			iterations = cmda.GetIntDefault("iterations", 1);
 			return cmda;
 		}
 
@@ -241,6 +270,13 @@ namespace BefunRep
 
 				Console.Out.WriteLine("  Statistics  ");
 				Console.Out.WriteLine("##############");
+				Console.Out.WriteLine();
+
+				for (int i = 0; i < founds.Count; i++)
+				{
+					Console.Out.WriteLine(String.Format("{0,-8} Updates found in iteration {1}", founds[i], i));
+				}
+
 				Console.Out.WriteLine();
 
 				long valuecount = safe.getHighestValue() - safe.getLowestValue();
