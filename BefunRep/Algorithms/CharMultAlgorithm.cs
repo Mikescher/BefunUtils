@@ -1,5 +1,7 @@
 ﻿
 using System;
+using System.Collections.Generic;
+using System.Text;
 namespace BefunRep.Algorithms
 {
 	/// <summary>
@@ -8,6 +10,9 @@ namespace BefunRep.Algorithms
 	/// </summary>
 	public class CharMultAlgorithm : RepAlgorithm
 	{
+		private Dictionary<long, string> cache = new Dictionary<long, string>();
+		private Stack<char> stack = new Stack<char>();
+
 		public CharMultAlgorithm(byte aid)
 			: base(aid)
 		{
@@ -85,21 +90,49 @@ namespace BefunRep.Algorithms
 			if (value == 0)
 				return null;
 
-			for (int chr = ' '; chr <= '~'; chr++)
+			string tgresult;
+			if (cache.TryGetValue(value, out tgresult))
+				return tgresult;
+
+			long initv = value;
+
+			stack.Clear();
+			stack.Push((char)1);
+
+			for (; ; )
 			{
-				if (chr == '"')
-					continue;
-				if (value % chr != 0)
-					continue;
-				if (value == chr)
-					return ((char)chr) + "";
+				int start = stack.Pop();
+				value *= start;
 
-				string mpcands = getMultiplicands(value / chr);
-				if (mpcands != null)
-					return mpcands + ((char)chr);
+				for (char chr = (char)(Math.Max(start, ' ' - 1) + 1); chr <= '~'; chr++)
+				{
+					if (chr == '"')
+						continue;
+					if (value % chr != 0)
+						continue;
+
+					stack.Push(chr);
+					stack.Push((char)1);
+					value /= chr;
+					break;
+				}
+
+				if (stack.Count == 0)
+				{
+					cache.Add(initv, null);
+					return null;
+				}
+
+				if (value == 1)
+				{
+					StringBuilder builder = new StringBuilder();
+					while (stack.Count > 0)
+						builder.Append(stack.Pop());
+					string result = builder.ToString();
+					cache.Add(initv, result);
+					return result;
+				}
 			}
-
-			return null;
 		}
 	}
 }

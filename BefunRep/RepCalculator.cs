@@ -48,7 +48,7 @@ namespace BefunRep
 			foreach (var algo in algorithms)
 				algo.representations = rsafe;
 
-			algorithmTime = Enumerable.Repeat(0l, algorithmTime.Length).ToArray();
+			algorithmTime = Enumerable.Repeat(0L, algorithmTime.Length).ToArray();
 		}
 
 		public int calculate(int algonum)
@@ -87,7 +87,7 @@ namespace BefunRep
 		{
 			int algofound = 0;
 
-			algorithmTime[algonum] += Environment.TickCount;
+			long time = Environment.TickCount;
 
 			RepAlgorithm algo = algorithms[algonum];
 
@@ -95,7 +95,8 @@ namespace BefunRep
 			{
 				algofound += calculateSingleNumber(algo, v) ? 1 : 0;
 			}
-			algorithmTime[algonum] = Environment.TickCount - algorithmTime[algonum];
+			time = Environment.TickCount - time;
+			algorithmTime[algonum] += time;
 
 			Console.Out.WriteLine(String.Format("[{0:HH:mm:ss}] Algorithm {1} Finished (+{2})", DateTime.Now, algorithmNames[algonum], algofound));
 
