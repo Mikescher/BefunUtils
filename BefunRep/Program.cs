@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 
 namespace BefunRep
 {
@@ -83,6 +82,7 @@ namespace BefunRep
 				int foundcount = r.calculate(algorithm);
 				founds.Add(foundcount);
 
+				Console.Out.WriteLine();
 				Console.Out.WriteLine(String.Format("[{0:HH:mm:ss}] Iteration {1} Finished (+{2})", DateTime.Now, i, foundcount));
 				Console.Out.WriteLine();
 
@@ -91,6 +91,7 @@ namespace BefunRep
 			}
 
 			Console.Out.WriteLine(String.Format("[{0:HH:mm:ss}] Caclulations Finished.", DateTime.Now));
+			Console.Out.WriteLine();
 			Console.Out.WriteLine(String.Format("[{0:HH:mm:ss}] Outputting Started.", DateTime.Now));
 
 			safe.start();
@@ -175,11 +176,17 @@ namespace BefunRep
 				upperBoundary,
 				boundaryDiscovery ? "      (via auto discovery)" : ""));
 
+			Console.Out.WriteLine(String.Format("[{0:HH:mm:ss}] Iterations := {1}", DateTime.Now,
+				iterations < 0 ? "INF" : (iterations == 0 ? "NONE" : (iterations.ToString()))));
+
 			Console.Out.WriteLine(String.Format("[{0:HH:mm:ss}] Testing    := {1}", DateTime.Now,
 				testResults.ToString().ToLower()));
 
 			Console.Out.WriteLine(String.Format("[{0:HH:mm:ss}] Reset      := {1}", DateTime.Now,
 				doReset.ToString().ToLower()));
+
+			Console.Out.WriteLine(String.Format("[{0:HH:mm:ss}] Quiet      := {1}", DateTime.Now,
+				quiet.ToString().ToLower()));
 
 			Console.Out.WriteLine(String.Format("[{0:HH:mm:ss}] Statistics := {1}", DateTime.Now,
 				new string[] { "none", "simple", "verbose", "all" }[statsLevel]));
@@ -265,6 +272,9 @@ namespace BefunRep
 		private void printStats(RepresentationSafe safe)
 		{
 			safe.start();
+
+			SafeInfo info = safe.getInformations();
+
 			if (statsLevel >= 1) //############################################
 			{
 
@@ -279,13 +289,9 @@ namespace BefunRep
 
 				Console.Out.WriteLine();
 
-				long valuecount = safe.getHighestValue() - safe.getLowestValue();
-
-				long repcount = safe.getNonNullRepresentations();
-
-				Console.Out.WriteLine(String.Format("{0}/{1} Representations found", valuecount, repcount));
+				Console.Out.WriteLine(String.Format("{0}/{1} Representations found", info.nonNullCount, info.count));
 				Console.Out.WriteLine(String.Format("{0} Algorithms registered", RepCalculator.algorithms.Length));
-				Console.Out.WriteLine(String.Format("Run Duration = {0:mm} minutes {0:ss} seconds {0:ff} milliseconds", startTime - DateTime.Now));
+				Console.Out.WriteLine(String.Format("Run Duration = {0:hh} hours {0:mm} minutes {0:ss} seconds {0:ff} milliseconds", startTime - DateTime.Now));
 
 				Console.Out.WriteLine();
 
@@ -300,35 +306,37 @@ namespace BefunRep
 
 				if (statsLevel >= 2) //########################################
 				{
-					long[] repPerAlgo = Enumerable.Range(0, RepCalculator.algorithms.Length)
-						.Select(p => safe.countRepresentationsPerAlgorithm(p))
-						.ToArray();
-
-					for (int i = 0; i < repPerAlgo.Length; i++)
+					for (int i = 0; i < RepCalculator.algorithms.Length; i++)
 					{
 						Console.Out.WriteLine(String.Format("{0,6} Representations with algorithm {1,16} ({2:0.##}%)",
-							repPerAlgo[i],
+							info.nonNullPerAlgorithm[i],
 							RepCalculator.algorithmNames[i],
-							repPerAlgo[i] * 100d / repcount));
+							info.nonNullPerAlgorithm[i] * 100d / info.count));
 					}
 
 					Console.Out.WriteLine();
 
 					if (statsLevel >= 3) //####################################
 					{
-						double avgWidth = safe.getAverageRepresentationWidth();
+						Console.Out.WriteLine(String.Format("Average representation width = {0:0.###}", info.avgLen));
 
-						double[] avgWidthPerAlgo = Enumerable.Range(0, RepCalculator.algorithms.Length)
-							.Select(p => safe.getAverageRepresentationWidthPerAlgorithm(p))
-							.ToArray();
-
-						Console.Out.WriteLine(String.Format("Average representation width = {0}", avgWidth));
-
-						for (int i = 0; i < repPerAlgo.Length; i++)
+						for (int i = 0; i < RepCalculator.algorithms.Length; i++)
 						{
-							Console.Out.WriteLine(String.Format("Average representation width with algorithm {0,16}  = {1:0.##}",
+							Console.Out.WriteLine(String.Format("Average representation width with algorithm {0,16}  = {1:0.###}",
 								RepCalculator.algorithmNames[i],
-								avgWidthPerAlgo[i]));
+								info.avgLenPerAlgorithm[i]));
+						}
+
+						Console.Out.WriteLine();
+
+						Console.Out.WriteLine(String.Format("Representation length (min|max) = [{0,3},{1,3}]", info.minLen, info.maxLen));
+
+						for (int i = 0; i < RepCalculator.algorithms.Length; i++)
+						{
+							Console.Out.WriteLine(String.Format("Representation length (min|max) for {0,16} = [{1,3},{2,3}]",
+								RepCalculator.algorithmNames[i],
+								info.minLenPerAlgorithm[i],
+								info.maxLenPerAlgorithm[i]));
 						}
 
 						Console.Out.WriteLine();
