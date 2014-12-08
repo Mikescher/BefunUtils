@@ -7,12 +7,9 @@ using System.IO;
 
 namespace BefunRep
 {
-
-	//TODO Add info about algorithm into safes (all 3)
-
 	class Program
 	{
-		public const string VERSION = "0.1";
+		public const string VERSION = "1.0";
 		public const string TITLE = "BefunRep";
 
 		private readonly DateTime startTime = DateTime.Now;
@@ -160,6 +157,7 @@ namespace BefunRep
 			Console.Out.WriteLine("-algorithm=[0 - " + (RepCalculator.algorithms.Length - 1) + "]");
 			Console.Out.WriteLine("-safe=[filename].[csv|json|bin|dat]");
 			Console.Out.WriteLine("-out=[filename].[csv|json|xml]");
+			Console.Out.WriteLine("-iterations=[-1 | 0-n ]");
 			Console.Out.WriteLine("-stats=[0-3]");
 			Console.Out.WriteLine("-help");
 			Console.Out.WriteLine();
