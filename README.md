@@ -20,11 +20,11 @@ A tool for generating Befunge-93 Programs out of a imperative-programming-langua
 
 ###Table of contents
 
-- [BefunWrite](#befunwrite)
-- [BefunGen](#befungen)
-- [BefunHighlight](#befunhighlight)
-- [BefunExec](#befunexec)
-- [BefunRep](#befunrep)
+- [BefunWrite](#-befunwrite)
+- [BefunGen](#-befungen)
+- [BefunHighlight](#-befunhighlight)
+- [BefunExec](#-befunexec)
+- [BefunRep](#-befunrep)
 
 Overview
 ========
@@ -59,9 +59,7 @@ It's an IDE in which you can write a program in *TextFunge*, and compile it to v
 > Because this tool can generate fairly big Befunge-93 code, it often exceeds the size of 80x25, and is so no longer totally valid Befunge-93 code.
 > But for the sake of confusion I will refer in the rest of these documents to it as Befunge-93 code.
 
-<center>
 ![](https://raw.githubusercontent.com/Mikescher/BefunGen/master/README-FILES/BefunWrite_Main.png)
-</center>
 
 In BefunWrite you write your source code in the, specially for this developed, language **TextFunge**.
 BefunWrite supports you in this process with a lot of the basic IDE features you already know from other IDE's.  
@@ -107,9 +105,7 @@ Because of the properties of my generated code I needed an interpreter that was
 As you can imagine, I didn't find an interpreter that fitted my needs and so I wrote my own.  
 The big point that makes BefunExec unique is it's very high speed. On my machine (and its not really a good one) I reach a maximum speed of **6.5 MHz**. This are over **6 million** executions per second, enough for most of my programs :D.  
 
-<center>
 ![](https://raw.githubusercontent.com/Mikescher/BefunGen/master/README-FILES/BefunExec_Main.png)
-</center>
 
 Some other features are (as stated above) the ability to set breakpoints, step slowly through the program and zoom into specific parts.  
 Also you are able to capture the program execution as a gif animation.  
