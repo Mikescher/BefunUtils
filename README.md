@@ -120,6 +120,8 @@ The problem here is that there may be code that never gets executed (not part of
 BefunHighlight tries to solve this by evaluating every possible path an program can execute and so calculating the ways a single command is used.
 Based on these informations it's now possible for another program to better highlight the source code.
 
+![](https://raw.githubusercontent.com/Mikescher/BefunGen/master/README-FILES/BefunExec_ESH_example.png)
+
 Be aware that put (**p**) and get (**g**) operations will invalidate the calculated values and it is needed to update them.
 
 ##![](https://raw.githubusercontent.com/Mikescher/BefunGen/master/README-FILES/icon_BefunRep.png) BefunRep
@@ -127,6 +129,8 @@ Be aware that put (**p**) and get (**g**) operations will invalidate the calcula
 A common problem with Befunge is the *(efficient)* representation of big numbers. *(= putting a number on the stack with the least amount of instructions)*
 
 BefunRep is a commandline tool to generate a list of representations for all numbers in a specified range. I'm pretty sure the calculation of the optimal representation is a NP complete. But BefunRep tries to to find good representations for all numbers via various algorithms. And it does a pretty good job. It finds for all the numbers between -1 million and +1 million representations with a maximum of eleven characters.
+
+![](https://raw.githubusercontent.com/Mikescher/BefunGen/master/README-FILES/BefunRep_Main.png)
 
 Here an example call to BefunRep:
 
