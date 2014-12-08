@@ -1,7 +1,8 @@
 BefunGen
 ========
 
-A tool for generating Befunge-93 Programs out of a imperative-programming-language (TextFunge)
+A tool for generating Befunge-93 Programs out of a imperative-programming-language (TextFunge).  
+**(Over time this has more become my collection of various Befunge tools. Many of them are quite useful alone but still, most are centered around BefunGen.)**
 
 *Download:* [mikescher.de](http://www.mikescher.de/programs/view/BefunGen)  
 *Manual:* [mikescher.de](http://www.mikescher.de/programs/view/BefunGen)  
