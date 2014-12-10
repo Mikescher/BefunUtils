@@ -75,6 +75,8 @@ namespace BefunHighlight
 						fields[op.X, op.Y].information[(int)op.D].hl_string = true;
 						ops.Push(op.next(Width, Height, op.D));
 					}
+
+					fields[op.X, op.Y].information[(int)op.D].setDirection(op.D, true);
 				}
 				else
 				{
@@ -87,11 +89,17 @@ namespace BefunHighlight
 							{
 								ops.Push(op.next(Width, Height, BeGraphDirection.LeftRight));
 								ops.Push(op.next(Width, Height, BeGraphDirection.RightLeft));
+
+								fields[op.X, op.Y].information[(int)op.D].setDirection(BeGraphDirection.LeftRight, true);
+								fields[op.X, op.Y].information[(int)op.D].setDirection(BeGraphDirection.RightLeft, true);
 							}
 							else if (cmd.Type == BeGraphCommandType.If_Vertical)
 							{
 								ops.Push(op.next(Width, Height, BeGraphDirection.TopBottom));
 								ops.Push(op.next(Width, Height, BeGraphDirection.BottomTop));
+
+								fields[op.X, op.Y].information[(int)op.D].setDirection(BeGraphDirection.TopBottom, true);
+								fields[op.X, op.Y].information[(int)op.D].setDirection(BeGraphDirection.BottomTop, true);
 							}
 							else if (cmd.Type == BeGraphCommandType.PC_Random)
 							{
@@ -99,28 +107,46 @@ namespace BefunHighlight
 								ops.Push(op.next(Width, Height, BeGraphDirection.BottomTop));
 								ops.Push(op.next(Width, Height, BeGraphDirection.LeftRight));
 								ops.Push(op.next(Width, Height, BeGraphDirection.RightLeft));
+
+								fields[op.X, op.Y].information[(int)op.D].setDirection(BeGraphDirection.LeftRight, true);
+								fields[op.X, op.Y].information[(int)op.D].setDirection(BeGraphDirection.RightLeft, true);
+								fields[op.X, op.Y].information[(int)op.D].setDirection(BeGraphDirection.TopBottom, true);
+								fields[op.X, op.Y].information[(int)op.D].setDirection(BeGraphDirection.BottomTop, true);
 							}
 							else
 								throw new Exception();
 							break;
 						case BeGraphOpType.DirectionChange:
 							fields[op.X, op.Y].information[(int)op.D].hl_command = true;
+
 							ops.Push(op.next(Width, Height, op.getDC(cmd)));
+
+							fields[op.X, op.Y].information[(int)op.D].setDirection(op.getDC(cmd), true);
 							break;
 						case BeGraphOpType.Jump:
 							fields[op.X, op.Y].information[(int)op.D].hl_command = true;
+
 							ops.Push(op.next(Width, Height, op.D, 2));
+
+							fields[op.X, op.Y].information[(int)op.D].setDirection(op.D, true);
 							break;
 						case BeGraphOpType.SimpleCommand:
 							fields[op.X, op.Y].information[(int)op.D].hl_command = true;
+
 							ops.Push(op.next(Width, Height, op.D));
+
+							fields[op.X, op.Y].information[(int)op.D].setDirection(op.D, true);
 							break;
 						case BeGraphOpType.Stop:
 							fields[op.X, op.Y].information[(int)op.D].hl_command = true;
+
 							break;
 						case BeGraphOpType.Stringmode:
 							fields[op.X, op.Y].information[(int)op.D].hl_command = true;
+
 							ops.Push(op.next_sm(Width, Height, op.D));
+
+							fields[op.X, op.Y].information[(int)op.D].setDirection(op.D, true);
 							break;
 					}
 				}
