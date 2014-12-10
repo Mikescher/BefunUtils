@@ -11,6 +11,8 @@ namespace BefunHighlight
 		public bool hl_string = false;
 		public bool hl_command = false;
 
+		public bool hl_jumpover = false;
+
 		public bool is_set { get { return hl_string || hl_command; } }
 
 		public void setDirection(BeGraphDirection d, bool val)

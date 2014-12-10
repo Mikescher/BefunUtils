@@ -58,6 +58,11 @@ namespace BefunHighlight
 			get { return information.Any(p => p.outgoing_direction_right); }
 		}
 
+		public bool is_jump
+		{
+			get { return command.Type == BeGraphCommandType.PC_Jump; }
+		}
+
 		#endregion
 
 		public BeGraphCommand command;

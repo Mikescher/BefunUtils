@@ -126,6 +126,9 @@ namespace BefunHighlight
 						case BeGraphOpType.Jump:
 							fields[op.X, op.Y].information[(int)op.D].hl_command = true;
 
+							BeGraphCalculateOperation jumpover = op.next(Width, Height, op.D, 1);
+							fields[jumpover.X, jumpover.Y].information[(int)op.D].hl_jumpover = true;
+
 							ops.Push(op.next(Width, Height, op.D, 2));
 
 							fields[op.X, op.Y].information[(int)op.D].setDirection(op.D, true);
