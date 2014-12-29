@@ -18,8 +18,6 @@ A (fast) Befunge-93 interpreter and debugger
 ###![](https://raw.githubusercontent.com/Mikescher/BefunUtils/master/README-FILES/icon_BefunRep.png) [BefunRep](https://github.com/Mikescher/BefunRep):  
 A tool to calculate (the best) number-representation in Befunge-93 space
 
-![](https://raw.githubusercontent.com/Mikescher/BefunUtils/master/README-FILES/befunge.jpg)
-
 Set up
 ==========
 
@@ -31,3 +29,22 @@ Or you can setup the Solution by yourself:
 - Clone all the subproject repositories into subfolder
 - *(eg clone BefunExec into the folder /BefunExec)*
 - Open the solution file in Visual Studio
+
+
+Screenshots
+==========
+
+BefunExec:  
+![](https://raw.githubusercontent.com/Mikescher/BefunUtils/master/README-FILES/BefunExec_Main.png)
+
+BefunWrite:  
+![](https://raw.githubusercontent.com/Mikescher/BefunUtils/master/README-FILES/BefunWrite_Main.png)
+
+BefunRep:  
+![](https://raw.githubusercontent.com/Mikescher/BefunUtils/master/README-FILES/BefunRep_Main.png)
+
+BefunHighlight:  
+![](https://raw.githubusercontent.com/Mikescher/BefunUtils/master/README-FILES/BefunExec_ESH_example.png)
+
+BefunHighlight (Graph display):  
+![](https://raw.githubusercontent.com/Mikescher/BefunUtils/master/README-FILES/BefunExec_ESG_example.png)
