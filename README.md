@@ -20,8 +20,8 @@ A tool to calculate (the best) number-representation in Befunge-93 space
 
 ![](https://raw.githubusercontent.com/Mikescher/BefunUtils/master/README-FILES/befunge.jpg)
 
-##Set up
-----------------------
+Set up
+==========
 
 You can either download the binaries from [my website](http://www.mikescher.de/programs/view/BefunUtils).
 
