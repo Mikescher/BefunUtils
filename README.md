@@ -5,17 +5,17 @@ This is my collection of tools and libraries for the esoteric programming langua
 
 It consists of the following components:
 
-###[BefunGen](https://github.com/Mikescher/BefunGen):  
+###![](https://raw.githubusercontent.com/Mikescher/BefunGen/master/README-FILES/icon_BefunGen.png) [BefunGen](https://github.com/Mikescher/BefunGen):  
 A library to automatically generate Befunge-93 programs out of a imperative-programming-language
-###[BefunGenTest](https://github.com/Mikescher/BefunGenTest):  
+###![](https://raw.githubusercontent.com/Mikescher/BefunGen/master/README-FILES/icon_BefunGen.png) [BefunGenTest](https://github.com/Mikescher/BefunGenTest):  
 A test set for BefunGen
-###[BefunWrite](https://github.com/Mikescher/BefunWrite):  
+###![](https://raw.githubusercontent.com/Mikescher/BefunGen/master/README-FILES/icon_BefunWrite.png) [BefunWrite](https://github.com/Mikescher/BefunWrite):  
 A samll editor for Textfunge, the language used by BefunGen - use this if you want to try BefunGen for yourself
-###[BefunHighlight](https://github.com/Mikescher/BefunHighlight):  
+###![](https://raw.githubusercontent.com/Mikescher/BefunGen/master/README-FILES/icon_BefunHighlight.png) [BefunHighlight](https://github.com/Mikescher/BefunHighlight):  
 A dynamic Befunge-93 syntax highlighting library. Highlights your sourcecode intelligent and context-sensitive
-###[BefunExec](https://github.com/Mikescher/BefunExec):  
+###![](https://raw.githubusercontent.com/Mikescher/BefunGen/master/README-FILES/icon_BefunExec.png) [BefunExec](https://github.com/Mikescher/BefunExec):  
 A (fast) Befunge-93 interpreter and debugger
-###[BefunRep](https://github.com/Mikescher/BefunRep):  
+###![](https://raw.githubusercontent.com/Mikescher/BefunGen/master/README-FILES/icon_BefunRep.png) [BefunRep](https://github.com/Mikescher/BefunRep):  
 A tool to calculate (the best) number-representation in Befunge-93 space
 
 ![](https://raw.githubusercontent.com/Mikescher/BefunUtils/master/README-FILES/befunge.jpg)
