@@ -10,7 +10,7 @@ A library to automatically generate Befunge-93 programs out of a imperative-prog
 ###![](https://raw.githubusercontent.com/Mikescher/BefunUtils/master/README-FILES/icon_BefunGen.png) [BefunGenTest](https://github.com/Mikescher/BefunGenTest):  
 A test set for BefunGen
 ###![](https://raw.githubusercontent.com/Mikescher/BefunUtils/master/README-FILES/icon_BefunWrite.png) [BefunWrite](https://github.com/Mikescher/BefunWrite):  
-A samll editor for Textfunge, the language used by BefunGen - use this if you want to try BefunGen for yourself
+A small editor for Textfunge, the language used by BefunGen - use this if you want to try BefunGen for yourself
 ###![](https://raw.githubusercontent.com/Mikescher/BefunUtils/master/README-FILES/icon_BefunHighlight.png) [BefunHighlight](https://github.com/Mikescher/BefunHighlight):  
 A dynamic Befunge-93 syntax highlighting library. Highlights your sourcecode intelligent and context-sensitive
 ###![](https://raw.githubusercontent.com/Mikescher/BefunUtils/master/README-FILES/icon_BefunExec.png) [BefunExec](https://github.com/Mikescher/BefunExec):  
