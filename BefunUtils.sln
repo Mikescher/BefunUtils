@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BefunHighlight", "BefunHigh
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BefunRep", "BefunRep\BefunRep.csproj", "{59D9439B-C969-472A-AF62-D7CFD78F01D3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BefunCompile", "BefunCompile\BefunCompile.csproj", "{ECFE8D28-F8A6-4C2B-9202-C0E47A4FF906}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -49,6 +51,10 @@ Global
 		{59D9439B-C969-472A-AF62-D7CFD78F01D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{59D9439B-C969-472A-AF62-D7CFD78F01D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{59D9439B-C969-472A-AF62-D7CFD78F01D3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ECFE8D28-F8A6-4C2B-9202-C0E47A4FF906}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ECFE8D28-F8A6-4C2B-9202-C0E47A4FF906}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ECFE8D28-F8A6-4C2B-9202-C0E47A4FF906}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ECFE8D28-F8A6-4C2B-9202-C0E47A4FF906}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
