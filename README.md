@@ -20,6 +20,9 @@ It consists of the following core components:
 ###![](https://raw.githubusercontent.com/Mikescher/BefunUtils/master/README-FILES/icon_BefunRep.png) [BefunRep](https://github.com/Mikescher/BefunRep):  
 > A tool to calculate (the best) number-representation in Befunge-93 space
 
+###![](https://raw.githubusercontent.com/Mikescher/BefunUtils/master/README-FILES/icon_BefunCompile.png) [BefunCompile](https://github.com/Mikescher/BefunCompile):  
+> An *(non-general)* Befunge-93 compiler. Compile your Befunge-93 code to C, C# or Python
+
 
 and a few testing/debugging applications:
 
@@ -58,5 +61,17 @@ BefunRep:
 BefunHighlight:  
 ![](https://raw.githubusercontent.com/Mikescher/BefunUtils/master/README-FILES/BefunExec_ESH_example.png)
 
-BefunHighlight (Graph display):  
-![](https://raw.githubusercontent.com/Mikescher/BefunUtils/master/README-FILES/BefunExec_ESG_example.png)
+BefunHighlight:  
+![](https://raw.githubusercontent.com/Mikescher/BefunUtils/master/README-FILES/BefunCompile_Main_example.png.png)
+
+BefunHighlight (Graph display of [Euler_Problem-002](https://github.com/Mikescher/Project-Euler_Befunge/blob/master/Euler_Problem-002.b93) Level **0**) *(via [BefunDebug](https://github.com/Mikescher/BefunDebug))*:  
+![](https://raw.githubusercontent.com/Mikescher/BefunUtils/master/README-FILES/BefunCompile_Graph-0_example.png)
+
+BefunHighlight (Graph display of [Euler_Problem-002](https://github.com/Mikescher/Project-Euler_Befunge/blob/master/Euler_Problem-002.b93) Level **2**) *(via [BefunDebug](https://github.com/Mikescher/BefunDebug))*:  
+![](https://raw.githubusercontent.com/Mikescher/BefunUtils/master/README-FILES/BefunCompile_Graph-2_example.png)
+
+BefunHighlight (Graph display of [Euler_Problem-002](https://github.com/Mikescher/Project-Euler_Befunge/blob/master/Euler_Problem-002.b93) Level **3**) *(via [BefunDebug](https://github.com/Mikescher/BefunDebug))*:  
+![](https://raw.githubusercontent.com/Mikescher/BefunUtils/master/README-FILES/BefunCompile_Graph-3_example.png)
+
+BefunHighlight (Graph display of [Euler_Problem-002](https://github.com/Mikescher/Project-Euler_Befunge/blob/master/Euler_Problem-002.b93) Level **5**) *(via [BefunDebug](https://github.com/Mikescher/BefunDebug))*:  
+![](https://raw.githubusercontent.com/Mikescher/BefunUtils/master/README-FILES/BefunCompile_Graph-5_example.png)
