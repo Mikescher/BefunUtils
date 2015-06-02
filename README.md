@@ -41,10 +41,9 @@ You can either download the binaries from [my website](http://www.mikescher.de/p
 Or you can setup the Solution by yourself:
 
 - Clone the **BefunUtils** repository
-- Clone all the subproject repositories into subfolder *(or execute CLONE_ALL.bat)*
+- Clone all the subproject repositories into subfolder *(or simply execute CLONE_ALL.bat)*
 - *(eg clone BefunExec into the folder /BefunExec)*
-- Open the solution file in Visual Studio
-
+- Open the solution file in Visual Studio *(or build all projects with the BUILD_ALL.bat script)*
 
 Screenshots
 ==========
