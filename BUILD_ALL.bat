@@ -1,3 +1,3 @@
-msbuild BefunUtils.sln /nologo /t:Clean,Build /p:Platform="Any CPU" /p:Configuration=Release
+msbuild BefunUtils.sln /nologo /t:Clean,Build /p:Platform="Any CPU" /p:Configuration=Release /verbosity:m
 
 @PAUSE
