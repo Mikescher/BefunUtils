@@ -7,3 +7,4 @@ cd BefunGen       & git pull   & cd ..
 cd BefunHighlight & git pull   & cd ..
 cd BefunRep       & git pull   & cd ..
 cd BefunWrite     & git pull   & cd ..
+cd BefunRun       & git pull   & cd ..

@@ -5,3 +5,4 @@ git clone https://github.com/Mikescher/BefunGen.git
 git clone https://github.com/Mikescher/BefunHighlight.git
 git clone https://github.com/Mikescher/BefunRep.git
 git clone https://github.com/Mikescher/BefunWrite.git
+git clone https://github.com/Mikescher/BefunRun.git

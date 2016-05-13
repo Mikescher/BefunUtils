@@ -23,6 +23,9 @@ It consists of the following core components:
 ###![](https://raw.githubusercontent.com/Mikescher/BefunUtils/master/README-FILES/icon_BefunCompile.png) [BefunCompile](https://github.com/Mikescher/BefunCompile):  
 > An *(non-general)* Befunge-93 compiler. Compile your Befunge-93 code to C, C# or Python
 
+###![](https://raw.githubusercontent.com/Mikescher/BefunUtils/master/README-FILES/icon_BefunRun.png) [BefunRun](https://github.com/Mikescher/BefunRun):  
+> A simple terminal tool to run a befunge93 program (with extended grid size) and output its output.
+
 ###![](https://raw.githubusercontent.com/Mikescher/BefunUtils/master/README-FILES/icon_BefunDebug.png) [BefunDebug](https://github.com/Mikescher/BefunDebug):  
 > A debug and test tool for BefunGen, BefunCompile, BefunHighlight, etc
 
@@ -30,7 +33,7 @@ It consists of the following core components:
 Set up
 ==========
 
-You can either download the binaries from [my website](http://www.mikescher.de/programs/view/BefunUtils).
+You can either download the binaries from [www.mikescher.com](http://www.mikescher.com/programs/view/BefunUtils).
 
 Or you can setup the Solution by yourself:
 
