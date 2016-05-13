@@ -1,7 +1,7 @@
 BefunUtils
 ========
 
-This is my collection of tools and libraries for the esoteric programming language [Befunge](http://esolangs.org/wiki/Befunge).
+This is my collection of tools, libraries and transcompilers for the esoteric programming language [Befunge](http://esolangs.org/wiki/Befunge).
 
 It consists of the following core components:
 
@@ -23,14 +23,8 @@ It consists of the following core components:
 ###![](https://raw.githubusercontent.com/Mikescher/BefunUtils/master/README-FILES/icon_BefunCompile.png) [BefunCompile](https://github.com/Mikescher/BefunCompile):  
 > An *(non-general)* Befunge-93 compiler. Compile your Befunge-93 code to C, C# or Python
 
-
-and a few testing/debugging applications:
-
-###![](https://raw.githubusercontent.com/Mikescher/BefunUtils/master/README-FILES/icon_BefunGen.png) [BefunGenTest](https://github.com/Mikescher/BefunGenTest):  
-> A test set for BefunGen
-
 ###![](https://raw.githubusercontent.com/Mikescher/BefunUtils/master/README-FILES/icon_BefunDebug.png) [BefunDebug](https://github.com/Mikescher/BefunDebug):  
-> A debug and test tool for BefunGen
+> A debug and test tool for BefunGen, BefunCompile, BefunHighlight, etc
 
 
 Set up

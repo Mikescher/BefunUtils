@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BefunGen", "BefunGen\BefunGen.csproj", "{1FF871B2-5334-487A-BB1B-DA8245C8083F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BefunGen", "BefunGen\BefunGen\BefunGen.csproj", "{1FF871B2-5334-487A-BB1B-DA8245C8083F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BefunDebug", "BefunDebug\BefunDebug.csproj", "{EDAF7AC1-5908-4AF0-B228-26D1E1539233}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BefunGenTest", "BefunGenTest\BefunGenTest.csproj", "{AFE4C79F-1404-4F6E-8F7E-69A99AB9B065}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BefunGenTest", "BefunGen\BefunGenTest\BefunGenTest.csproj", "{AFE4C79F-1404-4F6E-8F7E-69A99AB9B065}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BefunExec", "BefunExec\BefunExec.csproj", "{9CFFC63F-6F1B-44A8-B330-5367BC23BC0E}"
 EndProject

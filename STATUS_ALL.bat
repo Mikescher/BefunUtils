@@ -31,12 +31,6 @@ echo.
 echo --------------------------------------------------------------------
 echo.
 echo.
-cd BefunGenTest   & git status   & cd ..
-echo.
-echo.
-echo --------------------------------------------------------------------
-echo.
-echo.
 cd BefunHighlight & git status   & cd ..
 echo.
 echo.
