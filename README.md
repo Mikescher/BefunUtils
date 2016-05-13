@@ -1,12 +1,12 @@
 BefunUtils
 ========
 
-This is my collection of tools, libraries and transcompilers for the esoteric programming language [Befunge](http://esolangs.org/wiki/Befunge).
+This is my collection of tools, libraries and transcompilers for the esoteric programming language [Befunge](http://esolangs.org/wiki/Befunge).	
 
 It consists of the following core components:
 
 ###![](https://raw.githubusercontent.com/Mikescher/BefunUtils/master/README-FILES/icon_BefunGen.png) [BefunGen](https://github.com/Mikescher/BefunGen):  
-> A library to automatically generate Befunge-93 programs out of a imperative-programming-language
+> A Befunge-93 to multiple procedural languages (c, java, csharp, python) transcompiler
 
 ###![](https://raw.githubusercontent.com/Mikescher/BefunUtils/master/README-FILES/icon_BefunWrite.png) [BefunWrite](https://github.com/Mikescher/BefunWrite):  
 > A small editor for Textfunge, the language used by BefunGen - use this if you want to try BefunGen for yourself
