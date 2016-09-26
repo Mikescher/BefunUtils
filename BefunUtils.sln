@@ -17,9 +17,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BefunHighlight", "BefunHigh
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BefunRep", "BefunRep\BefunRep.csproj", "{59D9439B-C969-472A-AF62-D7CFD78F01D3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BefunCompile", "BefunCompile\BefunCompile.csproj", "{ECFE8D28-F8A6-4C2B-9202-C0E47A4FF906}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BefunCompile", "BefunCompile\BefunCompile\BefunCompile.csproj", "{ECFE8D28-F8A6-4C2B-9202-C0E47A4FF906}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BefunRun", "BefunRun\BefunRun.vcxproj", "{D4F614AE-E843-4BCD-9F5C-8F97A8EF68AF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BefunCompileTest", "BefunCompile\BefunCompileTest\BefunCompileTest.csproj", "{4E718090-39BB-4E85-B29F-3043842CFB96}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -139,6 +141,18 @@ Global
 		{D4F614AE-E843-4BCD-9F5C-8F97A8EF68AF}.Release|x64.Build.0 = Release|x64
 		{D4F614AE-E843-4BCD-9F5C-8F97A8EF68AF}.Release|x86.ActiveCfg = Release|Win32
 		{D4F614AE-E843-4BCD-9F5C-8F97A8EF68AF}.Release|x86.Build.0 = Release|Win32
+		{4E718090-39BB-4E85-B29F-3043842CFB96}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E718090-39BB-4E85-B29F-3043842CFB96}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4E718090-39BB-4E85-B29F-3043842CFB96}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{4E718090-39BB-4E85-B29F-3043842CFB96}.Debug|x64.Build.0 = Debug|Any CPU
+		{4E718090-39BB-4E85-B29F-3043842CFB96}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4E718090-39BB-4E85-B29F-3043842CFB96}.Debug|x86.Build.0 = Debug|Any CPU
+		{4E718090-39BB-4E85-B29F-3043842CFB96}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4E718090-39BB-4E85-B29F-3043842CFB96}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4E718090-39BB-4E85-B29F-3043842CFB96}.Release|x64.ActiveCfg = Release|Any CPU
+		{4E718090-39BB-4E85-B29F-3043842CFB96}.Release|x64.Build.0 = Release|Any CPU
+		{4E718090-39BB-4E85-B29F-3043842CFB96}.Release|x86.ActiveCfg = Release|Any CPU
+		{4E718090-39BB-4E85-B29F-3043842CFB96}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
